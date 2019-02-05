@@ -27,6 +27,11 @@
   margin-top: 5rem;
 }
 
+.App-footer{
+  text-align: center;
+  margin-top: 5rem;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

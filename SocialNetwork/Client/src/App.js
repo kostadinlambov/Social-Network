@@ -1,10 +1,15 @@
-import React, { Component } from 'react';
-import './App.css';
+import React, { Component, Fragment } from 'react';
+import './styles/App.css';
+import { Footer, Header } from './components/common';
 
 class App extends Component {
   render() {
     return (
-     <h1 className="App-center">Hello from Social Network!</h1>
+      <Fragment>
+        <Header/>
+        <h1 className="App-center">Hello from Social Network!</h1>
+        <Footer />
+      </Fragment>
     )
   }
 }
