@@ -8,19 +8,27 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public class BaseEntity {
+public abstract class BaseEntity {
     private String id;
 
     public BaseEntity() {
     }
 
+//    @Id
+//    @GeneratedValue(generator = "UUID")
+//    @GenericGenerator(
+//            name = "UUID",
+//            strategy = "org.hibernate.id.UUIDGenerator"
+//    )
+//    @Column(name = "id", nullable = false, unique =true, updatable = false)
+//    public String getId() {
+//        return this.id;
+//    }
+
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
-    @Column(name = "id", nullable = false, unique =true, updatable = false)
+    @GeneratedValue(generator = "uuid-string")
+    @GenericGenerator(name="uuid-string", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", nullable = false, unique = true, updatable = false)
     public String getId() {
         return this.id;
     }

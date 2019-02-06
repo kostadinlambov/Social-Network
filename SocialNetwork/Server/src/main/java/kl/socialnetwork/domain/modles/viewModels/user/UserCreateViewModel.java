@@ -9,7 +9,7 @@ public class UserCreateViewModel {
     private String id;
     private String username;
     private String email;
-    private String password;
+//    private String password;
     private String firstName;
     private String lastName;
     private String address;
@@ -18,7 +18,7 @@ public class UserCreateViewModel {
 //    private Set<String> roleName;
 
 //    @JsonIgnore
-    private Set<String> roles;
+//    private Set<String> roles;
 //
 //    private Set<Order> orders;
 //    private Set<Payment> payments;
@@ -32,7 +32,7 @@ public class UserCreateViewModel {
 
     public UserCreateViewModel() {
 //        this.roleName = new HashSet<>();
-        this.roles = new HashSet<>();
+//        this.roles = new HashSet<>();
 //        this.orders = new HashSet<>();
 //        this.payments = new HashSet<>();
 //        this.feedbackSet = new HashSet<>();
@@ -71,13 +71,13 @@ public class UserCreateViewModel {
         this.email = email;
     }
 
-    public String getPassword() {
-        return this.password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+//    public String getPassword() {
+//        return this.password;
+//    }
+//
+//    public void setPassword(String password) {
+//        this.password = password;
+//    }
 
     public String getFirstName() {
         return this.firstName;
@@ -111,11 +111,11 @@ public class UserCreateViewModel {
         this.city = city;
     }
 
-    public Set<String> getRoles() {
-        return this.roles;
-    }
-
-    public void setRoles(Set<String> roles) {
-        this.roles = roles;
-    }
+//    public Set<String> getRoles() {
+//        return this.roles;
+//    }
+//
+//    public void setRoles(Set<String> roles) {
+//        this.roles = roles;
+//    }
 }

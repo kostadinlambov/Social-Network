@@ -16,6 +16,8 @@ public class User extends BaseEntity implements UserDetails {
     private String password;
     private String firstName;
     private String lastName;
+    private String address;
+    private String city;
     private boolean isDeleted;
     private Set<UserRole> authorities;
 
@@ -69,6 +71,24 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "last_name", nullable = false)
     public String getLastName() {
         return this.lastName;
+    }
+
+    @Column(name = "address", nullable = false)
+    public String getAddress() {
+        return this.address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    @Column(name = "city", nullable = false)
+    public String getCity() {
+        return this.city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public void setLastName(String lastName) {
