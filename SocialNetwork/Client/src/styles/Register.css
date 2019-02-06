@@ -1,0 +1,30 @@
+.Register-form-container{
+    /* width: 30%; */
+    margin: auto;
+  
+  
+}
+
+h1{
+    text-align: center;
+    margin: 3rem auto;
+    /* margin-top: 5rem;
+    margin-bottom: 5rem; */
+}
+
+.section-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.left-section, .right-section{
+    flex: 0 1 30%;
+    margin: 0 2rem;
+}
+
+
+
+/* form{
+    margin-top: 1rem;
+} */
