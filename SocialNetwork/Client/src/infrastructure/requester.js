@@ -28,7 +28,7 @@ export default {
             .then(callback)
             .catch(error => {
 
-                observer.trigger(observer.events.notification, { type: 'success', message: error })
+                // observer.trigger(observer.events.notification, { type: 'success', message: error })
                 console.log('Fetch Error (POST): ', error)
             })
 

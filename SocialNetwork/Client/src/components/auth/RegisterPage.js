@@ -21,9 +21,6 @@ export default class RegisterPage extends Component {
 
         this.onChangeHandler = this.onChangeHandler.bind(this);
         this.onSubmitHandler = this.onSubmitHandler.bind(this);
-
-
-
     }
 
     onChangeHandler(event) {

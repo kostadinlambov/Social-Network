@@ -1,8 +1,12 @@
 .Register-form-container{
     /* width: 30%; */
     margin: auto;
-  
-  
+
+}
+
+.Login-form-container{
+     width: 30%;
+     margin: auto;
 }
 
 h1{
