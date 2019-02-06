@@ -1,9 +1,11 @@
 package kl.socialnetwork.web.filters;
 
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import kl.socialnetwork.domain.entities.User;
+import kl.socialnetwork.domain.modles.bindingModels.user.UserLoginBindingModel;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,20 +31,19 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-//        try {
-//            UserLoginBindingModel loginBindingModel = new ObjectMapper()
-//                    .readValue(request.getInputStream(), UserLoginBindingModel.class);
-//
-//            return this.authenticationManager.authenticate(
-//                    new UsernamePasswordAuthenticationToken(
-//                            loginBindingModel.getUsername(),
-//                            loginBindingModel.getPassword(),
-//                            new ArrayList<>())
-//            );
-//        } catch (IOException ignored) {
-//            return null;
-//        }
-        return null;
+        try {
+            UserLoginBindingModel loginBindingModel = new ObjectMapper()
+                    .readValue(request.getInputStream(), UserLoginBindingModel.class);
+
+            return this.authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginBindingModel.getUsername(),
+                            loginBindingModel.getPassword(),
+                            new ArrayList<>())
+            );
+        } catch (IOException ignored) {
+            return null;
+        }
     }
 
     @Override
@@ -67,7 +68,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 //        response.getWriter()
 //                .append("Authorization: Bearer " + token);
-                response.getWriter()
+        response.getWriter()
                 .append(tokenJson);
 
 
