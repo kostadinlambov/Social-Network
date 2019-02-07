@@ -1,12 +1,20 @@
 import React, { Component } from 'react';
 import { NavLink, Link } from 'react-router-dom'
 import '../../styles/Header.css'
+import observer from '../../infrastructure/observer'
 
 export default class Header extends Component {
     constructor(props) {
         super(props)
 
+        this.state = {username: ''}
+
+        observer.subscribe(observer.events.loginUser, this.userLoggedIn)
     }
+
+    userLoggedIn = (username => {
+        this.setState({username})
+    })
 
     render() {
         return (
@@ -34,8 +42,8 @@ export default class Header extends Component {
                                         Dropdown link</NavLink>
                                     <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                         <NavLink exact to="/register" className="dropdown-item" >Register</NavLink>
-                                        <NavLink   to="/login" className="dropdown-item" >Login</NavLink>
-                                        <NavLink   to="/logout" className="dropdown-item" >Logout</NavLink>
+                                        <NavLink  to="/login" className="dropdown-item" >Login</NavLink>
+                                        <NavLink  to="/logout" className="dropdown-item" >Logout</NavLink>
                                     </div>
                                 </li>
                             </ul>

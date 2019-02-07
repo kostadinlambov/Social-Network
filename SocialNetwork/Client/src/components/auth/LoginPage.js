@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import '../../styles/Register.css'
 import requester from '../../infrastructure/requester'
 import Input from '../common/Input'
+import observer from '../../infrastructure/observer';
+import userService from '../../infrastructure/userService';
+// import userService from 
 
 export default class LoginPage extends Component {
     constructor(props) {
@@ -31,9 +34,12 @@ export default class LoginPage extends Component {
         // const { firstNameError, ...otherProps } = this.state;
 
         requester.post('/login', { ...this.state }, (response) => {
-
             console.log('response: ', response)
+            localStorage.setItem('token', response);
+
+            observer.trigger(observer.events.loginUser, userService.getUsername());
             debugger;
+            this.props.history.push('/');
 
             // if(response.success == true){
             //     observer.trigger(observer.events.notification,  { type: 'success', message: response.message });
@@ -93,7 +99,7 @@ export default class LoginPage extends Component {
                     </div>
 
                     <div className="text-center">
-                        <button type="submit" className="btn btn-primary reg-btn">Login</button>
+                        <button type="submit" className="btn App-button-primary reg-btn">Login</button>
                     </div>
 
                 </form>

@@ -7,10 +7,22 @@ import HomePage from './components/auth/HomePage';
 import LoginPage from './components/auth/LoginPage';
 
 class App extends Component {
+  constructor(props){
+    super(props)
+
+    this.onLogout = this.onLogout.bind(this);
+  }
+
+  onLogout(){
+    localStorage.clear();
+    this.props.history.push('/');
+  }
+
+
   render() {
     return (
       <Fragment>
-        <Header/>
+        <Header loggedIn={localStorage.getItem('userId') != null} onLogout={this.onLogout} />
         <Switch>
           <Route exact path="/" component={HomePage} />
           <Route exact path="/register" component={RegisterPage} />

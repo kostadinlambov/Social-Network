@@ -197,7 +197,7 @@ export default class RegisterPage extends Component {
                     </div>
 
                     <div className="text-center">
-                        <button type="submit" className="btn btn-primary reg-btn">Register</button>
+                        <button type="submit" className="btn App-button-primary reg-btn">Register</button>
                     </div>
 
                 </form>
@@ -206,14 +206,3 @@ export default class RegisterPage extends Component {
         )
     }
 };
-
-
-{/* <div className="form-group">
-                        <Input
-                            name="email"
-                            type="email"
-                            value={this.state.email}
-                            onChange={this.onChangeHandler}
-                            label="Email address"
-                        />
-                    </div> */}
