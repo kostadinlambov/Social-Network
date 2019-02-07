@@ -41,6 +41,7 @@ export default class RegisterPage extends Component {
 
             console.log('response: ', response)
             debugger;
+            this.props.history.push('/login');
 
             // if(response.success == true){
             //     observer.trigger(observer.events.notification,  { type: 'success', message: response.message });

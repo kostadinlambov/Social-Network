@@ -57,6 +57,18 @@
 }
 
 
+.App-button-secondary{
+  background:#40a3f4;
+  color:white;
+}
+
+
+.App-button-secondary:hover{
+  background: #3b5998;
+  color:#fff;
+  border: 1px solid #fff;
+  box-shadow: 0 0 14px 1px rgba(0,0,0,.3)
+}
 
 @keyframes App-logo-spin {
   from {

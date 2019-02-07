@@ -1,28 +1,90 @@
 
-const token = localStorage.getItem('token')
+// let token = localStorage.getItem('token')
 
-let payload;
+// let payload;
+// let role;
 
-if(token !== null && token !== undefined){
-     payload = JSON.parse(atob(token.split('.')[1]));
-}
+// if (token !== null && token !== undefined) {
+//     payload = JSON.parse(atob(token.split('.')[1]));
+//     role = payload['role'];
+// }
 
 
 export default {
     getPayload: () => {
-        return payload;
+        const token = localStorage.getItem('token')
+
+        if (token !== null && token !== undefined) {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            if (payload) {
+                return payload;
+            }
+        }
     },
 
     getUsername: () => {
-        
-        return payload['sub'];
+        const token = localStorage.getItem('token')
+
+        if (token !== null && token !== undefined) {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+
+            if (payload) {
+                return payload['sub'];
+            }
+        }
     },
 
     getUserId: () => {
-        return payload['id'];
+
+        const token = localStorage.getItem('token')
+        if (token !== null && token !== undefined) {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+
+            if (payload) {
+                return payload['id'];
+            }
+        }
     },
 
     getRole: () => {
-        return payload['role'];
+        const token = localStorage.getItem('token')
+        if (token !== null && token !== undefined) {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            if (payload) {
+                return payload['role'];
+            }
+        }
+    },
+
+    isRoot: () => {
+        const token = localStorage.getItem('token')
+        if (token !== null && token !== undefined) {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            const role = payload['role'];
+
+            if (payload) {
+                if ((role !== null || role !== undefined) && role === 'ROOT') {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    },
+
+    isAdmin: () => {
+        const token = localStorage.getItem('token')
+        if (token !== null && token !== undefined) {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            const role = payload['role'];
+            debugger;
+            if (payload) {
+                if ((role !== null || role !== undefined) && (role === 'ADMIN' || role === 'ROOT')) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

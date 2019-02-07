@@ -36,8 +36,8 @@ export default class HomePage extends Component {
                             <h2 className="h1 h1-responsive">Welcome to SoftUni Social Network!</h2>
                             <hr className="my-2 mb-3 mt-3 col-md-8 mx-auto"></hr>
                             <p className="lead">
-                                <NavLink className="btn App-button-primary btn-lg m-3" to="/login" role="button">Home</NavLink>
-                                <NavLink className="btn App-button-primary btn-lg m-3" to="/login" role="button">Profile</NavLink>
+                                <NavLink className="btn App-button-primary btn-lg m-3" to="/" role="button">Home</NavLink>
+                                <NavLink className="btn App-button-primary btn-lg m-3" to="/profile" role="button">Profile</NavLink>
                             </p>
 
                         </div>

@@ -20,9 +20,12 @@ class App extends Component {
 
 
   render() {
+    console.log(localStorage.getItem('token'))
+    console.log(localStorage.getItem('token') != null)
+    debugger;
     return (
       <Fragment>
-        <Header loggedIn={localStorage.getItem('userId') != null} onLogout={this.onLogout} />
+        <Header loggedIn={localStorage.getItem('token') != null} onLogout={this.onLogout} />
         <Switch>
           <Route exact path="/" component={HomePage} />
           <Route exact path="/register" component={RegisterPage} />
