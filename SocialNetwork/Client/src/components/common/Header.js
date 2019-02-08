@@ -40,9 +40,9 @@ export default class Header extends Component {
                         </button>
                         <div className="collapse navbar-collapse d-flex justify-content-between" id="navbarNavDropdown">
                             <ul className="navbar-nav">
-                                {loggedIn && <li className="nav-item active">
+                                 <li className="nav-item active">
                                     <NavLink exact to="/" className="nav-link text-white" >Home<span className="sr-only">(current)</span></NavLink>
-                                </li>}
+                                </li>
 
                                 {/* <li className="nav-item dropdown text-white">
                                     <NavLink to="#" className="nav-link dropdown-toggle text-white" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -69,7 +69,7 @@ export default class Header extends Component {
 
                                 {loggedIn && <li className="nav-item"><NavLink exact to="/profile" className="nav-link text-white" >Find friends!</NavLink></li>}
 
-                                {loggedIn && <li className="nav-item"><NavLink exact to="javascript:void(0)" className="nav-link text-white" onClick={onLogout} >Logout</NavLink></li>}
+                                {loggedIn && <li className="nav-item"><NavLink exact to="#" className="nav-link text-white" onClick={onLogout} >Logout</NavLink></li>}
                                
                                 {/* {loggedIn && <li className="nav-item">
                             

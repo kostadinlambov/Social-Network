@@ -5,6 +5,9 @@ import { Footer, Header } from './components/common';
 import RegisterPage from './components/auth/RegisterPage';
 import HomePage from './components/auth/HomePage';
 import LoginPage from './components/auth/LoginPage';
+import { withRootAuthorization, withAdminAuthorization } from './hocs/withAuthorization';
+import ErrorPage from './components/common/ErrorPage';
+
 
 class App extends Component {
   constructor(props){
@@ -20,6 +23,7 @@ class App extends Component {
 
 
   render() {
+    const loggedIn = localStorage.getItem('token');
     console.log(localStorage.getItem('token'))
     console.log(localStorage.getItem('token') != null)
     debugger;
@@ -28,9 +32,12 @@ class App extends Component {
         <Header loggedIn={localStorage.getItem('token') != null} onLogout={this.onLogout} />
         <Switch>
           <Route exact path="/" component={HomePage} />
-          <Route exact path="/register" component={RegisterPage} />
-          <Route exact path="/login" component={LoginPage} />
-          <Route component={HomePage} />
+          <Route exact path="/register" component={withRootAuthorization(RegisterPage)} />
+          {/* {<Route exact path="/register" component={RegisterPage} />} */}
+          {!loggedIn && <Route exact path="/login" component={LoginPage} />}
+          
+          <Route exact path="/error" component={ErrorPage} />
+          <Route component={ErrorPage} />
         </Switch>
         <Footer />
       </Fragment>
