@@ -7,6 +7,7 @@ import HomePage from './components/auth/HomePage';
 import LoginPage from './components/auth/LoginPage';
 import { withRootAuthorization, withAdminAuthorization } from './hocs/withAuthorization';
 import ErrorPage from './components/common/ErrorPage';
+import ProfilePage from './components/user/ProfilePage';
 
 
 class App extends Component {
@@ -32,9 +33,10 @@ class App extends Component {
         <Header loggedIn={localStorage.getItem('token') != null} onLogout={this.onLogout} />
         <Switch>
           <Route exact path="/" component={HomePage} />
-          <Route exact path="/register" component={withRootAuthorization(RegisterPage)} />
+          {!loggedIn &&<Route exact path="/register" component={RegisterPage} />}
           {/* {<Route exact path="/register" component={RegisterPage} />} */}
           {!loggedIn && <Route exact path="/login" component={LoginPage} />}
+          {loggedIn && <Route exact path="/profile" component={ProfilePage} />}
           
           <Route exact path="/error" component={ErrorPage} />
           <Route component={ErrorPage} />

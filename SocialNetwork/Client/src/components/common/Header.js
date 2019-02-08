@@ -67,7 +67,7 @@ export default class Header extends Component {
 
                                
 
-                                {loggedIn && <li className="nav-item"><NavLink exact to="/profile" className="nav-link text-white" >Find friends!</NavLink></li>}
+                                {loggedIn && <li className="nav-item"><NavLink exact to="/frends" className="nav-link text-white" >Find friends!</NavLink></li>}
 
                                 {loggedIn && <li className="nav-item"><NavLink exact to="#" className="nav-link text-white" onClick={onLogout} >Logout</NavLink></li>}
                                
