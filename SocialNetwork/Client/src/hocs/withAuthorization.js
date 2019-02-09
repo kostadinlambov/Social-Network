@@ -34,7 +34,7 @@ function withAuthorization(WrapperComponent, roles) {
             }else{
                 // this.props.history.push('/error');
                 // return null;
-                
+
                 // return <ErrorPage {...this.props}/>
                 return <Redirect to="/error" {...this.props} />
             }
@@ -44,7 +44,7 @@ function withAuthorization(WrapperComponent, roles) {
 }
 
 export function withAdminAuthorization(Component) {
-    return withAuthorization(Component, ['ADMIN'])
+    return withAuthorization(Component, ['ADMIN', 'ROOT'])
 }
 
 export function withRootAuthorization(Component) {

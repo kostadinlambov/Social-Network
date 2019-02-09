@@ -36,7 +36,9 @@ class App extends Component {
           {!loggedIn &&<Route exact path="/register" component={RegisterPage} />}
           {/* {<Route exact path="/register" component={RegisterPage} />} */}
           {!loggedIn && <Route exact path="/login" component={LoginPage} />}
-          {loggedIn && <Route exact path="/profile" component={ProfilePage} />}
+          {loggedIn && <Route exact path="/profile/:id" component={ProfilePage} />}
+           {/* <Route exact path="/profile" component={withAdminAuthorization(ProfilePage)} /> */}
+
           
           <Route exact path="/error" component={ErrorPage} />
           <Route component={ErrorPage} />

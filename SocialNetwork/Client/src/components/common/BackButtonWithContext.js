@@ -1,6 +1,6 @@
 import React, {Component} from  'react';
 
-export default class BackButton extends Component {
+export default class BackButtonWithContext extends Component {
 
     static contextTypes = {
         router: () => true

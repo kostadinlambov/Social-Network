@@ -1,6 +1,6 @@
 import React, {Component} from  'react';
 
-export default class BackButton extends Component {
+export default class BackButtonWithProps extends Component {
     constructor(props){
         super(props)
         this.goBack = this.goBack.bind(this)

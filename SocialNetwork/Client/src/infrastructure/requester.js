@@ -5,7 +5,7 @@ const BASE_URL = 'http://localhost:8000';
 export default {
     get: (endpoint, callback) => {
         fetch(BASE_URL + endpoint)
-        .then(data => data.json)
+        .then(data => data.json())
         .then(callback)
         .catch(err => {
             observer.trigger(observer.events.notification, {type: 'success', message: err})

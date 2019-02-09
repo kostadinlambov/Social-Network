@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom'
-import BackButtonWithProps from './BackButtonWithProps';
-import BackButton from './BackButtonWithContext';
+import BackButton from './BackButtonWithProps';
+// import BackButton from './BackButtonWithContext';
 // import softUniLogo from '../../picks/softuniLogo.PNG';
 import socialMedia from '../../picks/Social_Media.jpg';
 
@@ -30,7 +30,7 @@ export default class ErrorPage extends Component {
                    
                 /> */}
 
-                <BackButtonWithProps
+                <BackButton
                     text="Go back to the previous page"
                     class="btn App-button-primary btn-lg m-3"
                     {...this.props}

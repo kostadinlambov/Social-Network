@@ -22,6 +22,9 @@ export default class Header extends Component {
 
         let isAdmin = userService.isAdmin();
 
+        let userId = userService.getUserId();
+        let profileLink = "/profile/"+ userId;
+
         debugger;
 
         console.log('isAdmin: ', isAdmin)
@@ -63,7 +66,7 @@ export default class Header extends Component {
 
 
                             <ul className="navbar-nav d-flex justify-content-end align-items-center">
-                                {loggedIn && <li className="nav-item"><NavLink exact to="/profile" className="nav-link text-white fas fa-user" > {userService.getUsername()}</NavLink></li>}
+                                {loggedIn && <li className="nav-item"><NavLink exact to={`/profile/${userId}`} className="nav-link text-white fas fa-user" > {userService.getUsername()}</NavLink></li>}
 
                                
 
