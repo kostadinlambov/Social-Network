@@ -33,6 +33,7 @@ public final class ResponseMessageConstants {
     public static final String SUCCESSFUL_USER_PROMOTED_MESSAGE = "User promoted successfully.";
     public static final String SUCCESSFUL_USER_PROFILE_EDIT_MESSAGE = "User Profile have been successfully edited.";
     public static final String SUCCESSFUL_USER_DELETE_MESSAGE = "User have been successfully deleted.";
+    public static final String SUCCESSFUL_USER_ALL_MESSAGE = "All users successfully loaded.";
     public static final String SUCCESSFUL_CATEGORY_ADDITION_MESSAGE = "Category have been successfully added.";
     public static final String SUCCESSFUL_CATEGORY_RESTORE_MESSAGE = "Category restored successfully.";
     public static final String SUCCESSFUL_CATEGORY_DELETE_MESSAGE = "Category deleted successfully.";

@@ -1,16 +1,17 @@
 package kl.socialnetwork.utils.responseHandler.successResponse;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class SuccessResponse implements Serializable {
-  private Date timestamp;
+  private LocalDateTime timestamp;
   private String message;
   private Object payload;
   private boolean success;
 
 
-  public SuccessResponse(Date timestamp, String message, Object payload, boolean success) {
+  public SuccessResponse(LocalDateTime timestamp, String message, Object payload, boolean success) {
     this.timestamp = timestamp;
     this.message = message;
     this.payload = payload;
@@ -18,11 +19,11 @@ public class SuccessResponse implements Serializable {
   }
 
 
-  public Date getTimestamp() {
+  public LocalDateTime getTimestamp() {
     return this.timestamp;
   }
 
-  public void setTimestamp(Date timestamp) {
+  public void setTimestamp(LocalDateTime timestamp) {
     this.timestamp = timestamp;
   }
 

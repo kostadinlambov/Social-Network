@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,7 +58,7 @@ public class UserController {
 
         if (user != null) {
             SuccessResponse successResponse = new SuccessResponse(
-                    new Date(),
+                    LocalDateTime.now(),
                     SUCCESSFUL_REGISTER_MESSAGE,
                     savedUser,
                     true);
@@ -72,8 +73,10 @@ public class UserController {
 
 
     @GetMapping(value = "/all")
-    public List<UserAllViewModel> getAllUsers() {
-        return this.userService
+    public ResponseEntity<Object> getAllUsers() throws JsonProcessingException {
+
+
+        List<UserAllViewModel> allUser = this.userService
                 .getAllUsers()
                 .stream()
                 .map(x -> {
@@ -83,6 +86,17 @@ public class UserController {
                 })
                 .collect(Collectors.toList());
 
+        if(allUser.size() > 0){
+            SuccessResponse successResponse = new SuccessResponse(
+                     LocalDateTime.now(),
+                    SUCCESSFUL_USER_ALL_MESSAGE,
+                    allUser,
+                    true);
+
+            System.out.println(this.objectMapper.writeValueAsString(successResponse));
+            return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
+        }
+        throw new CustomException(SERVER_ERROR_MESSAGE);
     }
 
     @GetMapping(value = "/details/{id}")
@@ -90,7 +104,7 @@ public class UserController {
         UserDetailsViewModel user = this.userService.getById(id);
 
         SuccessResponse successResponse = new SuccessResponse(
-                new Date(),
+                LocalDateTime.now(),
                 SUCCESSFUL_USER_DETAILS_FOUND_MESSAGE,
                 user,
                 true
@@ -103,7 +117,7 @@ public class UserController {
         UserDetailsViewModel user = this.userService.getByUsername(username);
 
         SuccessResponse successResponse = new SuccessResponse(
-                new Date(),
+                LocalDateTime.now(),
                 SUCCESSFUL_USER_DETAILS_FOUND_MESSAGE,
                 user,
                 true
@@ -116,7 +130,7 @@ public class UserController {
         UserEditViewModel user = this.userService.editById(id);
 
         SuccessResponse successResponse = new SuccessResponse(
-                new Date(),
+                LocalDateTime.now(),
                 SUCCESSFUL_USER_DETAILS_FOUND_MESSAGE,
                 user,
                 true
@@ -131,7 +145,7 @@ public class UserController {
 
         if (result) {
             SuccessResponse successResponse = new SuccessResponse(
-                    new Date(),
+                    LocalDateTime.now(),
                     SUCCESSFUL_USER_PROFILE_EDIT_MESSAGE,
                     "",
                     true);
@@ -147,7 +161,7 @@ public class UserController {
 
         if (resultOfPromoting) {
             SuccessResponse successResponse = new SuccessResponse(
-                    new Date(),
+                    LocalDateTime.now(),
                     SUCCESSFUL_USER_PROMOTED_MESSAGE,
                     "",
                     true);
@@ -162,7 +176,7 @@ public class UserController {
 
         if (resultOfDemoting) {
             SuccessResponse successResponse = new SuccessResponse(
-                    new Date(),
+                    LocalDateTime.now(),
                     SUCCESSFUL_USER_DEMOTED_MESSAGE,
                     "",
                     true);
@@ -177,7 +191,7 @@ public class UserController {
         boolean result = this.userService.deleteUserById(id);
         if (result) {
             SuccessResponse successResponse = new SuccessResponse(
-                    new Date(),
+                    LocalDateTime.now(),
                     SUCCESSFUL_USER_DELETE_MESSAGE,
                     "",
                     true);
