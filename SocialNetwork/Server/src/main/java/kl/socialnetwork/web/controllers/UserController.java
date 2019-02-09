@@ -85,7 +85,7 @@ public class UserController {
 
     }
 
-    @GetMapping(value = "details/{id}")
+    @GetMapping(value = "/details/{id}")
     public ResponseEntity getDetails(@PathVariable String id) throws JsonProcessingException {
         UserDetailsViewModel user = this.userService.getById(id);
 
@@ -98,7 +98,7 @@ public class UserController {
         return new ResponseEntity<>(this.objectMapper.writeValueAsString(user), HttpStatus.OK);
     }
 
-    @GetMapping(value = "details/username/{username}")
+    @GetMapping(value = "/details/username/{username}")
     public ResponseEntity getDetailsByUsername(@PathVariable String username) throws JsonProcessingException {
         UserDetailsViewModel user = this.userService.getByUsername(username);
 
@@ -111,7 +111,7 @@ public class UserController {
         return new ResponseEntity<>(this.objectMapper.writeValueAsString(user), HttpStatus.OK);
     }
 
-    @GetMapping(value = "editDetails/{id}")
+    @GetMapping(value = "/editDetails/{id}")
     public ResponseEntity getEditDetails(@PathVariable String id) throws JsonProcessingException {
         UserEditViewModel user = this.userService.editById(id);
 
@@ -124,21 +124,21 @@ public class UserController {
         return new ResponseEntity<>(this.objectMapper.writeValueAsString(user), HttpStatus.OK);
     }
 
-//    @PutMapping(value = "/update", produces = "application/json")
-//    public ResponseEntity updateUser(@RequestBody @Valid UserUpdateBindingModel userUpdateBindingModel) throws JsonProcessingException {
-//
-//        boolean result = this.userService.updateUser(this.modelMapper.map(userUpdateBindingModel, UserServiceModel.class));
-//
-//        if (result) {
-//            SuccessResponse successResponse = new SuccessResponse(
-//                    new Date(),
-//                    SUCCESSFUL_USER_PROFILE_EDIT_MESSAGE,
-//                    "",
-//                    true);
-//            return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
-//        }
-//        throw new CustomException(ResponseMessageConstants.SERVER_ERROR_MESSAGE);
-//    }
+    @PutMapping(value = "/update")
+    public ResponseEntity updateUser(@RequestBody @Valid UserUpdateBindingModel userUpdateBindingModel) throws JsonProcessingException {
+
+        boolean result = this.userService.updateUser(this.modelMapper.map(userUpdateBindingModel, UserServiceModel.class));
+
+        if (result) {
+            SuccessResponse successResponse = new SuccessResponse(
+                    new Date(),
+                    SUCCESSFUL_USER_PROFILE_EDIT_MESSAGE,
+                    "",
+                    true);
+            return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
+        }
+        throw new CustomException(ResponseMessageConstants.SERVER_ERROR_MESSAGE);
+    }
 
 
     @PostMapping(value = "/promote")

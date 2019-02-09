@@ -76,24 +76,22 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-//    @Override
-//    public boolean updateUser(UserServiceModel userServiceModel) {
-//        User userOrigin = this.userRepository.findById(userServiceModel.getId()).orElse(null);
-//
-//        if (userOrigin != null) {
-//            User userEntity = this.modelMapper.map(userServiceModel, User.class);
-//            userEntity.setPassword(userOrigin.getPassword());
-//            userEntity.setAuthorities(userOrigin.getAuthorities());
-//            userEntity.setFeedbackSet(userOrigin.getFeedbackSet());
-//            userEntity.setOrders(userOrigin.getOrders());
-//            userEntity.setPayments(userOrigin.getPayments());
-//
-//            User updatedUser  = this.userRepository.saveAndFlush(userEntity);
-//            return updatedUser != null;
-//        }
-//
-//        return false;
-//    }
+    @Override
+    public boolean updateUser(UserServiceModel userServiceModel) {
+        User userOrigin = this.userRepository.findById(userServiceModel.getId()).orElse(null);
+
+        if (userOrigin != null) {
+            User userEntity = this.modelMapper.map(userServiceModel, User.class);
+            userEntity.setPassword(userOrigin.getPassword());
+            userEntity.setAuthorities(userOrigin.getAuthorities());
+
+
+            User updatedUser  = this.userRepository.saveAndFlush(userEntity);
+            return updatedUser != null;
+        }
+
+        return false;
+    }
 
 //    public boolean addToCart(String userId, String racketId ){
 //       User user = this.userRepository.findById(userId).orElse(null);

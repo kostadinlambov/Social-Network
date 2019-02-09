@@ -2,6 +2,7 @@
 //
 //import com.fasterxml.jackson.databind.ObjectMapper;
 //import kl.socialnetwork.services.UserService;
+//
 //import kl.socialnetwork.web.filters.JwtAuthenticationFilter;
 //import kl.socialnetwork.web.filters.JwtAuthorizationFilter;
 //import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +22,15 @@
 //@Configuration
 //@EnableWebSecurity
 //@EnableGlobalMethodSecurity(prePostEnabled = true)
-//public class Old_ApplicationSecurityConfiguration
+//public class TennisShop_ApplicationSecurityConfiguration
 //        extends WebSecurityConfigurerAdapter {
-//
 //    private final UserService userService;
+//
 //    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 //    private final ObjectMapper mapper;
 //
 //    @Autowired
-//    public Old_ApplicationSecurityConfiguration(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, ObjectMapper mapper) {
+//    public TennisShop_ApplicationSecurityConfiguration(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, ObjectMapper mapper) {
 //        this.userService = userService;
 //        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 //        this.mapper = mapper;
@@ -45,22 +46,39 @@
 //                .authorizeRequests()
 //                .antMatchers(
 //                        "/users/register",
+//                        "/rackets/all",
+//                        "/orders/order",
+//                        "/orders/all",
+//                        "/orders/checkout",
+//                        "/orders/remove",
+//                        "/orders/edit",
+//                        "/rackets/test",
 //                        "/users/update",
 //                        "/**"
-//                        ).permitAll()
+//                ).permitAll()
 //                .antMatchers(
+//                        "/rackets/details",
+//                        "/rackets/create",
+//                        "/rackets/edit",
+//                        "/rackets/categories",
 //                        "/users/all",
 //                        "/users/promote",
 //                        "/users/demote",
 //                        "/users/details",
 //                        "/users/details/username",
 //                        "/users/editDetails",
+//                        "categories/all",
+//                        "categories/allDeleted",
+//                        "categories/create",
+//                        "categories/edit",
+//                        "categories/restore",
+//                        "categories/delete",
 //                        "logs/all",
 //                        "logs/findByUserName",
 //                        "logs/clear",
 //                        "logs/clearByName"
 //                ).hasAnyAuthority("ADMIN", "ROOT")
-//                .antMatchers( "/users/delete").hasAuthority("ROOT")
+//                .antMatchers(  "/rackets/delete", "/users/delete", "categories/delete").hasAuthority("ROOT")
 //                .anyRequest().authenticated()
 //                .and()
 //                .addFilter(new JwtAuthenticationFilter(authenticationManager(), this.mapper))

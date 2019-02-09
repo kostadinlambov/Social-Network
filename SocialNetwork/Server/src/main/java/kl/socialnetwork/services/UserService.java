@@ -15,7 +15,7 @@ public interface UserService extends UserDetailsService {
 
     UserCreateViewModel createUser(UserServiceModel userRegisterBindingModel);
 
-//    boolean updateUser(UserServiceModel userUpdateBindingModel);
+    boolean updateUser(UserServiceModel userUpdateBindingModel);
 
     UserDetailsViewModel getById(String id);
 
