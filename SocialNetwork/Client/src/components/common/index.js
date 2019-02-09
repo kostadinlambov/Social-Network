@@ -5,6 +5,7 @@ import Notifications from './Notifications';
 import Button from './Button';
 import BackButton from './BackButtonWithProps';
 import BackButtonWithContext from './BackButtonWithContext';
+import ButtonWithClickEvent from './ButtonWithClickEvent';
 
 
 export{
@@ -14,5 +15,6 @@ export{
     Button,
     BackButton,
     BackButtonWithContext,
+    ButtonWithClickEvent,
     Notifications 
 };

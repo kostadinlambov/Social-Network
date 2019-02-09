@@ -10,9 +10,6 @@ export default class BackButtonWithProps extends Component {
         this.props.history.goBack()
     }
 
-    static contextTypes = {
-        router: () => true
-    }
 
     render() {
         return (

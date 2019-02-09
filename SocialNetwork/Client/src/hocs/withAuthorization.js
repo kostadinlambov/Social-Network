@@ -14,7 +14,7 @@ function withAuthorization(WrapperComponent, roles) {
             }
         }
 
-        componentDidMount = () => {
+        componentWillMount = () => {
             let currentUserRoles = userService.getRole();
             debugger;
             if(currentUserRoles){
@@ -30,8 +30,10 @@ function withAuthorization(WrapperComponent, roles) {
             }
             debugger;
             if(userHasAccess){
+                debugger
                 return <WrapperComponent {...this.props} /> 
             }else{
+                debugger;
                 // this.props.history.push('/error');
                 // return null;
 

@@ -66,7 +66,7 @@ export default class LoginPage extends Component {
     render() {
         return (
             <div className="container">
-                <h1 >Login</h1>
+                  <h1 className="mt-5 mb-5 text-center font-weight-bold ">Login</h1>
                 <form className="Login-form-container" onSubmit={this.onSubmitHandler}>
                     <div className="form-group">
                         <label htmlFor="username">Username</label>
@@ -99,7 +99,7 @@ export default class LoginPage extends Component {
                     </div>
 
                     <div className="text-center">
-                        <button type="submit" className="btn App-button-primary reg-btn">Login</button>
+                        <button type="submit" className="btn App-button-primary btn-lg m-3">Login</button>
                     </div>
 
                 </form>

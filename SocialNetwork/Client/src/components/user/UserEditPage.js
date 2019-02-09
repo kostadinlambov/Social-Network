@@ -1,29 +1,42 @@
 import React, { Component } from 'react';
-import '../../styles/Register.css'
-import requester from '../../infrastructure/requester'
-import Input from '../common/Input'
+import { userService, requester } from '../../infrastructure';
+import { Button } from '../common';
 
-export default class RegisterPage extends Component {
+
+export default class UserEditPage extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
+            id: '',
             username: '',
             email: '',
-            password: '',
-            confirmPassword: '',
             firstName: '',
-            firstNameError: '',
             lastName: '',
             address: '',
             city: '',
-        };
+        }
 
         this.onChangeHandler = this.onChangeHandler.bind(this);
         this.onSubmitHandler = this.onSubmitHandler.bind(this);
     }
 
+    componentDidMount() {
+        debugger;
+        this.setState({
+            id: this.props.location.state.id,
+            username: this.props.location.state.username,
+            email: this.props.location.state.email,
+            firstName: this.props.location.state.firstName,
+            lastName: this.props.location.state.lastName,
+            address: this.props.location.state.address,
+            city: this.props.location.state.city,
+        })
+
+    }
+
     onChangeHandler(event) {
+        debugger;
         console.log('name: ', event.target.name)
         console.log('value: ', event.target.value)
         this.setState({
@@ -35,40 +48,24 @@ export default class RegisterPage extends Component {
         event.preventDefault();
         console.log('event: ', event);
         debugger;
-        const { firstNameError, ...otherProps } = this.state;
 
-        requester.post('/users/register', { ...otherProps }, (response) => {
-
+        requester.put('/users/update', { ...this.state }, (response) => {
             console.log('response: ', response)
             debugger;
-            this.props.history.push('/login');
-
-            // if(response.success == true){
-            //     observer.trigger(observer.events.notification,  { type: 'success', message: response.message });
-
-            // this.setState({ fireRedirect: true })
-            // }else {
-            //     observer.trigger(observer.events.notification, { type: 'error', message: response.message });
-            //     this.setState({
-            //         username:'',
-            //         email:'',
-            //         password:'',
-            //         confirmPassword:'',
-            //         firstName:'',
-            //         lastName:'',
-            //         adress:'',
-            //         city:''
-            //     })
-            // }
-
+            this.props.history.push(`/profile/${this.state.id}`);
         })
     }
 
-
     render() {
+
+        const { match, location, history } = this.props
+        console.log('match: ', match);
+        console.log('location: ', location);
+        console.log('history: ', history);
+        debugger;
         return (
             <div className="container">
-                  <h1 className="mt-5 mb-5 text-center font-weight-bold ">Register</h1>
+                <h1 className="mt-5 mb-5 text-center font-weight-bold ">Edit Account</h1>
                 <form className="Register-form-container" onSubmit={this.onSubmitHandler}>
 
                     <div className="section-container">
@@ -117,21 +114,6 @@ export default class RegisterPage extends Component {
                                 />
                                 <small id="addressHelp" className="form-text text-muted">We'll never share your last name with anyone else.</small>
                             </div>
-
-                            <div className="form-group">
-                                <label htmlFor="password">Password</label>
-                                <input
-                                    type="password"
-                                    className="form-control"
-                                    id="password"
-                                    name="password"
-                                    value={this.state.password}
-                                    onChange={this.onChangeHandler}
-                                    aria-describedby="passwordHelp"
-                                    placeholder="Enter city"
-                                />
-                                <small id="passwordHelp" className="form-text text-muted">We'll never share your password with anyone else.</small>
-                            </div>
                         </section>
 
                         <section className="right-section">
@@ -179,26 +161,13 @@ export default class RegisterPage extends Component {
                                 />
                                 <small id="cityHelp" className="form-text text-muted">We'll never share your city with anyone else.</small>
                             </div>
-
-                            <div className="form-group">
-                                <label htmlFor="confirmPassword">Confirm Password</label>
-                                <input
-                                    type="password"
-                                    className="form-control"
-                                    id="confirmPassword"
-                                    name="confirmPassword"
-                                    value={this.state.confirmPassword}
-                                    onChange={this.onChangeHandler}
-                                    aria-describedby="confirmPasswordHelp"
-                                    placeholder="Confirm your password"
-                                />
-                                <small id="confirmPasswordHelp" className="form-text text-muted">We'll never share your password with anyone else.</small>
-                            </div>
                         </section>
                     </div>
 
                     <div className="text-center">
-                        <button type="submit" className="btn App-button-primary btn-lg m-3">Register</button>
+                        <button type="submit" className="btn App-button-primary btn-lg m-3">Edit</button>
+                        {/* <Button  buttonClass={"btn App-button-primary btn-lg m-3"} url={`/users/all`} text={"Edit"} /> */}
+                        <Button buttonClass={"btn App-button-primary btn-lg m-3"} url={`/`} text={"Cancel"} />
                     </div>
 
                 </form>
@@ -206,4 +175,5 @@ export default class RegisterPage extends Component {
             </div>
         )
     }
-};
+}
+

@@ -1,15 +1,15 @@
 import React, { Component, Fragment } from 'react';
 import { NavLink } from 'react-router-dom'
 import { userService, requester } from '../../infrastructure';
-import { Button } from '../common'
+import { Button, ButtonWithClickEvent } from '../common'
 
 
-export default class ProfilePage extends Component {
+export default class UserProfilePage extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            id:  '',
+            id: '',
             username: '',
             email: '',
             firstName: '',
@@ -39,13 +39,32 @@ export default class ProfilePage extends Component {
             debugger;
 
         })
+    }
 
+   
+
+
+    onSubmitHandlerDelete = (e) => {
+        console.log(this.state.id)
+
+        this.props.history.push({
+            pathname: "/users/delete/" + this.state.id,
+            state:
+                { ...this.state }
+        });
     }
 
 
+    onSubmitHandlerEdit = (e) => {
+        // e.preventDefault();
+        console.log(this.state.id)
 
-
-
+        this.props.history.push({
+            pathname: "/users/edit/" + this.state.id,
+            state:
+                { ...this.state }
+        });
+    }
 
 
 
@@ -58,11 +77,32 @@ export default class ProfilePage extends Component {
         const isAdmin = userService.isAdmin();
         const isRoot = userService.isRoot();
 
+
+        // const deleteButton = (
+        //     <button
+        //         type="button"
+        //         className="btn btn-danger m-5"
+        //         onClick={this.onSubmitHandlerDelete.bind(this)}>
+        //         Delete
+        //     </button>
+        // )
+
+        // const editButton = (
+        //     <button
+        //         type="button"
+        //         className="btn btn-warning m-5"
+        //         onClick={this.onSubmitHandlerEdit.bind(this)}>
+        //         Edit
+        //         {/* <Link to={'/tournaments/edit/' + this.state.id} className="editPost">Edit</Link> */}
+        //     </button>
+        // )
+
+
         debugger;
         return (
             <div className="container mx-auto text-center" >
 
-                <h1 className="mt-5 mb-5 text-center font-weight-bold ">Account details</h1>
+                <h1 className="mt-5 mb-5 text-center font-weight-bold ">Account Details</h1>
                 <hr className="my-2 mb-3 mt-3 col-md-8 mx-auto" />
                 {/* <div className="d-flex justify-content-center  "> */}
                 <div className="col-md-6 mx-auto text-center">
@@ -122,32 +162,29 @@ export default class ProfilePage extends Component {
                                     <h5>{this.state.city}</h5>
                                 </td>
                             </tr>
-                           {(isAdmin || isRoot) &&<tr className="row">
+                            {(isAdmin || isRoot) && <tr className="row">
                                 <td className="col-md-6" >
                                     <h5 className=" font-weight-bold">Role</h5>
                                 </td>
                                 <td className="col-md-6" >
                                     <h5>{authority}</h5>
                                 </td>
-                            </tr>} 
+                            </tr>}
 
                         </tbody>
                     </table>
-
                     <hr className="my-2 mb-3 mt-3 col-md-12 mx-auto" />
-
                     <div className="d-flex justify-content-center ">
-                      {(isAdmin || isRoot) && <Button buttonClass={"btn App-button-primary btn-lg m-3"}  url={`/users/edit/${this.state.id}`} text={"Edit"} />} 
-                      {(isAdmin || isRoot) && <Button buttonClass={"btn App-button-primary btn-lg m-3"}  url={`/users/delete/${this.state.id}`} text={"Delete"} />}
-                        <Button buttonClass={"btn App-button-primary btn-lg m-3"}  url={`/users/all`} text={"All Users"} />
+                        {/* <Button buttonClass={"btn App-button-primary btn-lg m-3"} url={`/users/edit/${this.state.id}`} text={"Edit"} /> */}
+                        {/* {(isAdmin || isRoot) && <Button buttonClass={"btn App-button-primary btn-lg m-3"} url={`/users/delete/${this.state.id}`} text={"Delete"} />}
+                        {(isAdmin || isRoot) && <Button buttonClass={"btn App-button-primary btn-lg m-3"} url={`/users/all`} text={"All Users"} />} */}
+
+                        {<ButtonWithClickEvent buttonClass={"btn App-button-primary btn-lg m-3"} url={`/users/edit/`} text={"Edit"} onClick={this.onSubmitHandlerEdit} />}
+                        {(isAdmin || isRoot) && <ButtonWithClickEvent buttonClass={"btn App-button-primary btn-lg m-3"} url={`/users/delete/`} text={"Delete"} onClick={this.onSubmitHandlerDelete} />}
+                        {(isAdmin || isRoot) && <Button buttonClass={"btn App-button-primary btn-lg m-3"} url={`/users/all`} text={"All Users"} />} 
+                        
                     </div >
                 </div >
-                {/* <NavLink
-                    className="btn App-button-primary btn-lg m-3"
-                    to="/"
-                    role="button">
-                    Go to Home
-                </NavLink> */}
 
                 <hr className="my-2 mb-3 mt-3 col-md-8 mx-auto" />
             </div >
@@ -156,20 +193,4 @@ export default class ProfilePage extends Component {
         )
     }
 
-    // return (
-
-    //     <Fragment>
-    //         <h1>Hello from Profile Page!</h1>
-
-    //         <div classNameName="text-center">
-    //             <NavLink
-    //                 classNameName="btn App-button-primary btn-lg m-3"
-    //                 to="/"
-    //                 role="button">
-    //                 Home
-    //         </NavLink>
-    //         </div>
-
-    //     </Fragment>
-    // )
 }
