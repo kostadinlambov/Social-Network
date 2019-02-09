@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import '../../styles/Register.css'
-import requester from '../../infrastructure/requester'
+import { requester, observer } from '../../infrastructure'
 import Input from '../common/Input'
 
 export default class RegisterPage extends Component {
@@ -13,7 +13,7 @@ export default class RegisterPage extends Component {
             password: '',
             confirmPassword: '',
             firstName: '',
-            firstNameError: '',
+            // firstNameError: '',
             lastName: '',
             address: '',
             city: '',
@@ -35,31 +35,34 @@ export default class RegisterPage extends Component {
         event.preventDefault();
         console.log('event: ', event);
         debugger;
-        const { firstNameError, ...otherProps } = this.state;
+        // const { firstNameError, ...otherProps } = this.state;
 
-        requester.post('/users/register', { ...otherProps }, (response) => {
+        requester.post('/users/register', { ...this.state }, (response) => {
 
             console.log('response: ', response)
             debugger;
-            this.props.history.push('/login');
 
-            // if(response.success == true){
-            //     observer.trigger(observer.events.notification,  { type: 'success', message: response.message });
 
-            // this.setState({ fireRedirect: true })
-            // }else {
-            //     observer.trigger(observer.events.notification, { type: 'error', message: response.message });
-            //     this.setState({
-            //         username:'',
-            //         email:'',
-            //         password:'',
-            //         confirmPassword:'',
-            //         firstName:'',
-            //         lastName:'',
-            //         adress:'',
-            //         city:''
-            //     })
-            // }
+            if (response.success === true) {
+                console.log('success message: ',  response.message);
+                debugger;
+                observer.trigger(observer.events.notification, { type: 'success', message: response.message });
+                this.props.history.push('/login');
+            } else {
+                console.log('error message: ',  response.message);
+                debugger;
+                observer.trigger(observer.events.notification, { type: 'error', message: response.message });
+                // this.setState({
+                //     username: '',
+                //     email: '',
+                //     password: '',
+                //     confirmPassword: '',
+                //     firstName: '',
+                //     lastName: '',
+                //     address: '',
+                //     city: ''
+                // })
+            }
 
         })
     }
@@ -68,7 +71,7 @@ export default class RegisterPage extends Component {
     render() {
         return (
             <div className="container">
-                  <h1 className="mt-5 mb-5 text-center font-weight-bold ">Register</h1>
+                <h1 className="mt-5 mb-5 text-center font-weight-bold ">Register</h1>
                 <form className="Register-form-container" onSubmit={this.onSubmitHandler}>
 
                     <div className="section-container">
@@ -128,7 +131,7 @@ export default class RegisterPage extends Component {
                                     value={this.state.password}
                                     onChange={this.onChangeHandler}
                                     aria-describedby="passwordHelp"
-                                    placeholder="Enter city"
+                                    placeholder="Enter password"
                                 />
                                 <small id="passwordHelp" className="form-text text-muted">We'll never share your password with anyone else.</small>
                             </div>

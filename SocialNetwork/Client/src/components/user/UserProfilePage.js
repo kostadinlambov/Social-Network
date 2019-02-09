@@ -77,27 +77,6 @@ export default class UserProfilePage extends Component {
         const isAdmin = userService.isAdmin();
         const isRoot = userService.isRoot();
 
-
-        // const deleteButton = (
-        //     <button
-        //         type="button"
-        //         className="btn btn-danger m-5"
-        //         onClick={this.onSubmitHandlerDelete.bind(this)}>
-        //         Delete
-        //     </button>
-        // )
-
-        // const editButton = (
-        //     <button
-        //         type="button"
-        //         className="btn btn-warning m-5"
-        //         onClick={this.onSubmitHandlerEdit.bind(this)}>
-        //         Edit
-        //         {/* <Link to={'/tournaments/edit/' + this.state.id} className="editPost">Edit</Link> */}
-        //     </button>
-        // )
-
-
         debugger;
         return (
             <div className="container mx-auto text-center" >
@@ -180,7 +159,7 @@ export default class UserProfilePage extends Component {
                         {(isAdmin || isRoot) && <Button buttonClass={"btn App-button-primary btn-lg m-3"} url={`/users/all`} text={"All Users"} />} */}
 
                         {<ButtonWithClickEvent buttonClass={"btn App-button-primary btn-lg m-3"} url={`/users/edit/`} text={"Edit"} onClick={this.onSubmitHandlerEdit} />}
-                        {(isAdmin || isRoot) && <ButtonWithClickEvent buttonClass={"btn App-button-primary btn-lg m-3"} url={`/users/delete/`} text={"Delete"} onClick={this.onSubmitHandlerDelete} />}
+                        {((isAdmin || isRoot) && !userService.isLoggedInUser(this.state.username)) && <ButtonWithClickEvent buttonClass={"btn App-button-primary btn-lg m-3"} url={`/users/delete/`} text={"Delete"} onClick={this.onSubmitHandlerDelete} />}
                         {(isAdmin || isRoot) && <Button buttonClass={"btn App-button-primary btn-lg m-3"} url={`/users/all`} text={"All Users"} />} 
                         
                     </div >

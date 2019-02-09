@@ -11,7 +11,9 @@ export default class HomePage extends Component {
     }
 
     render() {
-        let currentUserId = userService.getUserId();
+        const isAdmin = userService.isAdmin();
+        const isRoot = userService.isRoot();
+        const currentUserId = userService.getUserId();
         let homepageView;
 
         if (!localStorage.getItem('token')) {
@@ -23,7 +25,7 @@ export default class HomePage extends Component {
                     <hr className="my-2 mb-3 mt-3 col-md-8 mx-auto"></hr>
                     <p className="lead">
                         <NavLink className="btn App-button-primary btn-lg m-3" to="/login" role="button">Login</NavLink>
-                        <NavLink className="btn App-button-primary btn-lg m-3" to="/register" role="button">Register</NavLink>
+                      <NavLink className="btn App-button-primary btn-lg m-3" to="/register" role="button">Register</NavLink>
                     </p>
                 </div>
             )
@@ -39,6 +41,7 @@ export default class HomePage extends Component {
                             <p className="lead">
                                 <NavLink className="btn App-button-primary btn-lg m-3" to="/" role="button">Home</NavLink>
                                 <NavLink className="btn App-button-primary btn-lg m-3" to={`/profile/${currentUserId}`} role="button">Profile</NavLink>
+                                { (isAdmin || isRoot) &&  <NavLink className="btn App-button-primary btn-lg m-3" to={`/users/all`} role="button">All Users</NavLink>}
                             </p>
 
                         </div>

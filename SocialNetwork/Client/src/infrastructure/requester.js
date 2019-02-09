@@ -52,6 +52,26 @@ export default {
             })
     },
 
+    delete: (endpoint, data, callback) => {
+        fetch(BASE_URL + endpoint, {
+            method: 'DELETE',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+
+            .then(res => res.json())
+            .then(callback)
+            // .then(()=>console.log('updated!!!'))
+            .catch(error => {
+
+                // observer.trigger(observer.events.notification, { type: 'success', message: error })
+                console.log('Fetch Error (DELETE): ', error)
+            })
+    },
+
     update: (data) => {
         return fetch(BASE_URL + '/users/update', {
             method: 'put',

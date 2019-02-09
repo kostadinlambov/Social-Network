@@ -86,5 +86,29 @@ export default {
         }
 
         return false;
-    }
+    },
+
+
+    isLoggedInUser(username) {
+        const token = localStorage.getItem('token')
+        if (token !== null && token !== undefined) {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+
+            if (payload) {
+                const loggedInUserName = payload['sub'];
+                if (username === loggedInUserName) {
+                    return true;
+                }
+                return false;
+            }
+        }
+    },
+
+    checkIfIsRoot(role) {
+        if (role === 'ROOT') {
+          return true;
+        }
+    
+        return false;
+      }
 }

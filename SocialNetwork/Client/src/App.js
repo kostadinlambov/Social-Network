@@ -7,8 +7,7 @@ import HomePage from './components/auth/HomePage';
 import LoginPage from './components/auth/LoginPage';
 import { withRootAuthorization, withAdminAuthorization } from './hocs/withAuthorization';
 import ErrorPage from './components/common/ErrorPage';
-import {UserProfilePage, UserEditPage, UserDeletePage} from './components/user';
-
+import {UserProfilePage, UserEditPage, UserDeletePage, UserAllPage} from './components/user';
 
 class App extends Component {
   constructor(props) {
@@ -40,6 +39,7 @@ class App extends Component {
           {/* <Route exact path="/profile" component={withAdminAuthorization(ProfilePage)} /> */}
           {loggedIn && <Route exact path="/users/edit/:id" component={UserEditPage} />}
           {loggedIn && <Route path="/users/delete/:id" component={withRootAuthorization(UserDeletePage)} />}
+          {loggedIn && <Route path="/users/all" component={withRootAuthorization(UserAllPage)} />}
 
           <Route exact path="/error" component={ErrorPage} />
           <Route component={ErrorPage} />

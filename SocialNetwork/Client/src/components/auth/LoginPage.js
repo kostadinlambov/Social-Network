@@ -93,7 +93,7 @@ export default class LoginPage extends Component {
                             value={this.state.password}
                             onChange={this.onChangeHandler}
                             aria-describedby="passwordHelp"
-                            placeholder="Enter city"
+                            placeholder="Enter password"
                         />
                         <small id="passwordHelp" className="form-text text-muted">We'll never share your password with anyone else.</small>
                     </div>
