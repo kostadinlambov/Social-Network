@@ -38,8 +38,8 @@ class App extends Component {
           {loggedIn && <Route exact path="/profile/:id" component={UserProfilePage} />}
           {/* <Route exact path="/profile" component={withAdminAuthorization(ProfilePage)} /> */}
           {loggedIn && <Route exact path="/users/edit/:id" component={UserEditPage} />}
-          {loggedIn && <Route path="/users/delete/:id" component={withRootAuthorization(UserDeletePage)} />}
-          {loggedIn && <Route path="/users/all" component={withRootAuthorization(UserAllPage)} />}
+          {loggedIn && <Route path="/users/delete/:id" component={withAdminAuthorization(UserDeletePage)} />}
+          {loggedIn && <Route path="/users/all" component={withAdminAuthorization(UserAllPage)} />}
 
           <Route exact path="/error" component={ErrorPage} />
           <Route component={ErrorPage} />

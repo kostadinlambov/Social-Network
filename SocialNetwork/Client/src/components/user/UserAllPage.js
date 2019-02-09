@@ -13,7 +13,6 @@ export default class UserAllPage extends Component {
     }
 
     componentDidMount() {
-
         debugger;
         requester.get('/users/all', (response) => {
             debugger;
@@ -27,35 +26,14 @@ export default class UserAllPage extends Component {
                 this.setState({
                     userArr: response['payload']
                 })
-
                 console.log('all users state', this.state)
-
-                // this.props.history.push('/login');
             } else {
                 console.log('error message: ', response.message);
                 debugger;
                 observer.trigger(observer.events.notification, { type: 'error', message: response.message });
-                // this.setState({
-                //     username: '',
-                //     email: '',
-                //     password: '',
-                //     confirmPassword: '',
-                //     firstName: '',
-                //     lastName: '',
-                //     address: '',
-                //     city: ''
-                // })
             }
-
-
-
-
-
             debugger;
-
         });
-
-
     }
 
     render() {
@@ -73,30 +51,10 @@ export default class UserAllPage extends Component {
                         </tr>
                     </thead>
                     <tbody>
-
-                        {this.state.userArr.map((user, i) => <UserRow key={user.id} index={i + 1} {...user} />)}
-
-
-
-                        {/* <h5>
-              <button  className="btn btn-success m-1" (click) = "promote(item.id)" *ngIf="!isRoot(item.role) && !isLoggedInUser(item.username)">Promote</button>
-            </h5>
-            <h5>
-              <button className="btn btn-warning m-1" (click) = "demote(item.id)" *ngIf="!isRoot(item.role)  && !isLoggedInUser(item.username)">Demote</button>
-            </h5>
-            <h5>
-              <button  className="btn btn-secondary m-1"  routerLink="/user/details/{{item.id}}" >Details</button>
-            </h5> */}
-
+                        {this.state.userArr.map((user, i) => <UserRow key={user.id} index={i + 1} {...user} {...this.props} />)}
                     </tbody>
                 </table>
             </div>
-
-
         )
     }
-
-
-
-
 }
