@@ -6,7 +6,8 @@ import Button from './Button';
 import BackButton from './BackButtonWithProps';
 import BackButtonWithContext from './BackButtonWithContext';
 import ButtonWithClickEvent from './ButtonWithClickEvent';
-
+import ErrorPage from './ErrorPage';
+import ToastComponent from './ToastComponent';
 
 export{
     Footer,
@@ -16,5 +17,7 @@ export{
     BackButton,
     BackButtonWithContext,
     ButtonWithClickEvent,
-    Notifications 
+    Notifications,
+    ErrorPage,
+    ToastComponent
 };

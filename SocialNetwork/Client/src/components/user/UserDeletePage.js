@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { userService, requester, observer } from '../../infrastructure';
 import {withRootAuthorization} from '../../hocs/withAuthorization'
 import { Button, ButtonWithClickEvent } from '../common'
+import { toast } from 'react-toastify';
+import { ToastComponent } from '../common'
 
 
  export default class UserDeletePage extends Component {
@@ -53,13 +55,18 @@ import { Button, ButtonWithClickEvent } from '../common'
             debugger;
             if (response.success === true) {
 
-                // observer.trigger(observer.events.loginUser, res.username)
-                observer.trigger(observer.events.notification, { type: 'success', message: response.message })
+                toast.success(<ToastComponent.successToast text={response.message} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+                // observer.trigger(observer.events.notification, { type: 'success', message: response.message })
                 this.props.history.push(`/`);
 
                 this.setState({ fireRedirect: true })
             } else {
-                observer.trigger(observer.events.notification, { type: 'error', message: response.message });
+                toast.error(<ToastComponent.errorToast text={response.message} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+                // observer.trigger(observer.events.notification, { type: 'error', message: response.message });
             }
         })
     }

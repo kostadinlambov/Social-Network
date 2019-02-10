@@ -1,0 +1,30 @@
+#infoBox, #errorBox, #loadingBox {
+    /* width: 80%;
+    margin: 10px auto;
+    color: white;
+    text-align: center;
+    padding: 5px;
+    border-radius: 3px; */
+}
+
+#loadingBox {
+    background: #7CB3E9;
+}
+
+#infoBox {
+    background: rgb(81, 163, 81);
+}
+
+#errorBox {
+    background: rgb(189, 54, 47) ;
+}
+
+.notification-container {
+    /* background: green; */
+    color: white;
+    padding: 16px;
+    position: absolute;
+    top: 2rem;
+    right: 6rem;
+    z-index: 999;
+}

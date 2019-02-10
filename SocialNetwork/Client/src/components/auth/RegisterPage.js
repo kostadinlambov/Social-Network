@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import '../../styles/Register.css'
 import { requester, observer } from '../../infrastructure'
 import Input from '../common/Input'
+import { toast } from 'react-toastify';
+import { ToastComponent } from '../common'
 
 export default class RegisterPage extends Component {
     constructor(props) {
@@ -46,12 +48,18 @@ export default class RegisterPage extends Component {
             if (response.success === true) {
                 console.log('success message: ',  response.message);
                 debugger;
-                observer.trigger(observer.events.notification, { type: 'success', message: response.message });
+                toast.success(<ToastComponent.successToast text={response.message} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+                // observer.trigger(observer.events.notification, { type: 'success', message: response.message });
                 this.props.history.push('/login');
             } else {
                 console.log('error message: ',  response.message);
                 debugger;
                 observer.trigger(observer.events.notification, { type: 'error', message: response.message });
+                toast.error(<ToastComponent.errorToast text={response.message} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
                 // this.setState({
                 //     username: '',
                 //     email: '',

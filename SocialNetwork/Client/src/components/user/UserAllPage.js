@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import UserRow from './UserRow';
 import { requester, observer } from '../../infrastructure/'
+import { toast } from 'react-toastify';
+import { ToastComponent } from '../common'
 
 
 export default class UserAllPage extends Component {
@@ -21,7 +23,10 @@ export default class UserAllPage extends Component {
             if (response.success === true) {
                 console.log('success message: ', response.message);
                 debugger;
-                observer.trigger(observer.events.notification, { type: 'success', message: response.message });
+                toast.success(<ToastComponent.successToast text={response.message} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+                // observer.trigger(observer.events.notification, { type: 'success', message: response.message });
 
                 this.setState({
                     userArr: response['payload']
@@ -30,7 +35,10 @@ export default class UserAllPage extends Component {
             } else {
                 console.log('error message: ', response.message);
                 debugger;
-                observer.trigger(observer.events.notification, { type: 'error', message: response.message });
+                toast.error(<ToastComponent.errorToast text={response.message} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+                // observer.trigger(observer.events.notification, { type: 'error', message: response.message });
             }
             debugger;
         });

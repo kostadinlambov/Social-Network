@@ -4,7 +4,11 @@ import requester from '../../infrastructure/requester'
 import Input from '../common/Input'
 import observer from '../../infrastructure/observer';
 import userService from '../../infrastructure/userService';
+import { toast } from 'react-toastify';
+import { ToastComponent } from '../common'
 // import userService from 
+
+
 
 export default class LoginPage extends Component {
     constructor(props) {
@@ -31,42 +35,40 @@ export default class LoginPage extends Component {
         event.preventDefault();
         console.log('event: ', event);
         debugger;
-        // const { firstNameError, ...otherProps } = this.state;
 
         requester.post('/login', { ...this.state }, (response) => {
             console.log('response: ', response)
-            localStorage.setItem('token', response);
-
-            observer.trigger(observer.events.loginUser, userService.getUsername());
             debugger;
-            this.props.history.push('/');
-
-            // if(response.success == true){
-            //     observer.trigger(observer.events.notification,  { type: 'success', message: response.message });
-
-            // this.setState({ fireRedirect: true })
-            // }else {
-            //     observer.trigger(observer.events.notification, { type: 'error', message: response.message });
-            //     this.setState({
-            //         username:'',
-            //         email:'',
-            //         password:'',
-            //         confirmPassword:'',
-            //         firstName:'',
-            //         lastName:'',
-            //         adress:'',
-            //         city:''
-            //     })
-            // }
+            if (response.error) {
+                debugger;
+                // observer.trigger(observer.events.notification, { type: 'error', message: 'Incorrect credentials!' });
+                toast.error(<ToastComponent.errorToast text={' Incorrect credentials!'} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+            } else {
+                debugger;
+                localStorage.setItem('token', response);
+                observer.trigger(observer.events.loginUser, userService.getUsername());
+                // observer.trigger(observer.events.notification, { type: 'success', message: 'You have successfully logged in!' });
+                toast.success(<ToastComponent.successToast text={' You have successfully logged in!'} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+                debugger;
+                this.props.history.push('/');
+            }
 
         })
     }
 
-
     render() {
         return (
+
             <div className="container">
-                  <h1 className="mt-5 mb-5 text-center font-weight-bold ">Login</h1>
+                <div>
+                    <button onClick={this.notify}>Notify</button>;
+                </div>
+
+                <h1 className="mt-5 mb-5 text-center font-weight-bold ">Login</h1>
                 <form className="Login-form-container" onSubmit={this.onSubmitHandler}>
                     <div className="form-group">
                         <label htmlFor="username">Username</label>
@@ -111,14 +113,3 @@ export default class LoginPage extends Component {
         )
     }
 };
-
-
-{/* <div className="form-group">
-                        <Input
-                            name="email"
-                            type="email"
-                            value={this.state.email}
-                            onChange={this.onChangeHandler}
-                            label="Email address"
-                        />
-                    </div> */}

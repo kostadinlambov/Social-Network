@@ -1,13 +1,12 @@
 import React, { Component, Fragment } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import './styles/App.css';
-import { Footer, Header } from './components/common';
-import RegisterPage from './components/auth/RegisterPage';
-import HomePage from './components/auth/HomePage';
-import LoginPage from './components/auth/LoginPage';
-import { withRootAuthorization, withAdminAuthorization } from './hocs/withAuthorization';
-import ErrorPage from './components/common/ErrorPage';
+import { Footer, Header, Notifications, ErrorPage } from './components/common';
+import {HomePage,LoginPage, RegisterPage } from './components/auth';
 import {UserProfilePage, UserEditPage, UserDeletePage, UserAllPage} from './components/user';
+import { withRootAuthorization, withAdminAuthorization } from './hocs/withAuthorization';
+import { ToastContainer, toast, Slide, Zoom, Flip, Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css'
 
 class App extends Component {
   constructor(props) {
@@ -21,7 +20,6 @@ class App extends Component {
     this.props.history.push('/');
   }
 
-
   render() {
     const loggedIn = localStorage.getItem('token');
     console.log(localStorage.getItem('token'))
@@ -29,7 +27,11 @@ class App extends Component {
     debugger;
     return (
       <Fragment>
+        
         <Header loggedIn={localStorage.getItem('token') != null} onLogout={this.onLogout} />
+        <Notifications />
+        <ToastContainer transition={Zoom} closeButton={false}/>
+      
         <Switch>
           <Route exact path="/" component={HomePage} />
           {!loggedIn && <Route exact path="/register" component={RegisterPage} />}
@@ -40,7 +42,6 @@ class App extends Component {
           {loggedIn && <Route exact path="/users/edit/:id" component={UserEditPage} />}
           {loggedIn && <Route path="/users/delete/:id" component={withAdminAuthorization(UserDeletePage)} />}
           {loggedIn && <Route path="/users/all" component={withAdminAuthorization(UserAllPage)} />}
-
           <Route exact path="/error" component={ErrorPage} />
           <Route component={ErrorPage} />
         </Switch>

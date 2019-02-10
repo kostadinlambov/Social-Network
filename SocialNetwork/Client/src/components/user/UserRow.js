@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { userService, observer, requester } from '../../infrastructure'
+import { toast } from 'react-toastify';
+import { ToastComponent } from '../common'
 
 export default class UserRow extends Component {
     constructor(props) {
@@ -28,10 +30,16 @@ export default class UserRow extends Component {
             debugger;
             if (response.success) {
                 this.setState({role: 'ADMIN'})
-                observer.trigger(observer.events.loginUser, userService.getUsername());
+                toast.success(<ToastComponent.successToast text={response.message} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+                // observer.trigger(observer.events.notification, { type: 'success', message: response.message });
             } else {
                 console.log('error message: ', response.message);
-                observer.trigger(observer.events.notification, { type: 'error', message: response.message });
+                toast.error(<ToastComponent.errorToast text={response.message} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+                // observer.trigger(observer.events.notification, { type: 'error', message: response.message });
             }
         })
     }
@@ -43,12 +51,18 @@ export default class UserRow extends Component {
             console.log(response)
             if (response.success) {
                 this.setState({role: 'USER'})
-                observer.trigger(observer.events.loginUser, userService.getUsername());
+                toast.success(<ToastComponent.successToast text={response.message} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+                // observer.trigger(observer.events.notification, { type: 'success', message: response.message });
                 debugger;
             } else {
                 console.log('error message: ', response.message);
                 debugger;
-                observer.trigger(observer.events.notification, { type: 'error', message: response.message });
+                toast.error(<ToastComponent.errorToast text={response.message} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+                // observer.trigger(observer.events.notification, { type: 'error', message: response.message });
             }
 
         })

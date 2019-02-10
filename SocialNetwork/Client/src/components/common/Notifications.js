@@ -1,6 +1,6 @@
 import React ,{ Component} from 'react';
 import observer from '../../infrastructure/observer';
-// import '../../style/notifications.css'
+import '../../styles/notifications.css'
 
 const DEFAULT_STATE = {
     message: '',
@@ -20,6 +20,7 @@ export default class Notifications extends Component {
     }
 
     showNotification = (data) => {
+        debugger;
         this.setState(DEFAULT_STATE)
         let message = data.message
         let type = data.type
@@ -36,7 +37,7 @@ export default class Notifications extends Component {
     notificationTimeout = () => {
         this.timerHandle = setTimeout(() => {
             this.setState({ display: 'none' })
-        }, 3000)
+        }, 5000)
     }
 
     clearTimer = () => {
@@ -44,13 +45,16 @@ export default class Notifications extends Component {
             clearTimeout(this.timerHandle);
         }
     }
+
     render = () => {
         console.log('render notification')
 
         let notificationId;
+        let caption;
 
         if (this.state.success) {
-            notificationId = 'infoBox'
+            notificationId = 'infoBox';
+            caption = '';
         } else if (this.state.error) {
             notificationId = 'errorBox'
         } else if (this.state.loading) {
@@ -58,9 +62,10 @@ export default class Notifications extends Component {
         }
 
         if (this.state.message) {
-           
-            return (<div id={notificationId} className="notification" style={{ display: this.state.display }}>
-                <span>{this.state.message}</span>
+            // return (<div id={notificationId} className="notification-container" style={{ display: this.state.display }}>
+            return (<div id={notificationId} className="notification-container" style={{ display: this.state.display }}>
+                <div>{'Error!'}</div>
+                <div>{this.state.message}</div>
             </div>)
         } else {
             return null

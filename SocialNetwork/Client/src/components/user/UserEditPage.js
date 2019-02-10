@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { userService, requester } from '../../infrastructure';
 import { Button } from '../common';
+import { toast } from 'react-toastify';
+import { ToastComponent } from '../common'
 
 
 export default class UserEditPage extends Component {
@@ -52,6 +54,9 @@ export default class UserEditPage extends Component {
         requester.put('/users/update', { ...this.state }, (response) => {
             console.log('response: ', response)
             debugger;
+            toast.success(<ToastComponent.successToast text={response.message} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
             this.props.history.push(`/profile/${this.state.id}`);
         })
     }
