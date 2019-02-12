@@ -4,7 +4,6 @@ import { Button } from '../common';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
 
-
 export default class UserEditPage extends Component {
     constructor(props) {
         super(props)
@@ -56,19 +55,57 @@ export default class UserEditPage extends Component {
 
     onSubmitHandler(event) {
         event.preventDefault();
+
+        if (!this.canBeSubmitted()) {
+            return;
+        }
+
         console.log('event: ', event);
         debugger;
-        const {touched, ...otherProps} = this.state;
+        const { touched, ...otherProps } = this.state;
 
         requester.put('/users/update', { ...otherProps }, (response) => {
             console.log('response: ', response)
             debugger;
-            toast.success(<ToastComponent.successToast text={response.message} />, {
-                position: toast.POSITION.TOP_RIGHT
-            });
-            this.props.history.push(`/profile/${this.state.id}`);
+
+            if (response.success === true) {
+                console.log('success message: ', response.message);
+                debugger;
+                toast.success(<ToastComponent.successToast text={response.message} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+
+                this.props.history.push(`/profile/${this.state.id}`);
+
+            } else {
+                console.log('error message: ', response.message);
+                debugger;
+                toast.error(<ToastComponent.errorToast text={response.message} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+
+                this.setState({
+                    id: this.props.location.state.id,
+                    username: this.props.location.state.username,
+                    email: this.props.location.state.email,
+                    firstName: this.props.location.state.firstName,
+                    lastName: this.props.location.state.lastName,
+                    address: this.props.location.state.address,
+                    city: this.props.location.state.city,
+                })
+
+            }
         })
     }
+
+    canBeSubmitted() {
+        const { username, email, firstName, lastName, address, city } = this.state;
+       // const isEnabled = this.buttonEnableFunc();
+       const errors = this.validate(username, email, firstName, lastName, address, city);
+       const isDisabled = Object.keys(errors).some(x => errors[x])
+       return !isDisabled;
+   }
+
 
     handleBlur = (field) => (event) => {
         this.setState({
@@ -96,15 +133,15 @@ export default class UserEditPage extends Component {
         }
     }
 
+   
     render() {
-
         // const { match, location, history } = this.props
         // console.log('match: ', match);
         // console.log('location: ', location);
         // console.log('history: ', history);
         // debugger;
 
-        const { username, email, firstName, lastName,  address, city } = this.state;
+        const { username, email, firstName, lastName, address, city } = this.state;
         // const isEnabled = this.buttonEnableFunc();
         const errors = this.validate(username, email, firstName, lastName, address, city);
         const isEnabled = !Object.keys(errors).some(x => errors[x])

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import '../../styles/FormPages.css'
 import { requester, observer } from '../../infrastructure'
-import Input from '../common/Input'
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
 
@@ -32,7 +31,6 @@ export default class RegisterPage extends Component {
 
         this.onChangeHandler = this.onChangeHandler.bind(this);
         this.onSubmitHandler = this.onSubmitHandler.bind(this);
-        // this.buttonEnableFunc = this.buttonEnableFunc.bind(this);
     }
 
     onChangeHandler(event) {
@@ -48,7 +46,11 @@ export default class RegisterPage extends Component {
         console.log('event: ', event);
         debugger;
 
-        const {touched, ...otherProps} = this.state;
+        if (!this.canBeSubmitted()) {
+            return;
+        }
+
+        const { touched, ...otherProps } = this.state;
 
         requester.post('/users/register', { ...otherProps }, (response) => {
 
@@ -71,19 +73,17 @@ export default class RegisterPage extends Component {
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
-                // this.setState({
-                //     username: '',
-                //     email: '',
-                //     password: '',
-                //     confirmPassword: '',
-                //     firstName: '',
-                //     lastName: '',
-                //     address: '',
-                //     city: ''
-                // })
+
             }
 
         })
+    }
+
+    canBeSubmitted() {
+        const { username, email, firstName, lastName, password, confirmPassword, address, city } = this.state;
+        const errors = this.validate(username, email, firstName, lastName, password, confirmPassword, address, city);
+        const isDisabled = Object.keys(errors).some(x => errors[x])
+        return !isDisabled;
     }
 
     handleBlur = (field) => (event) => {
@@ -114,12 +114,10 @@ export default class RegisterPage extends Component {
         }
     }
 
-
     render() {
         debugger;
 
         const { username, email, firstName, lastName, password, confirmPassword, address, city } = this.state;
-        // const isEnabled = this.buttonEnableFunc();
         const errors = this.validate(username, email, firstName, lastName, password, confirmPassword, address, city);
         const isEnabled = !Object.keys(errors).some(x => errors[x])
 

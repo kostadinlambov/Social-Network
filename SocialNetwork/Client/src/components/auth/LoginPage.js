@@ -6,9 +6,6 @@ import observer from '../../infrastructure/observer';
 import userService from '../../infrastructure/userService';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
-// import userService from 
-
-
 
 export default class LoginPage extends Component {
     constructor(props) {
@@ -22,12 +19,10 @@ export default class LoginPage extends Component {
                 password: false
             }
         };
-
+        
         this.onChangeHandler = this.onChangeHandler.bind(this);
         this.onSubmitHandler = this.onSubmitHandler.bind(this);
     }
-
-    
 
     onChangeHandler(event) {
         console.log('name: ', event.target.name)
@@ -42,7 +37,11 @@ export default class LoginPage extends Component {
         console.log('event: ', event);
         debugger;
 
-        const {touched, ...otherProps} = this.state;
+        if (!this.canBeSubmitted()) {
+            return;
+        }
+
+        const { touched, ...otherProps } = this.state;
 
         requester.post('/login', { ...otherProps }, (response) => {
             console.log('response: ', response)
@@ -68,9 +67,17 @@ export default class LoginPage extends Component {
         })
     }
 
+    canBeSubmitted() {
+        const { username, password } = this.state;
+
+        const errors = this.validate(username, password);
+        const isDisabled = Object.keys(errors).some(x => errors[x])
+        return !isDisabled;
+    }
+
     handleBlur = (field) => (event) => {
         this.setState({
-            touched: {...this.state.touched, [field]: true}
+            touched: { ...this.state.touched, [field]: true }
         });
 
     }
@@ -80,12 +87,10 @@ export default class LoginPage extends Component {
             username: username.length === 0,
             password: password.length === 0
         }
-    } 
+    }
 
     render() {
-
-        const {username, password} = this.state;
-        // const isEnabled = username.length > 0 && password.length> 0; 
+        const { username, password } = this.state;
 
         const errors = this.validate(username, password);
         const isEnabled = !Object.keys(errors).some(x => errors[x])
@@ -96,10 +101,7 @@ export default class LoginPage extends Component {
 
             return hasError ? shouldShow : false;
         }
-        
-        // let errorClass = 
 
-        // let usernameClass = "form-control " + (errors.username ? "error" : "");
 
         return (
 
@@ -121,7 +123,7 @@ export default class LoginPage extends Component {
                             aria-describedby="usernameHelp"
                             placeholder="Enter username"
                         />
-                       {shouldMarkError('username') && <small id="usernameHelp" className="form-text error-text">Username is required!</small>} 
+                        {shouldMarkError('username') && <small id="usernameHelp" className="form-text error-text">Username is required!</small>}
                     </div>
 
                     <div className="form-group">
@@ -137,7 +139,7 @@ export default class LoginPage extends Component {
                             aria-describedby="passwordHelp"
                             placeholder="Enter password"
                         />
-                       {shouldMarkError('password') && <small id="passwordHelp" className="form-text error-text">Password is required!</small>}
+                        {shouldMarkError('password') && <small id="passwordHelp" className="form-text error-text">Password is required!</small>}
                     </div>
 
                     <div className="text-center">
@@ -149,7 +151,6 @@ export default class LoginPage extends Component {
                 <p>{JSON.stringify(this.state, null, 2)}</p>
 
             </div>
-
         )
     }
 };
