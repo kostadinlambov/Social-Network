@@ -9,7 +9,7 @@ export default {
             //     {text}
             // </div>
             <div className="d-flex justify-content-start align-items-center">
-                <div style={{'font-size': '25px' }}>
+                <div style={{'fontSize': '25px' }}>
                     <i className="fas fa-check"></i>
                 </div>
                 <div className="ml-3">
@@ -24,7 +24,7 @@ export default {
 
         return (
             <div className="d-flex justify-content-start align-items-center">
-                <div style={{'font-size': '25px' }}>
+                <div style={{'fontSize': '25px' }}>
                     <i className="fas fa-exclamation-triangle"></i>
                 </div>
                 <div className="ml-3">
@@ -39,7 +39,7 @@ export default {
 
         return (
             <div className="d-flex justify-content-start align-items-center">
-                <div style={{'font-size': '25px' }}>
+                <div style={{'fontSize': '25px' }}>
                     <i class="fas fa-info-circle"></i>
                 </div>
                 <div className="ml-3">

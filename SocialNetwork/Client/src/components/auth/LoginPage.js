@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import '../../styles/Register.css'
-import requester from '../../infrastructure/requester'
-import Input from '../common/Input'
+import '../../styles/FormPages.css';
+import requester from '../../infrastructure/requester';
+import Input from '../common/Input';
 import observer from '../../infrastructure/observer';
 import userService from '../../infrastructure/userService';
 import { toast } from 'react-toastify';
@@ -16,12 +16,18 @@ export default class LoginPage extends Component {
 
         this.state = {
             username: '',
-            password: ''
+            password: '',
+            touched: {
+                username: false,
+                password: false
+            }
         };
 
         this.onChangeHandler = this.onChangeHandler.bind(this);
         this.onSubmitHandler = this.onSubmitHandler.bind(this);
     }
+
+    
 
     onChangeHandler(event) {
         console.log('name: ', event.target.name)
@@ -36,7 +42,9 @@ export default class LoginPage extends Component {
         console.log('event: ', event);
         debugger;
 
-        requester.post('/login', { ...this.state }, (response) => {
+        const {touched, ...otherProps} = this.state;
+
+        requester.post('/login', { ...otherProps }, (response) => {
             console.log('response: ', response)
             debugger;
             if (response.error) {
@@ -60,48 +68,80 @@ export default class LoginPage extends Component {
         })
     }
 
+    handleBlur = (field) => (event) => {
+        this.setState({
+            touched: {...this.state.touched, [field]: true}
+        });
+
+    }
+
+    validate = (username, password) => {
+        return {
+            username: username.length === 0,
+            password: password.length === 0
+        }
+    } 
+
     render() {
+
+        const {username, password} = this.state;
+        // const isEnabled = username.length > 0 && password.length> 0; 
+
+        const errors = this.validate(username, password);
+        const isEnabled = !Object.keys(errors).some(x => errors[x])
+
+        const shouldMarkError = (field) => {
+            const hasError = errors[field];
+            const shouldShow = this.state.touched[field];
+
+            return hasError ? shouldShow : false;
+        }
+        
+        // let errorClass = 
+
+        // let usernameClass = "form-control " + (errors.username ? "error" : "");
+
         return (
 
             <div className="container">
-                <div>
-                    <button onClick={this.notify}>Notify</button>;
-                </div>
 
                 <h1 className="mt-5 mb-5 text-center font-weight-bold ">Login</h1>
                 <form className="Login-form-container" onSubmit={this.onSubmitHandler}>
                     <div className="form-group">
+                        {/* <label htmlFor="username" className={(shouldMarkError('username') ? "error-text-label" : "")}>Username</label> */}
                         <label htmlFor="username">Username</label>
                         <input
                             type="text"
-                            className="form-control"
+                            className={"form-control " + (shouldMarkError('username') ? "error" : "")}
                             id="username"
                             name="username"
                             value={this.state.username}
                             onChange={this.onChangeHandler}
+                            onBlur={this.handleBlur('username')}
                             aria-describedby="usernameHelp"
                             placeholder="Enter username"
                         />
-                        <small id="usernameHelp" className="form-text text-muted">We'll never share your username with anyone else.</small>
+                       {shouldMarkError('username') && <small id="usernameHelp" className="form-text error-text">Username is required!</small>} 
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="password">Password</label>
+                        <label htmlFor="password" >Password</label>
                         <input
                             type="password"
-                            className="form-control"
+                            className={"form-control " + (shouldMarkError('password') ? "error" : "")}
                             id="password"
                             name="password"
                             value={this.state.password}
                             onChange={this.onChangeHandler}
+                            onBlur={this.handleBlur('password')}
                             aria-describedby="passwordHelp"
                             placeholder="Enter password"
                         />
-                        <small id="passwordHelp" className="form-text text-muted">We'll never share your password with anyone else.</small>
+                       {shouldMarkError('password') && <small id="passwordHelp" className="form-text error-text">Password is required!</small>}
                     </div>
 
                     <div className="text-center">
-                        <button type="submit" className="btn App-button-primary btn-lg m-3">Login</button>
+                        <button disabled={!isEnabled} type="submit" className="btn App-button-primary btn-lg m-3">Login</button>
                     </div>
 
                 </form>

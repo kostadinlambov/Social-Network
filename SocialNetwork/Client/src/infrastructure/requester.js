@@ -1,4 +1,7 @@
-import observer from './observer'
+import React from 'react';
+import observer from './observer';
+import { toast } from 'react-toastify';
+import { ToastComponent } from '../components/common';
 
 const BASE_URL = 'http://localhost:8000';
 
@@ -7,10 +10,14 @@ export default {
         fetch(BASE_URL + endpoint)
             .then(data => data.json())
             .then(callback)
-            .catch(err => {
-                observer.trigger(observer.events.notification, { type: 'success', message: err })
+            .catch(error => {
+                // observer.trigger(observer.events.notification, { type: 'success', message: err })
+                toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${error.message}`} />, {
+                    // toast.error(<ToastComponent.errorToast text={`${error.name}: ${error.message}`} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
 
-                console.log('Fetch Error (GET): ', err)
+                console.log('Fetch Error (GET): ', error)
             })
     },
 
@@ -26,9 +33,13 @@ export default {
             .then(res => res.json())
             .then(callback)
             .catch(error => {
-
+                toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${error.message}`} />, {
+                    // toast.error(<ToastComponent.errorToast text={`${error.name}: ${error.message}`} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
                 // observer.trigger(observer.events.notification, { type: 'success', message: error })
-                console.log('Fetch Error (POST): ', error)
+                console.log('Fetch Error (POST): ', error);
+
             })
     },
 
@@ -47,8 +58,12 @@ export default {
             // .then(()=>console.log('updated!!!'))
             .catch(error => {
 
+                toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${error.message}`} />, {
+                    // toast.error(<ToastComponent.errorToast text={`${error.name}: ${error.message}`} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
                 // observer.trigger(observer.events.notification, { type: 'success', message: error })
-                console.log('Fetch Error (PUT): ', error)
+                console.log('Fetch Error (PUT): ', error);
             })
     },
 
@@ -66,9 +81,13 @@ export default {
             .then(callback)
             // .then(()=>console.log('updated!!!'))
             .catch(error => {
+                toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${error.message}`} />, {
+                    // toast.error(<ToastComponent.errorToast text={`${error.name}: ${error.message}`} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
 
                 // observer.trigger(observer.events.notification, { type: 'success', message: error })
-                console.log('Fetch Error (DELETE): ', error)
+                console.log('Fetch Error (DELETE): ', error);
             })
     },
 
@@ -94,8 +113,8 @@ function checkStatus(response) {
     if (response.status >= 200 && response.status < 300) {
         return response
     } else {
-        var error = new Error(response.statusText)
-        error.response = response
-        throw error
+        var error = new Error(response.statusText);
+        error.response = response;
+        throw error;
     }
 }

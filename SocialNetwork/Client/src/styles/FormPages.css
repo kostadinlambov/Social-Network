@@ -1,0 +1,58 @@
+.Register-form-container{
+    /* width: 30%; */
+    margin: auto;
+
+}
+
+.Login-form-container{
+     width: 30%;
+     margin: auto;
+}
+
+h1{
+    text-align: center;
+    margin: 3rem auto;
+    /* margin-top: 5rem;
+    margin-bottom: 5rem; */
+}
+
+.section-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.left-section, .right-section{
+    flex: 0 1 30%;
+    margin: 0 2rem;
+}
+
+.form-group{
+    position: relative;
+    margin-bottom: 3rem; 
+}
+
+.error{
+    border: 1px solid red;
+}
+
+.error-text-label{
+    color: red;
+}
+
+.error-text{
+    color: red;
+    position: absolute;
+    /* text-align: center; */
+    /* background: #F64417;
+    padding: 5px; */
+}
+
+input.error:focus{
+    border-color: rgba(229, 103, 23, 0.8);
+    box-shadow: 0 1px 1px rgba(229, 103, 23, 0.075) inset, 0 0 10px rgba(229, 103, 23, 0.8);
+    outline: 0 none;
+}
+
+
+
