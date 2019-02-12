@@ -19,7 +19,7 @@ export default class LoginPage extends Component {
                 password: false
             }
         };
-        
+
         this.onChangeHandler = this.onChangeHandler.bind(this);
         this.onSubmitHandler = this.onSubmitHandler.bind(this);
     }
@@ -49,9 +49,11 @@ export default class LoginPage extends Component {
             if (response.error) {
                 debugger;
                 // observer.trigger(observer.events.notification, { type: 'error', message: 'Incorrect credentials!' });
-                toast.error(<ToastComponent.errorToast text={' Incorrect credentials!'} />, {
-                    position: toast.POSITION.TOP_RIGHT
+                toast.error(<ToastComponent.errorToast text={' Incorrect credentials!'} />,  {
+                    position: toast.POSITION.TOP_RIGHT,
                 });
+
+                
             } else {
                 debugger;
                 localStorage.setItem('token', response);
@@ -123,7 +125,7 @@ export default class LoginPage extends Component {
                             aria-describedby="usernameHelp"
                             placeholder="Enter username"
                         />
-                        {shouldMarkError('username') && <small id="usernameHelp" className="form-text error-text">Username is required!</small>}
+                        {shouldMarkError('username') && <small id="usernameHelp" className="form-text alert alert-danger">Username is required!</small>}
                     </div>
 
                     <div className="form-group">
@@ -139,7 +141,7 @@ export default class LoginPage extends Component {
                             aria-describedby="passwordHelp"
                             placeholder="Enter password"
                         />
-                        {shouldMarkError('password') && <small id="passwordHelp" className="form-text error-text">Password is required!</small>}
+                        {shouldMarkError('password') && <small id="passwordHelp" className="form-text alert alert-danger">Password is required!</small>}
                     </div>
 
                     <div className="text-center">

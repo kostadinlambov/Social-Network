@@ -23,13 +23,13 @@ h1{
 }
 
 .left-section, .right-section{
-    flex: 0 1 30%;
+    flex: 0 1 36%;
     margin: 0 2rem;
 }
 
 .form-group{
     position: relative;
-    margin-bottom: 3rem; 
+    margin-bottom: 3.0rem; 
 }
 
 .error{
@@ -46,6 +46,16 @@ h1{
     /* text-align: center; */
     /* background: #F64417;
     padding: 5px; */
+}
+
+.alert{
+    position: absolute;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+}
+
+.small, small{
+    /* font-size: 70%; */
 }
 
 input.error:focus{

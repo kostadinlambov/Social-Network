@@ -150,7 +150,7 @@ export default class RegisterPage extends Component {
                                     aria-describedby="usernameHelp"
                                     placeholder="Enter username"
                                 />
-                                {shouldMarkError('username') && <small id="usernameHelp" className="form-text error-text"> {(!this.state.username ? 'Username is required' : 'Username should be at least 4 and maximum 16 characters long.')}</small>}
+                                {shouldMarkError('username') && <small id="usernameHelp" className="form-text alert alert-danger"> {(!this.state.username ? 'Username is required' : 'Username should be at least 4 and maximum 16 characters long.')}</small>}
                             </div>
 
                             <div className="form-group">
@@ -166,7 +166,7 @@ export default class RegisterPage extends Component {
                                     aria-describedby="firstNameHelp"
                                     placeholder="Enter first name"
                                 />
-                                {shouldMarkError('firstName') && <small id="firstNameHelp" className="form-text error-text">{(!this.state.firstName ? 'First Name is required' : 'First Name must start with a capital letter and must contain only letters..')}</small>}
+                                {shouldMarkError('firstName') && <small id="firstNameHelp" className="form-text alert alert-danger">{(!this.state.firstName ? 'First Name is required' : 'First Name must start with a capital letter and contain only letters.')}</small>}
                             </div>
 
                             <div className="form-group">
@@ -182,7 +182,7 @@ export default class RegisterPage extends Component {
                                     aria-describedby="addressHelp"
                                     placeholder="Enter address"
                                 />
-                                {shouldMarkError('address') && <small id="addressHelp" className="form-text error-text">{(!this.state.address ? 'Address is required' : '')}</small>}
+                                {shouldMarkError('address') && <small id="addressHelp" className="form-text alert alert-danger">{(!this.state.address ? 'Address is required' : '')}</small>}
                             </div>
 
                             <div className="form-group">
@@ -198,7 +198,7 @@ export default class RegisterPage extends Component {
                                     aria-describedby="passwordHelp"
                                     placeholder="Enter password"
                                 />
-                                {shouldMarkError('password') && <small id="passwordHelp" className="form-text error-text">{(!this.state.password ? 'Password is required!' : 'Password should be at least 4 and maximum 16 characters long!')}</small>}
+                                {shouldMarkError('password') && <small id="passwordHelp" className="form-text alert alert-danger">{(!this.state.password ? 'Password is required!' : 'Password should be at least 4 and maximum 16 characters long!')}</small>}
                             </div>
                         </section>
 
@@ -217,7 +217,7 @@ export default class RegisterPage extends Component {
                                     placeholder="Enter email"
 
                                 />
-                                {shouldMarkError('email') && <small id="emailHelp" className="form-text error-text">{(!this.state.email ? 'Email is required!' : 'Invalid e-mail address!')}</small>}
+                                {shouldMarkError('email') && <small id="emailHelp" className="form-text alert alert-danger">{(!this.state.email ? 'Email is required!' : 'Invalid e-mail address!')}</small>}
                             </div>
 
                             <div className="form-group">
@@ -233,7 +233,7 @@ export default class RegisterPage extends Component {
                                     aria-describedby="lastNameHelp"
                                     placeholder="Enter last name"
                                 />
-                                {shouldMarkError('lastName') && <small id="lastNameHelp" className="form-text error-text">{(!this.state.lastName ? 'Last Name is required!' : 'Last Name must start with a capital letter and must contain only letters..')}</small>}
+                                {shouldMarkError('lastName') && <small id="lastNameHelp" className="form-text alert alert-danger">{(!this.state.lastName ? 'Last Name is required!' : 'Last Name must start with a capital letter and contain only letters.')}</small>}
                             </div>
 
                             <div className="form-group">
@@ -249,7 +249,7 @@ export default class RegisterPage extends Component {
                                     aria-describedby="cityHelp"
                                     placeholder="Enter city"
                                 />
-                                {shouldMarkError('city') && <small id="cityHelp" className="form-text error-text">{(!this.state.city ? 'City is required!' : '')}</small>}
+                                {shouldMarkError('city') && <small id="cityHelp" className="form-text alert alert-danger">{(!this.state.city ? 'City is required!' : '')}</small>}
                             </div>
 
                             <div className="form-group">
@@ -265,7 +265,7 @@ export default class RegisterPage extends Component {
                                     aria-describedby="confirmPasswordHelp"
                                     placeholder="Confirm your password"
                                 />
-                                {shouldMarkError('confirmPassword') && <small id="confirmPasswordHelp" className="form-text error-text">Passwords do not match.</small>}
+                                {shouldMarkError('confirmPassword') && <small id="confirmPasswordHelp" className="form-text alert alert-danger">Passwords do not match.</small>}
                             </div>
                         </section>
                     </div>

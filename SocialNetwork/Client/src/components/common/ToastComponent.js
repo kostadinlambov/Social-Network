@@ -8,7 +8,7 @@ export default {
             //     <i className="fas fa-check mr-1"></i>
             //     {text}
             // </div>
-            <div className="d-flex justify-content-start align-items-center">
+            <div className="d-flex justify-content-start align-items-center" >
                 <div style={{'fontSize': '25px' }}>
                     <i className="fas fa-check"></i>
                 </div>
