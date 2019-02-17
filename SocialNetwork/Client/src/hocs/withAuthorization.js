@@ -45,6 +45,10 @@ function withAuthorization(WrapperComponent, roles) {
     }
 }
 
+export function withUserAuthorization(Component) {
+    return withAuthorization(Component, ['USER', 'ADMIN', 'ROOT'])
+}
+
 export function withAdminAuthorization(Component) {
     return withAuthorization(Component, ['ADMIN', 'ROOT'])
 }

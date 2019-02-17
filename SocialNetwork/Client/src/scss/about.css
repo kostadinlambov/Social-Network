@@ -1,0 +1,192 @@
+
+
+
+section.personal-info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: var(--default-box-shadow);
+
+    
+
+}
+
+section.hobbies-education-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+
+section.hobbies-and-interests {
+    width: 100%;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: var(--default-box-shadow);
+    margin-bottom: 1rem;
+}
+
+section.education-and-employement {
+    width: 100%;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: var(--default-box-shadow);
+}
+
+
+.section-title {
+    padding: 23px 25px 18px;
+    border-bottom: 1px solid silver;
+}
+
+article.personal-info-article,
+article.hobbies-and-interests-article,
+article.education-and-employement-article {
+    padding: 24px;
+}
+
+.info-category {
+    padding: 15px 0;
+    display: flex;
+    justify-content: space-between;
+    justify-items: flex-start;
+}
+
+.info-category-title {
+    flex: 0 0 30%;
+    font-weight: 500;
+    font-size: 0.812rem;
+    color: #515365;
+    font-weight: 500;
+}
+
+
+.info-category-description {
+    flex: 0 0 70%;
+    color: #888da8;
+    overflow: hidden;
+    font-size: 0.812rem;
+}
+
+//#########################
+// other-social-networks
+
+.other-social-networks-title {
+    padding: 35px 10px 18px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid silver;
+}
+
+.social-wrapper>button {
+    width: 100%;
+}
+
+.social-wrapper>button.button-twitter {
+    width: 100%;
+    background: rgb(124, 90, 194)
+}
+
+.social-wrapper>button.button-dribbble {
+    width: 100%;
+    background: rgb(248, 91, 142)
+}
+
+
+.social-wrapper>button>i {
+    padding-right: 5px;
+}
+
+.social-wrapper>button.button-twitter:hover,
+.social-wrapper>button.button-dribbble:hover {
+    background: rgb(64, 163, 244);
+    color: white;
+    border: 1px solid white;
+    box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.3);
+}
+
+
+
+
+//#########################
+// hobbies-education-wrapper
+
+
+//#############################
+// section.hobbies-and-interests
+
+article.hobbies-and-interests-article {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    justify-items: flex-start;
+}
+
+.column-wrapper-second-section {
+    flex: 1 1 49%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+}
+
+.info-category-second-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 15px 0;
+}
+
+//##################################
+// section.education-and-employement
+
+article.education-and-employement-article {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    justify-items: flex-start;
+}
+
+.column-wrapper-second-section {
+    flex: 1 1 49%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+}
+
+.info-category-second-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 15px 0;
+}
+
+p.duration {
+    margin-bottom: 15px;
+}
+
+
+
+@media screen and (max-width: 900px) {}
+
+
+
+@media screen and (max-width: 600px) {
+
+    section.hobbies-and-interests{
+        margin-bottom: 0;
+    }
+
+
+    article.education-and-employement-article,
+    article.hobbies-and-interests-article {
+        flex-direction: column;
+    }
+
+    
+
+}
+
+@media screen and (max-width: 400px) {}

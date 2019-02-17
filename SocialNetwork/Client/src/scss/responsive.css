@@ -1,0 +1,126 @@
+
+
+
+@media screen and (max-width: 900px) {
+    main {
+        display: block;
+        width: 100%;
+        margin: auto;
+        padding: 0;
+    }
+
+    main .aside-section {
+        flex: 0 0 100%;
+        /* width: 100%; */
+        /* margin: auto; */
+        display: block;
+        width: 100%;
+        margin-top: 0;
+
+    }
+
+    main .main-section {
+        flex: 0 0 100%;
+         /* width: 100%; */
+        /* margin: auto;  */
+        display: block;
+        
+    }
+
+    main .main-article-header nav {
+        margin: -4px auto 0;
+        
+    }
+
+    main .article-friends, 
+    main .aside-article-intro, 
+    main .aside-article-photos{
+        margin-bottom: 0;
+    }
+}
+
+
+
+@media screen and (max-width: 690px) {
+
+    html {
+        font: 14px/1.5 "Helvetica", sans-serif;
+    }
+
+
+    body{
+        display: block;
+        width: 100%;
+    }
+
+    /* header */
+    header .header-container{
+         /* flex-direction: column; */
+        justify-content: center;
+        align-items: center;
+    }
+
+    header .header-section {
+        padding-top: 35%;
+        padding-bottom: 7%;
+    }
+
+    header .header-container{
+        text-align: center;
+    }
+
+    header .img-container {
+        flex: 0 1 28%;
+        /* // width: 5rem; */
+    }
+
+    header .header-content {
+        margin: 1rem;
+    }
+
+    header .header-content h2 {
+        font-size: 1.8rem;
+    }
+
+    header .header-button-container button {
+        font-size: 0.6rem;
+    }
+
+    /* // main */
+
+   
+   
+    main .main-article-shared-content-header{
+        box-shadow:none;
+    }
+
+    main .aside-article-intro, 
+    main .article-friends, 
+    main .aside-article-photos {
+        margin-bottom: 0;
+        /* // box-shadow:none; */
+    }
+
+    main .aside-article-photos, 
+    main .aside-article-friends{
+        padding: 0;
+    }
+
+    main .aside-article-header {
+        padding: 1rem 0 0 1rem;
+    }
+
+    main .aside-article-intro>.aside-article-header{
+        padding: 1rem 0 0 0;
+    }
+
+
+}
+
+@media screen and (max-width: 400px) {
+
+    header .site-logo{
+        padding-right: 1rem;
+    }
+    
+}

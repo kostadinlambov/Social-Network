@@ -13,9 +13,10 @@ export default class Header extends Component {
         observer.subscribe(observer.events.loginUser, this.userLoggedIn)
     }
 
-    userLoggedIn = (username => {
+    userLoggedIn = (username) => {
+        debugger;
         this.setState({ username })
-    })
+    }
 
     render() {
         const role = userService.getRole();
@@ -23,7 +24,7 @@ export default class Header extends Component {
         let isAdmin = userService.isAdmin();
 
         let userId = userService.getUserId();
-        let profileLink = "/profile/"+ userId;
+        let profileLink = "/profile/" + userId;
 
         debugger;
 
@@ -33,9 +34,10 @@ export default class Header extends Component {
         const { loggedIn, onLogout } = this.props;
         debugger;
         return (
-            <div className="custom-header-container">
-                <div className="container ">
-                    {/* <div className="custom-header-container"> */}
+            // <div className="custom-header-container">
+            <div className="navbar-wrapper">
+                {/* <div className="container "> */}
+                    <div className="custom-nav-container">
                     <nav className="navbar navbar-expand-lg navbar-light">
                         <NavLink exact to="/" className="navbar-brand text-white">Social Network</NavLink>
                         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,8 +45,8 @@ export default class Header extends Component {
                         </button>
                         <div className="collapse navbar-collapse d-flex justify-content-between" id="navbarNavDropdown">
                             <ul className="navbar-nav">
-                                 <li className="nav-item active">
-                                    <NavLink exact to="/" className="nav-link text-white" >Home<span className="sr-only">(current)</span></NavLink>
+                                <li className="nav-item active">
+                                    <NavLink exact to={`/home/${userId}`} className="nav-link text-white" >Home<span className="sr-only">(current)</span></NavLink>
                                 </li>
 
                                 {/* <li className="nav-item dropdown text-white">
@@ -68,24 +70,25 @@ export default class Header extends Component {
                             <ul className="navbar-nav d-flex justify-content-end align-items-center">
                                 {loggedIn && <li className="nav-item"><NavLink exact to={`/profile/${userId}`} className="nav-link text-white fas fa-user" > {userService.getUsername()}</NavLink></li>}
 
-                               
+
 
                                 {loggedIn && <li className="nav-item"><NavLink exact to="/frends" className="nav-link text-white" >Find friends!</NavLink></li>}
 
                                 {loggedIn && <li className="nav-item"><NavLink exact to="#" className="nav-link text-white" onClick={onLogout} >Logout</NavLink></li>}
-                               
+
                                 {/* {loggedIn && <li className="nav-item">
                             
                                     <NavLink exact to="javascript:void(0)" style={{ margin: 20, color: 'white' }} onClick={onLogout}>Logout</NavLink>
                                 </li>} */}
 
+                                {!loggedIn && <li className="nav-item">
+                                    <NavLink exact to="/login" className="nav-link text-white" >Login</NavLink>
+                                </li>}
 
                                 {!loggedIn && <li className="nav-item">
                                     <NavLink exact to="/register" className="nav-link text-white" >Register</NavLink>
                                 </li>}
-                                {!loggedIn && <li className="nav-item">
-                                    <NavLink exact to="/login" className="nav-link text-white" >Login</NavLink>
-                                </li>}
+
 
                             </ul>
                         </div>

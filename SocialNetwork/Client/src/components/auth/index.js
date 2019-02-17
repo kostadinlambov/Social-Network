@@ -1,10 +1,10 @@
 import RegisterPage from './RegisterPage';
 import LoginPage from './LoginPage';
-import HomePage from './HomePage';
+import StartPage from './StartPage';
 
 
 export {
     RegisterPage,
     LoginPage,
-    HomePage
+    StartPage
 }

@@ -1,0 +1,95 @@
+.navigation {
+	display: none;
+	position: fixed;
+	top: 0; left: 0; right: 0; bottom: 0;
+	align-items: center;
+	justify-content: center;
+	background: rgba(#fff,0.9);
+
+	ul {
+		padding: 0;
+		margin: 0;
+	}
+
+	li {
+		display: block;
+		list-style: none outside;
+		padding: 1em 0;
+		animation: navitemin 1s 1 ease forwards;
+		opacity: 0;
+		transform: scale(0.1) translate(0, 3rem) rotate(720deg);
+	}
+
+	a {
+		display: block;
+		padding: 1.5em 2.5em;
+		font-size: 1.5em;
+		background: #fff;
+		text-decoration: none;
+		color: #444;
+		border-radius: 0.5rem;
+		box-shadow: 0 0 1.5rem 0.1rem rgba(#000,0.1);
+	}
+
+	a:before {
+		margin-right: 1em;
+	}
+
+	@for $i from 1 through 6 {
+		li:nth-child(#{$i}) { animation-delay: $i * 0.15s; }
+	}
+}
+
+
+#nav-main-toggle {
+	display: none;
+}
+
+.nav-toggle {
+	position: fixed;
+	top: var(--spacing-site, 2rem);
+	left: var(--spacing-site, 2rem);
+	z-index: 1000;
+	font-size: 2rem;
+	padding: 0 0.5rem;
+	animation: navtogglein 0.5s 1 ease-in-out forwards;
+
+	& span {
+		display: none;
+	}
+
+	&:before {
+		content: '\f0c9';
+	}
+
+	&:before {
+		margin-right: 1rem;
+	}
+
+	&#nav-toggle-left {
+
+	}
+
+	&#nav-toggle-right {
+		left: inherit;
+		right: var(--spacing-site, 2rem);
+	}
+}
+
+#nav-main-toggle:checked + .site-header {
+
+   	.navigation {
+		display: flex;
+		z-index: 1000;
+	}
+
+	.nav-toggle:before {
+		content: '\f00d';
+	}
+
+	.nav-toggle {
+		z-index: 1010;
+		animation: jump 0.1s 1 ease-in-out forwards;
+	}
+}
+

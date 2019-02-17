@@ -54,6 +54,11 @@ h1{
     padding: 0.5rem 0.75rem;
 }
 
+.position{
+    position: relative;
+    display: block;
+}
+
 .small, small{
     /* font-size: 70%; */
 }

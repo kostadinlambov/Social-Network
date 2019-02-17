@@ -1,0 +1,70 @@
+@keyframes navtogglein {
+	from {
+		opacity: 0;
+		transform: translate(0, -2rem);
+	}
+
+	to {
+		opacity: 1;
+		transform: translate(0,0);
+	}
+}
+
+@keyframes jump {
+	0% {
+		transform: translate(0,0);
+	}
+
+	50% {
+		transform: translate(0, -0.3rem);
+	}
+
+	100% {
+		transform: translate(0,0);
+	}
+}
+
+@keyframes navitemin {
+	from {
+	}
+
+	to {
+		opacity: 1;
+		transform: scale(1) translate(0,0) rotate(0deg);
+	}
+}
+
+
+@keyframes shake {
+	0% {
+		transform: translate(-2rem,0);
+	}
+
+	25% {
+		transform: translate(2rem, 0);
+	}
+
+	50% {
+		transform: translate(-2rem, 0);
+	}
+
+	75% {
+		transform: translate(2rem, 0);
+	}
+	
+	100% {
+		transform: translate(0,0);
+	}
+}
+
+@keyframes slidein{
+	from{
+	  transform: translateX(-10rem);
+	  /*opacity: 0; */
+	}
+	
+	to{
+	  transform: translate(0);
+	/*  opacity: 1;*/
+	}
+  }

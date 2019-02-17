@@ -30,7 +30,7 @@ export default class UserAllPage extends Component {
 
                 this.setState({
                     userArr: response['payload']
-                })
+                },)
                 console.log('all users state', this.state)
             } else {
                 console.log('error message: ', response.message);
@@ -46,7 +46,7 @@ export default class UserAllPage extends Component {
 
     render() {
         return (
-            <div className="container col-md-8 text-center">
+            <div className="container col-md-8 text-center pt-5">
                 <h1 className="mt-5 mb-5 text-center font-weight-bold display-5">All Users</h1>
                 {/* <hr className="display-3 col-md-10" /> */}
                 <table className="table table-hover mt-3 w-80 mx-auto text-center">

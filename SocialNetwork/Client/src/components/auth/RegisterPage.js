@@ -97,9 +97,9 @@ export default class RegisterPage extends Component {
         debugger;
         const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
         const firstLastNameRegex = /^[A-Z]([a-zA-Z]+)?$/;
-        let testEmail = emailRegex.test(email)
-        let testFirstName = firstLastNameRegex.test(firstName)
-        let testLastName = firstLastNameRegex.test(lastName)
+        const testEmail = emailRegex.test(email)
+        const testFirstName = firstLastNameRegex.test(firstName)
+        const testLastName = firstLastNameRegex.test(lastName)
         console.log('testEmail : ', testEmail)
         debugger;
         return {
@@ -130,7 +130,7 @@ export default class RegisterPage extends Component {
 
 
         return (
-            <div className="container">
+            <div className="container pt-5">
                 <h1 className="mt-5 mb-5 text-center font-weight-bold ">Register</h1>
                 <form className="Register-form-container" onSubmit={this.onSubmitHandler}>
 
@@ -150,7 +150,7 @@ export default class RegisterPage extends Component {
                                     aria-describedby="usernameHelp"
                                     placeholder="Enter username"
                                 />
-                                {shouldMarkError('username') && <small id="usernameHelp" className="form-text alert alert-danger"> {(!this.state.username ? 'Username is required' : 'Username should be at least 4 and maximum 16 characters long.')}</small>}
+                                {shouldMarkError('username') && <small id="usernameHelp" className="form-text alert alert-danger"> {(!this.state.username ? 'Username is required!' : 'Username should be at least 4 and maximum 16 characters long!')}</small>}
                             </div>
 
                             <div className="form-group">
@@ -166,7 +166,7 @@ export default class RegisterPage extends Component {
                                     aria-describedby="firstNameHelp"
                                     placeholder="Enter first name"
                                 />
-                                {shouldMarkError('firstName') && <small id="firstNameHelp" className="form-text alert alert-danger">{(!this.state.firstName ? 'First Name is required' : 'First Name must start with a capital letter and contain only letters.')}</small>}
+                                {shouldMarkError('firstName') && <small id="firstNameHelp" className="form-text alert alert-danger">{(!this.state.firstName ? 'First Name is required!' : 'First Name must start with a capital letter and contain only letters!')}</small>}
                             </div>
 
                             <div className="form-group">
@@ -182,7 +182,7 @@ export default class RegisterPage extends Component {
                                     aria-describedby="addressHelp"
                                     placeholder="Enter address"
                                 />
-                                {shouldMarkError('address') && <small id="addressHelp" className="form-text alert alert-danger">{(!this.state.address ? 'Address is required' : '')}</small>}
+                                {shouldMarkError('address') && <small id="addressHelp" className="form-text alert alert-danger">{(!this.state.address ? 'Address is required!' : '')}</small>}
                             </div>
 
                             <div className="form-group">
@@ -233,7 +233,7 @@ export default class RegisterPage extends Component {
                                     aria-describedby="lastNameHelp"
                                     placeholder="Enter last name"
                                 />
-                                {shouldMarkError('lastName') && <small id="lastNameHelp" className="form-text alert alert-danger">{(!this.state.lastName ? 'Last Name is required!' : 'Last Name must start with a capital letter and contain only letters.')}</small>}
+                                {shouldMarkError('lastName') && <small id="lastNameHelp" className="form-text alert alert-danger">{(!this.state.lastName ? 'Last Name is required!' : 'Last Name must start with a capital letter and contain only letters!')}</small>}
                             </div>
 
                             <div className="form-group">
@@ -265,7 +265,7 @@ export default class RegisterPage extends Component {
                                     aria-describedby="confirmPasswordHelp"
                                     placeholder="Confirm your password"
                                 />
-                                {shouldMarkError('confirmPassword') && <small id="confirmPasswordHelp" className="form-text alert alert-danger">Passwords do not match.</small>}
+                                {shouldMarkError('confirmPassword') && <small id="confirmPasswordHelp" className="form-text alert alert-danger">Passwords do not match!</small>}
                             </div>
                         </section>
                     </div>

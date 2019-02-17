@@ -1,0 +1,61 @@
+form {
+	animation: shake 0.5s 1 ease-in-out forwards;
+}
+
+fieldset, 
+fieldset legend {
+	border: 2px solid #CCC;
+	border-radius: 0.3em;
+	box-shadow: 0 0 2rem 0 rgba(black, 0.1);
+}
+
+fieldset {
+	background: #FFF;
+	padding: 3.5vh 4.5vw 3vh 4.5vw;
+}
+
+fieldset legend {
+	display: inline-block;
+	background: #FFF;
+	padding: 0.6em 2.2em;
+	font-weight: bold;
+}
+
+label {
+	font-weight: bold;
+	display: block;
+}
+
+input[type="text"],
+input[type="password"] {
+	width: 20rem;
+	display: block;
+	border: 2px solid #CCC;
+	padding: 0.4em 1em;
+	border-radius: 0.4em;
+	background: #EEE;
+	outline: none;
+	transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+	background: #FFF;
+	border-color: #333;
+}
+
+input[type="submit"] {
+	display: block;
+	border: 2px solid #000;
+	background: #333;
+	color: #FFF;
+	padding: 0.6em 2.2em;
+	border-radius: 0.4em;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+input[type="submit"]:hover {
+	background: #060;
+	transition: background 0.3s ease, border-color 0.3s ease;
+}

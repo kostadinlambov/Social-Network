@@ -79,7 +79,7 @@ export default class UserProfilePage extends Component {
 
         debugger;
         return (
-            <div className="container mx-auto text-center" >
+            <div className="container mx-auto text-center pt-5" >
 
                 <h1 className="mt-5 mb-5 text-center font-weight-bold ">Account Details</h1>
                 <hr className="my-2 mb-3 mt-3 col-md-8 mx-auto" />

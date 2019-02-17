@@ -57,7 +57,9 @@ export default class LoginPage extends Component {
             } else {
                 debugger;
                 localStorage.setItem('token', response);
-                observer.trigger(observer.events.loginUser, userService.getUsername());
+                
+                // observer.trigger(observer.events.loginUser, userService.getUsername());
+                observer.trigger(observer.events.loginUser, response);
                 // observer.trigger(observer.events.notification, { type: 'success', message: 'You have successfully logged in!' });
                 toast.success(<ToastComponent.successToast text={' You have successfully logged in!'} />, {
                     position: toast.POSITION.TOP_RIGHT
@@ -106,8 +108,7 @@ export default class LoginPage extends Component {
 
 
         return (
-
-            <div className="container">
+            <div className="container pt-5">
 
                 <h1 className="mt-5 mb-5 text-center font-weight-bold ">Login</h1>
                 <form className="Login-form-container" onSubmit={this.onSubmitHandler}>

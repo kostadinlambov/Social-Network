@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom'
 import BackButton from './BackButtonWithProps';
 // import BackButton from './BackButtonWithContext';
 // import softUniLogo from '../../picks/softuniLogo.PNG';
-import socialMedia from '../../picks/Social_Media.jpg';
+import socialMedia from '../../assets/images/Social_Media.jpg';
 
 
 export default class ErrorPage extends Component {
@@ -12,7 +12,7 @@ export default class ErrorPage extends Component {
     }
 
     render = () => (
-        <div className="container text-center">
+        <div className="container text-center pt-5">
             <h1>This page isn't available</h1>
 
             <h3>The link you followed may be broken, or the page may have been removed.</h3>
