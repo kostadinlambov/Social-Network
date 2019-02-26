@@ -1,4 +1,6 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment, lazy, Suspense } from 'react';
+import { Route, Switch, withRouter } from 'react-router-dom';
+
 // import './css/Home.css'
 import TimeLine from './TimeLine';
 import HeaderSection from './HeaderSection';
@@ -7,6 +9,9 @@ import Intro from './Intro';
 import PhotoGallery from './PhotosGallery';
 import FriendsGallery from './FriendsGallery';
 import userService from '../../infrastructure/userService';
+
+
+const UserProfilePage = lazy(() => import('../../components/user/UserProfilePage'))
 
 export default class HomePage extends Component {
     constructor(props) {
@@ -26,42 +31,51 @@ export default class HomePage extends Component {
 
     render() {
         debugger;
+        console.log(this.props.match.url)
+        debugger;
         return (
-
             <Fragment>
-                <HeaderSection userId={this.state.id} />
+            <HeaderSection userId={this.state.id} />
 
-                <main className="site-content">
+            <main className="site-content">
 
-                    {/* <div className="container"> */}
-                    <section className="main-section">
+                {/* <div className="container"> */}
+                <section className="main-section">
 
-                        <TimeLine userId={this.state.id} />
-                        <MainSharedContent userId={this.state.id} />
 
-                        {/* {% include timeline_include.html class="active" %}
-                    {% include main_shared_content_include.html %} */}
+                    <TimeLine userId={this.state.id} />
+                    {/* <MainSharedContent userId={this.state.id} /> */}
+                    <Suspense fallback={<span>Loading...</span>}>
 
-                    </section>
+                        <Route exact path={this.props.match.url + "/:id"} component={UserProfilePage} />
+                            {/* <Route exact path={this.props.match.url + "/profile/:id"} render={() => console.log(this.props.match.url + "/profile/:id")} />} */}
 
-                    <section className="aside-section">
+                        {/* <Route exact path="/error" component={ErrorPage} />
+                        <Route component={ErrorPage} /> */}
+                    </Suspense >
+                    {/* {% include timeline_include.html class="active" %}
+                {% include main_shared_content_include.html %} */}
+
+                </section>
+
+                <section className="aside-section">
                     <Intro userId={this.state.id} />
 
                     <PhotoGallery userId={this.state.id} />
 
                     <FriendsGallery userId={this.state.id} />
 
-                        {/* {% include intro_include.html %}
-                    
-                    {% include photos_include.html %}
-                    
-                    {% include friends_include.html %} */}
+                    {/* {% include intro_include.html %}
+                
+                {% include photos_include.html %}
+                
+                {% include friends_include.html %} */}
 
-                    </section>
+                </section>
 
-                    {/* </div> */}
-                </main>
-            </Fragment>
+            </main>
+        </Fragment>
+           
         );
     }
 }

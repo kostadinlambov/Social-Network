@@ -23,6 +23,7 @@ export default class UserProfilePage extends Component {
     componentDidMount = () => {
         // const userId = userService.getUserId;
         const userId = this.props.match.params.id;
+        // const userId = this.props.userId;
         console.log("current User id: ", userId);
         debugger;
 

@@ -1,10 +1,10 @@
-import RegisterPage from './RegisterPage';
-import LoginPage from './LoginPage';
-import StartPage from './StartPage';
+// import RegisterPage from './RegisterPage';
+// import LoginPage from './LoginPage';
+// import StartPage from './StartPage';
 
 
-export {
-    RegisterPage,
-    LoginPage,
-    StartPage
-}
+// export {
+//     RegisterPage,
+//     LoginPage,
+//     StartPage
+// }

@@ -46,7 +46,7 @@ export default class Navbar extends Component {
                                     <NavLink to="/" className="nav-link " >Social Network</NavLink>
                                 </div>
                                 <div className="nav-search-icon">
-                                    <NavLink to="#"><i className="fas fa-search"></i></NavLink>
+                                    <NavLink  to="#"><i className="fas fa-search"></i></NavLink>
                                 </div>
                                 <div className="nav-search-div">
                                     <input type="text" className="nav-search" placeholder="Search..." />
@@ -63,13 +63,13 @@ export default class Navbar extends Component {
                                     <li><NavLink className="fas fa-user-friends" to="{{ site.baseurl }}/friends"></NavLink></li>
                                     <li><NavLink className="fas fa-camera" to="{{ site.baseurl }}/gallery/"></NavLink></li> */}
 
-                                    {loggedIn && <li className="nav-item"><NavLink exact to={`/profile/${userId}`} className="nav-link  fas fa-user" > {userService.getUsername()}</NavLink></li>}
+                                    {loggedIn && <li className="nav-item"><NavLink exact to={`/profile/${userId}`} className="nav-link  fas fa-user tooltipCustom"  > {userService.getUsername()}<span className="tooltiptextCustom">Profile</span></NavLink></li>}
 
                                     {loggedIn && <li className="nav-item"><NavLink exact to={`/home/${userId}`} className="nav-link ">Home</NavLink></li>}
 
                                     {loggedIn && <li className="nav-item"><NavLink exact to={`/users/all`} className="nav-link " >Find friends!</NavLink></li>}
 
-                                    {loggedIn && <li className="nav-item"><NavLink className="fas fa-user-friends" exact to={`/friends/${userId}`}></NavLink></li>}
+                                    {loggedIn && <li className="nav-item"><NavLink  exact to={`/friends/${userId}`} className="nav-link fas fa-user-friends tooltipCustom"> <span className="tooltiptextCustom">Friends</span></NavLink></li>}
                                     {/* {loggedIn && <li><NavLink className="fas fa-camera" to="{{ site.baseurl }}/gallery/"></NavLink></li>} */}
 
                                     {loggedIn && <li className="nav-item"><NavLink exact to="#" className="nav-link " onClick={onLogout} >Logout</NavLink></li>}
@@ -86,8 +86,8 @@ export default class Navbar extends Component {
                                     {!loggedIn && <li className="nav-item">
                                         <NavLink exact to="/register" className="nav-link" >Register</NavLink>
                                     </li>}
+                                    
 
-                                    <i ></i>
                                 </ul>
                             </nav>
 
