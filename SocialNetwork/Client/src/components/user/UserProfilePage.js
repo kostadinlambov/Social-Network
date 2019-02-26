@@ -49,7 +49,7 @@ export default class UserProfilePage extends Component {
         console.log(this.state.id)
 
         this.props.history.push({
-            pathname: "/users/delete/" + this.state.id,
+            pathname: "/home/users/delete/" + this.state.id,
             state:
                 { ...this.state }
         });
@@ -61,7 +61,7 @@ export default class UserProfilePage extends Component {
         console.log(this.state.id)
 
         this.props.history.push({
-            pathname: "/users/edit/" + this.state.id,
+            pathname: "/home/users/edit/" + this.state.id,
             state:
                 { ...this.state }
         });
@@ -80,9 +80,9 @@ export default class UserProfilePage extends Component {
 
         debugger;
         return (
-            <div className="container mx-auto text-center pt-5" >
+            <div className="container mx-auto text-center " >
 
-                <h1 className="mt-5 mb-5 text-center font-weight-bold ">Account Details</h1>
+                <h1 className="text-center font-weight-bold ">Account Details</h1>
                 <hr className="my-2 mb-3 mt-3 col-md-8 mx-auto" />
                 {/* <div className="d-flex justify-content-center  "> */}
                 <div className="col-md-6 mx-auto text-center">
@@ -159,9 +159,9 @@ export default class UserProfilePage extends Component {
                         {/* {(isAdmin || isRoot) && <Button buttonClass={"btn App-button-primary btn-lg m-3"} url={`/users/delete/${this.state.id}`} text={"Delete"} />}
                         {(isAdmin || isRoot) && <Button buttonClass={"btn App-button-primary btn-lg m-3"} url={`/users/all`} text={"All Users"} />} */}
 
-                        {<ButtonWithClickEvent buttonClass={"btn App-button-primary btn-lg m-3"} url={`/users/edit/`} text={"Edit"} onClick={this.onSubmitHandlerEdit} />}
-                        {((isAdmin || isRoot) && !userService.isLoggedInUser(this.state.username)) && <ButtonWithClickEvent buttonClass={"btn App-button-primary btn-lg m-3"} url={`/users/delete/`} text={"Delete"} onClick={this.onSubmitHandlerDelete} />}
-                        {(isAdmin || isRoot) && <Button buttonClass={"btn App-button-primary btn-lg m-3"} url={`/users/all`} text={"All Users"} />} 
+                        {<ButtonWithClickEvent buttonClass={"btn App-button-primary btn-lg m-3"} url={`/home/users/edit/`} text={"Edit"} onClick={this.onSubmitHandlerEdit} />}
+                        {((isAdmin || isRoot) && !userService.isLoggedInUser(this.state.username)) && <ButtonWithClickEvent buttonClass={"btn App-button-primary btn-lg m-3"} url={`/home/users/delete/`} text={"Delete"} onClick={this.onSubmitHandlerDelete} />}
+                        {(isAdmin || isRoot) && <Button buttonClass={"btn App-button-primary btn-lg m-3"} url={`/home/users/all`} text={"All Users"} />} 
                         
                     </div >
                 </div >

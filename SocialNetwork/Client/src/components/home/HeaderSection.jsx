@@ -52,7 +52,7 @@ const HeaderSection = (props) => {
                             <h2>Bender Rodrigez</h2>
                             <div className="header-button-container">
                                 <button className="button update-info">
-                                    <NavLink to={`/profile/${props.userId}`}>UPDATE INFO</NavLink>
+                                    <NavLink to={`/home/profile/${props.userId}`}>UPDATE INFO</NavLink>
                                 </button>
                                 <button className="button view-activity">
                                     <NavLink to={`/home/${props.userId}`}>VIEW ACTIVITY</NavLink>

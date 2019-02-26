@@ -85,9 +85,9 @@ import { ToastComponent } from '../common'
 
         debugger;
         return (
-            <div className="container mx-auto text-center pt-5" >
+            <div className="container mx-auto text-center " >
 
-                <h1 className="mt-5 mb-5 text-center font-weight-bold alert alert-danger position col-md-10 mx-auto">Are you sure you want to delete this User?</h1>
+                <h1 className="text-center font-weight-bold alert alert-danger position col-md-10 mx-auto">Are you sure you want to delete this User?</h1>
                 <hr className="my-2 mb-3 mt-3 col-md-8 mx-auto" />
                 {/* <div className="d-flex justify-content-center  "> */}
                 <div className="col-md-6 mx-auto text-center">
@@ -160,8 +160,8 @@ import { ToastComponent } from '../common'
                     </table>
                     <hr className="my-2 mb-3 mt-3 col-md-12 mx-auto" />
                     <div className="d-flex justify-content-center ">
-                        {(isAdmin || isRoot) && <ButtonWithClickEvent buttonClass={"btn App-button-primary btn-lg m-3"} url={`/users/delete/`} text={"Delete"} onClick={this.onSubmitHandlerDelete} />}
-                        {(isAdmin || isRoot) && <Button buttonClass={"btn App-button-primary btn-lg m-3"} url={`/users/all`} text={"All Users"} />} 
+                        {(isAdmin || isRoot) && <ButtonWithClickEvent buttonClass={"btn App-button-primary btn-lg m-3"} url={`/home/users/delete/`} text={"Delete"} onClick={this.onSubmitHandlerDelete} />}
+                        {(isAdmin || isRoot) && <Button buttonClass={"btn App-button-primary btn-lg m-3"} url={`/home/users/all`} text={"All Users"} />} 
                     </div >
                 </div >
 

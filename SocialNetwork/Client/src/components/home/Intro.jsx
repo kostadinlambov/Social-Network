@@ -19,7 +19,7 @@ const Intro = (props) => {
                 </div>
 
                 <button className="button update-info">
-                    <NavLink className="about  " exact to={`/profile/${props.userId}`}>UPDATE INFO</NavLink>
+                    <NavLink className="about  " exact to={`/home/profile/${props.userId}`}>UPDATE INFO</NavLink>
                 </button>
                 {/* <!-- <div className="aside-intro-update">
                  <a className="active" href="{{ site.baseurl }}/about">UPDATE INFO</a>

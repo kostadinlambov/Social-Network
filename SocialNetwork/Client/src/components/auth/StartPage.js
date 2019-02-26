@@ -42,7 +42,7 @@ export default class StartPage extends Component {
                             <p className="lead">
                                 <NavLink className="btn App-button-primary btn-lg m-3" to={`/home/${currentUserId}`} role="button">Home</NavLink>
                                 <NavLink className="btn App-button-primary btn-lg m-3" to={`/home/profile/${currentUserId}`} role="button">Profile</NavLink>
-                                {(isAdmin || isRoot) && <NavLink className="btn App-button-primary btn-lg m-3" to={`/users/all`} role="button">All Users</NavLink>}
+                                {(isAdmin || isRoot) && <NavLink className="btn App-button-primary btn-lg m-3" to={`/home/users/all`} role="button">All Users</NavLink>}
                             </p>
 
 

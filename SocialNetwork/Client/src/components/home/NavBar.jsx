@@ -63,13 +63,13 @@ export default class Navbar extends Component {
                                     <li><NavLink className="fas fa-user-friends" to="{{ site.baseurl }}/friends"></NavLink></li>
                                     <li><NavLink className="fas fa-camera" to="{{ site.baseurl }}/gallery/"></NavLink></li> */}
 
-                                    {loggedIn && <li className="nav-item"><NavLink exact to={`/profile/${userId}`} className="nav-link  fas fa-user tooltipCustom"  > {userService.getUsername()}<span className="tooltiptextCustom">Profile</span></NavLink></li>}
+                                    {loggedIn && <li className="nav-item"><NavLink exact to={`/home/profile/${userId}`} className="nav-link  fas fa-user tooltipCustom"  > {userService.getUsername()}<span className="tooltiptextCustom">Profile</span></NavLink></li>}
 
                                     {loggedIn && <li className="nav-item"><NavLink exact to={`/home/${userId}`} className="nav-link ">Home</NavLink></li>}
 
-                                    {loggedIn && <li className="nav-item"><NavLink exact to={`/users/all`} className="nav-link " >Find friends!</NavLink></li>}
+                                    {loggedIn && <li className="nav-item"><NavLink exact to={`/home/users/all`} className="nav-link " >Find friends!</NavLink></li>}
 
-                                    {loggedIn && <li className="nav-item"><NavLink  exact to={`/friends/${userId}`} className="nav-link fas fa-user-friends tooltipCustom"> <span className="tooltiptextCustom">Friends</span></NavLink></li>}
+                                    {loggedIn && <li className="nav-item"><NavLink  exact to={`/home/friends/${userId}`} className="nav-link fas fa-user-friends tooltipCustom"> <span className="tooltiptextCustom">Friends</span></NavLink></li>}
                                     {/* {loggedIn && <li><NavLink className="fas fa-camera" to="{{ site.baseurl }}/gallery/"></NavLink></li>} */}
 
                                     {loggedIn && <li className="nav-item"><NavLink exact to="#" className="nav-link " onClick={onLogout} >Logout</NavLink></li>}

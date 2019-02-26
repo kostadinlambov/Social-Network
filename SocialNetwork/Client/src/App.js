@@ -17,9 +17,9 @@ const LoginPage = lazy(() => import('./components/auth/LoginPage'))
 
 const HomePage = lazy(() => import('./components/home/HomePage'))
 
-const UserProfilePage = lazy(() => import('./components/user/UserProfilePage'))
-const UserEditPage = lazy(() => import('./components/user/UserEditPage'))
-const UserDeletePage = lazy(() => import('./components/user/UserDeletePage'))
+// const UserProfilePage = lazy(() => import('./components/user/UserProfilePage'))
+// const UserEditPage = lazy(() => import('./components/user/UserEditPage'))
+// const UserDeletePage = lazy(() => import('./components/user/UserDeletePage'))
 const UserAllPage = lazy(() => import('./components/user/UserAllPage'))
 
 const ErrorPage = lazy(() => import('./components/common/ErrorPage'))
@@ -53,11 +53,11 @@ class App extends Component {
                 {!loggedIn && <Route exact path="/register" component={RegisterPage} />}
                 {/* {<Route exact path="/register" component={RegisterPage} />} */}
                 {!loggedIn && <Route exact path="/login" component={LoginPage} />}
-                {loggedIn && <Route exact path="/profile/:id" component={UserProfilePage} />}
+                {/* {loggedIn && <Route exact path="/profile/:id" component={UserProfilePage} />} */}
                 {/* <Route exact path="/profile" component={withAdminAuthorization(ProfilePage)} /> */}
-                {loggedIn && <Route exact path="/users/edit/:id" component={UserEditPage} />}
-                {loggedIn && <Route path="/users/delete/:id" component={withAdminAuthorization(UserDeletePage)} />}
-                {loggedIn && <Route path="/users/all" component={withAdminAuthorization(UserAllPage)} />}
+                {/* {loggedIn && <Route exact path="/users/edit/:id" component={UserEditPage} />} */}
+                {/* {loggedIn && <Route path="/users/delete/:id" component={withAdminAuthorization(UserDeletePage)} />} */}
+                {loggedIn && <Route exact path="/home/users/all" component={withAdminAuthorization(UserAllPage)} />}
                 {loggedIn && <Route path="/home/:id" component={withUserAuthorization(HomePage)} />}
                 <Route exact path="/error" component={ErrorPage} />
                 <Route component={ErrorPage} />

@@ -75,7 +75,7 @@ export default class UserEditPage extends Component {
                     position: toast.POSITION.TOP_RIGHT
                 });
 
-                this.props.history.push(`/profile/${this.state.id}`);
+                this.props.history.push(`/home/profile/${this.state.id}`);
 
             } else {
                 console.log('error message: ', response.message);
@@ -153,14 +153,15 @@ export default class UserEditPage extends Component {
             return hasError ? shouldShow : false;
         }
         return (
-            <div className="container pt-5">
-                <h1 className="mt-5 mb-5 text-center font-weight-bold ">Edit Account</h1>
-                <form className="Register-form-container" onSubmit={this.onSubmitHandler}>
+            <div className="container ">
+                <h1 className="text-center font-weight-bold ">Edit Account</h1>
+                <hr className="my-2 mb-3 mt-3 col-md-12 mx-auto"></hr>
+                <form className="Register-form-container  " onSubmit={this.onSubmitHandler}>
 
-                    <div className="section-container">
+                    <div className="section-container w-50 mx-auto text-center">
                         <section className="left-section">
                             <div className="form-group">
-                                <label htmlFor="username" >Username</label>
+                                <label htmlFor="username" className="font-weight-bold" >Username</label>
                                 <input
                                     type="text"
                                     className={"form-control " + (shouldMarkError('username') ? "error" : "")}
@@ -176,7 +177,7 @@ export default class UserEditPage extends Component {
                             </div>
 
                             <div className="form-group">
-                                <label htmlFor="firstName" >First Name</label>
+                                <label htmlFor="firstName" className="font-weight-bold" >First Name</label>
                                 <input
                                     type="text"
                                     className={"form-control " + (shouldMarkError('firstName') ? "error" : "")}
@@ -192,7 +193,7 @@ export default class UserEditPage extends Component {
                             </div>
 
                             <div className="form-group">
-                                <label htmlFor="address" >Address</label>
+                                <label htmlFor="address" className="font-weight-bold" >Address</label>
                                 <input
                                     type="text"
                                     className={"form-control " + (shouldMarkError('address') ? "error" : "")}
@@ -211,7 +212,7 @@ export default class UserEditPage extends Component {
 
                         <section className="right-section">
                             <div className="form-group">
-                                <label htmlFor="email" >Email Address</label>
+                                <label htmlFor="email" className="font-weight-bold">Email Address</label>
                                 <input
                                     type="email"
                                     className={"form-control " + (shouldMarkError('email') ? "error" : "")}
@@ -228,7 +229,7 @@ export default class UserEditPage extends Component {
                             </div>
 
                             <div className="form-group">
-                                <label htmlFor="lastName" >Last Name</label>
+                                <label htmlFor="lastName" className="font-weight-bold">Last Name</label>
                                 <input
                                     type="text"
                                     className={"form-control " + (shouldMarkError('lastName') ? "error" : "")}
@@ -244,7 +245,7 @@ export default class UserEditPage extends Component {
                             </div>
 
                             <div className="form-group">
-                                <label htmlFor="city" >City</label>
+                                <label htmlFor="city" className="font-weight-bold">City</label>
                                 <input
                                     type="text"
                                     className={"form-control " + (shouldMarkError('city') ? "error" : "")}
@@ -261,6 +262,8 @@ export default class UserEditPage extends Component {
 
                         </section>
                     </div>
+
+                    <hr className="my-2 mb-3 mt-3 col-md-12 mx-auto"></hr>
 
                     <div className="text-center">
                         <button disabled={!isEnabled} type="submit" className="btn App-button-primary btn-lg m-3">Edit</button>

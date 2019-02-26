@@ -12,7 +12,7 @@ export default class ErrorPage extends Component {
     }
 
     render = () => (
-        <div className="container text-center pt-5">
+        <div className="container text-center pt-5 mt-5">
             <h1>This page isn't available</h1>
 
             <h3>The link you followed may be broken, or the page may have been removed.</h3>

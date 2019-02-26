@@ -90,7 +90,7 @@ export default class UserRow extends Component {
                             <button className="btn App-button-primary btn-lg m-1" onClick={this.demote} >Demote</button>
                         </h5>}
                     <h5>
-                        <NavLink className="btn App-button-primary btn-lg m-1" to={`/profile/${this.state.id}`} role="button">Profile</NavLink>
+                        <NavLink className="btn App-button-primary btn-lg m-1" to={`/home/profile/${this.state.id}`} role="button">Profile</NavLink>
                     </h5>
                 </td>
             </tr>
