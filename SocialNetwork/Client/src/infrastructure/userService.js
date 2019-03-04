@@ -1,15 +1,4 @@
 
-// let token = localStorage.getItem('token')
-
-// let payload;
-// let role;
-
-// if (token !== null && token !== undefined) {
-//     payload = JSON.parse(atob(token.split('.')[1]));
-//     role = payload['role'];
-// }
-
-
 export default {
     getPayload: () => {
         const token = localStorage.getItem('token')

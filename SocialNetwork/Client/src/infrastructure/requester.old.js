@@ -1,3 +1,9 @@
+import React, {Component} from 'react';
+import observer from './observer';
+import { toast } from 'react-toastify';
+import { ToastComponent } from '../components/common';
+import {Redirect} from 'react-router-dom';
+
 const BASE_URL = 'http://localhost:8000';
 
 const getAuthHeader = () => {
@@ -9,21 +15,35 @@ const getAuthHeader = () => {
 
 }
 
+
 export default {
     get: (endpoint, callback) => {
-        return fetch(BASE_URL + endpoint, {
+        debugger;
+        fetch(BASE_URL + endpoint, {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
                 ...getAuthHeader(),
             },
-        }).then(checkStatus)
+        })
+            .then(checkStatus)
             // .then(data => data.json())
-            .then(callback);
+            .then(callback)
+            .catch(error => {
+                debugger;
+                // observer.trigger(observer.events.notification, { type: 'success', message: err })
+                toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${error.message}`} />, {
+                    // toast.error(<ToastComponent.errorToast text={`${error.name}: ${error.message}`} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+
+                console.log('Fetch Error (GET): ', error)
+            })
     },
 
+
     post: (endpoint, data, callback) => {
-        return fetch(BASE_URL + endpoint, {
+        fetch(BASE_URL + endpoint, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -32,13 +52,25 @@ export default {
             },
 
             body: JSON.stringify(data)
-        }).then(checkStatus)
+        })
+            .then(checkStatus)
             // .then(res => res.json())
-            .then(callback);
+            .then(callback)
+            .catch(error => {
+                debugger;
+                toast.error(<ToastComponent.errorToast text={`${error.message}`} />, {
+                    // toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${error.message}`} />, {
+                    // toast.error(<ToastComponent.errorToast text={`${error.name}: ${error.message}`} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+                // observer.trigger(observer.events.notification, { type: 'success', message: error })
+                console.log('Fetch Error (POST): ', error);
+
+            })
     },
 
     put: (endpoint, data, callback) => {
-        return fetch(BASE_URL + endpoint, {
+        fetch(BASE_URL + endpoint, {
             method: 'PUT',
             headers: {
                 Accept: 'application/json',
@@ -46,12 +78,24 @@ export default {
                 ...getAuthHeader(),
             },
             body: JSON.stringify(data)
-        }).then(checkStatus)
-            .then(callback);
+        })
+
+            .then(res => res.json())
+            .then(callback)
+            // .then(()=>console.log('updated!!!'))
+            .catch(error => {
+
+                toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${error.message}`} />, {
+                    // toast.error(<ToastComponent.errorToast text={`${error.name}: ${error.message}`} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+                // observer.trigger(observer.events.notification, { type: 'success', message: error })
+                console.log('Fetch Error (PUT): ', error);
+            })
     },
 
     delete: (endpoint, data, callback) => {
-        return fetch(BASE_URL + endpoint, {
+        fetch(BASE_URL + endpoint, {
             method: 'DELETE',
             headers: {
                 Accept: 'application/json',
@@ -59,8 +103,21 @@ export default {
                 ...getAuthHeader(),
             },
             body: JSON.stringify(data)
-        }).then(checkStatus)
+        })
+
+            .then(res => res.json())
             .then(callback)
+            // .then(()=>console.log('updated!!!'))
+            .catch(error => {
+
+                toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${error.message}`} />, {
+                    // toast.error(<ToastComponent.errorToast text={`${error.name}: ${error.message}`} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+
+                // observer.trigger(observer.events.notification, { type: 'success', message: error })
+                console.log('Fetch Error (DELETE): ', error);
+            })
     },
 
     update: (data) => {
@@ -72,12 +129,12 @@ export default {
                 'Content-Type': 'application/json',
                 ...getAuthHeader(),
             }
-        }).then(checkStatus)
+        })
+            .then(checkStatus)
             .then(() => console.log('updated!!!'))
-        // .catch(err => {
-        //     console.log(err)
-        // })
-
+            .catch(err => {
+                console.log(err)
+            })
     }
 }
 
@@ -98,15 +155,12 @@ function checkStatus(response) {
             error.message = 'Your JWT token is expired. Please log in!'
             error.status = 403;
             error.type = 'cors'
+            // error.response = response;
+            // <Redirect to='/login' /> 
+            // this.props.history.push();
             throw error;
-        } 
-        // else if (response.status === 500) {
-        //     console.log('err response: ', response)
-        //     error.message = 'Something went wrong'
-        //     error.status = 403;
-        //     error.type = 'cors'
-        //     throw error;
-        // }
+
+        }
         else {
             return response.json();
         }

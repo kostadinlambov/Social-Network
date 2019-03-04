@@ -31,20 +31,13 @@ import { ToastComponent } from '../common'
         debugger;
 
         requester.get(`/users/details/${userId}`, (userData) => {
-
             console.log("userData: ", userData);
-
 
             this.setState({
                 ...userData
             })
-            debugger;
-            console.log("this.state: ", this.state);
-            debugger;
-
         })
     }
-
 
     onSubmitHandlerDelete = (e) => {
         e.preventDefault();
@@ -54,25 +47,28 @@ import { ToastComponent } from '../common'
         requester.delete('/users/delete/' + this.state.id, {}, (response) => {
             debugger;
             if (response.success === true) {
-
                 toast.success(<ToastComponent.successToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
-                // observer.trigger(observer.events.notification, { type: 'success', message: response.message })
                 this.props.history.push(`/`);
-
-                this.setState({ fireRedirect: true })
             } else {
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
-                // observer.trigger(observer.events.notification, { type: 'error', message: response.message });
+            }
+        }).catch(err => {
+            console.error('deatils err:', err)
+            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+                // toast.error(<ToastComponent.errorToast text={`${error.name}: ${error.message}`} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+
+            if(err.status === 403 && err.message === 'Your JWT token is expired. Please log in!'){
+                localStorage.clear();
+                this.props.history.push('/login');
             }
         })
     }
-
-
-
 
     render = () => {
         let authority;
@@ -86,8 +82,7 @@ import { ToastComponent } from '../common'
         debugger;
         return (
             <div className="container mx-auto text-center " >
-
-                <h1 className="text-center font-weight-bold alert alert-danger position col-md-10 mx-auto">Are you sure you want to delete this User?</h1>
+                <h1 className="text-center font-weight-bold alert alert-danger position col-md-10 mx-auto mt-0">Are you sure you want to delete this User?</h1>
                 <hr className="my-2 mb-3 mt-3 col-md-8 mx-auto" />
                 {/* <div className="d-flex justify-content-center  "> */}
                 <div className="col-md-6 mx-auto text-center">

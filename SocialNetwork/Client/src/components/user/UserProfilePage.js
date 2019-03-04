@@ -2,6 +2,8 @@ import React, { Component, Fragment } from 'react';
 import { NavLink } from 'react-router-dom'
 import { userService, requester } from '../../infrastructure';
 import { Button, ButtonWithClickEvent } from '../common'
+import { toast } from 'react-toastify';
+import { ToastComponent } from '../../components/common';
 
 
 export default class UserProfilePage extends Component {
@@ -21,9 +23,7 @@ export default class UserProfilePage extends Component {
     }
 
     componentDidMount = () => {
-        // const userId = userService.getUserId;
         const userId = this.props.match.params.id;
-        // const userId = this.props.userId;
         console.log("current User id: ", userId);
         debugger;
 
@@ -39,11 +39,19 @@ export default class UserProfilePage extends Component {
             console.log("this.state: ", this.state);
             debugger;
 
+        }).catch(err => {
+            console.error('deatils err:', err)
+            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+                // toast.error(<ToastComponent.errorToast text={`${error.name}: ${error.message}`} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+
+            if(err.status === 403 && err.message === 'Your JWT token is expired. Please log in!'){
+                localStorage.clear();
+                this.props.history.push('/login');
+            }
         })
     }
-
-   
-
 
     onSubmitHandlerDelete = (e) => {
         console.log(this.state.id)
@@ -66,8 +74,6 @@ export default class UserProfilePage extends Component {
                 { ...this.state }
         });
     }
-
-
 
     render = () => {
         let authority;
@@ -161,8 +167,8 @@ export default class UserProfilePage extends Component {
 
                         {<ButtonWithClickEvent buttonClass={"btn App-button-primary btn-lg m-3"} url={`/home/users/edit/`} text={"Edit"} onClick={this.onSubmitHandlerEdit} />}
                         {((isAdmin || isRoot) && !userService.isLoggedInUser(this.state.username)) && <ButtonWithClickEvent buttonClass={"btn App-button-primary btn-lg m-3"} url={`/home/users/delete/`} text={"Delete"} onClick={this.onSubmitHandlerDelete} />}
-                        {(isAdmin || isRoot) && <Button buttonClass={"btn App-button-primary btn-lg m-3"} url={`/home/users/all`} text={"All Users"} />} 
-                        
+                        {(isAdmin || isRoot) && <Button buttonClass={"btn App-button-primary btn-lg m-3"} url={`/home/users/all`} text={"All Users"} />}
+
                     </div >
                 </div >
 

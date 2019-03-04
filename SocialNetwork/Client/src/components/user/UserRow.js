@@ -33,13 +33,22 @@ export default class UserRow extends Component {
                 toast.success(<ToastComponent.successToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
-                // observer.trigger(observer.events.notification, { type: 'success', message: response.message });
             } else {
                 console.log('error message: ', response.message);
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
-                // observer.trigger(observer.events.notification, { type: 'error', message: response.message });
+            }
+        }).catch(err => {
+            console.error('Promote err:', err)
+            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+                // toast.error(<ToastComponent.errorToast text={`${error.name}: ${error.message}`} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+
+            if(err.status === 403 && err.message === 'Your JWT token is expired. Please log in!'){
+                localStorage.clear();
+                this.props.history.push('/login');
             }
         })
     }
@@ -54,17 +63,24 @@ export default class UserRow extends Component {
                 toast.success(<ToastComponent.successToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
-                // observer.trigger(observer.events.notification, { type: 'success', message: response.message });
-                debugger;
             } else {
                 console.log('error message: ', response.message);
-                debugger;
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
-                // observer.trigger(observer.events.notification, { type: 'error', message: response.message });
             }
 
+        }).catch(err => {
+            console.error('Demote err:', err)
+            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+                // toast.error(<ToastComponent.errorToast text={`${error.name}: ${error.message}`} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+
+            if(err.status === 403 && err.message === 'Your JWT token is expired. Please log in!'){
+                localStorage.clear();
+                this.props.history.push('/login');
+            }
         })
     }
 

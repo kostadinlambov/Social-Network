@@ -4,7 +4,6 @@ import { requester, observer } from '../../infrastructure/'
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
 
-
 export default class UserAllPage extends Component {
     constructor(props) {
         super(props)
@@ -21,33 +20,37 @@ export default class UserAllPage extends Component {
             console.log('users all: ', response);
 
             if (response.success === true) {
-                console.log('success message: ', response.message);
-                debugger;
                 toast.success(<ToastComponent.successToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
-                // observer.trigger(observer.events.notification, { type: 'success', message: response.message });
 
                 this.setState({
                     userArr: response['payload']
                 },)
-                console.log('all users state', this.state)
             } else {
-                console.log('error message: ', response.message);
-                debugger;
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
-                // observer.trigger(observer.events.notification, { type: 'error', message: response.message });
             }
-            debugger;
-        });
+        }).catch(err => {
+            console.error('deatils err:', err)
+            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+                // toast.error(<ToastComponent.errorToast text={`${error.name}: ${error.message}`} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+
+            if(err.status === 403 && err.message === 'Your JWT token is expired. Please log in!'){
+                localStorage.clear();
+                this.props.history.push('/login');
+
+            }
+        })
     }
 
     render() {
         return (
-            <div className="container col-md-8 text-center ">
-                <h1 className="text-center font-weight-bold display-5">All Users</h1>
+            <div className="container col-md-8 text-center pt-5">
+                <h1 className="text-center font-weight-bold display-5 mt-5">All Users</h1>
                 {/* <hr className="display-3 col-md-10" /> */}
                 <table className="table table-hover mt-3 w-80 mx-auto text-center">
                     <thead>

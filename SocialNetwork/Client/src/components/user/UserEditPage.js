@@ -70,7 +70,6 @@ export default class UserEditPage extends Component {
 
             if (response.success === true) {
                 console.log('success message: ', response.message);
-                debugger;
                 toast.success(<ToastComponent.successToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
@@ -79,7 +78,6 @@ export default class UserEditPage extends Component {
 
             } else {
                 console.log('error message: ', response.message);
-                debugger;
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });

@@ -44,8 +44,10 @@ export default class LoginPage extends Component {
         const { touched, ...otherProps } = this.state;
 
         requester.post('/login', { ...otherProps }, (response) => {
+
             console.log('response: ', response)
             debugger;
+
             if (response.error) {
                 debugger;
                 // observer.trigger(observer.events.notification, { type: 'error', message: 'Incorrect credentials!' });
@@ -55,11 +57,10 @@ export default class LoginPage extends Component {
 
                 
             } else {
-                debugger;
-                localStorage.setItem('token', response);
-                
-                // observer.trigger(observer.events.loginUser, userService.getUsername());
-                observer.trigger(observer.events.loginUser, response);
+                const token = response.split(' ')[1];
+                localStorage.setItem('token', token);
+
+                observer.trigger(observer.events.loginUser, token);
                 // observer.trigger(observer.events.notification, { type: 'success', message: 'You have successfully logged in!' });
                 toast.success(<ToastComponent.successToast text={' You have successfully logged in!'} />, {
                     position: toast.POSITION.TOP_RIGHT
@@ -67,6 +68,20 @@ export default class LoginPage extends Component {
                 debugger;
                 this.props.history.push('/');
             }
+
+        }).catch(err => {
+            console.log('Login Error (POST): ', err)
+
+            // toast.error(<ToastComponent.errorToast text={`${err.message}`} />, {
+            toast.error(<ToastComponent.errorToast text={'Incorrect credentials!'} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+
+            // if(err.status === 403 && err.message === 'Your JWT token is expired. Please log in!'){
+            //     localStorage.clear();
+            //     this.props.history.push('/login');
+
+            // }
 
         })
     }

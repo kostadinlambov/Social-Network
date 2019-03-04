@@ -76,6 +76,12 @@ export default class RegisterPage extends Component {
 
             }
 
+        }).catch(err => {
+            console.error('Register Errror:', err)
+            toast.error(<ToastComponent.errorToast text={`${err.message}`} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+
         })
     }
 
