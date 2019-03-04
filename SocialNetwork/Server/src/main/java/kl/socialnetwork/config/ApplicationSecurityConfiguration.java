@@ -18,6 +18,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import javax.servlet.http.HttpSession;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -43,30 +45,47 @@ public class ApplicationSecurityConfiguration
                 .csrf()
                 .disable()
                 .authorizeRequests()
+                .antMatchers("/users/register",
+                        "/",
+                        "/favicon.ico",
+                        "/**/*.png",
+                        "/**/*.gif",
+                        "/**/*.svg",
+                        "/**/*.jpg",
+                        "/**/*.html",
+                        "/**/*.css",
+                        "/**/*.js"
+                        //                        "/**"
+                ).permitAll()
                 .antMatchers(
-                        "/users/register",
-                        "/users/update",
-                        "/**"
-                        ).permitAll()
+                        "/users/details/*",
+                        "/users/update"
+                ).hasAnyAuthority("ADMIN", "ROOT", "USER")
                 .antMatchers(
                         "/users/all",
                         "/users/promote",
                         "/users/demote",
-                        "/users/details",
                         "/users/details/username",
                         "/users/editDetails",
-                        "logs/all",
-                        "logs/findByUserName",
-                        "logs/clear",
-                        "logs/clearByName"
+                        "/logs/all",
+                        "/logs/findByUserName",
+                        "/logs/clear",
+                        "/logs/clearByName"
                 ).hasAnyAuthority("ADMIN", "ROOT")
-                .antMatchers( "/users/delete").hasAuthority("ROOT")
+                .antMatchers("/users/delete").hasAuthority("ROOT")
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), this.mapper))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), this.userService))
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+//                .and()
+//                .logout()
+////                .logoutSuccessUrl("/login")
+//                .logoutSuccessUrl("/users/logout")
+//                .invalidateHttpSession(true)
+//                .deleteCookies("JSESSIONID")
+//                .permitAll();
     }
 
     @Bean

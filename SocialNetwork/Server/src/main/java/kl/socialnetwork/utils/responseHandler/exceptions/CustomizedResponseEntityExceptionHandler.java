@@ -39,6 +39,7 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
     return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
   }
 
+
   @ExceptionHandler({ CustomException.class, BadRequestException.class})
   public ResponseEntity<Object> handleException(MethodArgumentNotValidException ex,
                                                 HttpHeaders headers, HttpStatus status, WebRequest request) throws URISyntaxException {

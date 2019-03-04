@@ -6,6 +6,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import kl.socialnetwork.domain.entities.User;
 import kl.socialnetwork.domain.modles.bindingModels.user.UserLoginBindingModel;
+import kl.socialnetwork.utils.constants.ResponseMessageConstants;
+import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -35,14 +37,18 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             UserLoginBindingModel loginBindingModel = new ObjectMapper()
                     .readValue(request.getInputStream(), UserLoginBindingModel.class);
 
-            return this.authenticationManager.authenticate(
+            Authentication authenticate = this.authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             loginBindingModel.getUsername(),
                             loginBindingModel.getPassword(),
-                            new ArrayList<>())
-            );
-        } catch (IOException ignored) {
-            return null;
+                            new ArrayList<>()));
+
+            return authenticate;
+
+        } catch (IOException | AuthenticationException ex) {
+            ex.printStackTrace();
+            throw new CustomException(ex.getMessage());
+//            return null;
         }
     }
 
@@ -58,7 +64,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         String token = Jwts.builder()
                 .setSubject(user.getUsername())
-                .setExpiration(new Date(System.currentTimeMillis() + 12000000))
+                .setExpiration(new Date(System.currentTimeMillis() + 1200000))
                 .claim("role", authority)
                 .claim("id", id)
                 .signWith(SignatureAlgorithm.HS256, "Secret".getBytes())
@@ -71,10 +77,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.getWriter()
                 .append(tokenJson);
 
-
-
         System.out.println(response);
-
 
         response.addHeader("Authorization", "Bearer " + token);
     }

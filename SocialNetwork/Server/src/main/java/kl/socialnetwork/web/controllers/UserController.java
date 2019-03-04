@@ -19,8 +19,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -199,5 +204,19 @@ public class UserController {
         }
         throw new CustomException(ResponseMessageConstants.SERVER_ERROR_MESSAGE);
     }
+
+//    @PostMapping(value = "/logout")
+//    public ResponseEntity<Object> logout(HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if(authentication != null){
+//            new SecurityContextLogoutHandler().logout(request, response, authentication);
+//        }
+//        SuccessResponse successResponse = new SuccessResponse(
+//                LocalDateTime.now(),
+//                "You have been successfully logged out!",
+//                "",
+//                true);
+//        return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
+//    }
 
 }
