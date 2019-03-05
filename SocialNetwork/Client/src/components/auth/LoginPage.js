@@ -51,11 +51,11 @@ export default class LoginPage extends Component {
             if (response.error) {
                 debugger;
                 // observer.trigger(observer.events.notification, { type: 'error', message: 'Incorrect credentials!' });
-                toast.error(<ToastComponent.errorToast text={' Incorrect credentials!'} />,  {
+                toast.error(<ToastComponent.errorToast text={' Incorrect credentials!'} />, {
                     position: toast.POSITION.TOP_RIGHT,
                 });
 
-                
+
             } else {
                 const token = response.split(' ')[1];
                 localStorage.setItem('token', token);
@@ -72,15 +72,21 @@ export default class LoginPage extends Component {
         }).catch(err => {
             console.log('Login Error (POST): ', err)
 
+            debugger;
             // toast.error(<ToastComponent.errorToast text={`${err.message}`} />, {
-            toast.error(<ToastComponent.errorToast text={'Incorrect credentials!'} />, {
-                position: toast.POSITION.TOP_RIGHT
-            });
+            localStorage.clear();
 
-            // if(err.status === 403 && err.message === 'Your JWT token is expired. Please log in!'){
-            //     localStorage.clear();
-            //     this.props.history.push('/login');
+            // if (err.status === 403 && err.response.url === 'http://localhost:8000/login') {
+            //     // this.props.history.push('/login');
+            //     toast.error(<ToastComponent.errorToast text={'Incorrect credentials!'} />, {
+            //         position: toast.POSITION.TOP_RIGHT
+            //     });
 
+            // } else {
+                
+                toast.error(<ToastComponent.errorToast text={`${err.message}`} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
             // }
 
         })

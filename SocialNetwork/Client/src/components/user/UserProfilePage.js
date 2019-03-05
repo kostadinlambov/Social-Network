@@ -18,6 +18,7 @@ export default class UserProfilePage extends Component {
             lastName: '',
             address: '',
             city: '',
+            profilePicUrl: '',
             authorities: []
         }
     }

@@ -1,6 +1,9 @@
 import React, { Component, Fragment, lazy, Suspense } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import { withRootAuthorization, withAdminAuthorization, withUserAuthorization } from '../../hocs/withAuthorization';
+import { toast } from 'react-toastify';
+import { ToastComponent } from '../common'
+import { requester } from '../../infrastructure/'
 
 
 // import './css/Home.css'
@@ -25,25 +28,63 @@ export default class HomePage extends Component {
         super(props)
 
         this.state = {
-            id: ''
+            id: '',
+            username: '',
+            email: '',
+            firstName: '',
+            lastName: '',
+            address: '',
+            city: '',
+            profilePicUrl: '',
+            backgroundImageUrl: '',
+            authorities: [],
+            ready: false
         }
     }
 
-    componentWillMount() {
+    componentDidMount() {
         const currentUserId = userService.getUserId();
+        debugger;
 
-        this.setState({ id: currentUserId })
+        requester.get(`/users/details/${currentUserId}`, (userData) => {
+
+            console.log("userData: ", userData);
+
+
+            this.setState({
+                ...userData, ready: true
+            })
+            debugger;
+            console.log("this.state: ", this.state);
+            debugger;
+
+        }).catch(err => {
+            console.error('deatils err:', err)
+            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+                // toast.error(<ToastComponent.errorToast text={`${error.name}: ${error.message}`} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+
+            if(err.status === 403 && err.message === 'Your JWT token is expired. Please log in!'){
+                localStorage.clear();
+                this.props.history.push('/login');
+            }
+        })
     }
 
 
+
     render() {
+        if(!this.state.ready){
+            return <h1 className="text-center pt-5 mt-5">Loading...</h1>
+        }
         debugger;
         console.log(this.props.match.url)
         const loggedIn = localStorage.getItem('token');
         debugger;
         return (
             <Fragment>
-                <HeaderSection userId={this.state.id} />
+                <HeaderSection  {...this.state} />
 
                 <main className="site-content">
 
