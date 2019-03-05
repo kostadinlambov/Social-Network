@@ -13,6 +13,8 @@ public class UserDetailsViewModel {
     private String lastName;
     private String address;
     private String city;
+    private String profilePicUrl;
+    private String backgroundImageUrl;
 
     private Set<UserRole> authorities;
 //    private Set<Order> orders;
@@ -82,6 +84,14 @@ public class UserDetailsViewModel {
         this.city = city;
     }
 
+    public String getProfilePicUrl() {
+        return this.profilePicUrl;
+    }
+
+    public void setProfilePicUrl(String profilePicUrl) {
+        this.profilePicUrl = profilePicUrl;
+    }
+
     public Set<UserRole> getAuthorities() {
         return this.authorities;
     }
@@ -90,7 +100,15 @@ public class UserDetailsViewModel {
         this.authorities = authorities;
     }
 
-//    public Set<Order> getOrders() {
+    public String getBackgroundImageUrl() {
+        return this.backgroundImageUrl;
+    }
+
+    public void setBackgroundImageUrl(String backgroundImageUrl) {
+        this.backgroundImageUrl = backgroundImageUrl;
+    }
+
+    //    public Set<Order> getOrders() {
 //        return this.orders;
 //    }
 //

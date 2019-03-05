@@ -20,6 +20,8 @@ public class User extends BaseEntity implements UserDetails {
     private String city;
     private boolean isDeleted;
     private Set<UserRole> authorities;
+    private String profilePicUrl;
+    private String backgroundImageUrl;
 
     private boolean isAccountNonExpired;
     private boolean isAccountNonLocked;
@@ -153,4 +155,22 @@ public class User extends BaseEntity implements UserDetails {
         isDeleted = deleted;
     }
 
+
+    @Column(name="profile_pic_url")
+    public String getProfilePicUrl() {
+        return this.profilePicUrl;
+    }
+
+    public void setProfilePicUrl(String profilePicUrl) {
+        this.profilePicUrl = profilePicUrl;
+    }
+
+    @Column(name="background_image_url")
+    public String getBackgroundImageUrl() {
+        return this.backgroundImageUrl;
+    }
+
+    public void setBackgroundImageUrl(String backgroundImageUrl) {
+        this.backgroundImageUrl = backgroundImageUrl;
+    }
 }

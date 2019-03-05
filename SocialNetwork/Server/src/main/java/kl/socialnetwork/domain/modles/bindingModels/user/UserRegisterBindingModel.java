@@ -1,5 +1,6 @@
 package kl.socialnetwork.domain.modles.bindingModels.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import kl.socialnetwork.utils.constants.ValidationMessageConstants;
 import kl.socialnetwork.validations.Password;
 import kl.socialnetwork.validations.PasswordMatching;
@@ -22,6 +23,9 @@ public class UserRegisterBindingModel implements Serializable {
     private String lastName;
     private String address;
     private String city;
+
+//    @JsonIgnore
+//    private String profilePicUrl;
 
 //    private Set<UserRole> roles;
 //    private Boolean isDeleted = false;
@@ -108,4 +112,12 @@ public class UserRegisterBindingModel implements Serializable {
     public void setCity(String city) {
         this.city = city;
     }
+
+//    public String getProfilePic() {
+//        return this.profilePic;
+//    }
+//
+//    public void setProfilePic(String profilePic) {
+//        this.profilePic = profilePic;
+//    }
 }
