@@ -22,6 +22,7 @@ public class Like extends BaseEntity{
         this.count = count;
     }
 
+//    @OneToOne ?????
     @ManyToOne(optional = false, targetEntity = User.class)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     public Set<User> getUsers() {

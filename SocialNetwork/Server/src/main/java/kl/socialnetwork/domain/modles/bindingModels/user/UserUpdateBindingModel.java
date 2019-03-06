@@ -16,6 +16,8 @@ public class UserUpdateBindingModel implements Serializable {
     private String lastName;
     private String address;
     private String city;
+    private String profilePicUrl;
+    private String backgroundImageUrl;
 
 //    private Set<UserRole> roles;
 //    private Boolean isDeleted = false;
@@ -92,5 +94,21 @@ public class UserUpdateBindingModel implements Serializable {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public String getProfilePicUrl() {
+        return this.profilePicUrl;
+    }
+
+    public void setProfilePicUrl(String profilePicUrl) {
+        this.profilePicUrl = profilePicUrl;
+    }
+
+    public String getBackgroundImageUrl() {
+        return this.backgroundImageUrl;
+    }
+
+    public void setBackgroundImageUrl(String backgroundImageUrl) {
+        this.backgroundImageUrl = backgroundImageUrl;
     }
 }

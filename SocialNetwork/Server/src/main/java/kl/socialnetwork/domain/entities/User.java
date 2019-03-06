@@ -156,7 +156,7 @@ public class User extends BaseEntity implements UserDetails {
     }
 
 
-    @Column(name="profile_pic_url")
+    @Column(name="profile_pic_url", columnDefinition = "TEXT")
     public String getProfilePicUrl() {
         return this.profilePicUrl;
     }
@@ -165,7 +165,7 @@ public class User extends BaseEntity implements UserDetails {
         this.profilePicUrl = profilePicUrl;
     }
 
-    @Column(name="background_image_url")
+    @Column(name="background_image_url", columnDefinition = "TEXT")
     public String getBackgroundImageUrl() {
         return this.backgroundImageUrl;
     }
