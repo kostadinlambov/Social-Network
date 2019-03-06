@@ -3,6 +3,7 @@ import { userService, requester } from '../../infrastructure';
 import { Button } from '../common';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
+import '../../styles/FormPages.css'
 
 export default class UserEditPage extends Component {
     constructor(props) {
@@ -16,6 +17,8 @@ export default class UserEditPage extends Component {
             lastName: '',
             address: '',
             city: '',
+            profilePicUrl: '',
+            backgroundImageUrl: '',
             touched: {
                 username: false,
                 email: false,
@@ -23,6 +26,8 @@ export default class UserEditPage extends Component {
                 lastName: false,
                 address: false,
                 city: false,
+                profilePicUrl: false,
+                backgroundImageUrl: false,
             }
         }
 
@@ -40,6 +45,8 @@ export default class UserEditPage extends Component {
             lastName: this.props.location.state.lastName,
             address: this.props.location.state.address,
             city: this.props.location.state.city,
+            profilePicUrl: this.props.location.state.profilePicUrl,
+            backgroundImageUrl: this.props.location.state.backgroundImageUrl,
         })
 
     }
@@ -90,6 +97,8 @@ export default class UserEditPage extends Component {
                     lastName: this.props.location.state.lastName,
                     address: this.props.location.state.address,
                     city: this.props.location.state.city,
+                    profilePicUrl: this.props.location.state.profilePicUrl,
+                    backgroundImageUrl: this.props.location.state.backgroundImageUrl,
                 })
 
             }
@@ -97,12 +106,12 @@ export default class UserEditPage extends Component {
     }
 
     canBeSubmitted() {
-        const { username, email, firstName, lastName, address, city } = this.state;
-       // const isEnabled = this.buttonEnableFunc();
-       const errors = this.validate(username, email, firstName, lastName, address, city);
-       const isDisabled = Object.keys(errors).some(x => errors[x])
-       return !isDisabled;
-   }
+        const { username, email, firstName, lastName, address, city, profilePicUrl, backgroundImageUrl } = this.state;
+        // const isEnabled = this.buttonEnableFunc();
+        const errors = this.validate(username, email, firstName, lastName, address, city, profilePicUrl, backgroundImageUrl);
+        const isDisabled = Object.keys(errors).some(x => errors[x])
+        return !isDisabled;
+    }
 
 
     handleBlur = (field) => (event) => {
@@ -112,7 +121,7 @@ export default class UserEditPage extends Component {
 
     }
 
-    validate = (username, email, firstName, lastName, address, city) => {
+    validate = (username, email, firstName, lastName, address, city, profilePicUrl, backgroundImageUrl) => {
         debugger;
         const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
         const firstLastNameRegex = /^[A-Z]([a-zA-Z]+)?$/;
@@ -128,10 +137,13 @@ export default class UserEditPage extends Component {
             lastName: lastName.length === 0 || !testLastName,
             address: address.length === 0,
             city: city.length === 0,
+            profilePicUrl: profilePicUrl.length === 0,
+            backgroundImageUrl: backgroundImageUrl.length === 0,
+
         }
     }
 
-   
+
     render() {
         // const { match, location, history } = this.props
         // console.log('match: ', match);
@@ -139,9 +151,19 @@ export default class UserEditPage extends Component {
         // console.log('history: ', history);
         // debugger;
 
-        const { username, email, firstName, lastName, address, city } = this.state;
+        const { username, email, firstName, lastName, address, city, profilePicUrl, backgroundImageUrl } = this.state;
+
+        const loggedInUserName = userService.getUsername();
+        const loggedInRole = userService.getRole();
+
+        let showPicsButtons = true;
+        if (loggedInUserName !== username && (loggedInRole !== "ROOT")) {
+            showPicsButtons = false;
+            // this.props.history.push('/');
+        }
+        debugger;
         // const isEnabled = this.buttonEnableFunc();
-        const errors = this.validate(username, email, firstName, lastName, address, city);
+        const errors = this.validate(username, email, firstName, lastName, address, city, profilePicUrl, backgroundImageUrl);
         const isEnabled = !Object.keys(errors).some(x => errors[x])
 
         const shouldMarkError = (field) => {
@@ -152,11 +174,11 @@ export default class UserEditPage extends Component {
         }
         return (
             <div className="container ">
-                <h1 className="text-center font-weight-bold ">Edit Account</h1>
+                <h1 className="text-center font-weight-bold " style={{ 'margin': '1rem auto' }}>Edit Account</h1>
                 <hr className="my-2 mb-3 mt-3 col-md-12 mx-auto"></hr>
                 <form className="Register-form-container  " onSubmit={this.onSubmitHandler}>
 
-                    <div className="section-container w-50 mx-auto text-center">
+                    <div className="section-container w-75 mx-auto text-center">
                         <section className="left-section">
                             <div className="form-group">
                                 <label htmlFor="username" className="font-weight-bold" >Username</label>
@@ -205,6 +227,22 @@ export default class UserEditPage extends Component {
                                 />
                                 {shouldMarkError('address') && <small id="addressHelp" className="form-text alert alert-danger">{(!this.state.address ? 'Address is required!' : '')}</small>}
                             </div>
+
+                         {showPicsButtons && <div className="form-group">
+                                <label htmlFor="profilePicUrl" className="font-weight-bold" >Profile image url</label>
+                                <input
+                                    type="text"
+                                    className={"form-control " + (shouldMarkError('profilePicUrl') ? "error" : "")}
+                                    id="profilePicUrl"
+                                    name="profilePicUrl"
+                                    value={this.state.profilePicUrl}
+                                    onChange={this.onChangeHandler}
+                                    onBlur={this.handleBlur('profilePicUrl')}
+                                    aria-describedby="profilePicUrlHelp"
+                                    placeholder="Enter profile image url"
+                                />
+                                {shouldMarkError('profilePicUrl') && <small id="profilePicUrl" className="form-text alert alert-danger">{(!this.state.profilePicUrl ? 'Profile image url is required!' : '')}</small>}
+                            </div>}  
 
                         </section>
 
@@ -258,6 +296,23 @@ export default class UserEditPage extends Component {
                                 {shouldMarkError('city') && <small id="cityHelp" className="form-text alert alert-danger">{(!this.state.city ? 'City is required!' : '')}</small>}
                             </div>
 
+                            {showPicsButtons &&  <div className="form-group">
+                                <label htmlFor="backgroundImageUrl" className="font-weight-bold" >Cover image url</label>
+                                <input
+                                    type="text"
+                                    className={"form-control " + (shouldMarkError('backgroundImageUrl') ? "error" : "")}
+                                    id="backgroundImageUrl"
+                                    name="backgroundImageUrl"
+                                    value={this.state.backgroundImageUrl}
+                                    onChange={this.onChangeHandler}
+                                    onBlur={this.handleBlur('backgroundImageUrl')}
+                                    aria-describedby="backgroundImageUrlHelp"
+                                    placeholder="Enter cover image url"
+                                />
+                                {shouldMarkError('backgroundImageUrl') && <small id="backgroundImageUrlHelp" className="form-text alert alert-danger">{(!this.state.backgroundImageUrl ? 'Cover image url is required!' : '')}</small>}
+                            </div>}
+
+
                         </section>
                     </div>
 
@@ -270,7 +325,7 @@ export default class UserEditPage extends Component {
                     </div>
 
                 </form>
-                <p>{JSON.stringify(this.state, null, 2)}</p>
+                {/* <p>{JSON.stringify(this.state, null, 2)}</p> */}
             </div>
         )
     }

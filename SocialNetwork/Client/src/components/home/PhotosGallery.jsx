@@ -1,13 +1,13 @@
 import React, { Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
-import benderPic from '../..//assets/images/Bender/Bender_1.jpeg';
-import benderPic_11 from '../..//assets/images/Bender/Bender_11.jpg';
-import benderPic_4 from '../..//assets/images/Bender/Bender_4.jpg';
-import benderPic_5 from '../..//assets/images/Bender/Bender_5.jpg';
-import benderPic_10 from '../..//assets/images/Bender/Bendder_10.jpg';
-import benderPic_7 from '../..//assets/images/Bender/Bender_7.jpg';
-import benderPic_8 from '../..//assets/images/Bender/Bender_8.jpg';
-import benderPic_9 from '../..//assets/images/Bender/Bender_9.jpg';
+import benderPic from '../../assets/images/Bender/Bender_1.jpeg';
+import benderPic_11 from '../../assets/images/Bender/Bender_11.jpg';
+import benderPic_4 from '../../assets/images/Bender/Bender_4.jpg';
+import benderPic_5 from '../../assets/images/Bender/Bender_5.jpg';
+import benderPic_10 from '../../assets/images/Bender/Bendder_10.jpg';
+import benderPic_7 from '../../assets/images/Bender/Bender_7.jpg';
+import benderPic_8 from '../../assets/images/Bender/Bender_8.jpg';
+import benderPic_9 from '../../assets/images/Bender/Bender_9.jpg';
 
 const PhotoGallery = (props) => {
 

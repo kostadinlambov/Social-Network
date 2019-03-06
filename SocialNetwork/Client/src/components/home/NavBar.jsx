@@ -67,9 +67,10 @@ export default class Navbar extends Component {
 
                                     {loggedIn && <li className="nav-item"><NavLink exact to={`/home/${userId}`} className="nav-link ">Home</NavLink></li>}
 
-                                    {loggedIn && <li className="nav-item"><NavLink exact to={`/home/users/all`} className="nav-link " >Find friends!</NavLink></li>}
+                                    {loggedIn && <li className="nav-item"><NavLink exact to={`/home/findFriends/${userId}`} className="nav-link " >Find friends!</NavLink></li>}
 
-                                    {loggedIn && <li className="nav-item"><NavLink  exact to={`/home/friends/${userId}`} className="nav-link fas fa-user-friends tooltipCustom"> <span className="tooltiptextCustom">Friends</span></NavLink></li>}
+                                    {loggedIn && <li className="nav-item"><NavLink  exact to={`/home/friends/${userId}`} className="nav-link fas fa-user-friends tooltipCustom"> <span className="tooltiptextCustom">Friend Requests</span></NavLink></li>}
+                                    {loggedIn && <li className="nav-item"><NavLink  exact to={`/home/friends/${userId}`} className="nav-link fas fa-envelope tooltipCustom"><span className="tooltiptextCustom">Messages</span></NavLink></li>}
                                     {/* {loggedIn && <li><NavLink className="fas fa-camera" to="{{ site.baseurl }}/gallery/"></NavLink></li>} */}
 
                                     {loggedIn && <li className="nav-item"><NavLink exact to="#" className="nav-link " onClick={onLogout} >Logout</NavLink></li>}

@@ -5,6 +5,9 @@ import { Button, ButtonWithClickEvent } from '../common'
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../../components/common';
 
+import placeholder_user_image from '../../assets/images/placeholder-profile-male.jpg'
+import default_background_image from '../../assets/images/default-background-image.jpg'
+
 
 export default class UserProfilePage extends Component {
     constructor(props) {
@@ -19,7 +22,9 @@ export default class UserProfilePage extends Component {
             address: '',
             city: '',
             profilePicUrl: '',
-            authorities: []
+            backgroundImageUrl: '',
+            authorities: [],
+            ready: false
         }
     }
 
@@ -32,9 +37,11 @@ export default class UserProfilePage extends Component {
 
             console.log("userData: ", userData);
 
-
             this.setState({
-                ...userData
+                ...userData,
+                ready: true,
+                profilePicUrl: userData.profilePicUrl || placeholder_user_image,
+                backgroundImageUrl: userData.backgroundImageUrl || default_background_image,
             })
             debugger;
             console.log("this.state: ", this.state);
@@ -47,7 +54,7 @@ export default class UserProfilePage extends Component {
                 position: toast.POSITION.TOP_RIGHT
             });
 
-            if(err.status === 403 && err.message === 'Your JWT token is expired. Please log in!'){
+            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
                 localStorage.clear();
                 this.props.history.push('/login');
             }
@@ -77,6 +84,19 @@ export default class UserProfilePage extends Component {
     }
 
     render = () => {
+        if (!this.state.ready) {
+            return <h1 className="text-center pt-5 mt-5">Loading...</h1>
+        }
+
+        const loggedInUserName = userService.getUsername();
+        const loggedInRole = userService.getRole();
+
+        let showPicsButtons = true;
+        if (loggedInUserName !== this.state.username && (loggedInRole !== "ROOT")) {
+            showPicsButtons = false;
+            // this.props.history.push('/');
+        }
+
         let authority;
         if (this.state.authorities[0]) {
             authority = this.state.authorities[0]['authority'];
@@ -89,7 +109,7 @@ export default class UserProfilePage extends Component {
         return (
             <div className="container mx-auto text-center " >
 
-                <h1 className="text-center font-weight-bold ">Account Details</h1>
+                <h1 className="text-center font-weight-bold" style={{'margin': '1rem auto'}}>Account Details</h1>
                 <hr className="my-2 mb-3 mt-3 col-md-8 mx-auto" />
                 {/* <div className="d-flex justify-content-center  "> */}
                 <div className="col-md-6 mx-auto text-center">
@@ -166,7 +186,7 @@ export default class UserProfilePage extends Component {
                         {/* {(isAdmin || isRoot) && <Button buttonClass={"btn App-button-primary btn-lg m-3"} url={`/users/delete/${this.state.id}`} text={"Delete"} />}
                         {(isAdmin || isRoot) && <Button buttonClass={"btn App-button-primary btn-lg m-3"} url={`/users/all`} text={"All Users"} />} */}
 
-                        {<ButtonWithClickEvent buttonClass={"btn App-button-primary btn-lg m-3"} url={`/home/users/edit/`} text={"Edit"} onClick={this.onSubmitHandlerEdit} />}
+                        {((isAdmin || isRoot) || userService.isLoggedInUser(this.state.username)) &&<ButtonWithClickEvent buttonClass={"btn App-button-primary btn-lg m-3"} url={`/home/users/edit/`} text={"Edit"} onClick={this.onSubmitHandlerEdit} />}
                         {((isAdmin || isRoot) && !userService.isLoggedInUser(this.state.username)) && <ButtonWithClickEvent buttonClass={"btn App-button-primary btn-lg m-3"} url={`/home/users/delete/`} text={"Delete"} onClick={this.onSubmitHandlerDelete} />}
                         {(isAdmin || isRoot) && <Button buttonClass={"btn App-button-primary btn-lg m-3"} url={`/home/users/all`} text={"All Users"} />}
 

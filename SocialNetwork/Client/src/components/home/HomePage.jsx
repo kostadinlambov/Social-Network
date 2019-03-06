@@ -17,6 +17,9 @@ import userService from '../../infrastructure/userService';
 
 
 const UserProfilePage = lazy(() => import('../../components/user/UserProfilePage'))
+const UserFriendsPage = lazy(() => import('../../components/user/UserFriendsAllPage'))
+const UserFindFriendsPage = lazy(() => import('../../components/user/UserFindFriendsPage'))
+const UserAllPage = lazy(() => import('../../components/user/UserAllPage'))
 const UserEditPage = lazy(() => import('../../components/user/UserEditPage'))
 const UserDeletePage = lazy(() => import('../../components/user/UserDeletePage'))
 
@@ -65,7 +68,7 @@ export default class HomePage extends Component {
                 position: toast.POSITION.TOP_RIGHT
             });
 
-            if(err.status === 403 && err.message === 'Your JWT token is expired. Please log in!'){
+            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
                 localStorage.clear();
                 this.props.history.push('/login');
             }
@@ -75,7 +78,7 @@ export default class HomePage extends Component {
 
 
     render() {
-        if(!this.state.ready){
+        if (!this.state.ready) {
             return <h1 className="text-center pt-5 mt-5">Loading...</h1>
         }
         debugger;
@@ -101,8 +104,12 @@ export default class HomePage extends Component {
                                 {/* <Route exact path={this.props.match.url + "/profile/:id"} render={() => console.log(this.props.match.url + "/profile/:id")} />} */}
                                 {loggedIn && <Route exact path="/home/profile/:id" component={UserProfilePage} />}
                                 {/* <Route exact path="/profile" component={withAdminAuthorization(ProfilePage)} /> */}
-                                {loggedIn && <Route exact path="/home/users/edit/:id" component={UserEditPage} />}
+                                {loggedIn && <Route exact path="/home/friends/:id" component={UserFriendsPage} />}
+                                {loggedIn && <Route exact path="/home/findFriends/:id" component={UserFindFriendsPage} />}
+                                {loggedIn && <Route exact path="/home/users/edit/:id" component={withUserAuthorization(UserEditPage)} />}
                                 {loggedIn && <Route exact path="/home/users/delete/:id" component={withAdminAuthorization(UserDeletePage)} />}
+                                {loggedIn && <Route exact path="/home/users/all" component={withAdminAuthorization(UserAllPage)} />}
+
                                 <Route exact path="/error" component={ErrorPage} />
                                 <Route component={ErrorPage} />
                             </Switch>

@@ -99,7 +99,13 @@ function checkStatus(response) {
             error.status = 403;
             error.type = 'cors'
             throw error;
-        } 
+        } else if (response.status === 400) {
+            console.log('err response: ', response)
+            error.message = 'Internal Server Error: Bad request'
+            error.status = 400;
+            error.type = 'cors'
+            throw error;
+        }
         // else if (response.status === 500) {
         //     console.log('err response: ', response)
         //     error.message = 'Something went wrong'

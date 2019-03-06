@@ -86,6 +86,12 @@ ul{
   margin-bottom: 0;
 }
 
+.text-shadow {
+  color: #FFFFFF;
+  /* background: #b8b8b8; */
+  text-shadow: 4px 3px 0 #7A7A7A;
+}
+
 
 
 @keyframes App-logo-spin {

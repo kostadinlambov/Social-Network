@@ -1,0 +1,108 @@
+.friend-section {
+    /* background: url("../assets/images/cover_MI_28_NE.jpg"); */
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    margin: auto;
+
+}
+
+.friend-section {
+    /* padding-top: 12%;
+    padding-bottom: 5%; */
+}
+
+.friend-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    margin: 0 auto 1rem;
+
+    background: white;
+    /* width: 100%; */
+    box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.3);
+    padding: 1rem;
+    border-radius: 5px;
+}
+
+.friend-img-container {
+    flex: 0 1 25%;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.friend-img-container:before {
+    display: block;
+    content: '';
+    padding-top: 100%;
+}
+
+
+.friend-container .friend-img-container img {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+
+/* .friend-container .img-container img {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+} */
+
+.friend-container .friend-img-container img.l {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: auto;
+    height: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+
+.friend-content {
+    margin: 2rem 2rem 2rem 2rem;
+    color: white;
+}
+
+
+.friend-button-container button {
+    background: rgba(59, 89, 152);
+    padding: 0.6rem 1rem;
+    border: 1px solid rgb(59, 89, 152);
+    /* border: none;
+    outline: none; */
+    border-radius: 5px;
+    margin: 0.3rem;
+    font-size: 1.1rem;
+    width: 200px;
+}
+
+.friend-text-shadow {
+    color: #40a3f4;
+    /* background: #b8b8b8; */
+    /* text-shadow: 4px 3px 0 #7A7A7A; */
+
+    text-shadow: rgb(237, 241, 242) 4px 0px 0px, rgb(237, 241, 242) 3.87565px 0.989616px 0px, rgb(237, 241, 242) 3.51033px 1.9177px 0px, rgb(237, 241, 242) 2.92676px 2.72656px 0px, rgb(237, 241, 242) 2.16121px 3.36588px 0px, rgb(237, 241, 242) 1.26129px 3.79594px 0px, rgb(237, 241, 242) 0.282949px 3.98998px 0px, rgb(237, 241, 242) -0.712984px 3.93594px 0px, rgb(237, 241, 242) -1.66459px 3.63719px 0px, rgb(237, 241, 242) -2.51269px 3.11229px 0px, rgb(237, 241, 242) -3.20457px 2.39389px 0px, rgb(237, 241, 242) -3.69721px 1.52664px 0px, rgb(237, 241, 242) -3.95997px 0.56448px 0px, rgb(237, 241, 242) -3.97652px -0.432781px 0px, rgb(237, 241, 242) -3.74583px -1.40313px 0px, rgb(237, 241, 242) -3.28224px -2.28625px 0px, rgb(237, 241, 242) -2.61457px -3.02721px 0px, rgb(237, 241, 242) -1.78435px -3.57996px 0px, rgb(237, 241, 242) -0.843183px -3.91012px 0px, rgb(237, 241, 242) 0.150409px -3.99717px 0px, rgb(237, 241, 242) 1.13465px -3.8357px 0px, rgb(237, 241, 242) 2.04834px -3.43574px 0px, rgb(237, 241, 242) 2.83468px -2.82216px 0px, rgb(237, 241, 242) 3.44477px -2.03312px 0px, rgb(237, 241, 242) 3.84068px -1.11766px 0px, rgb(237, 241, 242) 3.9978px -0.132717px 0px;
+}

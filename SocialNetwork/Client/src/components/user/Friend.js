@@ -2,24 +2,36 @@ import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { userService, observer, requester } from '../../infrastructure'
 import { toast } from 'react-toastify';
-import { ToastComponent } from '../common'
+import { ToastComponent } from '../common';
+import default_background_image from '../../assets/images/default-background-image.jpg'
+import placeholder_user_image from '../../assets/images/placeholder-profile-male.jpg'
 
-export default class UserRow extends Component {
+
+export default class Friend extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
             id: '',
-            role: '',
-            username: ''
+            firstName: '',
+            lastName: '',
+            username: '',
+            profilePicUrl: '',
+            backgroundImageUrl: '',
+            firstButtonText: '',
+            secondButtonText: '',
+            firstButtonLink: '',
+            secondButtonLink: '',
         }
 
         this.promote = this.promote.bind(this);
         this.demote = this.demote.bind(this);
     }
 
-    componentDidMount(){
-        this.setState({...this.props})
+    componentDidMount() {
+
+        this.setState({ ...this.props })
+        debugger;
     }
 
     promote = (event) => {
@@ -29,7 +41,7 @@ export default class UserRow extends Component {
             console.log(response)
             debugger;
             if (response.success) {
-                this.setState({role: 'ADMIN'})
+                this.setState({ role: 'ADMIN' })
                 toast.success(<ToastComponent.successToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
@@ -46,7 +58,7 @@ export default class UserRow extends Component {
                 position: toast.POSITION.TOP_RIGHT
             });
 
-            if(err.status === 403 && err.message === 'Your JWT token is expired. Please log in!'){
+            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
                 localStorage.clear();
                 this.props.history.push('/login');
             }
@@ -59,7 +71,7 @@ export default class UserRow extends Component {
         requester.post('/users/demote?id=' + id, id, (response) => {
             console.log(response)
             if (response.success) {
-                this.setState({role: 'USER'})
+                this.setState({ role: 'USER' })
                 toast.success(<ToastComponent.successToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
@@ -77,7 +89,7 @@ export default class UserRow extends Component {
                 position: toast.POSITION.TOP_RIGHT
             });
 
-            if(err.status === 403 && err.message === 'Your JWT token is expired. Please log in!'){
+            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
                 localStorage.clear();
                 this.props.history.push('/login');
             }
@@ -85,34 +97,34 @@ export default class UserRow extends Component {
     }
 
     render = () => {
+        const {id, firstName, lastName, firstButtonText, secondButtonText, firstButtonLink, secondButtonLink } = this.state;
+        const backgroundImageUrl = this.state.backgroundImageUrl || default_background_image
+        const profilePicUrl = this.state.profilePicUrl || placeholder_user_image
+
+        debugger;
+        let imgClassName = '';
+        if (profilePicUrl) {
+            imgClassName = userService.getImageSize(profilePicUrl);
+        }
+        debugger;
         return (
-            <tr className="row" >
-                <td className="col-md-1" >
-                    <h5>{this.state.index}</h5>
-                </td>
-                <td className="col-md-3" >
-                    <h5>{this.state.username}</h5>
-                </td>
-                <td className="col-md-3" >
-                    <h5>{this.state.role}</h5>
-                </td>
-                <td className="col-md-5 d-flex justify-content-center" >
-                    {(!userService.checkIfIsRoot(this.state.role) && !userService.isLoggedInUser(this.state.username)) &&
-                        <h5>
-                            {/* <button className="btn App-button-primary" onClick={this.promote} >Promote</button> */}
-                            <button className="btn App-button-primary btn-lg m-1" onClick={this.promote} >Promote</button>
-                        </h5>}
-                    {(!userService.checkIfIsRoot(this.state.role) && !userService.isLoggedInUser(this.state.username)) &&
-                        <h5>
-                            {/* <button className="btn App-button-primary" onClick={this.demote} >Demote</button> */}
-                            <button className="btn App-button-primary btn-lg m-1" onClick={this.demote} >Demote</button>
-                        </h5>}
-                    <h5>
-                        {/* <NavLink className="btn App-button-primary" to={`/home/profile/${this.state.id}`} role="button">Profile</NavLink> */}
-                        <NavLink className="btn App-button-primary btn-lg m-1" to={`/home/profile/${this.state.id}`} role="button">Profile</NavLink>
-                    </h5>
-                </td>
-            </tr>
+            <div className="friend-container" style={{ 'backgroundImage': `url(${backgroundImageUrl})` }}>
+                <span className="friend-img-container">
+                    <img className={imgClassName} src={profilePicUrl} alt="Profile pic" />
+                </span>
+                <div className="friend-content">
+                    <h2 className="friend-text-shadow" >{`${firstName} ${lastName}`}</h2>
+                    <div className="friend-button-container">
+                        <button className="button update-info">
+                            <NavLink to={firstButtonLink}>{firstButtonText}</NavLink>
+                            {/* <NavLink to={`/home/profile/${id}`}>VIEW PROFILE</NavLink> */}
+                        </button>
+                        <button className="button view-activity">
+                            <NavLink to={secondButtonLink}>{secondButtonText}</NavLink>
+                        </button>
+                    </div>
+                </div>
+            </div>
         )
     }
 }

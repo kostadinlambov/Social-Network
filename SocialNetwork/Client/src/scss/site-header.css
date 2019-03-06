@@ -43,7 +43,7 @@ header ul.nav-ul {
 
 header ul.nav-ul li {
     list-style: none outside;
-    padding: 1rem;
+    padding: 1rem 0;
 }
 
 /* // header ul.nav-ul li:after {

@@ -149,7 +149,7 @@ main .aside-article-friends {
 main .aside-article-gallery {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: start;
     align-items: center;
 }
 
@@ -161,12 +161,12 @@ main ul.aside-article-gallery {
 
 
 main ul.aside-article-gallery li {
-    flex: 0 1 33%;
+    flex: 0 1 32%;
     /* height: 50px; */
     /* width: 30%; */
     list-style: none outside;
     padding-left: 0;
-    margin: 1px 0;
+    margin: 1px 2px 1px 0;
 
     /* Center images */
     display: flex;
