@@ -10,6 +10,7 @@ export default class FriendsGallery extends Component {
 
         this.state = {
             friendsArr: [],
+            ready: false,
         }
 
     }
@@ -23,7 +24,7 @@ export default class FriendsGallery extends Component {
             console.log('friends all: ', response);
 
             this.setState({
-                friendsArr: response
+                friendsArr: response, ready: true
             })
         }).catch(err => {
             console.error('deatils err:', err)
@@ -39,6 +40,12 @@ export default class FriendsGallery extends Component {
     }
 
     render() {
+        if (!this.state.ready) {
+            // return <h1 className="text-center pt-5 mt-5">Loading...</h1>
+            return null;
+        }
+
+
         return (
             <Fragment >
                 <article className="aside-article-friends">
@@ -48,7 +55,7 @@ export default class FriendsGallery extends Component {
                         </div>
                         <NavLink className="friends " exact to={`/home/friends/${this.props.userId}`}>
                             <h3 className="aside-article-title" style={{ color: ' #333' }}>
-                                Friends
+                                Friends &bull; {this.state.friendsArr.length}
                             </h3>
                         </NavLink>
                     </div>

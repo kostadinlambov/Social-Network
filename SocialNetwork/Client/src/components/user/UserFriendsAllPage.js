@@ -45,7 +45,7 @@ export default class UserFriendsAllPage extends Component {
         debugger;
         return (
             <div className="container col-md-12 text-center">
-                <h1 className="text-center font-weight-bold display-5" style={{ 'margin': '1rem auto' }}>Friends</h1>
+                <h1 className="text-center font-weight-bold display-5" style={{ 'margin': '1rem auto' }}>Friends </h1>
                 <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" />
                 <section className="friend-section" >
                     {this.state.friendsArr.map((friend) =>
