@@ -4,6 +4,7 @@ import kl.socialnetwork.domain.entities.Relationship;
 import kl.socialnetwork.domain.entities.User;
 import kl.socialnetwork.domain.modles.serviceModels.RelationshipServiceModel;
 import kl.socialnetwork.domain.modles.viewModels.relationship.FriendsAllViewModel;
+import kl.socialnetwork.domain.modles.viewModels.relationship.FriendsCandidatesViewModel;
 import kl.socialnetwork.repositories.RelationshipRepository;
 import kl.socialnetwork.repositories.UserRepository;
 import kl.socialnetwork.services.RelationshipService;
@@ -33,9 +34,9 @@ public class RelationshipServiceImpl implements RelationshipService {
     }
 
     @Override
-    public List<RelationshipServiceModel> findAllUserRelationshipsWithStatus(String userId, int status) {
+    public List<RelationshipServiceModel> findAllUserRelationshipsWithStatus(String userId) {
         List<Relationship> relationshipList = this.relationshipRepository
-                .findAllByUserOneIdAndStatusOrUserTwoIdAndStatus(userId, status,  userId, status);
+                .findRelationshipByUserIdAndStatus(userId, 1);
 
         List<RelationshipServiceModel> relationshipServiceModels = relationshipList
                 .stream()
@@ -44,17 +45,21 @@ public class RelationshipServiceImpl implements RelationshipService {
                 .collect(Collectors.toList());
 
         return relationshipServiceModels;
-
     }
 
     @Override
-    public List<FriendsAllViewModel> findAllNotFriends(String id, int status) {
+    public List<FriendsCandidatesViewModel> findAllFriendCandidates(String id) {
         List<User> userList = this.userRepository.findAll();
-        List<Relationship> relationshipList = this.relationshipRepository.findAllCandidatesForFriends(id);
+        List<Relationship> notCandidatesForFriends = this.relationshipRepository.findAllNotCandidatesForFriends(id);
+
+        List<Relationship> relationshipWithStatusZero = this.relationshipRepository.findRelationshipByUserIdAndStatus(id, 0);
+
+//        this.relationshipRepository.findRelationshipByUserIdAndStatus(id)
+
 
         List<User> usersWithRelationship = new ArrayList<>();
 
-        relationshipList.forEach(relationship -> {
+        notCandidatesForFriends.forEach(relationship -> {
             if(!relationship.getUserOne().getId().equals(id)){
                 usersWithRelationship.add(relationship.getUserOne());
             }else{
@@ -62,13 +67,55 @@ public class RelationshipServiceImpl implements RelationshipService {
             }
         });
 
-        List<FriendsAllViewModel> notFriendsUserList = userList.stream()
+        List<FriendsCandidatesViewModel> notFriendsUserList = userList.stream()
                 .filter(user -> !usersWithRelationship.contains(user) && !user.getId().equals(id))
-                .map(user -> this.modelMapper.map(user, FriendsAllViewModel.class))
+                .map(user -> this.modelMapper.map(user, FriendsCandidatesViewModel.class))
                 .collect(Collectors.toList());
 
-        return notFriendsUserList;
+        List<FriendsCandidatesViewModel> candidatesViewModels = notFriendsUserList.stream().map(user -> {
+            Relationship relationshipWithCurrentUser = relationshipWithStatusZero.stream()
+                    .filter(relationship ->
+                            relationship.getUserOne().getId().equals(user.getId()) ||
+                                    relationship.getUserTwo().getId().equals(user.getId()))
+                    .findFirst().orElse(null);
+            if (relationshipWithCurrentUser != null) {
+                user.setStatus(0);
+                user.setStarterOfAction(relationshipWithCurrentUser.getActionUser().getId().equals(user.getId()));
+            }
+
+            return user;
+        }).collect(Collectors.toList());
+
+
+        return candidatesViewModels;
     }
+
+//    @Override
+//    public List<FriendsAllViewModel> findAllFriendCandidates(String id) {
+//        List<User> userList = this.userRepository.findAll();
+//        List<Relationship> notCandidatesForFriends = this.relationshipRepository.findAllNotCandidatesForFriends(id);
+//
+//
+////        this.relationshipRepository.findRelationshipByUserIdAndStatus(id)
+//
+//
+//        List<User> usersWithRelationship = new ArrayList<>();
+//
+//        notCandidatesForFriends.forEach(relationship -> {
+//            if(!relationship.getUserOne().getId().equals(id)){
+//                usersWithRelationship.add(relationship.getUserOne());
+//            }else{
+//                usersWithRelationship.add(relationship.getUserTwo());
+//            }
+//        });
+//
+//        List<FriendsAllViewModel> notFriendsUserList = userList.stream()
+//                .filter(user -> !usersWithRelationship.contains(user) && !user.getId().equals(id))
+//                .map(user -> this.modelMapper.map(user, FriendsAllViewModel.class))
+//                .collect(Collectors.toList());
+//
+//        return notFriendsUserList;
+//    }
 
     @Override
     public boolean createRequestForAddingFriend(String loggedInUserId, String friendCandidateId) {
@@ -84,48 +131,18 @@ public class RelationshipServiceImpl implements RelationshipService {
                 relationship.setActionUser(loggedInUser);
                 relationship.setUserOne(loggedInUser);
                 relationship.setUserTwo(friendCandidateUser);
-                relationship.setStatus(1);
-//                relationship.setStatus(0);
+                relationship.setStatus(0);
                 relationship.setTime(LocalDateTime.now());
 
                return this.relationshipRepository.saveAndFlush(relationship) != null;
             }else{
-                relationshipFromDb.setStatus(1);
+                relationshipFromDb.setStatus(0);
                 return this.relationshipRepository.saveAndFlush(relationshipFromDb) != null;
             }
 
         }
         return false;
     }
-
-//    @Override
-//    public boolean createRequestForAddingFriend(String loggedInUserId, String friendCandidateId) {
-//        User loggedInUser = this.userRepository.findById(loggedInUserId).orElse(null);
-//        User friendCandidateUser = this.userRepository.findById(friendCandidateId).orElse(null);
-//
-//        if(loggedInUser != null && friendCandidateUser != null){
-//
-//            Relationship firstCheck = this.relationshipRepository
-//                    .findByUserOneIdAndUserTwoId(loggedInUserId, friendCandidateId);
-//            Relationship secondCheck = this.relationshipRepository
-//                    .findByUserOneIdAndUserTwoId(friendCandidateId, loggedInUserId);
-//
-//            if(firstCheck == null && secondCheck == null){
-//                Relationship relationship = new Relationship();
-//                relationship.setActionUser(loggedInUser);
-//                relationship.setUserOne(loggedInUser);
-//                relationship.setUserTwo(friendCandidateUser);
-//                relationship.setStatus(1);
-////                relationship.setStatus(0);
-//                relationship.setTime(LocalDateTime.now());
-//
-//                return this.relationshipRepository.saveAndFlush(relationship) != null;
-//            }
-//
-//            System.out.println();
-//        }
-//        return false;
-//    }
 
     @Override
     public boolean removeFriend(String loggedInUserId, String friendToRemoveId) {
@@ -135,7 +152,7 @@ public class RelationshipServiceImpl implements RelationshipService {
         if(loggedInUser != null && friendToRemove != null){
 
             Relationship relationship = this.relationshipRepository
-                    .findRelationshipWithFriendToRemove(
+                    .findRelationshipWithFriendWithStatus(
                             loggedInUserId, friendToRemoveId, 1);
 
 

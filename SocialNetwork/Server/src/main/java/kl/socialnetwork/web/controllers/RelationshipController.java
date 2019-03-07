@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kl.socialnetwork.domain.modles.serviceModels.RelationshipServiceModel;
 import kl.socialnetwork.domain.modles.viewModels.relationship.FriendsAllViewModel;
+import kl.socialnetwork.domain.modles.viewModels.relationship.FriendsCandidatesViewModel;
 import kl.socialnetwork.services.RelationshipService;
 import kl.socialnetwork.utils.constants.ResponseMessageConstants;
 import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;
@@ -39,8 +40,7 @@ public class RelationshipController {
 
     @GetMapping(value = "/friends/{id}", produces = "application/json")
     public List<FriendsAllViewModel> findAllFriends(@PathVariable String id) {
-        int status = 1;
-        List<RelationshipServiceModel> allFriends = this.relationshipService.findAllUserRelationshipsWithStatus(id, status);
+        List<RelationshipServiceModel> allFriends = this.relationshipService.findAllUserRelationshipsWithStatus(id);
 
         List<FriendsAllViewModel> friendsAllViewModels = allFriends.stream().map(relationshipServiceModel -> {
             if (!relationshipServiceModel.getUserOne().getId().equals(id)) {
@@ -54,9 +54,9 @@ public class RelationshipController {
 
 
     @GetMapping(value = "/findFriends/{id}", produces = "application/json")
-    public List<FriendsAllViewModel> findAllNotFriends(@PathVariable String id) {
-        int status = 3;
-        List<FriendsAllViewModel> allNotFriends = this.relationshipService.findAllNotFriends(id, status);
+    public List<FriendsCandidatesViewModel> findAllNotFriends(@PathVariable String id) {
+
+        List<FriendsCandidatesViewModel> allNotFriends = this.relationshipService.findAllFriendCandidates(id);
 
         return allNotFriends;
     }

@@ -2,14 +2,15 @@ package kl.socialnetwork.services;
 
 import kl.socialnetwork.domain.modles.serviceModels.RelationshipServiceModel;
 import kl.socialnetwork.domain.modles.viewModels.relationship.FriendsAllViewModel;
+import kl.socialnetwork.domain.modles.viewModels.relationship.FriendsCandidatesViewModel;
 
 import java.util.List;
 
 public interface RelationshipService {
 
-    List<RelationshipServiceModel> findAllUserRelationshipsWithStatus(String userId, int status);
+    List<RelationshipServiceModel> findAllUserRelationshipsWithStatus(String userId);
 
-    List<FriendsAllViewModel> findAllNotFriends(String id, int status);
+    List<FriendsCandidatesViewModel> findAllFriendCandidates(String id);
 
 
     boolean createRequestForAddingFriend(String loggedInUserId, String friendCandidateId);

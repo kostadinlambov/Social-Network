@@ -19,6 +19,25 @@ public interface RelationshipRepository extends JpaRepository<Relationship, Stri
 
     Relationship findByUserOneIdAndUserTwoId(String userOneId, String userTwoId);
 
+
+    @Query(value = "" +
+            "SELECT r FROM Relationship AS r " +
+            "WHERE (r.userOne.id = :id OR r.userTwo.id = :id ) " +
+            "AND r.status = :status")
+    List<Relationship> findRelationshipByUserIdAndStatus(@Param(value = "id") String userId,
+                                                         @Param(value = "status") int status);
+
+
+    @Query(value = "" +
+            "SELECT r FROM Relationship AS r " +
+            "WHERE ((r.userOne.id = :id1 AND r.userTwo.id = :id2) " +
+            "OR ( r.userTwo.id = :id1 AND r.userOne.id = :id2)) " +
+            "AND r.status = :status")
+    Relationship findRelationshipWithFriendWithStatus(@Param(value = "id1") String userOneId,
+                                                      @Param(value = "id2") String userTwoId,
+                                                      @Param(value = "status") int status);
+
+
     @Query(value = "" +
             "SELECT r FROM Relationship AS r " +
             "WHERE ((r.userOne.id = :id1 AND r.userTwo.id = :id2) " +
@@ -26,20 +45,12 @@ public interface RelationshipRepository extends JpaRepository<Relationship, Stri
     Relationship findRelationshipByUserOneIdAndUserTwoId(@Param(value = "id1") String userOneId,
                                                          @Param(value = "id2") String userTwoId);
 
-    @Query(value = "" +
-            "SELECT r FROM Relationship AS r " +
-            "WHERE ((r.userOne.id = :id1 AND r.userTwo.id = :id2) " +
-            "OR ( r.userTwo.id = :id1 AND r.userOne.id = :id2)) " +
-            "AND r.status = :status")
-    Relationship findRelationshipWithFriendToRemove(@Param(value = "id1") String userOneId,
-                                                    @Param(value = "id2") String userTwoId,
-                                                    @Param(value = "status") int status);
 
     @Query(value = "" +
             "SELECT r FROM Relationship AS r " +
             "WHERE (r.userOne.id = :id OR r.userTwo.id = :id) " +
-            "AND r.status  NOT IN (2, 3)")
-    List<Relationship> findAllCandidatesForFriends(@Param(value = "id") String id);
+            "AND r.status  NOT IN (0 , 2)")
+    List<Relationship> findAllNotCandidatesForFriends(@Param(value = "id") String id);
 
 
     @Query(value = "" +
