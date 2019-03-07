@@ -54,9 +54,6 @@ public class RelationshipServiceImpl implements RelationshipService {
 
         List<Relationship> relationshipWithStatusZero = this.relationshipRepository.findRelationshipByUserIdAndStatus(id, 0);
 
-//        this.relationshipRepository.findRelationshipByUserIdAndStatus(id)
-
-
         List<User> usersWithRelationship = new ArrayList<>();
 
         notCandidatesForFriends.forEach(relationship -> {
@@ -86,36 +83,8 @@ public class RelationshipServiceImpl implements RelationshipService {
             return user;
         }).collect(Collectors.toList());
 
-
         return candidatesViewModels;
     }
-
-//    @Override
-//    public List<FriendsAllViewModel> findAllFriendCandidates(String id) {
-//        List<User> userList = this.userRepository.findAll();
-//        List<Relationship> notCandidatesForFriends = this.relationshipRepository.findAllNotCandidatesForFriends(id);
-//
-//
-////        this.relationshipRepository.findRelationshipByUserIdAndStatus(id)
-//
-//
-//        List<User> usersWithRelationship = new ArrayList<>();
-//
-//        notCandidatesForFriends.forEach(relationship -> {
-//            if(!relationship.getUserOne().getId().equals(id)){
-//                usersWithRelationship.add(relationship.getUserOne());
-//            }else{
-//                usersWithRelationship.add(relationship.getUserTwo());
-//            }
-//        });
-//
-//        List<FriendsAllViewModel> notFriendsUserList = userList.stream()
-//                .filter(user -> !usersWithRelationship.contains(user) && !user.getId().equals(id))
-//                .map(user -> this.modelMapper.map(user, FriendsAllViewModel.class))
-//                .collect(Collectors.toList());
-//
-//        return notFriendsUserList;
-//    }
 
     @Override
     public boolean createRequestForAddingFriend(String loggedInUserId, String friendCandidateId) {
@@ -146,19 +115,34 @@ public class RelationshipServiceImpl implements RelationshipService {
 
     @Override
     public boolean removeFriend(String loggedInUserId, String friendToRemoveId) {
-        User loggedInUser = this.userRepository.findById(loggedInUserId).orElse(null);
-        User friendToRemove = this.userRepository.findById(friendToRemoveId).orElse(null);
+        return this.changeStatusAndSave(loggedInUserId, friendToRemoveId, 1, 2);
+    }
 
-        if(loggedInUser != null && friendToRemove != null){
+    @Override
+    public boolean acceptFriend(String loggedInUserId, String friendToAcceptId) {
+        return this.changeStatusAndSave(loggedInUserId, friendToAcceptId, 0, 1);
+
+    }
+
+    @Override
+    public boolean cancelFriendshipRequest(String loggedInUserId, String friendToRejectId) {
+       return this.changeStatusAndSave(loggedInUserId, friendToRejectId, 0, 2);
+    }
+
+    private boolean changeStatusAndSave(String loggedInUserId, String userTwoID, int fromStatus, int toStatus){
+        User loggedInUser = this.userRepository.findById(loggedInUserId).orElse(null);
+        User friendToReject = this.userRepository.findById(userTwoID).orElse(null);
+
+        if(loggedInUser != null && friendToReject != null){
 
             Relationship relationship = this.relationshipRepository
                     .findRelationshipWithFriendWithStatus(
-                            loggedInUserId, friendToRemoveId, 1);
+                            loggedInUserId, userTwoID, fromStatus);
 
 
             if(relationship != null){
                 relationship.setActionUser(loggedInUser);
-                relationship.setStatus(2);
+                relationship.setStatus(toStatus);
                 relationship.setTime(LocalDateTime.now());
                 return this.relationshipRepository.saveAndFlush(relationship) != null;
             }

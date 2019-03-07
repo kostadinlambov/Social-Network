@@ -85,10 +85,6 @@ public class RelationshipController {
 
     @PostMapping(value = "/removeFriend")
     public ResponseEntity removeFriend(@RequestBody Map<String, Object> body) throws JsonProcessingException {
-//    public ResponseEntity removeFriend(
-//            @RequestParam(value = "loggedInUserId") String loggedInUserId,
-//            @RequestParam(value = "friendToRemoveId") String friendToRemoveId
-//    ) throws JsonProcessingException {
         String loggedInUserId = (String) body.get("loggedInUserId");
         String friendToRemoveId = (String) body.get("friendToRemoveId");
 
@@ -107,4 +103,46 @@ public class RelationshipController {
 
         throw new CustomException(ResponseMessageConstants.SERVER_ERROR_MESSAGE);
     }
+
+    @PostMapping(value = "/acceptFriend")
+    public ResponseEntity acceptFriend(@RequestBody Map<String, Object> body) throws JsonProcessingException {
+        String loggedInUserId = (String) body.get("loggedInUserId");
+        String friendToAcceptId = (String) body.get("friendToAcceptId");
+
+        boolean result = this.relationshipService.acceptFriend(loggedInUserId, friendToAcceptId);
+
+        if (result) {
+            SuccessResponse successResponse = new SuccessResponse(
+                    LocalDateTime.now(),
+                    "User was added successfully to your friends list!",
+                    "",
+                    true
+            );
+
+            return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
+        }
+        throw new CustomException(ResponseMessageConstants.SERVER_ERROR_MESSAGE);
+    }
+
+    @PostMapping(value = "/cancelRequest")
+    public ResponseEntity cancelFriendshipRequest(@RequestBody Map<String, Object> body) throws JsonProcessingException {
+        String loggedInUserId = (String) body.get("loggedInUserId");
+        String friendToRejectId = (String) body.get("friendToRejectId");
+
+        boolean result = this.relationshipService.cancelFriendshipRequest(loggedInUserId, friendToRejectId);
+
+        if (result) {
+            SuccessResponse successResponse = new SuccessResponse(
+                    LocalDateTime.now(),
+                    "User was added successfully to your friends list!",
+                    "",
+                    true
+            );
+
+            return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
+        }
+
+        throw new CustomException(ResponseMessageConstants.SERVER_ERROR_MESSAGE);
+    }
 }
+

@@ -16,4 +16,8 @@ public interface RelationshipService {
     boolean createRequestForAddingFriend(String loggedInUserId, String friendCandidateId);
 
     boolean removeFriend(String loggedInUserId, String friendToRemoveId);
+
+    boolean acceptFriend(String loggedInUserId, String friendToAcceptId);
+
+    boolean cancelFriendshipRequest(String loggedInUserId, String friendToRejectId);
 }
