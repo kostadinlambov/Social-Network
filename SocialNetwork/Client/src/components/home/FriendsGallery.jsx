@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { requester, userService } from '../../infrastructure';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common';
+import placeholder_user_image from '../../assets/images/placeholder-profile-male.jpg'
 
 export default class FriendsGallery extends Component {
     constructor(props) {
@@ -61,10 +62,11 @@ export default class FriendsGallery extends Component {
                     </div>
                     <ul className="aside-article-gallery ">
                         {this.state.friendsArr.map(friend => {
-                            const imageClassName = userService.getImageSize(friend.profilePicUrl, true);
+                            const profilePicUrl = friend.profilePicUrl || placeholder_user_image
+                            const imageClassName = userService.getImageSize(profilePicUrl, true);
                             return (
                                 <li key={friend.id}>
-                                    <NavLink to="#"><img className={imageClassName} src={friend.profilePicUrl} alt="Pic" /></NavLink>
+                                    <NavLink to="#"><img className={imageClassName} src={profilePicUrl} alt="Pic" /></NavLink>
                                     <div className="img-details"><p className="user-name">{`${friend.firstName} ${friend.lastName}`}</p> </div>
                                 </li>)
                         })}

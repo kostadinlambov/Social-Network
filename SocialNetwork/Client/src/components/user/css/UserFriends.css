@@ -3,7 +3,7 @@
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
-    margin: auto;
+    /* margin: auto; */
 
 }
 
@@ -25,6 +25,10 @@
     box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.3);
     padding: 1rem;
     border-radius: 5px;
+
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 
 .friend-img-container {
