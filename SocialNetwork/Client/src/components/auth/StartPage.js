@@ -7,10 +7,8 @@ export default class StartPage extends Component {
         super(props)
 
         this.state = {}
-       
     }
   
-
     render() {
         const isAdmin = userService.isAdmin();
         const isRoot = userService.isRoot();

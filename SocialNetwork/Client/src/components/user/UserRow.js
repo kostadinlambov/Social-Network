@@ -27,7 +27,7 @@ export default class UserRow extends Component {
         const id = this.state.id;
         requester.post('/users/promote?id=' + id, id, (response) => {
             console.log(response)
-            debugger;
+            
             if (response.success) {
                 this.setState({role: 'ADMIN'})
                 toast.success(<ToastComponent.successToast text={response.message} />, {

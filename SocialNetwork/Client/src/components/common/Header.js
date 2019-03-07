@@ -14,7 +14,6 @@ export default class Header extends Component {
     }
 
     userLoggedIn = (username) => {
-        debugger;
         this.setState({ username })
     }
 
@@ -26,13 +25,10 @@ export default class Header extends Component {
         let userId = userService.getUserId();
         let profileLink = "/profile/" + userId;
 
-        debugger;
-
         console.log('isAdmin: ', isAdmin)
         console.log(this.props)
 
         const { loggedIn, onLogout } = this.props;
-        debugger;
         return (
             // <div className="custom-header-container">
             <div className="navbar-wrapper">

@@ -22,23 +22,16 @@ import default_background_image from '../../assets/images/default-background-ima
 
 const HeaderSection = (props) => {
     console.log('HeaderSection props: ', props)
-
     console.log('props.profilePicUrl :', props.profilePicUrl)
-
-    debugger;
 
     const profilePicUrl = props.profilePicUrl || placeholder_user_image;
     const backgroundImageUrl = props.backgroundImageUrl || default_background_image
     console.log('profilePicUrl :', profilePicUrl)
-
-    debugger;
-
     let imgClassName = '';
 
     if(props.profilePicUrl){
        imgClassName = userService.getImageSize(profilePicUrl);
     }
-
 
     return (
         <Fragment >

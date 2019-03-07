@@ -17,7 +17,7 @@ function withAuthorization(WrapperComponent, roles) {
 
         componentDidMount = () => {
             let currentUserRoles = userService.getRole();
-            debugger;
+
             if(currentUserRoles){
                 this.setState({
                     userRoles: currentUserRoles.split(','),
@@ -27,21 +27,19 @@ function withAuthorization(WrapperComponent, roles) {
         }
 
         render = () => {
-            debugger;
+
             if(!this.state.ready){
                 return <h1 className="pt-5">Loading...</h1>
             }
             let userHasAccess = false;
-            debugger;
+
             for (let role of roles){
                 userHasAccess = userHasAccess || this.state.userRoles.indexOf(role) !== -1;
             }
-            debugger;
+
             if(userHasAccess){
-                debugger
                 return <WrapperComponent {...this.props} /> 
             }else{
-                debugger;
                 // this.props.history.push('/error');
                 // return null;
 

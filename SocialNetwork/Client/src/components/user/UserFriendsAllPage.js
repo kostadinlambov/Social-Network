@@ -21,7 +21,7 @@ export default class UserFriendsAllPage extends Component {
     componentDidMount() {
         const userId = this.props.match.params.id;
         this.setState({ id: userId })
-        debugger;
+        
         requester.get(`/relationship/friends/${userId}`, (response) => {
             debugger;
             console.log('friends all: ', response);
@@ -46,14 +46,14 @@ export default class UserFriendsAllPage extends Component {
     removeFriend = (friendToRemoveId, event) => {
         console.log('event: ', event)
         console.log('friendToRemoveId: ', friendToRemoveId)
-        debugger;
+
         event.preventDefault();
-        debugger;
+
         // const id = this.state.id;
         const requestBody = { loggedInUserId: userService.getUserId(), friendToRemoveId: friendToRemoveId }
 
         console.log('requestBody: ', requestBody)
-        debugger;
+
         requester.post('/relationship/removeFriend', requestBody, (response) => {
             console.log('RemoveFriend response: ', response)
             debugger;
@@ -87,7 +87,6 @@ export default class UserFriendsAllPage extends Component {
 
     render() {
 
-        debugger;
         return (
             <div className="container col-md-12 text-center">
                 <h1 className="text-center font-weight-bold display-5" style={{ 'margin': '1rem auto' }}>Friends </h1>

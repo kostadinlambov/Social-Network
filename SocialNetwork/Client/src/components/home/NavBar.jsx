@@ -15,7 +15,6 @@ export default class Navbar extends Component {
     }
 
     userLoggedIn = (username) => {
-        debugger;
         this.setState({ username })
     }
 
@@ -25,13 +24,10 @@ export default class Navbar extends Component {
         const userId = userService.getUserId();
         const profileLink = "/profile/" + userId;
 
-        debugger;
-
         console.log('isAdmin: ', isAdmin)
         console.log(this.props)
 
         const { loggedIn, onLogout } = this.props;
-        debugger;
         return (
             <Fragment >
                 <input type="checkbox" name="main-nav-toggle" id="main-nav-toggle" />
@@ -87,8 +83,6 @@ export default class Navbar extends Component {
                                     {!loggedIn && <li className="nav-item">
                                         <NavLink exact to="/register" className="nav-link" >Register</NavLink>
                                     </li>}
-                                    
-
                                 </ul>
                             </nav>
 

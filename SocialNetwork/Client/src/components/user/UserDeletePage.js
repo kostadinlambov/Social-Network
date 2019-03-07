@@ -42,10 +42,8 @@ import { ToastComponent } from '../common'
     onSubmitHandlerDelete = (e) => {
         e.preventDefault();
         console.log(this.state.id);
-        debugger;
 
         requester.delete('/users/delete/' + this.state.id, {}, (response) => {
-            debugger;
             if (response.success === true) {
                 toast.success(<ToastComponent.successToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT

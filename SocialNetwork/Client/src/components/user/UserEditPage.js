@@ -36,7 +36,6 @@ export default class UserEditPage extends Component {
     }
 
     componentDidMount() {
-        debugger;
         this.setState({
             id: this.props.location.state.id,
             username: this.props.location.state.username,
@@ -52,7 +51,6 @@ export default class UserEditPage extends Component {
     }
 
     onChangeHandler(event) {
-        debugger;
         console.log('name: ', event.target.name)
         console.log('value: ', event.target.value)
         this.setState({
@@ -68,7 +66,7 @@ export default class UserEditPage extends Component {
         }
 
         console.log('event: ', event);
-        debugger;
+
         const { touched, ...otherProps } = this.state;
 
         requester.put('/users/update', { ...otherProps }, (response) => {
@@ -122,14 +120,13 @@ export default class UserEditPage extends Component {
     }
 
     validate = (username, email, firstName, lastName, address, city, profilePicUrl, backgroundImageUrl) => {
-        debugger;
         const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
         const firstLastNameRegex = /^[A-Z]([a-zA-Z]+)?$/;
         let testEmail = emailRegex.test(email)
         let testFirstName = firstLastNameRegex.test(firstName)
         let testLastName = firstLastNameRegex.test(lastName)
         console.log('testEmail : ', testEmail)
-        debugger;
+
         return {
             username: username.length < 4 || username.length > 16,
             email: email.length === 0 || !testEmail,

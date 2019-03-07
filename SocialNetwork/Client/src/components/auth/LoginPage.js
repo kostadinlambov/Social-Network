@@ -35,7 +35,6 @@ export default class LoginPage extends Component {
     onSubmitHandler(event) {
         event.preventDefault();
         console.log('event: ', event);
-        debugger;
 
         if (!this.canBeSubmitted()) {
             return;
@@ -44,9 +43,7 @@ export default class LoginPage extends Component {
         const { touched, ...otherProps } = this.state;
 
         requester.post('/login', { ...otherProps }, (response) => {
-
             console.log('response: ', response)
-            debugger;
 
             if (response.error) {
                 debugger;
@@ -65,7 +62,7 @@ export default class LoginPage extends Component {
                 toast.success(<ToastComponent.successToast text={' You have successfully logged in!'} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
-                debugger;
+                
                 this.props.history.push('/');
             }
 

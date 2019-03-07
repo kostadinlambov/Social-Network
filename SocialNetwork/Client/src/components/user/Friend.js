@@ -21,14 +21,14 @@ export default class Friend extends Component {
             secondButtonLink: '',
             firstButtonOnClick: '',
             secondButtonOnClick: '',
+            status: '',
+            actionUser: '',
             ready: false,
         }
     }
 
     componentDidMount() {
-
         this.setState({ ...this.props, ready: true })
-        debugger;
     }
 
     render = () => {
@@ -36,16 +36,17 @@ export default class Friend extends Component {
             return null;
         }
 
-        const { id, firstName, lastName, firstButtonText, secondButtonText, firstButtonLink, secondButtonLink, firstButtonOnClick, secondButtonOnClick } = this.state;
+        const { id, firstName, lastName, firstButtonText, secondButtonText, firstButtonLink, secondButtonLink,
+             firstButtonOnClick, secondButtonOnClick, status, actionUser } = this.state;
+
         const backgroundImageUrl = this.state.backgroundImageUrl || default_background_image
         const profilePicUrl = this.state.profilePicUrl || placeholder_user_image
 
-        debugger;
         let imgClassName = '';
         if (profilePicUrl) {
             imgClassName = userService.getImageSize(profilePicUrl);
         }
-        debugger;
+        
         return (
             <div className="friend-container" style={{ 'backgroundImage': `url(${backgroundImageUrl})` }}>
                 <span className="friend-img-container">

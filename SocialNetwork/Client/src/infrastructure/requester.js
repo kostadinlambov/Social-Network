@@ -83,12 +83,10 @@ export default {
 
 
 function checkStatus(response) {
-    debugger;
     if (response.status >= 200 && response.status < 300) {
         return response.json()
     } else {
         var error = new Error(response.statusText);
-        debugger;
         if (response.status === 403 && response.url === 'http://localhost:8000/login') {
             error.message = 'Incorrect credentials!';
             error.response = response;

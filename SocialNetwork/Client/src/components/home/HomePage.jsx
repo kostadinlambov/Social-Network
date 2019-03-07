@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
 import { requester } from '../../infrastructure/'
 
-
 // import './css/Home.css'
 import TimeLine from './TimeLine';
 import HeaderSection from './HeaderSection';
@@ -15,7 +14,6 @@ import PhotoGallery from './PhotosGallery';
 import FriendsGallery from './FriendsGallery';
 import userService from '../../infrastructure/userService';
 
-
 const UserProfilePage = lazy(() => import('../../components/user/UserProfilePage'))
 const UserFriendsPage = lazy(() => import('../../components/user/UserFriendsAllPage'))
 const UserFindFriendsPage = lazy(() => import('../../components/user/UserFindFriendsPage'))
@@ -24,7 +22,6 @@ const UserEditPage = lazy(() => import('../../components/user/UserEditPage'))
 const UserDeletePage = lazy(() => import('../../components/user/UserDeletePage'))
 
 const ErrorPage = lazy(() => import('../../components/common/ErrorPage'))
-
 
 export default class HomePage extends Component {
     constructor(props) {
@@ -47,7 +44,6 @@ export default class HomePage extends Component {
 
     componentDidMount() {
         const currentUserId = userService.getUserId();
-        debugger;
 
         requester.get(`/users/details/${currentUserId}`, (userData) => {
 
@@ -57,9 +53,7 @@ export default class HomePage extends Component {
             this.setState({
                 ...userData, ready: true
             })
-            debugger;
             console.log("this.state: ", this.state);
-            debugger;
 
         }).catch(err => {
             console.error('deatils err:', err)
@@ -81,10 +75,9 @@ export default class HomePage extends Component {
         if (!this.state.ready) {
             return <h1 className="text-center pt-5 mt-5">Loading...</h1>
         }
-        debugger;
         console.log(this.props.match.url)
         const loggedIn = localStorage.getItem('token');
-        debugger;
+        
         return (
             <Fragment>
                 <HeaderSection  {...this.state} />

@@ -17,11 +17,8 @@ export default class FriendsGallery extends Component {
     }
 
     componentDidMount() {
-        debugger;
         const userId = this.props.userId;
-        debugger;
         requester.get(`/relationship/friends/${userId}`, (response) => {
-            debugger;
             console.log('friends all: ', response);
 
             this.setState({

@@ -10,7 +10,6 @@ import benderPic_8 from '../../assets/images/Bender/Bender_8.jpg';
 import benderPic_9 from '../../assets/images/Bender/Bender_9.jpg';
 
 const PhotoGallery = (props) => {
-
     return (
         <Fragment >
             <article className="aside-article-photos">

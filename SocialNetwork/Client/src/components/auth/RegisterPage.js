@@ -44,7 +44,6 @@ export default class RegisterPage extends Component {
     onSubmitHandler(event) {
         event.preventDefault();
         console.log('event: ', event);
-        debugger;
 
         if (!this.canBeSubmitted()) {
             return;
@@ -53,14 +52,10 @@ export default class RegisterPage extends Component {
         const { touched, ...otherProps } = this.state;
 
         requester.post('/users/register', { ...otherProps }, (response) => {
-
             console.log('response: ', response)
-            debugger;
-
 
             if (response.success === true) {
                 console.log('success message: ', response.message);
-                debugger;
                 toast.success(<ToastComponent.successToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
@@ -68,7 +63,6 @@ export default class RegisterPage extends Component {
                 this.props.history.push('/login');
             } else {
                 console.log('error message: ', response.message);
-                debugger;
                 // observer.trigger(observer.events.notification, { type: 'error', message: response.message });
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
@@ -100,14 +94,12 @@ export default class RegisterPage extends Component {
     }
 
     validate = (username, email, firstName, lastName, password, confirmPassword, address, city) => {
-        debugger;
         const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
         const firstLastNameRegex = /^[A-Z]([a-zA-Z]+)?$/;
         const testEmail = emailRegex.test(email)
         const testFirstName = firstLastNameRegex.test(firstName)
         const testLastName = firstLastNameRegex.test(lastName)
         console.log('testEmail : ', testEmail)
-        debugger;
         return {
             username: username.length < 4 || username.length > 16,
             email: email.length === 0 || !testEmail,
@@ -121,8 +113,6 @@ export default class RegisterPage extends Component {
     }
 
     render() {
-        debugger;
-
         const { username, email, firstName, lastName, password, confirmPassword, address, city } = this.state;
         const errors = this.validate(username, email, firstName, lastName, password, confirmPassword, address, city);
         const isEnabled = !Object.keys(errors).some(x => errors[x])

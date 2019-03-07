@@ -3,7 +3,6 @@ import { NavLink } from 'react-router-dom';
 // import './css/TimeLine.css';
 
 const TimeLine = (props) => {
-    debugger;
     console.log('TimeLine props :', props)
     return (
         <article className="main-article-header">

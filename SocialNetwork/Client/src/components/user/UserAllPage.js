@@ -14,9 +14,7 @@ export default class UserAllPage extends Component {
     }
 
     componentDidMount() {
-        debugger;
         requester.get('/users/all', (response) => {
-            debugger;
             console.log('users all: ', response);
 
             if (response.success === true) {

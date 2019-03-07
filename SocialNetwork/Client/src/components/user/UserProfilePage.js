@@ -31,7 +31,6 @@ export default class UserProfilePage extends Component {
     componentDidMount = () => {
         const userId = this.props.match.params.id;
         console.log("current User id: ", userId);
-        debugger;
 
         requester.get(`/users/details/${userId}`, (userData) => {
 
@@ -43,9 +42,8 @@ export default class UserProfilePage extends Component {
                 profilePicUrl: userData.profilePicUrl || placeholder_user_image,
                 backgroundImageUrl: userData.backgroundImageUrl || default_background_image,
             })
-            debugger;
+            
             console.log("this.state: ", this.state);
-            debugger;
 
         }).catch(err => {
             console.error('deatils err:', err)
@@ -106,7 +104,6 @@ export default class UserProfilePage extends Component {
         const isRoot = userService.isRoot();
         const isCurrentUserRoot = authority === 'ROOT';
 
-        debugger;
         return (
             <div className="container mx-auto text-center " >
 
