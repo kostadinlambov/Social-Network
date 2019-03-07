@@ -101,6 +101,12 @@
     margin: 0.3rem;
     font-size: 1.1rem;
     width: 200px;
+    /* color:white */
+    font-weight: 600;
+}
+
+.friend-button-container button>a{
+    font-weight: 600;
 }
 
 .friend-text-shadow {

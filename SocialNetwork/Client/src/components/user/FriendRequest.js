@@ -4,7 +4,7 @@ import { userService } from '../../infrastructure'
 import default_background_image from '../../assets/images/default-background-image.jpg'
 import placeholder_user_image from '../../assets/images/placeholder-profile-male.jpg'
 
-export default class Friend extends Component {
+export default class FriendRequest extends Component {
     constructor(props) {
         super(props)
 
@@ -37,7 +37,7 @@ export default class Friend extends Component {
         }
 
         const { id, firstName, lastName, firstButtonText, secondButtonText, firstButtonLink, secondButtonLink,
-             firstButtonOnClick, secondButtonOnClick, status, actionUser } = this.state;
+            firstButtonOnClick, secondButtonOnClick, thirdButtonText, thirdButtonLink, thirdButtonOnClick } = this.state;
 
         const backgroundImageUrl = this.state.backgroundImageUrl || default_background_image
         const profilePicUrl = this.state.profilePicUrl || placeholder_user_image
@@ -46,7 +46,7 @@ export default class Friend extends Component {
         if (profilePicUrl) {
             imgClassName = userService.getImageSize(profilePicUrl);
         }
-        
+
         return (
             <div className="friend-container" style={{ 'backgroundImage': `url(${backgroundImageUrl})` }}>
                 <span className="friend-img-container">
@@ -68,13 +68,27 @@ export default class Friend extends Component {
                         }
 
                         {!secondButtonOnClick
-                            ? <button className="button view-activity">
-                                <NavLink to={secondButtonLink}> {secondButtonText} </NavLink>
+                            ?
+                            <button className="button update-info">
+                                <NavLink to={secondButtonLink}>{secondButtonText}</NavLink>
                             </button>
 
                             : <button
-                                className="button view-activity"
+                                className="button update-info"
                                 onClick={secondButtonOnClick.bind(this, id)} >
+                                {secondButtonText}
+                            </button>
+                        }
+
+                        {!thirdButtonOnClick
+                            ?
+                            <button className="button update-info">
+                                <NavLink to={thirdButtonLink}>{thirdButtonText}</NavLink>
+                            </button>
+
+                            : <button
+                                className="button update-info"
+                                onClick={thirdButtonOnClick.bind(this, id)} >
                                 {secondButtonText}
                             </button>
                         }
