@@ -50,7 +50,7 @@ public class RelationshipServiceImpl implements RelationshipService {
     @Override
     public List<FriendsAllViewModel> findAllNotFriends(String id, int status) {
         List<User> userList = this.userRepository.findAll();
-        List<Relationship> relationshipList = this.relationshipRepository.findAllByUserOneIdOrUserTwoIdAndStatusNot(id, id, status);
+        List<Relationship> relationshipList = this.relationshipRepository.findAllCandidatesForFriends(id);
 
         List<User> usersWithRelationship = new ArrayList<>();
 
@@ -76,13 +76,10 @@ public class RelationshipServiceImpl implements RelationshipService {
         User friendCandidateUser = this.userRepository.findById(friendCandidateId).orElse(null);
 
         if(loggedInUser != null && friendCandidateUser != null){
+            Relationship relationshipFromDb = this.relationshipRepository.findRelationshipByUserOneIdAndUserTwoId(loggedInUserId, friendCandidateId);
 
-            Relationship firstCheck = this.relationshipRepository
-                    .findByUserOneIdAndUserTwoId(loggedInUserId, friendCandidateId);
-            Relationship secondCheck = this.relationshipRepository
-                    .findByUserOneIdAndUserTwoId(friendCandidateId, loggedInUserId);
 
-            if(firstCheck == null && secondCheck == null){
+            if(relationshipFromDb == null){
                 Relationship relationship = new Relationship();
                 relationship.setActionUser(loggedInUser);
                 relationship.setUserOne(loggedInUser);
@@ -92,6 +89,61 @@ public class RelationshipServiceImpl implements RelationshipService {
                 relationship.setTime(LocalDateTime.now());
 
                return this.relationshipRepository.saveAndFlush(relationship) != null;
+            }else{
+                relationshipFromDb.setStatus(1);
+                return this.relationshipRepository.saveAndFlush(relationshipFromDb) != null;
+            }
+
+        }
+        return false;
+    }
+
+//    @Override
+//    public boolean createRequestForAddingFriend(String loggedInUserId, String friendCandidateId) {
+//        User loggedInUser = this.userRepository.findById(loggedInUserId).orElse(null);
+//        User friendCandidateUser = this.userRepository.findById(friendCandidateId).orElse(null);
+//
+//        if(loggedInUser != null && friendCandidateUser != null){
+//
+//            Relationship firstCheck = this.relationshipRepository
+//                    .findByUserOneIdAndUserTwoId(loggedInUserId, friendCandidateId);
+//            Relationship secondCheck = this.relationshipRepository
+//                    .findByUserOneIdAndUserTwoId(friendCandidateId, loggedInUserId);
+//
+//            if(firstCheck == null && secondCheck == null){
+//                Relationship relationship = new Relationship();
+//                relationship.setActionUser(loggedInUser);
+//                relationship.setUserOne(loggedInUser);
+//                relationship.setUserTwo(friendCandidateUser);
+//                relationship.setStatus(1);
+////                relationship.setStatus(0);
+//                relationship.setTime(LocalDateTime.now());
+//
+//                return this.relationshipRepository.saveAndFlush(relationship) != null;
+//            }
+//
+//            System.out.println();
+//        }
+//        return false;
+//    }
+
+    @Override
+    public boolean removeFriend(String loggedInUserId, String friendToRemoveId) {
+        User loggedInUser = this.userRepository.findById(loggedInUserId).orElse(null);
+        User friendToRemove = this.userRepository.findById(friendToRemoveId).orElse(null);
+
+        if(loggedInUser != null && friendToRemove != null){
+
+            Relationship relationship = this.relationshipRepository
+                    .findRelationshipWithFriendToRemove(
+                            loggedInUserId, friendToRemoveId, 1);
+
+
+            if(relationship != null){
+                relationship.setActionUser(loggedInUser);
+                relationship.setStatus(2);
+                relationship.setTime(LocalDateTime.now());
+                return this.relationshipRepository.saveAndFlush(relationship) != null;
             }
 
             System.out.println();

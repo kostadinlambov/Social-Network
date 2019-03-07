@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -37,9 +38,8 @@ public class RelationshipController {
     }
 
     @GetMapping(value = "/friends/{id}", produces = "application/json")
-    public List<FriendsAllViewModel> findAllFriends(@PathVariable String id){
+    public List<FriendsAllViewModel> findAllFriends(@PathVariable String id) {
         int status = 1;
-
         List<RelationshipServiceModel> allFriends = this.relationshipService.findAllUserRelationshipsWithStatus(id, status);
 
         List<FriendsAllViewModel> friendsAllViewModels = allFriends.stream().map(relationshipServiceModel -> {
@@ -49,17 +49,12 @@ public class RelationshipController {
             return this.modelMapper.map(relationshipServiceModel.getUserTwo(), FriendsAllViewModel.class);
         }).collect(Collectors.toList());
 
-        System.out.println();
-
         return friendsAllViewModels;
     }
 
 
-
-
-
     @GetMapping(value = "/findFriends/{id}", produces = "application/json")
-    public List<FriendsAllViewModel> findAllNotFriends(@PathVariable String id){
+    public List<FriendsAllViewModel> findAllNotFriends(@PathVariable String id) {
         int status = 3;
         List<FriendsAllViewModel> allNotFriends = this.relationshipService.findAllNotFriends(id, status);
 
@@ -68,16 +63,41 @@ public class RelationshipController {
 
 
     @PostMapping(value = "/addFriend")
-    public ResponseEntity addFriend(
-            @RequestParam(name="loggedInUserId") String loggedInUserId,
-            @RequestParam(name= "friendCandidateId") String friendCandidateId) throws JsonProcessingException {
+    public ResponseEntity addFriend(@RequestBody Map<String, Object> body) throws JsonProcessingException {
+        String loggedInUserId = (String) body.get("loggedInUserId");
+        String friendCandidateId = (String) body.get("friendCandidateId");
 
         boolean result = this.relationshipService.createRequestForAddingFriend(loggedInUserId, friendCandidateId);
 
-        if(result){
+        if (result) {
             SuccessResponse successResponse = new SuccessResponse(
                     LocalDateTime.now(),
                     "Your friend request have been successfully submitted!",
+                    "",
+                    true
+            );
+
+            return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
+        }
+
+        throw new CustomException(ResponseMessageConstants.SERVER_ERROR_MESSAGE);
+    }
+
+    @PostMapping(value = "/removeFriend")
+    public ResponseEntity removeFriend(@RequestBody Map<String, Object> body) throws JsonProcessingException {
+//    public ResponseEntity removeFriend(
+//            @RequestParam(value = "loggedInUserId") String loggedInUserId,
+//            @RequestParam(value = "friendToRemoveId") String friendToRemoveId
+//    ) throws JsonProcessingException {
+        String loggedInUserId = (String) body.get("loggedInUserId");
+        String friendToRemoveId = (String) body.get("friendToRemoveId");
+
+        boolean result = this.relationshipService.removeFriend(loggedInUserId, friendToRemoveId);
+
+        if (result) {
+            SuccessResponse successResponse = new SuccessResponse(
+                    LocalDateTime.now(),
+                    "User was removed from your friends list!",
                     "",
                     true
             );

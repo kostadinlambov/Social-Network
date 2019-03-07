@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -22,6 +23,10 @@ public class User extends BaseEntity implements UserDetails {
     private Set<UserRole> authorities;
     private String profilePicUrl;
     private String backgroundImageUrl;
+
+    private List<Relationship> relationshipsUserOne;
+    private List<Relationship> relationshipsUserTwo;
+    private List<Relationship> relationshipsActionUser;
 
     private boolean isAccountNonExpired;
     private boolean isAccountNonLocked;
@@ -124,6 +129,33 @@ public class User extends BaseEntity implements UserDetails {
 
     public void setAuthorities(Set<UserRole> authorities) {
         this.authorities = authorities;
+    }
+
+    @OneToMany(mappedBy = "userOne", cascade = CascadeType.ALL)
+    public List<Relationship> getRelationshipsUserOne() {
+        return this.relationshipsUserOne;
+    }
+
+    public void setRelationshipsUserOne(List<Relationship> relationshipsUserOne) {
+        this.relationshipsUserOne = relationshipsUserOne;
+    }
+
+    @OneToMany(mappedBy = "userTwo", cascade = CascadeType.ALL)
+    public List<Relationship> getRelationshipsUserTwo() {
+        return this.relationshipsUserTwo;
+    }
+
+    public void setRelationshipsUserTwo(List<Relationship> relationshipsUserTwo) {
+        this.relationshipsUserTwo = relationshipsUserTwo;
+    }
+
+    @OneToMany(mappedBy = "actionUser",  cascade = CascadeType.ALL)
+    public List<Relationship> getRelationshipsActionUser() {
+        return this.relationshipsActionUser;
+    }
+
+    public void setRelationshipsActionUser(List<Relationship> relationshipsActionUser) {
+        this.relationshipsActionUser = relationshipsActionUser;
     }
 
     @Override

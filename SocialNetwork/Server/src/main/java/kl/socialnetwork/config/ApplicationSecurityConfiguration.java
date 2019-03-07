@@ -46,7 +46,7 @@ public class ApplicationSecurityConfiguration
                 .disable()
                 .authorizeRequests()
                 .antMatchers("/users/register",
-                        "/relationship/addFriend",
+                        "/relationship/removeFriend",
                         "/",
                         "/favicon.ico",
                         "/**/*.png",
@@ -63,7 +63,8 @@ public class ApplicationSecurityConfiguration
                         "/users/all",
                         "/users/update",
                         "/relationship/friends/*",
-                        "/relationship/findFriends/*"
+                        "/relationship/findFriends/*",
+                        "/relationship/addFriend"
                         ).hasAnyAuthority("ADMIN", "ROOT", "USER")
                 .antMatchers(
                         "/users/promote",

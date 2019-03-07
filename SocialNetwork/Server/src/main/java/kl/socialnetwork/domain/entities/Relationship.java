@@ -4,7 +4,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "relationship", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_one_id", "user_two_id"})})
+//@Table(name = "relationship", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_one_id", "user_two_id"})})
+@Table(name = "relationship")
 public class Relationship extends BaseEntity {
     private User userOne;
     private User userTwo;
@@ -16,7 +17,7 @@ public class Relationship extends BaseEntity {
     }
 
     @ManyToOne(optional = false, targetEntity = User.class)
-    @JoinColumn(name = "user_one_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_one_id", referencedColumnName = "id" )
     public User getUserOne() {
         return this.userOne;
     }
