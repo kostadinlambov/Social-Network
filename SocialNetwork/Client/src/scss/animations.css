@@ -1,4 +1,4 @@
-@keyframes navtogglein {
+/* @keyframes navtogglein {
 	from {
 		opacity: 0;
 		transform: translate(0, -2rem);
@@ -61,10 +61,10 @@
 	from{
 	  transform: translateX(-10rem);
 	  /*opacity: 0; */
-	}
+	/* }
 	
 	to{
 	  transform: translate(0);
 	/*  opacity: 1;*/
-	}
-  }
+	/* } */
+  /* } */ 
