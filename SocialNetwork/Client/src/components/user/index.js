@@ -4,6 +4,7 @@ import UserDeletePage from './UserDeletePage';
 import UserAllPage from './UserAllPage';
 import UserFriendsAllPage from './UserFriendsAllPage';
 import UserFindFriendsPage from './UserFindFriendsPage';
+import UserSearchResultsPage from './UserSearchResultsPage';
 
 export {
     UserProfilePage,
@@ -12,4 +13,5 @@ export {
     UserAllPage,
     UserFriendsAllPage,
     UserFindFriendsPage,
+    UserSearchResultsPage
 }

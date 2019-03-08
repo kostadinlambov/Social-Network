@@ -1,15 +1,24 @@
 import React, { Component, Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
 import benderPic from '../..//assets/images/Bender/Bender_1.jpeg';
-import observer from '../../infrastructure/observer'
-import userService from '../../infrastructure/userService'
-// import './css/TimeLine.css';
+import { requester, userService, observer } from '../../infrastructure'
+import { toast } from 'react-toastify';
+import { ToastComponent } from '../common'
+
+import './css/Navbar.css';
 
 export default class Navbar extends Component {
     constructor(props) {
         super(props)
 
-        this.state = { username: '' }
+        this.state = {
+            username: '',
+            search: '',
+        }
+
+        this.searchFriend = this.searchFriend.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.onChangeHandler = this.onChangeHandler.bind(this);
 
         observer.subscribe(observer.events.loginUser, this.userLoggedIn)
     }
@@ -18,14 +27,51 @@ export default class Navbar extends Component {
         this.setState({ username })
     }
 
+    searchFriend(event) {
+        event.preventDefault();
+        console.log(this.state.search)
+        debugger;
+
+        this.props.history.push({
+            pathname: "/home/users/search",
+            state:{
+                search: this.state.search
+            }
+        })
+    }
+
+    handleChange(event) {
+        event.preventDefault();
+        const { name, value } = event.target
+
+        console.log(name + ' => ' + value);
+
+        this.setState({
+            [name]: value
+        })
+
+        console.log(this.state)
+
+
+    }
+
+    onChangeHandler(event) {
+        console.log('name: ', event.target.name)
+        console.log('value: ', event.target.value)
+        this.setState({
+            [event.target.name]: event.target.value
+        });
+
+        console.log('this.state.search: ', this.state.search)
+    }
+
     render() {
         const role = userService.getRole();
         const isAdmin = userService.isAdmin();
         const userId = userService.getUserId();
-        const profileLink = "/profile/" + userId;
 
-        console.log('isAdmin: ', isAdmin)
-        console.log(this.props)
+        // console.log('isAdmin: ', isAdmin)
+        // console.log(this.props)
 
         const { loggedIn, onLogout } = this.props;
         return (
@@ -41,12 +87,27 @@ export default class Navbar extends Component {
                                 <div className="site-logo">
                                     <NavLink to="/" className="nav-link " >Social Network</NavLink>
                                 </div>
-                                <div className="nav-search-icon">
-                                    <NavLink  to="#"><i className="fas fa-search"></i></NavLink>
+
+                               {loggedIn && <form className="form-inline my-2 my-lg-0" onSubmit={this.searchFriend}>
+                                    <input
+                                        className="form-control mr-sm-2"
+                                        type="search"
+                                        placeholder="Search"
+                                        aria-label="Search"
+                                        name="search"
+                                        id="search"
+                                        value={this.state.search}
+                                        onChange={this.onChangeHandler}
+                                    />
+
+                                    <button className="btn button-navbar-outline my-2 my-sm-0" type="submit">Search</button>
+                                </form>}
+                                {/* <div className="nav-search-icon">
+                                    <NavLink to="#"><i className="fas fa-search"></i></NavLink>
                                 </div>
                                 <div className="nav-search-div">
                                     <input type="text" className="nav-search" placeholder="Search..." />
-                                </div>
+                                </div> */}
                             </div>
 
                             <label id="toggle" htmlFor="main-nav-toggle"><span>Menu</span></label>
@@ -65,8 +126,8 @@ export default class Navbar extends Component {
 
                                     {loggedIn && <li className="nav-item"><NavLink exact to={`/home/findFriends/${userId}`} className="nav-link " >Find friends!</NavLink></li>}
 
-                                    {loggedIn && <li className="nav-item"><NavLink  exact to={`/home/friends/${userId}`} className="nav-link fas fa-user-friends tooltipCustom"> <span className="tooltiptextCustom">Friend Requests</span></NavLink></li>}
-                                    {loggedIn && <li className="nav-item"><NavLink  exact to={`/home/friends/${userId}`} className="nav-link fas fa-envelope tooltipCustom"><span className="tooltiptextCustom">Messages</span></NavLink></li>}
+                                    {loggedIn && <li className="nav-item"><NavLink exact to={`/home/friends/${userId}`} className="nav-link fas fa-user-friends tooltipCustom"> <span className="tooltiptextCustom">Friend Requests</span></NavLink></li>}
+                                    {loggedIn && <li className="nav-item"><NavLink exact to={`/home/friends/${userId}`} className="nav-link fas fa-envelope tooltipCustom"><span className="tooltiptextCustom">Messages</span></NavLink></li>}
                                     {/* {loggedIn && <li><NavLink className="fas fa-camera" to="{{ site.baseurl }}/gallery/"></NavLink></li>} */}
 
                                     {loggedIn && <li className="nav-item"><NavLink exact to="#" className="nav-link " onClick={onLogout} >Logout</NavLink></li>}

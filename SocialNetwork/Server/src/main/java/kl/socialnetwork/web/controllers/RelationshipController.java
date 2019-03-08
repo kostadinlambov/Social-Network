@@ -134,7 +134,7 @@ public class RelationshipController {
         if (result) {
             SuccessResponse successResponse = new SuccessResponse(
                     LocalDateTime.now(),
-                    "User was added successfully to your friends list!",
+                    "Request was successfully rejected!",
                     "",
                     true
             );
@@ -143,6 +143,14 @@ public class RelationshipController {
         }
 
         throw new CustomException(ResponseMessageConstants.SERVER_ERROR_MESSAGE);
+    }
+
+    @PostMapping(value = "/search", produces = "application/json")
+    public List<FriendsCandidatesViewModel> searchUsers(@RequestBody Map<String, Object> body){
+        String loggedInUserId = (String) body.get("loggedInUserId");
+        String search = (String) body.get("search");
+
+        return this.relationshipService.searchUsers(loggedInUserId, search);
     }
 }
 

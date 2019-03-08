@@ -20,4 +20,6 @@ public interface RelationshipService {
     boolean acceptFriend(String loggedInUserId, String friendToAcceptId);
 
     boolean cancelFriendshipRequest(String loggedInUserId, String friendToRejectId);
+
+    List<FriendsCandidatesViewModel> searchUsers(String loggedInUserId, String search);
 }

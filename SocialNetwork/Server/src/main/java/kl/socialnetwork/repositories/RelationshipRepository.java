@@ -19,6 +19,7 @@ public interface RelationshipRepository extends JpaRepository<Relationship, Stri
 
     Relationship findByUserOneIdAndUserTwoId(String userOneId, String userTwoId);
 
+    List<Relationship> findAllByUserOneIdOrUserTwoId(String userOneId, String userTwoId);
 
     @Query(value = "" +
             "SELECT r FROM Relationship AS r " +
@@ -53,10 +54,12 @@ public interface RelationshipRepository extends JpaRepository<Relationship, Stri
     List<Relationship> findAllNotCandidatesForFriends(@Param(value = "id") String id);
 
 
+
     @Query(value = "" +
             "SELECT r FROM Relationship AS r " +
             "WHERE (r.userOne.id = :id OR r.userTwo.id = :id) " +
             "AND r.status= 0")
     List<Relationship> findAllRequestedForFriendUsers(@Param(value = "id") String id);
+
 
 }

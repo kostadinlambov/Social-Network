@@ -14,6 +14,7 @@ import PhotoGallery from './PhotosGallery';
 import FriendsGallery from './FriendsGallery';
 import userService from '../../infrastructure/userService';
 
+const UserSearchResultsPage = lazy(() => import('../../components//user/UserSearchResultsPage'))
 const UserProfilePage = lazy(() => import('../../components/user/UserProfilePage'))
 const UserFriendsPage = lazy(() => import('../../components/user/UserFriendsAllPage'))
 const UserFindFriendsPage = lazy(() => import('../../components/user/UserFindFriendsPage'))
@@ -102,6 +103,7 @@ export default class HomePage extends Component {
                                 {loggedIn && <Route exact path="/home/users/edit/:id" component={withUserAuthorization(UserEditPage)} />}
                                 {loggedIn && <Route exact path="/home/users/delete/:id" component={withAdminAuthorization(UserDeletePage)} />}
                                 {loggedIn && <Route exact path="/home/users/all" component={withAdminAuthorization(UserAllPage)} />}
+                                {loggedIn && <Route exact path="/home/users/search" component={withUserAuthorization(UserSearchResultsPage)} />}
 
                                 <Route exact path="/error" component={ErrorPage} />
                                 <Route component={ErrorPage} />

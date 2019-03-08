@@ -67,15 +67,14 @@ class App extends Component {
   }
 
   render() {
-    debugger;
     const loggedIn = localStorage.getItem('token');
     console.log(localStorage.getItem('token'))
     console.log(localStorage.getItem('token') != null)
-    debugger;
+
     return (
       <Fragment>
         {/* <Header loggedIn={localStorage.getItem('token') != null} onLogout={this.onLogout} /> */}
-        <Navbar loggedIn={localStorage.getItem('token') != null} onLogout={this.onLogout} />
+        <Navbar loggedIn={localStorage.getItem('token') != null} onLogout={this.onLogout} {...this.props} />
         {/* <Notifications /> */}
         <ToastContainer transition={Zoom} closeButton={false} />
         <Suspense fallback={<span>Loading...</span>}>

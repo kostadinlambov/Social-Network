@@ -8,32 +8,53 @@ import FriendRequest from './FriendRequest';
 import './css/UserFriends.css'
 
 
-export default class UserFindFriendsPage extends Component {
+export default class UserSearchResultsPage extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
+            friendsArr: [],
             friendsCandidatesArr: [],
             userWaitingForAcceptingRequest: [],
             usersReceivedRequestFromCurrentUser: [],
+            search: '',
+            ready: false,
         };
 
         this.addFriend = this.addFriend.bind(this);
         this.confirmRequest = this.confirmRequest.bind(this);
         this.rejectRequest = this.rejectRequest.bind(this);
+        this.removeFriend = this.removeFriend.bind(this);
     }
 
     componentDidMount() {
-        const userId = this.props.match.params.id;
+        console.log(this.props);
+
+        const search = this.props.location.state.search
         debugger;
-        requester.get(`/relationship/findFriends/${userId}`, (response) => {
+
+        this.setState({
+            search
+        })
+
+
+        const requestBody = { loggedInUserId: userService.getUserId(), search: search }
+        debugger;
+
+        requester.post('/relationship/search', requestBody, (response) => {
+
+            console.log('Search result all: ', response);
             debugger;
-            console.log('friends all: ', response);
 
             this.setState({
+                friendsArr: response.filter(user => user.status === 1),
                 friendsCandidatesArr: response.filter(user => user.status !== 0 && user.status !== 1),
                 userWaitingForAcceptingRequest: response.filter(user => user.status === 0 && user.starterOfAction === true),
                 usersReceivedRequestFromCurrentUser: response.filter(user => user.status === 0 && user.starterOfAction === false)
+            })
+
+            this.setState({
+                ready: true
             })
 
             console.log('response: ', response)
@@ -182,7 +203,77 @@ export default class UserFindFriendsPage extends Component {
         })
     }
 
+    removeFriend = (friendToRemoveId, event) => {
+        console.log('event: ', event)
+        console.log('friendToRemoveId: ', friendToRemoveId)
+
+        event.preventDefault();
+
+        // const id = this.state.id;
+        const requestBody = { loggedInUserId: userService.getUserId(), friendToRemoveId: friendToRemoveId }
+
+        console.log('requestBody: ', requestBody)
+
+        requester.post('/relationship/removeFriend', requestBody, (response) => {
+            console.log('RemoveFriend response: ', response)
+            debugger;
+            if (response.success) {
+                toast.success(<ToastComponent.successToast text={response.message} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+
+                this.props.history.push("/home/friends/" + userService.getUserId())
+
+            } else {
+                debugger;
+                console.log('error message: ', response.message);
+                toast.error(<ToastComponent.errorToast text={response.message} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+            }
+        }).catch(err => {
+            debugger;
+            console.error('Remove Friend err:', err)
+            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+
+            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
+                localStorage.clear();
+                this.props.history.push('/login');
+            }
+        })
+    }
+
     render() {
+        if (!this.state.ready) {
+            return null;
+        }
+
+        const friendsArrLength = this.state.friendsArr.length;
+        let friends = '';
+
+        if (friendsArrLength > 0) {
+            friends = (
+                <Fragment>
+                    <h3>Users From Your Friend List</h3>
+                    <hr className="my-2 mb-5 mt-2 col-md-8 mx-auto" />
+                    {this.state.friendsArr.map((friend) =>
+                         <Friend
+                         key={friend.id}
+                         {...friend}
+                         {...this.props}
+                         firstButtonLink={`/home/profile/${friend.id}`}
+                         secondButtonLink={`/`}
+                         firstButtonText={'VIEW PROFILE'}
+                         secondButtonText={'REMOVE'}
+                         secondButtonOnClick={this.removeFriend}
+                     />)}
+                    <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" />
+                </Fragment>
+            )
+        }
+
         const requestLength = this.state.userWaitingForAcceptingRequest.length;
         let requests = '';
 
@@ -266,7 +357,7 @@ export default class UserFindFriendsPage extends Component {
         if (!requests && !friendsCandidates && !remainCandidates) {
             noResult = (
                 <Fragment>
-                    <h2>All registered users are already your friends!</h2>
+                    <h2>No results for "{this.state.search}"</h2>
                     <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" />
                 </Fragment>
             )
@@ -274,9 +365,10 @@ export default class UserFindFriendsPage extends Component {
 
         return (
             <div className="container col-md-12 text-center">
-                <h1 className="text-center font-weight-bold display-5" style={{ 'margin': '1rem auto' }}>Find Friends</h1>
+                <h1 className="text-center font-weight-bold display-5" style={{ 'margin': '1rem auto' }}>Search Results</h1>
                 <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" />
                 <section className="friend-section" >
+                    {friends}
                     {requests}
                     {friendsCandidates}
                     {remainCandidates}
