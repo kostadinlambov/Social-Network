@@ -45,4 +45,8 @@ public final class ResponseMessageConstants {
     public static final String SUCCESSFUL_CLEAR_LOGS_MESSAGE = "Logs have been successfully deleted.";
     public static final String SUCCESSFUL_ORDER_UPDATE_MESSAGE = "Order updated successfully.";
 
+    //Picture Messages
+    public static final String SUCCESSFUL_PICTURE_ALL_MESSAGE = "All pictures successfully loaded.";
+
+
 }

@@ -28,6 +28,8 @@ public class User extends BaseEntity implements UserDetails {
     private List<Relationship> relationshipsUserTwo;
     private List<Relationship> relationshipsActionUser;
 
+    private List<Picture> pictureList;
+
     private boolean isAccountNonExpired;
     private boolean isAccountNonLocked;
     private boolean isCredentialsNonExpired;
@@ -156,6 +158,15 @@ public class User extends BaseEntity implements UserDetails {
 
     public void setRelationshipsActionUser(List<Relationship> relationshipsActionUser) {
         this.relationshipsActionUser = relationshipsActionUser;
+    }
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    public List<Picture> getPictureList() {
+        return this.pictureList;
+    }
+
+    public void setPictureList(List<Picture> pictureList) {
+        this.pictureList = pictureList;
     }
 
     @Override

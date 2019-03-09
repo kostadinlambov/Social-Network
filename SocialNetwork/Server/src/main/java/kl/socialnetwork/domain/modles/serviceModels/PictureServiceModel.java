@@ -1,21 +1,27 @@
-package kl.socialnetwork.domain.entities;
+package kl.socialnetwork.domain.modles.serviceModels;
 
-import javax.persistence.*;
+import kl.socialnetwork.domain.entities.User;
+
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "pictures")
-public class Picture extends BaseEntity {
+public class PictureServiceModel {
+    private String id;
     private String description;
-//    private Album album;
     private User user;
     private String imageUrl;
     private LocalDateTime time;
 
-    public Picture() {
+    public String getId() {
+        return this.id;
     }
 
-    @Column(name = "description")
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public PictureServiceModel() {
+    }
+
     public String getDescription() {
         return this.description;
     }
@@ -24,8 +30,6 @@ public class Picture extends BaseEntity {
         this.description = description;
     }
 
-    @ManyToOne(optional = false, targetEntity = User.class)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
     public User getUser() {
         return this.user;
     }
@@ -34,7 +38,6 @@ public class Picture extends BaseEntity {
         this.user = user;
     }
 
-    @Column(name = "image_url", nullable = false)
     public String getImageUrl() {
         return this.imageUrl;
     }
@@ -43,7 +46,6 @@ public class Picture extends BaseEntity {
         this.imageUrl = imageUrl;
     }
 
-    @Column(name = "time", nullable = false)
     public LocalDateTime getTime() {
         return this.time;
     }
@@ -51,17 +53,4 @@ public class Picture extends BaseEntity {
     public void setTime(LocalDateTime time) {
         this.time = time;
     }
-
-
-
-    //    @ManyToOne(optional = false, targetEntity = Album.class)
-//    @JoinColumn(name = "album_id", referencedColumnName = "id")
-//    public Album getAlbum() {
-//        return this.album;
-//    }
-//
-//    public void setAlbum(Album album) {
-//        this.album = album;
-//    }
-
 }
