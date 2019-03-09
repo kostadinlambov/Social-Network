@@ -84,6 +84,7 @@ export default class UserProfilePage extends Component {
     render = () => {
         if (!this.state.ready) {
             return <h1 className="text-center pt-5 mt-5">Loading...</h1>
+            
         }
 
         const loggedInUserName = userService.getUsername();

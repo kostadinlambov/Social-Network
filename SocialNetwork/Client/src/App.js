@@ -27,8 +27,8 @@ class App extends Component {
     localStorage.clear();
 
     toast.success(<ToastComponent.successToast text='You have been successfully logged out!' />, {
-            position: toast.POSITION.TOP_RIGHT
-          });
+      position: toast.POSITION.TOP_RIGHT
+    });
 
     this.props.history.push('/login');
 
@@ -63,12 +63,15 @@ class App extends Component {
       <Fragment>
         <Navbar loggedIn={localStorage.getItem('token') != null} onLogout={this.onLogout} {...this.props} />
         <ToastContainer transition={Zoom} closeButton={false} />
-        <Suspense fallback={<span>Loading...</span>}>
+        <Suspense fallback={<h1 className="text-center pt-5 mt-5">Fallback App.js Loading...</h1>}>
           <Switch>
             <Route exact path="/" component={StartPage} />
             {!loggedIn && <Route exact path="/register" component={RegisterPage} />}
             {!loggedIn && <Route exact path="/login" component={LoginPage} />}
             {loggedIn && <Route path="/home/:id" component={withUserAuthorization(HomePage)} />}
+            {/* {loggedIn && <Route exact path="/home/profile/:id" component={UserProfilePage} />} */}
+            {/* <Route exact path="/profile" component={withAdminAuthorization(ProfilePage)} /> */}
+            {/* {loggedIn && <Route exact path="/home/friends/:id" component={UserFriendsPage} />} */}
             <Route exact path="/error" component={ErrorPage} />
             <Route component={ErrorPage} />
           </Switch>

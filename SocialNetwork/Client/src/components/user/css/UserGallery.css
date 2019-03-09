@@ -8,3 +8,28 @@
 .gallery-button-container{
     margin-bottom: 1rem;
 }
+
+.gallery-aside-article-header{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    /* margin-bottom: 1rem; */
+}
+
+.gallery-aside-article-header > h3{
+    margin-bottom: 0;
+    padding-bottom: 0;
+    padding-left: 0.8rem;
+}
+
+#fileUpload{
+    display: none;
+}
+
+label#upload{
+    margin-bottom: 0;
+}
+
+.username-gallery{
+    color:#40a3f4;
+}

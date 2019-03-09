@@ -12,6 +12,7 @@ const Intro = (props) => {
                     </div>
                     <h3 className="aside-article-title">Intro</h3>
                 </div>
+                <hr className="my-2 mb-3 mt-2 col-md-10 mx-auto" />
                 <div className="aside-intro-content">
                     <h4 className="occupation">Robot</h4>
                     <p>Lives in Apartment 00100100, Robot Arms Apartments, in New New York, Earth.</p>

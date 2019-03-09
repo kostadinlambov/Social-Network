@@ -57,6 +57,7 @@ export default class FriendsGallery extends Component {
                             </h3>
                         </NavLink>
                     </div>
+                    <hr className="my-2 mb-3 mt-2 col-md-10 mx-auto" />
                     <ul className="aside-article-gallery ">
                         {this.state.friendsArr.map(friend => {
                             const profilePicUrl = friend.profilePicUrl || placeholder_user_image

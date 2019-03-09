@@ -64,7 +64,8 @@ export default class HomePage extends Component {
 
     render() {
         if (!this.state.ready) {
-            return <h1 className="text-center pt-5 mt-5">Loading...</h1>
+            // return <h1 className="text-center pt-5 mt-5">Loading...</h1>
+            return null;
         }
         console.log(this.props.match.url)
         const loggedIn = localStorage.getItem('token');
@@ -76,7 +77,7 @@ export default class HomePage extends Component {
                     {/* <div className="container"> */}
                     <section className="main-section">
                         <TimeLine userId={this.state.id} />
-                        <Suspense fallback={<span>Loading...</span>}>
+                        <Suspense fallback={<h1 className="text-center pt-5 mt-5">Fallback Home Loading...</h1>}>
                             <Switch>
                                 {loggedIn && <Route exact path="/home/:id" render={props => <MainSharedContent userId={this.state.id} {...props} />} />}
                                 {/* <Route exact path={this.props.match.url + "/:id"} component={UserProfilePage} /> */}

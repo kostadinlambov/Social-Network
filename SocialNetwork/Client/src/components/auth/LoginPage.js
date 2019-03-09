@@ -46,7 +46,6 @@ export default class LoginPage extends Component {
             console.log('response: ', response)
 
             if (response.error) {
-                debugger;
                 // observer.trigger(observer.events.notification, { type: 'error', message: 'Incorrect credentials!' });
                 toast.error(<ToastComponent.errorToast text={' Incorrect credentials!'} />, {
                     position: toast.POSITION.TOP_RIGHT,
@@ -69,7 +68,6 @@ export default class LoginPage extends Component {
         }).catch(err => {
             console.log('Login Error (POST): ', err)
 
-            debugger;
             // toast.error(<ToastComponent.errorToast text={`${err.message}`} />, {
             localStorage.clear();
 
@@ -123,7 +121,6 @@ export default class LoginPage extends Component {
 
             return hasError ? shouldShow : false;
         }
-
 
         return (
             <div className="container pt-5">

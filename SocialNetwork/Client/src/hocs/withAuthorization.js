@@ -3,7 +3,6 @@ import userService from '../infrastructure/userService'
 import ErrorPage from '../components/common/ErrorPage';
 import { Redirect } from 'react-router-dom'
 
-
 function withAuthorization(WrapperComponent, roles) {
     return class WithAuthorization extends Component {
         constructor(props) {
@@ -29,7 +28,8 @@ function withAuthorization(WrapperComponent, roles) {
         render = () => {
 
             if(!this.state.ready){
-                return <h1 className="pt-5">Loading...</h1>
+                // return <h1 className="text-center pt-5 mt-5">withRootAuthorization Loading...</h1>
+                return null;
             }
             let userHasAccess = false;
 

@@ -179,14 +179,23 @@ main ul.aside-article-gallery li {
     position: relative;
 }
 
-
-
-
-main ul.aside-article-gallery li a {
+main ul.aside-article-gallery li div {
     flex: 0 0 100%;
     position: relative;
     /* margin: 0; */
     /* background: red; */
+
+}
+
+main ul.aside-article-gallery li div:after {
+    display: block;
+    content: '';
+    padding-top: 100%;
+}
+
+main ul.aside-article-gallery li a {
+    flex: 0 0 100%;
+    position: relative;
 
 }
 
@@ -196,10 +205,6 @@ main ul.aside-article-gallery li a:after {
     padding-top: 100%;
 
 }
-
-
-
-
 
 main ul.aside-article-gallery li img {
    

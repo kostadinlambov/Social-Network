@@ -3,42 +3,50 @@ import { NavLink } from 'react-router-dom';
 import { requester, userService } from '../../infrastructure'
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
+import Picture from './Picture';
 import './css/UserGallery.css'
-
-import benderPic from '../../assets/images/Bender/Bender_1.jpeg';
-import benderPic_11 from '../../assets/images/Bender/Bender_11.jpg';
-import benderPic_4 from '../../assets/images/Bender/Bender_4.jpg';
-import benderPic_5 from '../../assets/images/Bender/Bender_5.jpg';
-import benderPic_10 from '../../assets/images/Bender/Bendder_10.jpg';
-import benderPic_7 from '../../assets/images/Bender/Bender_7.jpg';
-import benderPic_8 from '../../assets/images/Bender/Bender_8.jpg';
-import benderPic_9 from '../../assets/images/Bender/Bender_9.jpg';
-import testPic from '../../assets/images/Social_Media.jpg';
-
 
 export default class UserGalleryPage extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            friendsArr: [],
+            picturesArr: [],
             id: '',
-            username: ''
+            username: '',
+            file: '',
+            error: '',
+            msg: '',
+            ready: true,
         };
+
+        this.uploadFile = this.uploadFile.bind(this);
+        this.onFileChange = this.onFileChange.bind(this);
     }
 
     componentDidMount() {
-        const username = userService.getUsername();
-        const userId = this.props.match.params.id;
-        this.setState({ id: userId, username })
+        this.loadAllPictures();
+    }
 
-        requester.get(`/relationship/friends/${userId}`, (response) => {
+    loadAllPictures = () => {
+        const userId = userService.getUserId()
+
+        requester.get('/pictures/all/' + userId, (response) => {
+            console.log('pictures all: ', response);
             debugger;
-            console.log('friends all: ', response);
+            if (response.success === true) {
+                toast.success(<ToastComponent.successToast text={response.message} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
 
-            this.setState({
-                friendsArr: response
-            })
+                this.setState({
+                    picturesArr: response['payload']
+                })
+            } else {
+                toast.error(<ToastComponent.errorToast text={response.message} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+            }
         }).catch(err => {
             console.error('deatils err:', err)
             toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
@@ -49,8 +57,64 @@ export default class UserGalleryPage extends Component {
             if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
                 localStorage.clear();
                 this.props.history.push('/login');
+
             }
         })
+    }
+
+    uploadFile = (event) => {
+        debugger;
+        // event.preventDefault();
+        this.setState({ error: '', msg: '' });
+
+        if (!this.state.file) {
+            toast.error(<ToastComponent.errorToast text='Please upload a file.' />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+            return;
+        }
+
+        if (this.state.file.size >= 2000000) {
+            toast.error(<ToastComponent.errorToast text='File size exceeds limit of 2MB.' />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+            return;
+        }
+
+        let data = new FormData();
+        data.append('file', this.state.file);
+        data.append('loggedInUserId', userService.getUserId());
+
+        fetch('http://localhost:8000/pictures/add', {
+            method: 'POST',
+            body: data
+        }).then(data => data.json())
+            .then(response => {
+                if (response.success === true) {
+                    toast.success(<ToastComponent.successToast text={response.message} />, {
+                        position: toast.POSITION.TOP_RIGHT
+                    });
+                    this.setState({ ready: true });
+                    this.loadAllPictures();
+                } else {
+                    toast.error(<ToastComponent.errorToast text={response.message} />, {
+                        position: toast.POSITION.TOP_RIGHT
+                    });
+                }
+
+            }).catch(err => {
+                console.error('Upload Pic Err:', err)
+                toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+                    // toast.error(<ToastComponent.errorToast text={`${error.name}: ${error.message}`} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+
+                if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
+                    localStorage.clear();
+                    this.props.history.push('/login');
+                }
+            });
+
     }
 
     removeFriend = (friendToRemoveId, event) => {
@@ -95,113 +159,60 @@ export default class UserGalleryPage extends Component {
         })
     }
 
-    render() {
+    onFileChange = (event) => {
+        debugger;
+        this.setState({
+            file: event.target.files[0],
+            ready: false
+        }, () => this.uploadFile());
 
+
+    }
+
+    render() {
+        if (!this.state.ready) {
+            return <h1 className="text-center pt-5 mt-5">Upload File...</h1>
+        }
 
         return (
-
-
             <section className="galerry-section">
-
                 <article className="aside-article-photos">
-                    <div class="gallery-article-intro">
-                        <div className="aside-article-header"  >
+                    <div className="gallery-article-intro">
+                        <div className="gallery-aside-article-header"  >
                             <div className="aside-article-icon">
                                 <i className="fas fa-images"></i>
                             </div>
-                            <h3  className="aside-article-title">Photos of {userService.getUsername()}</h3>
+                            <h3 className="aside-article-title">Photos</h3>
                         </div>
-                        <div className="gallery-button-container">
-                            <button className="button update-info" onClick={this.demote} >ADD PHOTO</button>
+
+                        <div className="">
+                            {/* <h4 style={{ color: 'red' }}>{this.state.error}</h4>
+                            <h4 style={{ color: 'green' }}>{this.state.msg}</h4> */}
+                            <button className="button update-info" >
+                                <label id="upload" htmlFor="fileUpload" > ADD PHOTO</label>
+                                <input id="fileUpload" onChange={this.onFileChange} type="file" />
+                            </button>
                         </div>
+
                     </div>
-                    <ul className="grid-container">
-                        <li>
-                            <article className="card">
-                                <div className="media">
-                                    <img className="l" src={testPic} alt="pic1" />
-                                </div>
-                                {/* <div className="content">
-                                <h3 className="card-title">Philip J. Fry</h3>
-                                <p></p>
-                            </div> */}
-                            </article>
-                        </li>
-                        <li>
-                            <article className="card">
-                                <div className="media">
-                                    <img src={benderPic_11} alt="pic1" />
-                                </div>
+                    {this.state.picturesArr.length > 0
+                        ?
+                        <Fragment>
+                            <hr className="my-2 mb-4 mt-3 col-md-10 mx-auto" />
+                            <ul className="grid-container">
 
-                            </article>
-                        </li>
+                                {this.state.picturesArr.map((picture) => <Picture key={picture.id}  {...picture} />)}
+                            </ul>
+                        </Fragment>
+                        :
+                        <Fragment>
+                            <hr className="my-2 mb-5 mt-3 col-md-10 mx-auto" />
+                            <h3 className="text-center">There are no photos of <span className="username-gallery">{userService.getUsername()}</span>.</h3>
+                            <hr className="my-2 mb-5 mt-3 col-md-10 mx-auto" />
+                        </Fragment>
 
-                        <li>
-                            <article className="card">
-                                <div className="media">
-                                    <img src={benderPic_4} alt="pic1" />
-                                </div>
+                    }
 
-                            </article>
-                        </li>
-                        <li>
-                            <article className="card">
-                                <div className="media">
-                                    <img src={benderPic_5} alt="pic1" />
-                                </div>
-                            </article>
-                        </li>
-                        <li>
-                            <article className="card">
-                                <div className="media">
-                                    <img src={benderPic_10} alt="pic1" />
-                                </div>
-                            </article>
-                        </li>
-
-                        <li>
-                            <article className="card">
-                                <div className="media">
-                                    <img src={benderPic_7} alt="pic1" />
-                                </div>
-                            </article>
-                        </li>
-                        <li>
-                            <article className="card">
-                                <div className="media">
-                                    <img src={benderPic_8} alt="pic1" />
-                                </div>
-                            </article>
-                        </li>
-                        <li>
-                            <article className="card">
-                                <div className="media">
-                                    <img src={benderPic_9} alt="pic1" />
-                                </div>
-                            </article>
-                        </li>
-
-                        <li>
-                            <article className="card">
-                                <div className="media">
-                                    <img src={benderPic} alt="pic1" />
-                                </div>
-                            </article>
-                        </li>
-
-                        {/* <li>
-                        <article className="card">
-                            <div className="media">
-                                <img src={benderPic} alt="pic1" />
-                            </div>
-                            <div className="content">
-                                <h3 className="card-title">Philip J. Fry</h3>
-                                <p>Fry is an immature, slovenly, yet good-hearted and sentimental pizza delivery boy who falls into
-                                    a cryogenic pod, causing it to activate and freeze him just after midnight on January 1, 2000.</p>
-                            </div>
-                        </article>
-                    </li> */}
-                    </ul>
                 </article>
             </section>
 
