@@ -10,6 +10,7 @@ public class PictureServiceModel {
     private User user;
     private String imageUrl;
     private LocalDateTime time;
+    private String cloudinaryPublicId;
 
     public String getId() {
         return this.id;
@@ -52,5 +53,13 @@ public class PictureServiceModel {
 
     public void setTime(LocalDateTime time) {
         this.time = time;
+    }
+
+    public String getCloudinaryPublicId() {
+        return this.cloudinaryPublicId;
+    }
+
+    public void setCloudinaryPublicId(String cloudinaryPublicId) {
+        this.cloudinaryPublicId = cloudinaryPublicId;
     }
 }

@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static kl.socialnetwork.utils.constants.ResponseMessageConstants.SUCCESSFUL_PICTURE_ALL_MESSAGE;
@@ -65,9 +66,7 @@ public class PicturesController {
             @RequestParam(name = "file") MultipartFile file
     ) throws IOException {
 
-        String imageUrl = this.cloudinaryService.uploadImage(file);
-
-        boolean result = this.pictureService.addPicture(loggedInUserId, imageUrl);
+        boolean result = this.pictureService.addPicture(loggedInUserId, file);
 
         if (result) {
             SuccessResponse successResponse = new SuccessResponse(
@@ -83,5 +82,24 @@ public class PicturesController {
         throw new CustomException(ResponseMessageConstants.SERVER_ERROR_MESSAGE);
     }
 
+    @PostMapping(value = "/remove")
+    public ResponseEntity addPicture(@RequestBody Map<String, Object> body) throws IOException {
+       String loggedInUserId = (String) body.get("loggedInUserId");
+       String photoToRemoveId = (String) body.get("photoToRemoveId");
 
+        boolean result = this.pictureService.deletePicture(loggedInUserId, photoToRemoveId);
+
+        if (result) {
+            SuccessResponse successResponse = new SuccessResponse(
+                    LocalDateTime.now(),
+                    "Photo successfully deleted!",
+                    "",
+                    true
+            );
+
+            return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
+        }
+
+        throw new CustomException(ResponseMessageConstants.SERVER_ERROR_MESSAGE);
+    }
 }

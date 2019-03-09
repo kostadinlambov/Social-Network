@@ -11,6 +11,7 @@ public class Picture extends BaseEntity {
     private User user;
     private String imageUrl;
     private LocalDateTime time;
+    private String cloudinaryPublicId;
 
     public Picture() {
     }
@@ -52,7 +53,14 @@ public class Picture extends BaseEntity {
         this.time = time;
     }
 
+    @Column(name = "cloudinary_public_id")
+    public String getCloudinaryPublicId() {
+        return this.cloudinaryPublicId;
+    }
 
+    public void setCloudinaryPublicId(String cloudinaryPublicId) {
+        this.cloudinaryPublicId = cloudinaryPublicId;
+    }
 
     //    @ManyToOne(optional = false, targetEntity = Album.class)
 //    @JoinColumn(name = "album_id", referencedColumnName = "id")
