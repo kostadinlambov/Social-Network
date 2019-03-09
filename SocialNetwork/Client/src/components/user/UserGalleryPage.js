@@ -22,6 +22,7 @@ export default class UserGalleryPage extends Component {
 
         this.uploadFile = this.uploadFile.bind(this);
         this.onFileChange = this.onFileChange.bind(this);
+        this.removePhoto = this.removePhoto.bind(this);
     }
 
     componentDidMount() {
@@ -87,6 +88,9 @@ export default class UserGalleryPage extends Component {
 
         fetch('http://localhost:8000/pictures/add', {
             method: 'POST',
+            headers: {
+                ...this.getAuthHeader()
+            },
             body: data
         }).then(data => data.json())
             .then(response => {
@@ -117,26 +121,34 @@ export default class UserGalleryPage extends Component {
 
     }
 
-    removeFriend = (friendToRemoveId, event) => {
-        console.log('event: ', event)
-        console.log('friendToRemoveId: ', friendToRemoveId)
+    getAuthHeader = () => {
+        const token = localStorage.getItem("token");
+    
+        return (token && token.length)
+            ? { 'Authorization': `Bearer ${token}` }
+            : {}
+    }
 
+    removePhoto = (photoToRemoveId, event) => {
         event.preventDefault();
 
+        console.log('event: ', event)
+        console.log('photoToRemoveId: ', photoToRemoveId)
+        
         // const id = this.state.id;
-        const requestBody = { loggedInUserId: userService.getUserId(), friendToRemoveId: friendToRemoveId }
+        const requestBody = { loggedInUserId: userService.getUserId(), photoToRemoveId: photoToRemoveId }
 
         console.log('requestBody: ', requestBody)
-
-        requester.post('/relationship/removeFriend', requestBody, (response) => {
-            console.log('RemoveFriend response: ', response)
+        debugger;
+        requester.post('/pictures/remove', requestBody, (response) => {
+            console.log('RemovePicture response: ', response)
             debugger;
             if (response.success) {
                 toast.success(<ToastComponent.successToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
 
-                this.props.history.push("/home/friends/" + userService.getUserId())
+                this.props.history.push("/home/gallery/" + userService.getUserId())
 
             } else {
                 debugger;
@@ -147,7 +159,7 @@ export default class UserGalleryPage extends Component {
             }
         }).catch(err => {
             debugger;
-            console.error('Remove Friend err:', err)
+            console.error('Remove Picture err:', err)
             toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
@@ -171,7 +183,7 @@ export default class UserGalleryPage extends Component {
 
     render() {
         if (!this.state.ready) {
-            return <h1 className="text-center pt-5 mt-5">Upload File...</h1>
+            return <h1 className="text-center pt-5 mt-5">Uploading File...</h1>
         }
 
         return (
@@ -201,7 +213,7 @@ export default class UserGalleryPage extends Component {
                             <hr className="my-2 mb-4 mt-3 col-md-10 mx-auto" />
                             <ul className="grid-container">
 
-                                {this.state.picturesArr.map((picture) => <Picture key={picture.id}  {...picture} />)}
+                                {this.state.picturesArr.map((picture) => <Picture key={picture.id} removePhoto={this.removePhoto}  {...picture}  />)}
                             </ul>
                         </Fragment>
                         :

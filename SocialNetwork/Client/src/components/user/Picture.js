@@ -18,9 +18,9 @@ const Picture = (props) => {
                                 <p></p>
                 </div> */}
                     {/* <div className="fbPhotoCurationControl uiButtonGroup far fa-trash-alt" id="delete-button"></div> */}
-                    <button className="">
-                        <div className="fbPhotoCurationControl inner uiButtonGroup " ><i class="far fa-trash-alt "></i></div>
-                    </button>
+                    <div  onClick={props.removePhoto.bind(this, props.id)}>
+                        <div className="btn fbPhotoCurationControl inner uiButtonGroup delete-button" ><i className="far fa-trash-alt "></i></div>
+                    </div>
                 </article>
             </div>
 

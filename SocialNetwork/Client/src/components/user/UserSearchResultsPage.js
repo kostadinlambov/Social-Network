@@ -354,7 +354,7 @@ export default class UserSearchResultsPage extends Component {
 
         let noResult = '';
 
-        if (!requests && !friendsCandidates && !remainCandidates) {
+        if (!friends && !requests && !friendsCandidates && !remainCandidates) {
             noResult = (
                 <Fragment>
                     <h2>No results for "{this.state.search}"</h2>

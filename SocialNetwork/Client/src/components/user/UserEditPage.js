@@ -142,11 +142,6 @@ export default class UserEditPage extends Component {
 
 
     render() {
-        // const { match, location, history } = this.props
-        // console.log('match: ', match);
-        // console.log('location: ', location);
-        // console.log('history: ', history);
-        // debugger;
 
         const { username, email, firstName, lastName, address, city, profilePicUrl, backgroundImageUrl } = this.state;
 
