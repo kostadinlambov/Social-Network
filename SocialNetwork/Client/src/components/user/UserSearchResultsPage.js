@@ -53,6 +53,7 @@ export default class UserSearchResultsPage extends Component {
                 usersReceivedRequestFromCurrentUser: response.filter(user => user.status === 0 && user.starterOfAction === false)
             })
 
+            debugger;
             this.setState({
                 ready: true
             })
@@ -276,7 +277,7 @@ export default class UserSearchResultsPage extends Component {
 
         const requestLength = this.state.userWaitingForAcceptingRequest.length;
         let requests = '';
-
+        debugger;
         if (requestLength > 0) {
             requests = (
                 <Fragment>

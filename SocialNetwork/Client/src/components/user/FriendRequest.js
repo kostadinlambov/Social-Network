@@ -1,4 +1,4 @@
-import React, { Component, Redirect } from 'react';
+import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { userService } from '../../infrastructure'
 import default_background_image from '../../assets/images/default-background-image.jpg'

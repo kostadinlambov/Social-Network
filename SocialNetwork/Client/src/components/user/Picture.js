@@ -23,9 +23,6 @@ const Picture = (props) => {
                     </div>
                 </article>
             </div>
-
-
-
         </li>
     )
 }

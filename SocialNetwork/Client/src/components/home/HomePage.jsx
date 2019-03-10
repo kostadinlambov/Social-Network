@@ -85,7 +85,7 @@ export default class HomePage extends Component {
                                 {loggedIn && <Route exact path="/home/profile/:id" component={UserProfilePage} />}
                                 {/* <Route exact path="/profile" component={withAdminAuthorization(ProfilePage)} /> */}
                                 {loggedIn && <Route exact path="/home/friends/:id" component={UserFriendsPage} />}
-                                {loggedIn && <Route exact path="/home/findFriends/:id" component={UserFindFriendsPage} />}
+                                {loggedIn && <Route exact path="/home/findFriends/:id/:category?" component={UserFindFriendsPage} />}
                                 {loggedIn && <Route exact path="/home/users/edit/:id" component={withUserAuthorization(UserEditPage)} />}
                                 {loggedIn && <Route exact path="/home/users/delete/:id" component={withAdminAuthorization(UserDeletePage)} />}
                                 {loggedIn && <Route exact path="/home/users/all" component={withAdminAuthorization(UserAllPage)} />}
