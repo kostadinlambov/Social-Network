@@ -4,8 +4,8 @@ import kl.socialnetwork.repositories.LikeRepository;
 import kl.socialnetwork.services.LikeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 
 @Service
 @Transactional

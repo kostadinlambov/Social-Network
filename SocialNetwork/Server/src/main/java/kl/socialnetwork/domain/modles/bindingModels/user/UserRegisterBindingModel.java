@@ -1,6 +1,5 @@
 package kl.socialnetwork.domain.modles.bindingModels.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import kl.socialnetwork.utils.constants.ValidationMessageConstants;
 import kl.socialnetwork.validations.Password;
 import kl.socialnetwork.validations.PasswordMatching;

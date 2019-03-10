@@ -1,11 +1,7 @@
 package kl.socialnetwork.web.interceptors;
 
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @Component("title_modifier")
 public class TitleModifierInterceptor extends HandlerInterceptorAdapter {

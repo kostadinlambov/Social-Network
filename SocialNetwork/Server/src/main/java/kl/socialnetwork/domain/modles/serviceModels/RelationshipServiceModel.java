@@ -1,12 +1,9 @@
 package kl.socialnetwork.domain.modles.serviceModels;
 
 import kl.socialnetwork.domain.entities.User;
-import kl.socialnetwork.domain.entities.UserRole;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 public class RelationshipServiceModel implements Serializable {
     private String id;

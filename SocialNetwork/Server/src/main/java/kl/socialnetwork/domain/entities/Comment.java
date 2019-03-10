@@ -1,7 +1,5 @@
 package kl.socialnetwork.domain.entities;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 

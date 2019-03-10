@@ -2,7 +2,6 @@ package kl.socialnetwork.utils.responseHandler.successResponse;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class SuccessResponse implements Serializable {
   private LocalDateTime timestamp;

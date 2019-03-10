@@ -5,7 +5,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "likes")
-public class Like extends BaseEntity{
+public class Like extends BaseEntity {
 
     private Long count = 0L;
     private Set<User> users;

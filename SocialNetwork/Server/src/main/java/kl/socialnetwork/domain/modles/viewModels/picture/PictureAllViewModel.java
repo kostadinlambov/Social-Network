@@ -1,7 +1,5 @@
 package kl.socialnetwork.domain.modles.viewModels.picture;
 
-import kl.socialnetwork.domain.entities.User;
-
 import java.time.LocalDateTime;
 
 public class PictureAllViewModel {

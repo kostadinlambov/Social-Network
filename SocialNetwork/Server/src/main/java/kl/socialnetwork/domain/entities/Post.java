@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "posts")
-public class Post extends BaseEntity{
+public class Post extends BaseEntity {
     private User user;
     private String content;
     private String imageUrl;

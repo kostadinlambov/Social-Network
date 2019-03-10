@@ -4,10 +4,6 @@ package kl.socialnetwork.web.interceptors;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.time.LocalDateTime;
-
 @Component
 public class LogsInterceptor extends HandlerInterceptorAdapter {
 //   private final LoggerService loggerService;

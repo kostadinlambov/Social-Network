@@ -3,7 +3,6 @@ package kl.socialnetwork.web.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kl.socialnetwork.domain.modles.viewModels.picture.PictureAllViewModel;
-import kl.socialnetwork.domain.modles.viewModels.user.UserAllViewModel;
 import kl.socialnetwork.services.CloudinaryService;
 import kl.socialnetwork.services.PictureService;
 import kl.socialnetwork.utils.constants.ResponseMessageConstants;
@@ -23,7 +22,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static kl.socialnetwork.utils.constants.ResponseMessageConstants.SUCCESSFUL_PICTURE_ALL_MESSAGE;
-import static kl.socialnetwork.utils.constants.ResponseMessageConstants.SUCCESSFUL_USER_ALL_MESSAGE;
 
 @RestController()
 @RequestMapping(value = "/pictures")

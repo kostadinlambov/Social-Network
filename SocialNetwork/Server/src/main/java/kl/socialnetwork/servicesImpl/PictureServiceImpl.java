@@ -13,12 +13,11 @@ import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -34,7 +33,8 @@ public class PictureServiceImpl implements PictureService {
     private final ModelMapper modelMapper;
 
     @Autowired
-    public PictureServiceImpl(PictureRepository pictureRepository, UserRepository userRepository, RoleRepository roleRepository, CloudinaryService cloudinaryService, ModelMapper modelMapper) {
+    public PictureServiceImpl(PictureRepository pictureRepository, UserRepository userRepository,
+                              RoleRepository roleRepository, CloudinaryService cloudinaryService, ModelMapper modelMapper) {
         this.pictureRepository = pictureRepository;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;

@@ -1,6 +1,5 @@
 package kl.socialnetwork.repositories;
 
-import kl.socialnetwork.domain.entities.Relationship;
 import kl.socialnetwork.domain.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

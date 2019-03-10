@@ -3,7 +3,6 @@ package kl.socialnetwork.servicesImpl;
 import kl.socialnetwork.domain.entities.Relationship;
 import kl.socialnetwork.domain.entities.User;
 import kl.socialnetwork.domain.modles.serviceModels.RelationshipServiceModel;
-import kl.socialnetwork.domain.modles.viewModels.relationship.FriendsAllViewModel;
 import kl.socialnetwork.domain.modles.viewModels.relationship.FriendsCandidatesViewModel;
 import kl.socialnetwork.repositories.RelationshipRepository;
 import kl.socialnetwork.repositories.UserRepository;
@@ -16,7 +15,6 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

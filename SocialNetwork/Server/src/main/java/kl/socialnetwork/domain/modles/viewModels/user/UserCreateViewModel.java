@@ -1,10 +1,5 @@
 package kl.socialnetwork.domain.modles.viewModels.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import java.util.HashSet;
-import java.util.Set;
-
 public class UserCreateViewModel {
     private String id;
     private String username;
