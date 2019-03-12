@@ -241,12 +241,18 @@ export default class UserFindFriendsPage extends Component {
 
         const { category } = this.state
 
+        if (!requests && category) {
+            requests = (
+                <Fragment>
+                    <h2>There are no friend requests!</h2>
+                    <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" />
+                </Fragment>)
+        }
+
         return (
             <div className="container col-md-12 text-center">
                 <h1 className="text-center font-weight-bold display-5" style={{ 'margin': '1rem auto' }}>
-                {!category ? 'Find Friends' : 'Friend Requests' }
-                
-                
+                    {!category ? 'Find Friends' : 'Friend Requests'}
                 </h1>
                 <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" />
                 <section className="friend-section" >

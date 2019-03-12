@@ -14,13 +14,13 @@ const Intro = (props) => {
                 </div>
                 <hr className="my-2 mb-3 mt-2 col-md-10 mx-auto" />
                 <div className="aside-intro-content">
-                    <h4 className="occupation">Robot</h4>
-                    <p>Lives in Apartment 00100100, Robot Arms Apartments, in New New York, Earth.</p>
-                    <p>From Tijuana, Mexico.</p>
+                    <h4 className="occupation">{props.firstName} {props.lastName}</h4>
+                    <p>Lives at {props.address},  in {props.city}.</p>
+                    <p>From {props.city}.</p>
                 </div>
 
                 <button className="button update-info">
-                    <NavLink className="about  " exact to={`/home/profile/${props.userId}`}>UPDATE INFO</NavLink>
+                    <NavLink className="about  " exact to={`/home/profile/${props.id}`}>UPDATE INFO</NavLink>
                 </button>
                 {/* <!-- <div className="aside-intro-update">
                  <a className="active" href="{{ site.baseurl }}/about">UPDATE INFO</a>

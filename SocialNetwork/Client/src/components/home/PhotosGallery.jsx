@@ -21,7 +21,8 @@ export default class PhotoGallery extends Component {
 
         this.state = {
             picturesArr: [],
-            ready: false
+            ready: false,
+            id: ''
         }
     }
 
@@ -30,7 +31,7 @@ export default class PhotoGallery extends Component {
     }
 
     loadAllPictures = () => {
-        const userId = userService.getUserId()
+        const userId = this.props.id
 
         requester.get('/pictures/all/' + userId, (response) => {
             console.log('pictures all: ', response);
@@ -43,6 +44,7 @@ export default class PhotoGallery extends Component {
                 this.setState({
                     picturesArr: response['payload'],
                     ready: true,
+                    id: userId
                 })
             } else {
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
@@ -68,6 +70,9 @@ export default class PhotoGallery extends Component {
         if (!this.state.ready) {
             return null
         }
+        if(this.state.id !== this.props.id){
+            this.loadAllPictures();
+        }
         return (
             <Fragment >
                 <article className="aside-article-photos">
@@ -75,7 +80,7 @@ export default class PhotoGallery extends Component {
                         <div className="aside-article-icon">
                             <i className="fas fa-images"></i>
                         </div>
-                        < NavLink className="friends " exact to={`/home/gallery/${this.props.userId}`}>
+                        < NavLink className="friends " exact to={`/home/gallery/${this.props.id}`}>
                             <h3 className="aside-article-title" style={{ color: ' #333' }}>
                             Photos &bull; {this.state.picturesArr.length}
                             </h3>

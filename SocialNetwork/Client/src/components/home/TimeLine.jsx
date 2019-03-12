@@ -9,25 +9,25 @@ const TimeLine = (props) => {
             <nav>
                 <ul>
                     <li>
-                        <NavLink className="timeline " exact to={`/home/${props.userId}`}>
+                        <NavLink className="timeline " exact to={`/home/comments/${props.id}`}>
                             <i className="fas fa-video"></i>
                             <div className="">TIMELINE</div>
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink className="about  " exact to={`/home/profile/${props.userId}`}>
+                        <NavLink className="about  " exact to={`/home/profile/${props.id}`}>
                             <i className="fas fa-info-circle"></i>
                             <div>PROFILE</div>
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink className="friends " exact to={`/home/friends/${props.userId}`}>
+                        <NavLink className="friends " exact to={`/home/friends/${props.id}`}>
                             <i className="fas fa-user-friends"></i>
                             <div>FRIENDS</div>
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink className="photos " exact to={`/home/gallery/${props.userId}`}>
+                        <NavLink className="photos " exact to={`/home/gallery/${props.id}`}>
                             <i className="fas fa-camera-retro"></i>
                             <div>PHOTOS</div>
                         </NavLink>

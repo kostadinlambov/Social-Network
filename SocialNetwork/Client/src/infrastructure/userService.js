@@ -45,6 +45,22 @@ export default {
         }
     },
 
+    isTheUserLoggedIn: () => {
+        const token = localStorage.getItem('token')
+        if (token !== null && token !== undefined) {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            const role = payload['role'];
+
+            if (payload) {
+                if (role !== null || role !== undefined) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    },
+
     isRoot: () => {
         const token = localStorage.getItem('token')
         if (token !== null && token !== undefined) {

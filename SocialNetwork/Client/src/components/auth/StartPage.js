@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import {NavLink } from 'react-router-dom';
 import userService from '../../infrastructure/userService';
 
 export default class StartPage extends Component {
@@ -38,9 +38,9 @@ export default class StartPage extends Component {
                             <h2 className="h1 h1-responsive">Welcome to SoftUni Social Network!</h2>
                             <hr className="my-2 mb-3 mt-3 col-md-8 mx-auto"></hr>
                             <p className="lead">
-                                <NavLink className="btn App-button-primary btn-lg m-3" to={`/home/${currentUserId}`} role="button">Home</NavLink>
+                                <NavLink className="btn App-button-primary btn-lg m-3" to={`/home/comments/${currentUserId}`} role="button">Home</NavLink>
                                 <NavLink className="btn App-button-primary btn-lg m-3" to={`/home/profile/${currentUserId}`} role="button">Profile</NavLink>
-                                {(isAdmin || isRoot) && <NavLink className="btn App-button-primary btn-lg m-3" to={`/home/users/all`} role="button">All Users</NavLink>}
+                                {(isAdmin || isRoot) && <NavLink className="btn App-button-primary btn-lg m-3" to={`/home/users/all/${userService.getUserId()}`} role="button">All Users</NavLink>}
                             </p>
                         </div>
                     </div>

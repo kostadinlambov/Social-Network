@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
 import { userService, requester } from '../../infrastructure';
 import { Button } from '../common';
 import { toast } from 'react-toastify';
@@ -11,15 +10,15 @@ export default class UserEditPage extends Component {
         super(props)
 
         this.state = {
-            id: this.props.id,
-            username: this.props.username,
-            email: this.props.email,
-            firstName: this.props.firstName,
-            lastName: this.props.lastName,
-            address: this.props.address,
-            city: this.props.city,
-            profilePicUrl: this.props.profilePicUrl,
-            backgroundImageUrl: this.props.backgroundImageUrl,
+            id: '',
+            username: '',
+            email: '',
+            firstName: '',
+            lastName: '',
+            address: '',
+            city: '',
+            profilePicUrl: '',
+            backgroundImageUrl: '',
             touched: {
                 username: false,
                 email: false,
@@ -37,24 +36,25 @@ export default class UserEditPage extends Component {
     }
 
     componentDidMount() {
-        debugger;
-        console.log(this.props.match.params.id);
-        debugger;
-        if (this.props.match.params.id !== this.props.id) {
-            this.props.getUserToShowId(this.props.match.params.id);
-        }
-        debugger;
-        // this.setState({
-        //     id: this.props.id,
-        //     username: this.props.username,
-        //     email: this.props.email,
-        //     firstName: this.props.firstName,
-        //     lastName: this.props.lastName,
-        //     address: this.props.address,
-        //     city: this.props.city,
-        //     profilePicUrl: this.props.profilePicUrl,
-        //     backgroundImageUrl: this.props.backgroundImageUrl
-        // })
+        const userId = this.props.match.params.id;
+        console.log("current User id: ", userId);
+
+        this.setState({id: userId});
+
+        this.props.getUserToShowId(userId);
+
+
+        this.setState({
+            id: this.props.location.state.id,
+            username: this.props.location.state.username,
+            email: this.props.location.state.email,
+            firstName: this.props.location.state.firstName,
+            lastName: this.props.location.state.lastName,
+            address: this.props.location.state.address,
+            city: this.props.location.state.city,
+            profilePicUrl: this.props.location.state.profilePicUrl,
+            backgroundImageUrl: this.props.location.state.backgroundImageUrl,
+        })
 
     }
 
@@ -96,15 +96,15 @@ export default class UserEditPage extends Component {
                 });
 
                 this.setState({
-                    id: this.props.id,
-                    username: this.props.username,
-                    email: this.props.email,
-                    firstName: this.props.firstName,
-                    lastName: this.props.lastName,
-                    address: this.props.address,
-                    city: this.props.city,
-                    profilePicUrl: this.props.profilePicUrl,
-                    backgroundImageUrl: this.props.backgroundImageUrl
+                    id: this.props.location.state.id,
+                    username: this.props.location.state.username,
+                    email: this.props.location.state.email,
+                    firstName: this.props.location.state.firstName,
+                    lastName: this.props.location.state.lastName,
+                    address: this.props.location.state.address,
+                    city: this.props.location.state.city,
+                    profilePicUrl: this.props.location.state.profilePicUrl,
+                    backgroundImageUrl: this.props.location.state.backgroundImageUrl,
                 })
 
             }
@@ -149,28 +149,13 @@ export default class UserEditPage extends Component {
     }
 
 
-    static getDerivedStateFromProps(props, current_state) {
-        if (current_state.value !== props.value) {
-            return {
-                username: props.username,
-            }
-        }
-        return null
-    }
-
-
     render() {
-        debugger;
-        if (this.props.match.params.id !== this.props.id) {
-            this.props.getUserToShowId(this.props.match.params.id);
-        }
+       
 
         const { username, email, firstName, lastName, address, city, profilePicUrl, backgroundImageUrl } = this.state;
 
         const loggedInUserName = userService.getUsername();
         const loggedInRole = userService.getRole();
-        const isAdmin = userService.isAdmin();
-        const isRoot = userService.isRoot();
 
         let showPicsButtons = true;
         if (loggedInUserName !== username && (loggedInRole !== "ROOT")) {
@@ -192,9 +177,9 @@ export default class UserEditPage extends Component {
             <div className="container ">
                 <h1 className="text-center font-weight-bold " style={{ 'margin': '1rem auto' }}>Edit Account</h1>
                 <hr className="my-2 mb-3 mt-3 col-md-12 mx-auto"></hr>
-                <form className="Register-form-container  " onSubmit={this.onSubmitHandler} >
+                <form className="Register-form-container  " onSubmit={this.onSubmitHandler}>
 
-                    <div className="section-container w-100 mx-auto text-center">
+                    <div className="section-container w-75 mx-auto text-center">
                         <section className="left-section">
                             <div className="form-group">
                                 <label htmlFor="username" className="font-weight-bold" >Username</label>
@@ -244,7 +229,7 @@ export default class UserEditPage extends Component {
                                 {shouldMarkError('address') && <small id="addressHelp" className="form-text alert alert-danger">{(!this.state.address ? 'Address is required!' : '')}</small>}
                             </div>
 
-                            {showPicsButtons && <div className="form-group">
+                         {showPicsButtons && <div className="form-group">
                                 <label htmlFor="profilePicUrl" className="font-weight-bold" >Profile image url</label>
                                 <input
                                     type="text"
@@ -257,8 +242,8 @@ export default class UserEditPage extends Component {
                                     aria-describedby="profilePicUrlHelp"
                                     placeholder="Enter profile image url"
                                 />
-                                {shouldMarkError('profilePicUrl') && <small id="profilePicUrl" className="form-text alert alert-danger">{(!this.state.profilePicUrl ? 'Profile Image Url is required!' : '')}</small>}
-                            </div>}
+                                {shouldMarkError('profilePicUrl') && <small id="profilePicUrl" className="form-text alert alert-danger">{(!this.state.profilePicUrl ? 'Profile image url is required!' : '')}</small>}
+                            </div>}  
 
                         </section>
 
@@ -312,7 +297,7 @@ export default class UserEditPage extends Component {
                                 {shouldMarkError('city') && <small id="cityHelp" className="form-text alert alert-danger">{(!this.state.city ? 'City is required!' : '')}</small>}
                             </div>
 
-                            {showPicsButtons && <div className="form-group">
+                            {showPicsButtons &&  <div className="form-group">
                                 <label htmlFor="backgroundImageUrl" className="font-weight-bold" >Cover image url</label>
                                 <input
                                     type="text"
@@ -325,7 +310,7 @@ export default class UserEditPage extends Component {
                                     aria-describedby="backgroundImageUrlHelp"
                                     placeholder="Enter cover image url"
                                 />
-                                {shouldMarkError('backgroundImageUrl') && <small id="backgroundImageUrlHelp" className="form-text alert alert-danger">{(!this.state.backgroundImageUrl ? 'Cover Image Url is required!' : '')}</small>}
+                                {shouldMarkError('backgroundImageUrl') && <small id="backgroundImageUrlHelp" className="form-text alert alert-danger">{(!this.state.backgroundImageUrl ? 'Cover image url is required!' : '')}</small>}
                             </div>}
 
 
@@ -337,9 +322,7 @@ export default class UserEditPage extends Component {
                     <div className="text-center">
                         <button disabled={!isEnabled} type="submit" className="btn App-button-primary btn-lg m-3">Edit</button>
                         {/* <Button  buttonClass={"btn App-button-primary btn-lg m-3"} url={`/users/all`} text={"Edit"} /> */}
-                        {/* <Button buttonClass={"btn App-button-primary btn-lg m-3"} url={`/`} text={"Cancel"} /> */}
-                        <NavLink className="btn App-button-primary btn-lg m-3" to={`/home/profile/${this.props.id}`} role="button">Cancel</NavLink>
-                        {(isAdmin || isRoot) && <NavLink className="btn App-button-primary btn-lg m-3" to={`/home/users/all/${userService.getUserId()}`} role="button">All Users</NavLink>}
+                        <Button buttonClass={"btn App-button-primary btn-lg m-3"} url={`/`} text={"Cancel"} />
                     </div>
 
                 </form>

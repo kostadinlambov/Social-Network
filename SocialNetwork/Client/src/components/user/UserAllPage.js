@@ -9,22 +9,26 @@ export default class UserAllPage extends Component {
         super(props)
 
         this.state = {
-            userArr: []
+            userArr: [],
+            id: '',
         };
     }
 
     componentDidMount() {
-        requester.get('/users/all', (response) => {
+        const userId = this.props.match.params.id;
+        
+        requester.get('/users/all/'+ userId, (response) => {
             console.log('users all: ', response);
-
+            debugger;
             if (response.success === true) {
                 toast.success(<ToastComponent.successToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
-
+                debugger;
                 this.setState({
-                    userArr: response['payload']
-                },)
+                    userArr: response['payload'],
+                    id: userId
+                })
             } else {
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
@@ -46,6 +50,11 @@ export default class UserAllPage extends Component {
     }
 
     render() {
+        if(this.props.match.params.id !== this.props.id){
+            this.props.getUserToShowId(this.props.match.params.id);
+        }
+        debugger;
+
         return (
             <div className="container col-md-12 text-center">
                 <h1 className="text-center font-weight-bold display-5" style={{'margin': '1rem auto'}}>All Users</h1>
@@ -60,7 +69,7 @@ export default class UserAllPage extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.userArr.map((user, i) => <UserRow key={user.id} index={i + 1} {...user} {...this.props} />)}
+                        {this.state.userArr.map((user, i) => <UserRow key={user.id} index={i + 1} {...this.props} {...user} />)}
                     </tbody>
                 </table>
 

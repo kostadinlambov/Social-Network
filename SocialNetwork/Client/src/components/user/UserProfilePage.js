@@ -26,46 +26,23 @@ export default class UserProfilePage extends Component {
             authorities: [],
             ready: false
         }
+
     }
 
     componentDidMount = () => {
         const userId = this.props.match.params.id;
         console.log("current User id: ", userId);
 
-        requester.get(`/users/details/${userId}`, (userData) => {
-
-            console.log("userData: ", userData);
-
-            this.setState({
-                ...userData,
-                ready: true,
-                profilePicUrl: userData.profilePicUrl || placeholder_user_image,
-                backgroundImageUrl: userData.backgroundImageUrl || default_background_image,
-            })
-            
-            console.log("this.state: ", this.state);
-
-        }).catch(err => {
-            console.error('deatils err:', err)
-            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-                // toast.error(<ToastComponent.errorToast text={`${error.name}: ${error.message}`} />, {
-                position: toast.POSITION.TOP_RIGHT
-            });
-
-            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-                localStorage.clear();
-                this.props.history.push('/login');
-            }
-        })
+        this.setState({id: userId});
+        this.props.getUserToShowId(userId);
     }
 
+
     onSubmitHandlerDelete = (e) => {
-        console.log(this.state.id)
+        console.log(this.props.id)
 
         this.props.history.push({
-            pathname: "/home/users/delete/" + this.state.id,
-            state:
-                { ...this.state }
+            pathname: "/home/users/delete/" + this.props.id,
         });
     }
 
@@ -73,7 +50,13 @@ export default class UserProfilePage extends Component {
     onSubmitHandlerEdit = (e) => {
         // e.preventDefault();
         console.log(this.state.id)
+        this.setState({...this.props})
+        console.log('this.state: ', this.state)
+        console.log('this.props: ', this.props)
+        debugger;
 
+        const id = this.state.id;
+        
         this.props.history.push({
             pathname: "/home/users/edit/" + this.state.id,
             state:
@@ -81,10 +64,26 @@ export default class UserProfilePage extends Component {
         });
     }
 
+
+    componetnDidUpdate(prevProps, prevState){
+        const newId = this.props.match.params.id;
+        const lastId = prevProps.id;
+        console.log('prevProps: ', prevProps)
+        console.log('newId: ', newId)
+        console.log('lastId: ', lastId)
+        if(newId !== lastId){
+            this.props.getUserToShowId(newId);
+        }
+    }
+
     render = () => {
-        if (!this.state.ready) {
-            return <h1 className="text-center pt-5 mt-5">Loading...</h1>
+        // if (!this.state.ready) {
+        //     return <h1 className="text-center pt-5 mt-5">Loading...</h1>
             
+        // }
+
+        if(this.props.match.params.id !== this.props.id){
+            this.props.getUserToShowId(this.props.match.params.id);
         }
 
         const loggedInUserName = userService.getUsername();
@@ -97,8 +96,8 @@ export default class UserProfilePage extends Component {
         }
 
         let authority;
-        if (this.state.authorities[0]) {
-            authority = this.state.authorities[0]['authority'];
+        if (this.props.authorities[0]) {
+            authority = this.props.authorities[0]['authority'];
         }
 
         const isAdmin = userService.isAdmin();
@@ -125,7 +124,7 @@ export default class UserProfilePage extends Component {
                                     <h5 className=" font-weight-bold">Username</h5>
                                 </td>
                                 <td className="col-md-6" >
-                                    <h5>{this.state.username}</h5>
+                                    <h5>{this.props.username}</h5>
                                 </td>
                             </tr>
                             <tr className="row">
@@ -133,7 +132,7 @@ export default class UserProfilePage extends Component {
                                     <h5 className=" font-weight-bold">Email</h5>
                                 </td>
                                 <td className="col-md-6">
-                                    <h5>{this.state.email}</h5>
+                                    <h5>{this.props.email}</h5>
                                 </td>
                             </tr>
                             <tr className="row">
@@ -141,7 +140,7 @@ export default class UserProfilePage extends Component {
                                     <h5 className=" font-weight-bold">First Name</h5>
                                 </td>
                                 <td className="col-md-6" >
-                                    <h5>{this.state.firstName}</h5>
+                                    <h5>{this.props.firstName}</h5>
                                 </td>
                             </tr>
                             <tr className="row">
@@ -149,7 +148,7 @@ export default class UserProfilePage extends Component {
                                     <h5 className=" font-weight-bold">Last Name</h5>
                                 </td>
                                 <td className="col-md-6" >
-                                    <h5>{this.state.lastName}</h5>
+                                    <h5>{this.props.lastName}</h5>
                                 </td>
                             </tr>
                             <tr className="row">
@@ -157,7 +156,7 @@ export default class UserProfilePage extends Component {
                                     <h5 className=" font-weight-bold">Address</h5>
                                 </td>
                                 <td className="col-md-6">
-                                    <h5>{this.state.address}</h5>
+                                    <h5>{this.props.address}</h5>
                                 </td>
                             </tr>
                             <tr className="row">
@@ -165,7 +164,7 @@ export default class UserProfilePage extends Component {
                                     <h5 className=" font-weight-bold">City</h5>
                                 </td>
                                 <td className="col-md-6" >
-                                    <h5>{this.state.city}</h5>
+                                    <h5>{this.props.city}</h5>
                                 </td>
                             </tr>
                             {(isAdmin || isRoot) && <tr className="row">
@@ -181,9 +180,9 @@ export default class UserProfilePage extends Component {
                     </table>
                     <hr className="my-2 mb-3 mt-3 col-md-12 mx-auto" />
                     <div className="d-flex justify-content-center ">
-                        {(((isRoot ||isAdmin) && !isCurrentUserRoot) || userService.isLoggedInUser(this.state.username)) && <ButtonWithClickEvent buttonClass={"btn App-button-primary btn-lg m-3"} url={`/home/users/edit/`} text={"Edit"} onClick={this.onSubmitHandlerEdit} />}
-                        {((isRoot) && !userService.isLoggedInUser(this.state.username)) && <ButtonWithClickEvent buttonClass={"btn App-button-primary btn-lg m-3"} url={`/home/users/delete/`} text={"Delete"} onClick={this.onSubmitHandlerDelete} />}
-                        {(isAdmin || isRoot) && <Button buttonClass={"btn App-button-primary btn-lg m-3"} url={`/home/users/all`} text={"All Users"} />}
+                        {(((isRoot ||isAdmin) && !isCurrentUserRoot) || userService.isLoggedInUser(this.props.username)) && <ButtonWithClickEvent buttonClass={"btn App-button-primary btn-lg m-3"} url={`/home/users/edit/`} text={"Edit"} onClick={this.onSubmitHandlerEdit} />}
+                        {((isRoot) && !userService.isLoggedInUser(this.props.username)) && <ButtonWithClickEvent buttonClass={"btn App-button-primary btn-lg m-3"} url={`/home/users/delete/`} text={"Delete"} onClick={this.onSubmitHandlerDelete} />}
+                        {(isAdmin || isRoot) && <Button buttonClass={"btn App-button-primary btn-lg m-3"} url={`/home/users/all/${userService.getUserId()}`} text={"All Users"} />}
 
                     </div >
                 </div >

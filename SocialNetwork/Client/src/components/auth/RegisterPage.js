@@ -4,6 +4,9 @@ import { requester, observer } from '../../infrastructure'
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
 
+import placeholder_user_image from '../../assets/images/placeholder-profile-male.jpg'
+import default_background_image from '../../assets/images/default-background-image.jpg'
+
 export default class RegisterPage extends Component {
     constructor(props) {
         super(props)
@@ -17,6 +20,8 @@ export default class RegisterPage extends Component {
             lastName: '',
             address: '',
             city: '',
+            profilePicUrl: placeholder_user_image,
+            backgroundImageUrl: default_background_image,
             touched: {
                 username: false,
                 email: false,

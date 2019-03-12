@@ -122,7 +122,7 @@ export default class Navbar extends Component {
 
                                     {loggedIn && <li className="nav-item"><NavLink exact to={`/home/profile/${userId}`} className="nav-link  fas fa-user tooltipCustom"  > {userService.getUsername()}<span className="tooltiptextCustom">Profile</span></NavLink></li>}
 
-                                    {loggedIn && <li className="nav-item"><NavLink exact to={`/home/${userId}`} className="nav-link ">Home</NavLink></li>}
+                                    {loggedIn && <li className="nav-item"><NavLink exact to={`/home/comments/${userId}`} className="nav-link ">Home</NavLink></li>}
 
                                     {loggedIn && <li className="nav-item"><NavLink exact to={`/home/findFriends/${userId}`} className="nav-link " >Find friends!</NavLink></li>}
 
