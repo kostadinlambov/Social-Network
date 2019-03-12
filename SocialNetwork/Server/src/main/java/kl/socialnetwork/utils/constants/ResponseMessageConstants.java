@@ -6,6 +6,7 @@ public final class ResponseMessageConstants {
 
     // Error Messages
     public static final String SERVER_ERROR_MESSAGE = "Server Error.";
+    public static final String UNAUTHORIZED_SERVER_ERROR_MESSAGE = "Unauthorized!";
     public static final String VALIDATION_ERROR_MESSAGE = "Validation error.";
     public static final String PASSWORDS_MISMATCH_ERROR_MESSAGE = "Passwords do not match.";
     public static final String INVALID_CREDENTIALS_ERROR_MESSAGE = "Incorrect email or password";

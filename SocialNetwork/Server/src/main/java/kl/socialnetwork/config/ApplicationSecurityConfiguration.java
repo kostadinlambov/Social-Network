@@ -57,7 +57,6 @@ public class ApplicationSecurityConfiguration
                 ).permitAll()
                 .antMatchers(
                         "/users/details/*",
-                        "/users/all",
                         "/users/update",
                         "/relationship/friends/*",
                         "/relationship/findFriends/*",
@@ -75,6 +74,7 @@ public class ApplicationSecurityConfiguration
                         "/users/demote",
                         "/users/details/username",
                         "/users/editDetails",
+                        "/users/all/*",
                         "/logs/all",
                         "/logs/findByUserName",
                         "/logs/clear",

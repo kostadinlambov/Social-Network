@@ -29,4 +29,13 @@ public class RoleServiceImpl implements RoleService {
     public UserRole getByName(String name) {
         return this.roleRepository.findByAuthority(name);
     }
+
+    @Override
+    public String testMethod(String test) {
+        if(test != null){
+            return "true";
+        }
+
+        return "false";
+    }
 }

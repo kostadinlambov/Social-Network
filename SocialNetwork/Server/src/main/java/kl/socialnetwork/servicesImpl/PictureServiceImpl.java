@@ -57,10 +57,15 @@ public class PictureServiceImpl implements PictureService {
             picture.setCloudinaryPublicId(uploadMap.get("public_id").toString());
             picture.setCloudinaryPublicId(cloudinaryPublicId);
 
-            return this.pictureRepository.saveAndFlush(picture) != null;
+//            return this.pictureRepository.saveAndFlush(picture) != null;
+            return this.savePicture(picture);
         }
 
         return false;
+    }
+
+    public boolean savePicture(Picture picture) {
+        return this.pictureRepository.saveAndFlush(picture) != null;
     }
 
     @Override
@@ -100,4 +105,6 @@ public class PictureServiceImpl implements PictureService {
 
         return false;
     }
+
+
 }

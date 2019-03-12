@@ -22,6 +22,8 @@ public class UserRegisterBindingModel implements Serializable {
     private String lastName;
     private String address;
     private String city;
+    private String profilePicUrl;
+    private String backgroundImageUrl;
 
 //    @JsonIgnore
 //    private String profilePicUrl;
@@ -112,7 +114,23 @@ public class UserRegisterBindingModel implements Serializable {
         this.city = city;
     }
 
-//    public String getProfilePic() {
+    public String getProfilePicUrl() {
+        return this.profilePicUrl;
+    }
+
+    public void setProfilePicUrl(String profilePicUrl) {
+        this.profilePicUrl = profilePicUrl;
+    }
+
+    public String getBackgroundImageUrl() {
+        return this.backgroundImageUrl;
+    }
+
+    public void setBackgroundImageUrl(String backgroundImageUrl) {
+        this.backgroundImageUrl = backgroundImageUrl;
+    }
+
+    //    public String getProfilePic() {
 //        return this.profilePic;
 //    }
 //

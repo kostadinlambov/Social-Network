@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -63,7 +64,7 @@ public class UserServiceImpl implements UserService {
         if (this.userRepository.findAll().isEmpty()) {
             roles.add(rootRole);
 //            roles.add(moderatorRole);
-        }else{
+        } else {
             roles.add(userRole);
         }
 
@@ -86,7 +87,7 @@ public class UserServiceImpl implements UserService {
             userEntity.setAuthorities(userOrigin.getAuthorities());
 
 
-            User updatedUser  = this.userRepository.saveAndFlush(userEntity);
+            User updatedUser = this.userRepository.saveAndFlush(userEntity);
             return updatedUser != null;
         }
 
@@ -169,24 +170,37 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
     @Override
-    public List<UserServiceModel> getAllUsers() {
-        return this.userRepository
-                .findAll()
-                .stream()
-                .map(x -> this.modelMapper.map(x, UserServiceModel.class))
-                .collect(Collectors.toList());
+    public List<UserServiceModel> getAllUsers(String userId) {
+        UserDetailsViewModel userById = this.getById(userId);
+
+
+        if (userById != null) {
+            List<UserRole> userRoles = userById
+                    .getAuthorities()
+                    .stream().filter(userRole ->
+                            userRole.getAuthority().equals("ROOT")
+                                    || userRole.getAuthority().equals("ADMIN"))
+                    .collect(Collectors.toList());
+            if(userRoles.size() > 0){
+                return this.userRepository
+                        .findAll()
+                        .stream()
+                        .map(x -> this.modelMapper.map(x, UserServiceModel.class))
+                        .collect(Collectors.toList());
+            }
+        }
+        throw new CustomException(ResponseMessageConstants.UNAUTHORIZED_SERVER_ERROR_MESSAGE);
     }
 
     @Override
     public boolean deleteUserById(String id) {
         User user = this.userRepository.findById(id).orElse(null);
-        if(user != null){
-            try{
+        if (user != null) {
+            try {
                 this.userRepository.deleteById(id);
                 return true;
-            }catch (IllegalArgumentException iae){
+            } catch (IllegalArgumentException iae) {
                 throw new CustomException(iae.getMessage());
             }
         }
@@ -222,7 +236,7 @@ public class UserServiceImpl implements UserService {
                 .findById(id)
                 .orElse(null);
 
-        if(user == null) return false;
+        if (user == null) return false;
 
         String userAuthority = this.getUserAuthority(user.getId());
 
@@ -247,7 +261,7 @@ public class UserServiceImpl implements UserService {
                 .findById(id)
                 .orElse(null);
 
-        if(user == null) return false;
+        if (user == null) return false;
 
         String userAuthority = this.getUserAuthority(user.getId());
 
@@ -265,7 +279,6 @@ public class UserServiceImpl implements UserService {
         this.userRepository.saveAndFlush(user);
         return true;
     }
-
 
 
     private Set<UserRole> getAuthorities(String authority) {

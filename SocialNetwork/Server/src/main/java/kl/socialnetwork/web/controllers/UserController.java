@@ -71,12 +71,12 @@ public class UserController {
     }
 
 
-    @GetMapping(value = "/all")
-    public ResponseEntity<Object> getAllUsers() throws JsonProcessingException {
+    @GetMapping(value = "/all/{id}")
+    public ResponseEntity<Object> getAllUsers(@PathVariable(value = "id") String userId) throws JsonProcessingException {
 
 
         List<UserAllViewModel> allUser = this.userService
-                .getAllUsers()
+                .getAllUsers(userId)
                 .stream()
                 .map(x -> {
                     UserAllViewModel userAllViewModel = this.modelMapper.map(x, UserAllViewModel.class);

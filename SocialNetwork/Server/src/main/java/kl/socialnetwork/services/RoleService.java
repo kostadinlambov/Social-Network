@@ -6,4 +6,6 @@ public interface RoleService {
     void persist(UserRole role);
 
     UserRole getByName(String name);
+
+    String testMethod(String test);
 }

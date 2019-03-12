@@ -29,7 +29,7 @@ public interface UserService extends UserDetailsService {
 
     UserDetailsViewModel getByUsername(String username);
 
-    List<UserServiceModel> getAllUsers();
+    List<UserServiceModel> getAllUsers(String userId);
 
     UserDeleteViewModel deleteUserByEmail(String email);
 
