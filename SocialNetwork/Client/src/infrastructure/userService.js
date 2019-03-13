@@ -133,8 +133,8 @@ export default {
     getImageSize(profilePicUrl, friendsGallery) {
         let img = new Image();
         img.src = profilePicUrl;
-        console.log('this.width + x + this.height');
-        console.log(img.width + 'x' + img.height);
+        // console.log('this.width + x + this.height');
+        // console.log(img.width + 'x' + img.height);
         // alert('ImageSize: ' + img.width + 'x' + img.height)
         if (img.width >= img.height && !friendsGallery) {
             return 'l'

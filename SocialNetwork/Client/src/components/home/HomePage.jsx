@@ -1,9 +1,8 @@
 import React, { Component, Fragment, lazy, Suspense } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
-import { withRootAuthorization, withAdminAuthorization, withUserAuthorization } from '../../hocs/withAuthorization';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
-import { requester } from '../../infrastructure/'
+import { requester, userService } from '../../infrastructure/'
 
 import TimeLine from './TimeLine';
 import HeaderSection from './HeaderSection';
@@ -11,7 +10,6 @@ import MainSharedContent from './MainSharedContent';
 import Intro from './Intro';
 import PhotoGallery from './PhotosGallery';
 import FriendsGallery from './FriendsGallery';
-import userService from '../../infrastructure/userService';
 
 import placeholder_user_image from '../../assets/images/placeholder-profile-male.jpg'
 import default_background_image from '../../assets/images/default-background-image.jpg'
@@ -39,33 +37,35 @@ export default class HomePage extends Component {
             lastName: '',
             address: '',
             city: '',
+            search: '',
             profilePicUrl: placeholder_user_image,
             backgroundImageUrl: default_background_image,
             authorities: [],
             picturesArr: [],
             friendsArr: [],
-            ready: false
+            friendsArrSearch: [],
+            friendsCandidatesArr: [],
+            userWaitingForAcceptingRequest: [],
+            usersReceivedRequestFromCurrentUser: [],
         }
 
         this.getUserToShowId = this.getUserToShowId.bind(this);
         this.loadAllPictures = this.loadAllPictures.bind(this);
         this.loadAllFriends = this.loadAllFriends.bind(this);
+        this.searchResults = this.searchResults.bind(this);
     }
 
     componentDidMount() {
-    //   this.loadAllPictures(userService.getUserId())
+        //   this.loadAllPictures(userService.getUserId())
     }
 
     getUserToShowId(getUserToShowId) {
-        debugger;
-        console.log(' getUserToShowId: ', getUserToShowId);
-
         requester.get(`/users/details/${getUserToShowId}`, (userData) => {
             this.setState({
                 ...userData, ready: true
             }, () => {
-              (() =>   this.loadAllPictures(getUserToShowId))();
-              (() =>   this.loadAllFriends(getUserToShowId))();
+                (() => this.loadAllPictures(getUserToShowId))();
+                (() => this.loadAllFriends(getUserToShowId))();
             })
 
             if (userData.error) {
@@ -73,8 +73,7 @@ export default class HomePage extends Component {
                 //     position: toast.POSITION.TOP_RIGHT
                 // });
                 this.props.history.push("/");
-            } 
-            debugger;
+            }
         }).catch(err => {
             console.error('deatils err:', err)
             toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
@@ -89,10 +88,7 @@ export default class HomePage extends Component {
     }
 
     loadAllPictures = (userId) => {
-        debugger;
         requester.get('/pictures/all/' + userId, (response) => {
-            console.log('pictures all: ', response);
-            debugger;
             if (response.success === true) {
                 // toast.success(<ToastComponent.successToast text={response.message} />, {
                 //     position: toast.POSITION.TOP_RIGHT
@@ -101,10 +97,6 @@ export default class HomePage extends Component {
                     picturesArr: response['payload'],
                     id: userId
                 })
-
-                console.log('loadAllPictures this.state:  ' , this.state)
-                debugger;
-                
             } else {
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
@@ -124,11 +116,7 @@ export default class HomePage extends Component {
     }
 
     loadAllFriends = (userId) => {
-        debugger;
         requester.get(`/relationship/friends/${userId}`, (response) => {
-            debugger;
-            console.log('friends all: ', response);
-
             this.setState({
                 friendsArr: response
             })
@@ -146,7 +134,35 @@ export default class HomePage extends Component {
         })
     }
 
-    checkIfCurrentUserIsLoggedInUser(){
+    searchResults = (userId, search) => {
+        this.setState({
+            search
+        })
+
+        const requestBody = { loggedInUserId: userId, search: search }
+
+        requester.post('/relationship/search', requestBody, (response) => {
+            this.setState({
+                friendsArrSearch: response.filter(user => user.status === 1),
+                friendsCandidatesArr: response.filter(user => user.status !== 0 && user.status !== 1),
+                userWaitingForAcceptingRequest: response.filter(user => user.status === 0 && user.starterOfAction === true),
+                usersReceivedRequestFromCurrentUser: response.filter(user => user.status === 0 && user.starterOfAction === false),
+                ready: true
+            })
+        }).catch(err => {
+            console.error('deatils err:', err)
+            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+
+            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
+                localStorage.clear();
+                this.props.history.push('/login');
+            }
+        })
+    }
+
+    checkIfCurrentUserIsLoggedInUser() {
         return this.state.id === userService.getUserId();
     }
 
@@ -160,40 +176,32 @@ export default class HomePage extends Component {
         const userToShowId = this.props.match.params;
 
         console.log(this.props.match.id)
-        
+
         const isRoot = userService.isRoot();
         const isAdmin = userService.isAdmin();
         const isTheCurrentLoggedInUser = this.checkIfCurrentUserIsLoggedInUser(userToShowId);
         let loggedIn = userService.isTheUserLoggedIn();
-        
-        console.log(isTheCurrentLoggedInUser)
-        debugger;
-
-        console.log('loggedIn: ', loggedIn);
-        console.log('userToShowId: ', userToShowId);
-        debugger;
 
         return (
             <Fragment>
                 <HeaderSection  {...this.state} />
                 <main className="site-content">
                     <section className="main-section">
-                    <TimeLine {...this.state} />
+                        <TimeLine {...this.state} />
                         <Suspense fallback={<h1 className="text-center pt-5 mt-5">Fallback Home Loading...</h1>}>
                             <Switch>
                                 {loggedIn && <Route exact path="/home/comments/:id" render={props => <MainSharedContent {...props} {...this.state} getUserToShowId={this.getUserToShowId} />} />}
                                 {loggedIn && <Route exact path="/home/profile/:id" render={props => <UserProfilePage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
-                                {loggedIn && <Route exact path="/home/friends/:id"  render={props => <UserFriendsAllPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} loadAllFriends={this.loadAllFriends} />}/>}
+                                {loggedIn && <Route exact path="/home/friends/:id" render={props => <UserFriendsAllPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} loadAllFriends={this.loadAllFriends} />} />}
                                 {loggedIn && <Route exact path="/home/findFriends/:id/:category?" component={UserFindFriendsPage} />}
-                                {/* {loggedIn &&  <Route exact path="/home/users/edit/:id" render={props => <UserEditPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />}/>} */}
-                                {loggedIn && (isRoot|| isAdmin || isTheCurrentLoggedInUser) && <Route exact path="/home/users/edit/:id" render={props => <UserEditPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />}/>}
+                                {loggedIn && (isRoot || isAdmin || isTheCurrentLoggedInUser) && <Route exact path="/home/users/edit/:id" render={props => <UserEditPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
                                 {(loggedIn && isRoot) && <Route exact path="/home/users/delete/:id" render={props => <UserDeletePage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
-                                {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/users/all/:id" render={props => <UserAllPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />}/>}
-                                {loggedIn && <Route exact path="/home/users/search" component={withUserAuthorization(UserSearchResultsPage)} />}
-                                {loggedIn && <Route exact path="/home/gallery/:id"  render={props => <UserGalleryPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} loadAllPictures={this.loadAllPictures} />} />}
+                                {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/users/all/:id" render={props => <UserAllPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
+                                {loggedIn && <Route exact path="/home/gallery/:id" render={props => <UserGalleryPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} loadAllPictures={this.loadAllPictures} />} />}
+                                {loggedIn && <Route exact path="/home/users/search" render={(props) => <UserSearchResultsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} searchResults={this.searchResults} />} />}
 
                                 <Route exact path="/error" component={ErrorPage} />
-                                <Route render={(props) => <Redirect to="/" {...props} /> } />
+                                <Route render={(props) => <Redirect to="/" {...props} />} />
                                 {/* <Route component={ErrorPage} /> */}
                             </Switch>
                         </Suspense >
@@ -204,8 +212,8 @@ export default class HomePage extends Component {
                             <section className="aside-section">
                                 <Intro {...this.state} />
                                 <PhotoGallery {...this.state} />
-                                <FriendsGallery {...this.state}  />
-                                </section>
+                                <FriendsGallery {...this.state} />
+                            </section>
                         </Fragment>
                     }
                 </main>

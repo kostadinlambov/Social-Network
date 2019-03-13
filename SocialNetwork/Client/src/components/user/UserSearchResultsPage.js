@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import UserRow from './UserRow';
 import { requester, userService } from '../../infrastructure'
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
@@ -7,18 +6,17 @@ import Friend from './Friend';
 import FriendRequest from './FriendRequest';
 import './css/UserFriends.css'
 
-
 export default class UserSearchResultsPage extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            friendsArr: [],
-            friendsCandidatesArr: [],
-            userWaitingForAcceptingRequest: [],
-            usersReceivedRequestFromCurrentUser: [],
+            friendsArrSearch: this.props.friendsArrSearch,
+            friendsCandidatesArr: this.props.friendsCandidatesArr,
+            userWaitingForAcceptingRequest: this.props.userWaitingForAcceptingRequest,
+            usersReceivedRequestFromCurrentUser: this.props.usersReceivedRequestFromCurrentUser,
             search: '',
-            ready: false,
+            userId: userService.getUserId(),
         };
 
         this.addFriend = this.addFriend.bind(this);
@@ -28,63 +26,16 @@ export default class UserSearchResultsPage extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props);
+        const userId = userService.getUserId();
+        const search = this.props.location.state.search;
+        this.setState({ search })
 
-        const search = this.props.location.state.search
-        debugger;
-
-        this.setState({
-            search
-        })
-
-
-        const requestBody = { loggedInUserId: userService.getUserId(), search: search }
-        debugger;
-
-        requester.post('/relationship/search', requestBody, (response) => {
-
-            console.log('Search result all: ', response);
-            debugger;
-
-            this.setState({
-                friendsArr: response.filter(user => user.status === 1),
-                friendsCandidatesArr: response.filter(user => user.status !== 0 && user.status !== 1),
-                userWaitingForAcceptingRequest: response.filter(user => user.status === 0 && user.starterOfAction === true),
-                usersReceivedRequestFromCurrentUser: response.filter(user => user.status === 0 && user.starterOfAction === false)
-            })
-
-            debugger;
-            this.setState({
-                ready: true
-            })
-
-            console.log('response: ', response)
-            console.log('friendsCandidatesArr: ', this.state.friendsCandidatesArr)
-            console.log('userWaitingForAcceptingRequest: ', this.state.userWaitingForAcceptingRequest)
-            console.log('usersReceivedRequestFromCurrentUser: ', this.state.usersReceivedRequestFromCurrentUser)
-
-            debugger;
-        }).catch(err => {
-            console.error('deatils err:', err)
-            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-                // toast.error(<ToastComponent.errorToast text={`${error.name}: ${error.message}`} />, {
-                position: toast.POSITION.TOP_RIGHT
-            });
-
-            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-                localStorage.clear();
-                this.props.history.push('/login');
-            }
-        })
+        this.props.getUserToShowId(userId);
+        this.props.searchResults(userId, search);
     }
 
     addFriend = (friendCandidateId, event) => {
-        console.log('event: ', event)
-        console.log('friendCandidateId: ', friendCandidateId)
-        debugger;
         event.preventDefault();
-        debugger;
-        // const id = this.state.id;
         const requestBody = { loggedInUserId: userService.getUserId(), friendCandidateId: friendCandidateId }
 
         console.log('requestBody: ', requestBody)
@@ -97,8 +48,7 @@ export default class UserSearchResultsPage extends Component {
                     position: toast.POSITION.TOP_RIGHT
                 });
 
-                this.props.history.push("/home/findFriends/" + userService.getUserId())
-
+                this.props.searchResults(this.state.userId, this.state.search);
             } else {
                 debugger;
                 console.log('error message: ', response.message);
@@ -121,12 +71,8 @@ export default class UserSearchResultsPage extends Component {
     }
 
     confirmRequest = (friendToAcceptId, event) => {
-        console.log('event: ', event)
-        console.log('friendToAcceptId: ', friendToAcceptId)
-
         event.preventDefault();
 
-        // const id = this.state.id;
         const requestBody = { loggedInUserId: userService.getUserId(), friendToAcceptId: friendToAcceptId }
 
         console.log('requestBody: ', requestBody)
@@ -138,9 +84,7 @@ export default class UserSearchResultsPage extends Component {
                 toast.success(<ToastComponent.successToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
-
-                this.props.history.push("/home/findFriends/" + userService.getUserId())
-
+                this.props.searchResults(this.state.userId, this.state.search)
             } else {
                 debugger;
                 console.log('error message: ', response.message);
@@ -163,12 +107,8 @@ export default class UserSearchResultsPage extends Component {
     }
 
     rejectRequest = (friendToRejectId, event) => {
-        console.log('event: ', event)
-        console.log('friendToRejectId: ', friendToRejectId)
-
         event.preventDefault();
 
-        // const id = this.state.id;
         const requestBody = { loggedInUserId: userService.getUserId(), friendToRejectId: friendToRejectId }
 
         console.log('requestBody: ', requestBody)
@@ -181,8 +121,7 @@ export default class UserSearchResultsPage extends Component {
                     position: toast.POSITION.TOP_RIGHT
                 });
 
-                this.props.history.push("/home/findFriends/" + userService.getUserId())
-
+                this.props.searchResults(this.state.userId, this.state.search);
             } else {
                 debugger;
                 console.log('error message: ', response.message);
@@ -205,26 +144,19 @@ export default class UserSearchResultsPage extends Component {
     }
 
     removeFriend = (friendToRemoveId, event) => {
-        console.log('event: ', event)
-        console.log('friendToRemoveId: ', friendToRemoveId)
-
         event.preventDefault();
 
-        // const id = this.state.id;
         const requestBody = { loggedInUserId: userService.getUserId(), friendToRemoveId: friendToRemoveId }
 
         console.log('requestBody: ', requestBody)
 
         requester.post('/relationship/removeFriend', requestBody, (response) => {
-            console.log('RemoveFriend response: ', response)
-            debugger;
             if (response.success) {
                 toast.success(<ToastComponent.successToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
 
-                this.props.history.push("/home/friends/" + userService.getUserId())
-
+                this.props.searchResults(this.state.userId, this.state.search)
             } else {
                 debugger;
                 console.log('error message: ', response.message);
@@ -247,35 +179,46 @@ export default class UserSearchResultsPage extends Component {
     }
 
     render() {
-        if (!this.state.ready) {
-            return null;
+        const userId = userService.getUserId();
+        const search = this.props.location.state.search;
+
+        if (this.state.search !== search) {
+            this.setState({ search: search },
+                () => this.props.searchResults(userId, search)
+            );
         }
 
-        const friendsArrLength = this.state.friendsArr.length;
-        let friends = '';
+        console.log('friendsArrSearch: ', this.props.friendsArrSearch)
+        console.log('userWaitingForAcceptingRequest: ', this.props.userWaitingForAcceptingRequest)
+        console.log('frienusersReceivedRequestFromCurrentUserdsArrSearch: ', this.props.usersReceivedRequestFromCurrentUser)
+        console.log('friendsCandidatesArr: ', this.props.friendsCandidatesArr)
+        // debugger;
 
+        const friendsArrLength = this.props.friendsArrSearch.length;
+        let friends = '';
+      
         if (friendsArrLength > 0) {
             friends = (
                 <Fragment>
                     <h3>Users From Your Friend List</h3>
                     <hr className="my-2 mb-5 mt-2 col-md-8 mx-auto" />
-                    {this.state.friendsArr.map((friend) =>
-                         <Friend
-                         key={friend.id}
-                         {...friend}
-                         {...this.props}
-                         firstButtonLink={`/home/profile/${friend.id}`}
-                         secondButtonLink={`/`}
-                         firstButtonText={'VIEW PROFILE'}
-                         secondButtonText={'REMOVE'}
-                         secondButtonOnClick={this.removeFriend}
-                     />)}
+                    {this.props.friendsArrSearch.map((friend) =>
+                        <Friend
+                            key={friend.id}
+                            {...this.props}
+                            {...friend}
+                            firstButtonLink={`/home/profile/${friend.id}`}
+                            secondButtonLink={`/`}
+                            firstButtonText={'VIEW PROFILE'}
+                            secondButtonText={'REMOVE'}
+                            secondButtonOnClick={this.removeFriend}
+                        />)}
                     <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" />
                 </Fragment>
             )
         }
 
-        const requestLength = this.state.userWaitingForAcceptingRequest.length;
+        const requestLength = this.props.userWaitingForAcceptingRequest.length;
         let requests = '';
         debugger;
         if (requestLength > 0) {
@@ -283,11 +226,11 @@ export default class UserSearchResultsPage extends Component {
                 <Fragment>
                     <h3>Respond to Your Friend Requests</h3>
                     <hr className="my-2 mb-5 mt-2 col-md-8 mx-auto" />
-                    {this.state.userWaitingForAcceptingRequest.map((friend) =>
+                    {this.props.userWaitingForAcceptingRequest.map((friend) =>
                         <FriendRequest
                             key={friend.id}
-                            {...friend}
                             {...this.props}
+                            {...friend}
                             firstButtonText={'CONFIRM'}
                             secondButtonText={'REJECT'}
                             thirdButtonText={'VIEW PROFILE'}
@@ -300,7 +243,7 @@ export default class UserSearchResultsPage extends Component {
             )
         }
 
-        let waitingForResponseUsers = this.state.usersReceivedRequestFromCurrentUser.length;
+        let waitingForResponseUsers = this.props.usersReceivedRequestFromCurrentUser.length;
         let friendsCandidates = '';
 
         if (waitingForResponseUsers > 0) {
@@ -309,11 +252,11 @@ export default class UserSearchResultsPage extends Component {
                     <h3>Pending Requests</h3>
                     <hr className="my-2 mb-5 mt-2 col-md-8 mx-auto" />
                     {
-                        this.state.usersReceivedRequestFromCurrentUser.map((friend) =>
+                        this.props.usersReceivedRequestFromCurrentUser.map((friend) =>
                             <Friend
                                 key={friend.id}
-                                {...friend}
                                 {...this.props}
+                                {...friend}
                                 firstButtonLink={`/home/profile/${friend.id}`}
                                 secondButtonLink={`/`}
                                 firstButtonText={'VIEW PROFILE'}
@@ -326,7 +269,7 @@ export default class UserSearchResultsPage extends Component {
             )
         }
 
-        let friendsCandidatesArr = this.state.friendsCandidatesArr.length;
+        let friendsCandidatesArr = this.props.friendsCandidatesArr.length;
         let remainCandidates = '';
 
         if (friendsCandidatesArr > 0) {
@@ -335,11 +278,11 @@ export default class UserSearchResultsPage extends Component {
                     <h3>People You May Know</h3>
                     <hr className="my-2 mb-5 mt-3 col-md-8 mx-auto" />
                     {
-                        this.state.friendsCandidatesArr.map((friend) =>
+                        this.props.friendsCandidatesArr.map((friend) =>
                             <Friend
                                 key={friend.id}
-                                {...friend}
                                 {...this.props}
+                                {...friend}
                                 firstButtonLink={`/home/profile/${friend.id}`}
                                 secondButtonLink={`/`}
                                 firstButtonText={'VIEW PROFILE'}

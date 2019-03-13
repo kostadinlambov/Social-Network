@@ -31,9 +31,10 @@ export default class Navbar extends Component {
         event.preventDefault();
         console.log(this.state.search)
         debugger;
+        // const id = userService.getUserId()
 
         this.props.history.push({
-            pathname: "/home/users/search",
+            pathname: "/home/users/search/" ,
             state:{
                 search: this.state.search
             }
