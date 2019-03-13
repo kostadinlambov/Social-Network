@@ -18,7 +18,7 @@ import default_background_image from '../../assets/images/default-background-ima
 
 const UserSearchResultsPage = lazy(() => import('../../components//user/UserSearchResultsPage'))
 const UserProfilePage = lazy(() => import('../../components/user/UserProfilePage'))
-const UserFriendsPage = lazy(() => import('../../components/user/UserFriendsAllPage'))
+const UserFriendsAllPage = lazy(() => import('../../components/user/UserFriendsAllPage'))
 const UserFindFriendsPage = lazy(() => import('../../components/user/UserFindFriendsPage'))
 const UserAllPage = lazy(() => import('../../components/user/UserAllPage'))
 const UserEditPage = lazy(() => import('../../components/user/UserEditPage'))
@@ -43,11 +43,13 @@ export default class HomePage extends Component {
             backgroundImageUrl: default_background_image,
             authorities: [],
             picturesArr: [],
+            friendsArr: [],
             ready: false
         }
 
         this.getUserToShowId = this.getUserToShowId.bind(this);
         this.loadAllPictures = this.loadAllPictures.bind(this);
+        this.loadAllFriends = this.loadAllFriends.bind(this);
     }
 
     componentDidMount() {
@@ -61,7 +63,10 @@ export default class HomePage extends Component {
         requester.get(`/users/details/${getUserToShowId}`, (userData) => {
             this.setState({
                 ...userData, ready: true
-            }, this.loadAllPictures(getUserToShowId))
+            }, () => {
+              (() =>   this.loadAllPictures(getUserToShowId))();
+              (() =>   this.loadAllFriends(getUserToShowId))();
+            })
 
             if (userData.error) {
                 // toast.error(<ToastComponent.errorToast text={userData.message} />, {
@@ -118,6 +123,29 @@ export default class HomePage extends Component {
         })
     }
 
+    loadAllFriends = (userId) => {
+        debugger;
+        requester.get(`/relationship/friends/${userId}`, (response) => {
+            debugger;
+            console.log('friends all: ', response);
+
+            this.setState({
+                friendsArr: response
+            })
+        }).catch(err => {
+            console.error('deatils err:', err)
+            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+                // toast.error(<ToastComponent.errorToast text={`${error.name}: ${error.message}`} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+
+            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
+                localStorage.clear();
+                this.props.history.push('/login');
+            }
+        })
+    }
+
     checkIfCurrentUserIsLoggedInUser(){
         return this.state.id === userService.getUserId();
     }
@@ -132,11 +160,12 @@ export default class HomePage extends Component {
         const userToShowId = this.props.match.params;
 
         console.log(this.props.match.id)
-        const loggedIn = userService.isTheUserLoggedIn();
+        
         const isRoot = userService.isRoot();
         const isAdmin = userService.isAdmin();
         const isTheCurrentLoggedInUser = this.checkIfCurrentUserIsLoggedInUser(userToShowId);
-
+        let loggedIn = userService.isTheUserLoggedIn();
+        
         console.log(isTheCurrentLoggedInUser)
         debugger;
 
@@ -154,14 +183,13 @@ export default class HomePage extends Component {
                             <Switch>
                                 {loggedIn && <Route exact path="/home/comments/:id" render={props => <MainSharedContent {...props} {...this.state} getUserToShowId={this.getUserToShowId} />} />}
                                 {loggedIn && <Route exact path="/home/profile/:id" render={props => <UserProfilePage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
-                                {loggedIn && <Route exact path="/home/friends/:id" component={UserFriendsPage} />}
+                                {loggedIn && <Route exact path="/home/friends/:id"  render={props => <UserFriendsAllPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} loadAllFriends={this.loadAllFriends} />}/>}
                                 {loggedIn && <Route exact path="/home/findFriends/:id/:category?" component={UserFindFriendsPage} />}
                                 {/* {loggedIn &&  <Route exact path="/home/users/edit/:id" render={props => <UserEditPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />}/>} */}
                                 {loggedIn && (isRoot|| isAdmin || isTheCurrentLoggedInUser) && <Route exact path="/home/users/edit/:id" render={props => <UserEditPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />}/>}
                                 {(loggedIn && isRoot) && <Route exact path="/home/users/delete/:id" render={props => <UserDeletePage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
                                 {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/users/all/:id" render={props => <UserAllPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />}/>}
                                 {loggedIn && <Route exact path="/home/users/search" component={withUserAuthorization(UserSearchResultsPage)} />}
-                                {/* {loggedIn && <Route exact path="/home/gallery/:id" component={withUserAuthorization(UserGalleryPage)} />} */}
                                 {loggedIn && <Route exact path="/home/gallery/:id"  render={props => <UserGalleryPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} loadAllPictures={this.loadAllPictures} />} />}
 
                                 <Route exact path="/error" component={ErrorPage} />
@@ -175,8 +203,8 @@ export default class HomePage extends Component {
                         <Fragment>
                             <section className="aside-section">
                                 <Intro {...this.state} />
-                                <PhotoGallery {...this.state} loadAllPictures={this.loadAllPictures}/>
-                                <FriendsGallery userId={this.state.id} />
+                                <PhotoGallery {...this.state} />
+                                <FriendsGallery {...this.state}  />
                                 </section>
                         </Fragment>
                     }

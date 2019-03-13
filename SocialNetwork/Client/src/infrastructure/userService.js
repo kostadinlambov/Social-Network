@@ -1,4 +1,9 @@
 
+import React from 'react';
+import { toast } from 'react-toastify';
+import { ToastComponent } from '../components/common'
+
+
 export default {
     getPayload: () => {
         const token = localStorage.getItem('token')
@@ -48,14 +53,23 @@ export default {
     isTheUserLoggedIn: () => {
         const token = localStorage.getItem('token')
         if (token !== null && token !== undefined) {
-            const payload = JSON.parse(atob(token.split('.')[1]));
-            const role = payload['role'];
+            try {
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                const role = payload['role'];
 
-            if (payload) {
-                if (role !== null || role !== undefined) {
-                    return true;
+                if (payload) {
+                    if (role !== null || role !== undefined) {
+                        return true;
+                    }
                 }
+            } catch (err) {
+                localStorage.clear();
+                toast.error(<ToastComponent.errorToast text={'Unauthorized'} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+                // throw new Error("Unauthorized");
             }
+
         }
 
         return false;
@@ -128,4 +142,4 @@ export default {
         return '';
 
     }
-}
+} 

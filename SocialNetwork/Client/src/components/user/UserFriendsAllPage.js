@@ -13,44 +13,20 @@ export default class UserFriendsAllPage extends Component {
         super(props)
 
         this.state = {
-            friendsArr: [],
-            id: ''
+            friendsArr: this.props.friendsArr,
+            id: this.props.id,
         };
     }
 
     componentDidMount() {
         const userId = this.props.match.params.id;
-        this.setState({ id: userId })
-        
-        requester.get(`/relationship/friends/${userId}`, (response) => {
-            debugger;
-            console.log('friends all: ', response);
-
-            this.setState({
-                friendsArr: response
-            })
-        }).catch(err => {
-            console.error('deatils err:', err)
-            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-                // toast.error(<ToastComponent.errorToast text={`${error.name}: ${error.message}`} />, {
-                position: toast.POSITION.TOP_RIGHT
-            });
-
-            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-                localStorage.clear();
-                this.props.history.push('/login');
-            }
-        })
+        this.setState({ id: userId });
+        this.props.loadAllFriends(userId);
     }
 
     removeFriend = (friendToRemoveId, event) => {
-        console.log('event: ', event)
-        console.log('friendToRemoveId: ', friendToRemoveId)
-
         event.preventDefault();
-
-        // const id = this.state.id;
-        const requestBody = { loggedInUserId: userService.getUserId(), friendToRemoveId: friendToRemoveId }
+        const requestBody = { loggedInUserId: this.props.id, friendToRemoveId: friendToRemoveId }
 
         console.log('requestBody: ', requestBody)
 
@@ -62,8 +38,7 @@ export default class UserFriendsAllPage extends Component {
                     position: toast.POSITION.TOP_RIGHT
                 });
 
-                this.props.history.push("/home/friends/" + userService.getUserId())
-
+                this.props.loadAllFriends(this.props.id);
             } else {
                 debugger;
                 console.log('error message: ', response.message);
@@ -86,31 +61,53 @@ export default class UserFriendsAllPage extends Component {
     }
 
     render() {
+        if (this.props.match.params.id !== this.props.id) {
+            this.props.getUserToShowId(this.props.match.params.id);
+        }
+
+        const isTheCurrentLoggedInUser = (this.props.id === userService.getUserId());
 
         return (
             <div className="container col-md-12 text-center">
                 <h1 className="text-center font-weight-bold display-5" style={{ 'margin': '1rem auto' }}>Friends </h1>
                 <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" />
                 <section className="friend-section" >
-                    {this.state.friendsArr.length > 0 ?
-                        this.state.friendsArr.map((friend) =>
-                            <Friend
-                                key={friend.id}
-                                {...friend}
-                                {...this.props}
-                                firstButtonLink={`/home/profile/${friend.id}`}
-                                secondButtonLink={`/`}
-                                firstButtonText={'VIEW PROFILE'}
-                                secondButtonText={'REMOVE'}
-                                secondButtonOnClick={this.removeFriend}
-                            />)
+                    {this.props.friendsArr.length > 0 ?
+                        this.props.friendsArr.map((friend) =>
+                            isTheCurrentLoggedInUser ?
+                                <Friend
+                                    key={friend.id}
+                                    {...this.props}
+                                    {...friend}
+                                    firstButtonLink={`/home/profile/${friend.id}`}
+                                    secondButtonLink={`/`}
+                                    firstButtonText={'VIEW PROFILE'}
+                                    secondButtonText={'REMOVE'}
+                                    secondButtonOnClick={this.removeFriend}
+                                />
+                                :
+                                <Friend
+                                    key={friend.id}
+                                    {...this.props}
+                                    {...friend}
+                                    firstButtonLink={`/home/profile/${friend.id}`}
+                                    secondButtonLink={`/`}
+                                    firstButtonText={'VIEW PROFILE'}
+                                    secondButtonText={'HOME'}
+                                />)
                         :
-                        <Fragment>
+                        (<Fragment>
                             <h2>You don't have any friends. Find some!</h2>
-                            <button className="button view-activity">
-                                <NavLink to={`/home/findFriends/${this.state.id}`}>FIND FRIENDS</NavLink>
-                            </button>
+                            {
+                                isTheCurrentLoggedInUser ?
+                                    (<button className="button view-activity">
+                                        <NavLink to={`/home/findFriends/${this.props.id}`}>FIND FRIENDS</NavLink>
+                                    </button>)
+                                    : null
+                            }
+                            <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" />
                         </Fragment>
+                        )
                     }
                 </section>
             </div>

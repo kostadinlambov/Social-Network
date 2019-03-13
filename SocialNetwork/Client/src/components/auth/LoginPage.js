@@ -166,7 +166,7 @@ export default class LoginPage extends Component {
 
                 </form>
 
-                <p>{JSON.stringify(this.state, null, 2)}</p>
+                {/* <p>{JSON.stringify(this.state, null, 2)}</p> */}
 
             </div>
         )
