@@ -57,7 +57,7 @@ public class ApplicationSecurityConfiguration
                 ).permitAll()
                 .antMatchers(
                         "/users/details/*",
-                        "/users/update",
+                        "/users/update/*",
                         "/relationship/friends/*",
                         "/relationship/findFriends/*",
                         "/relationship/addFriend",

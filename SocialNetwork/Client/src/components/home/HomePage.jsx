@@ -1,5 +1,5 @@
 import React, { Component, Fragment, lazy, Suspense } from 'react';
-import { Route, Switch, withRouter } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import { withRootAuthorization, withAdminAuthorization, withUserAuthorization } from '../../hocs/withAuthorization';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
@@ -42,50 +42,26 @@ export default class HomePage extends Component {
             profilePicUrl: placeholder_user_image,
             backgroundImageUrl: default_background_image,
             authorities: [],
+            picturesArr: [],
             ready: false
         }
 
         this.getUserToShowId = this.getUserToShowId.bind(this);
+        this.loadAllPictures = this.loadAllPictures.bind(this);
     }
 
     componentDidMount() {
-        // const currentUserId = userService.getUserId(); 
-        // const paramId = this.props.match.params.id;
-        // // const userId = this.props.match.params.id;
-
-        // console.log(' this.props: ', this.props);
-        // console.log('paramId: ', paramId);
-        // console.log('currentUserId: ', currentUserId);
-        // debugger;
-        // requester.get(`/users/details/${currentUserId}`, (userData) => {
-        //     this.setState({
-        //         ...userData, ready: true
-        //     })
-        // }).catch(err => {
-        //     console.error('deatils err:', err)
-        //     toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-        //         position: toast.POSITION.TOP_RIGHT
-        //     });
-
-        //     if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-        //         localStorage.clear();
-        //         this.props.history.push('/login');
-        //     }
-        // })
+    //   this.loadAllPictures(userService.getUserId())
     }
 
     getUserToShowId(getUserToShowId) {
         debugger;
         console.log(' getUserToShowId: ', getUserToShowId);
 
-        if(getUserToShowId === this.state.id){
-
-        }
-
         requester.get(`/users/details/${getUserToShowId}`, (userData) => {
             this.setState({
                 ...userData, ready: true
-            })
+            }, this.loadAllPictures(getUserToShowId))
 
             if (userData.error) {
                 // toast.error(<ToastComponent.errorToast text={userData.message} />, {
@@ -105,8 +81,45 @@ export default class HomePage extends Component {
                 this.props.history.push('/login');
             }
         })
+    }
 
+    loadAllPictures = (userId) => {
+        debugger;
+        requester.get('/pictures/all/' + userId, (response) => {
+            console.log('pictures all: ', response);
+            debugger;
+            if (response.success === true) {
+                // toast.success(<ToastComponent.successToast text={response.message} />, {
+                //     position: toast.POSITION.TOP_RIGHT
+                // });
+                this.setState({
+                    picturesArr: response['payload'],
+                    id: userId
+                })
 
+                console.log('loadAllPictures this.state:  ' , this.state)
+                debugger;
+                
+            } else {
+                toast.error(<ToastComponent.errorToast text={response.message} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+            }
+        }).catch(err => {
+            console.error('deatils err:', err)
+            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+
+            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
+                localStorage.clear();
+                this.props.history.push('/login');
+            }
+        })
+    }
+
+    checkIfCurrentUserIsLoggedInUser(){
+        return this.state.id === userService.getUserId();
     }
 
 
@@ -115,9 +128,17 @@ export default class HomePage extends Component {
         //     // return <h1 className="text-center pt-5 mt-5">Loading...</h1>
         //     return null;
         // }
-        console.log(this.props.match.url)
-        const loggedIn = localStorage.getItem('token');
+
         const userToShowId = this.props.match.params;
+
+        console.log(this.props.match.id)
+        const loggedIn = userService.isTheUserLoggedIn();
+        const isRoot = userService.isRoot();
+        const isAdmin = userService.isAdmin();
+        const isTheCurrentLoggedInUser = this.checkIfCurrentUserIsLoggedInUser(userToShowId);
+
+        console.log(isTheCurrentLoggedInUser)
+        debugger;
 
         console.log('loggedIn: ', loggedIn);
         console.log('userToShowId: ', userToShowId);
@@ -127,7 +148,6 @@ export default class HomePage extends Component {
             <Fragment>
                 <HeaderSection  {...this.state} />
                 <main className="site-content">
-                    {/* <div className="container"> */}
                     <section className="main-section">
                     <TimeLine {...this.state} />
                         <Suspense fallback={<h1 className="text-center pt-5 mt-5">Fallback Home Loading...</h1>}>
@@ -136,14 +156,17 @@ export default class HomePage extends Component {
                                 {loggedIn && <Route exact path="/home/profile/:id" render={props => <UserProfilePage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
                                 {loggedIn && <Route exact path="/home/friends/:id" component={UserFriendsPage} />}
                                 {loggedIn && <Route exact path="/home/findFriends/:id/:category?" component={UserFindFriendsPage} />}
-                                {loggedIn && <Route exact path="/home/users/edit/:id" render={props => <UserEditPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />}/>}
-                                {loggedIn && <Route exact path="/home/users/delete/:id" render={props => <UserDeletePage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
-                                {loggedIn && <Route exact path="/home/users/all/:id" render={props => <UserAllPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />}/>}
+                                {/* {loggedIn &&  <Route exact path="/home/users/edit/:id" render={props => <UserEditPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />}/>} */}
+                                {loggedIn && (isRoot|| isAdmin || isTheCurrentLoggedInUser) && <Route exact path="/home/users/edit/:id" render={props => <UserEditPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />}/>}
+                                {(loggedIn && isRoot) && <Route exact path="/home/users/delete/:id" render={props => <UserDeletePage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
+                                {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/users/all/:id" render={props => <UserAllPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />}/>}
                                 {loggedIn && <Route exact path="/home/users/search" component={withUserAuthorization(UserSearchResultsPage)} />}
-                                {loggedIn && <Route exact path="/home/gallery/:id" component={withUserAuthorization(UserGalleryPage)} />}
+                                {/* {loggedIn && <Route exact path="/home/gallery/:id" component={withUserAuthorization(UserGalleryPage)} />} */}
+                                {loggedIn && <Route exact path="/home/gallery/:id"  render={props => <UserGalleryPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} loadAllPictures={this.loadAllPictures} />} />}
 
                                 <Route exact path="/error" component={ErrorPage} />
-                                <Route component={ErrorPage} />
+                                <Route render={(props) => <Redirect to="/" {...props} /> } />
+                                {/* <Route component={ErrorPage} /> */}
                             </Switch>
                         </Suspense >
                     </section>
@@ -152,13 +175,11 @@ export default class HomePage extends Component {
                         <Fragment>
                             <section className="aside-section">
                                 <Intro {...this.state} />
-                                <PhotoGallery {...this.state} />
+                                <PhotoGallery {...this.state} loadAllPictures={this.loadAllPictures}/>
                                 <FriendsGallery userId={this.state.id} />
                                 </section>
                         </Fragment>
                     }
-
-
                 </main>
             </Fragment>
 

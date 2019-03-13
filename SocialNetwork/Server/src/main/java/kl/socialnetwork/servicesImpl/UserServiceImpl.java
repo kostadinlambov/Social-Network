@@ -78,37 +78,56 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean updateUser(UserServiceModel userServiceModel) {
-        User userOrigin = this.userRepository.findById(userServiceModel.getId()).orElse(null);
+    public boolean updateUser(UserServiceModel userServiceModel, String loggedInUserId) {
+        User userToEdit = this.userRepository.findById(userServiceModel.getId()).orElse(null);
+        User loggedInUser = this.userRepository.findById(loggedInUserId).orElse(null);
 
-        if (userOrigin != null) {
+        if(userToEdit != null && loggedInUser != null){
+            if(!userServiceModel.getId().equals(loggedInUserId)){
+                String userAuthority = this.getUserAuthority(loggedInUserId);
+                if(!("ROOT").equals(userAuthority) && !("ADMIN").equals(userAuthority)){
+                    throw new CustomException(ResponseMessageConstants.UNAUTHORIZED_SERVER_ERROR_MESSAGE);
+                }
+            }
+
             User userEntity = this.modelMapper.map(userServiceModel, User.class);
-            userEntity.setPassword(userOrigin.getPassword());
-            userEntity.setAuthorities(userOrigin.getAuthorities());
+            userEntity.setPassword(userToEdit.getPassword());
+            userEntity.setAuthorities(userToEdit.getAuthorities());
 
-
-            User updatedUser = this.userRepository.saveAndFlush(userEntity);
-            return updatedUser != null;
+            return  this.userRepository.saveAndFlush(userEntity) != null;
         }
 
         return false;
     }
 
-//    public boolean addToCart(String userId, String racketId ){
-//       User user = this.userRepository.findById(userId).orElse(null);
-//
-//       if(user != null){
-//         Racket racket = this.racketRepository.findById(racketId).orElse(null);
-//           if(racket != null){
-//               user.getShoppingCartProducts().add(racket);
-//
-//               User updatedUser = this.userRepository.saveAndFlush(user);
-//               return updatedUser != null;
-//           }
-//       }
-//
-//        return false;
-//    }
+    @Override
+    public UserEditViewModel editById(String id) {
+        User user = this.userRepository.findById(id).orElse(null);
+
+        if (user != null) {
+            return this.modelMapper.map(user, UserEditViewModel.class);
+        }
+
+        throw new CustomException(ResponseMessageConstants.USER_NOT_FOUND_ERROR_MESSAGE);
+    }
+
+    @Override
+    public List<UserServiceModel> getAllUsers(String userId) {
+        User userById = this.userRepository.findById(userId).orElse(null);
+
+        if (userById != null) {
+            List<UserRole> userRoles = this.getUserRoles(userById);
+
+            if(userRoles.size() > 0){
+                return this.userRepository
+                        .findAll()
+                        .stream()
+                        .map(x -> this.modelMapper.map(x, UserServiceModel.class))
+                        .collect(Collectors.toList());
+            }
+        }
+        throw new CustomException(ResponseMessageConstants.UNAUTHORIZED_SERVER_ERROR_MESSAGE);
+    }
 
 
     @Override
@@ -133,16 +152,7 @@ public class UserServiceImpl implements UserService {
         throw new CustomException(ResponseMessageConstants.USER_NOT_FOUND_ERROR_MESSAGE);
     }
 
-    @Override
-    public UserEditViewModel editById(String id) {
-        User user = this.userRepository.findById(id).orElse(null);
 
-        if (user != null) {
-            return this.modelMapper.map(user, UserEditViewModel.class);
-        }
-
-        throw new CustomException(ResponseMessageConstants.USER_NOT_FOUND_ERROR_MESSAGE);
-    }
 
     @Override
     public User getByFirstName(String firstName) {
@@ -169,29 +179,6 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-
-    @Override
-    public List<UserServiceModel> getAllUsers(String userId) {
-        UserDetailsViewModel userById = this.getById(userId);
-
-
-        if (userById != null) {
-            List<UserRole> userRoles = userById
-                    .getAuthorities()
-                    .stream().filter(userRole ->
-                            userRole.getAuthority().equals("ROOT")
-                                    || userRole.getAuthority().equals("ADMIN"))
-                    .collect(Collectors.toList());
-            if(userRoles.size() > 0){
-                return this.userRepository
-                        .findAll()
-                        .stream()
-                        .map(x -> this.modelMapper.map(x, UserServiceModel.class))
-                        .collect(Collectors.toList());
-            }
-        }
-        throw new CustomException(ResponseMessageConstants.UNAUTHORIZED_SERVER_ERROR_MESSAGE);
-    }
 
     @Override
     public boolean deleteUserById(String id) {
@@ -231,6 +218,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    @Override
     public boolean promoteUser(String id) {
         User user = this.userRepository
                 .findById(id)
@@ -280,6 +268,14 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    private List<UserRole> getUserRoles(User userById){
+        return userById
+                .getAuthorities()
+                .stream().filter(userRole ->
+                        userRole.getAuthority().equals("ROOT")
+                                || userRole.getAuthority().equals("ADMIN"))
+                .collect(Collectors.toList());
+    }
 
     private Set<UserRole> getAuthorities(String authority) {
         Set<UserRole> userAuthorities = new HashSet<>();

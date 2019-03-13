@@ -137,10 +137,13 @@ public class UserController {
         return new ResponseEntity<>(this.objectMapper.writeValueAsString(user), HttpStatus.OK);
     }
 
-    @PutMapping(value = "/update")
-    public ResponseEntity updateUser(@RequestBody @Valid UserUpdateBindingModel userUpdateBindingModel) throws JsonProcessingException {
+    @PutMapping(value = "/update/{id}")
+    public ResponseEntity updateUser(@RequestBody @Valid UserUpdateBindingModel userUpdateBindingModel,
+                                     @PathVariable(value = "id") String loggedInUserId) throws JsonProcessingException {
 
-        boolean result = this.userService.updateUser(this.modelMapper.map(userUpdateBindingModel, UserServiceModel.class));
+        UserServiceModel userServiceModel = this.modelMapper.map(userUpdateBindingModel, UserServiceModel.class);
+
+        boolean result = this.userService.updateUser(userServiceModel, loggedInUserId);
 
         if (result) {
             SuccessResponse successResponse = new SuccessResponse(

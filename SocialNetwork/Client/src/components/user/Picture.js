@@ -4,6 +4,8 @@ import { userService } from '../../infrastructure'
 
 const Picture = (props) => {
     const imageClass = userService.getImageSize(props.imageUrl);
+    const isRoot = userService.isRoot();
+    const isTheCurrentLoggedInUser = (props.userId === userService.getUserId());
 
     return (
 
@@ -19,7 +21,7 @@ const Picture = (props) => {
                 </div> */}
                     {/* <div className="fbPhotoCurationControl uiButtonGroup far fa-trash-alt" id="delete-button"></div> */}
                     <div  onClick={props.removePhoto.bind(this, props.id)}>
-                        <div className="btn fbPhotoCurationControl inner uiButtonGroup delete-button" ><i className="far fa-trash-alt "></i></div>
+                   { (isRoot ||  isTheCurrentLoggedInUser) &&  <div className="btn fbPhotoCurationControl inner uiButtonGroup delete-button" ><i className="far fa-trash-alt "></i></div>} 
                     </div>
                 </article>
             </div>

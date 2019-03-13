@@ -49,8 +49,9 @@ export default class UserEditPageForm extends Component {
         }
 
         const { touched, ...otherProps } = this.state;
+        const loggedInUserId = userService.getUserId();
 
-        requester.put('/users/update', { ...otherProps }, (response) => {
+        requester.put('/users/update/'+ loggedInUserId, { ...otherProps }, (response) => {
 
             if (response.success === true) {
                 toast.success(<ToastComponent.successToast text={response.message} />, {
