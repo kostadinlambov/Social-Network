@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import '../../styles/FormPages.css';
 import requester from '../../infrastructure/requester';
-import Input from '../common/Input';
 import observer from '../../infrastructure/observer';
-import userService from '../../infrastructure/userService';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
 
