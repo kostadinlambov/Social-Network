@@ -28,6 +28,7 @@ export default class UserSearchResultsPage extends Component {
     componentDidMount() {
         const userId = userService.getUserId();
         const search = this.props.location.state.search;
+        
         this.setState({ search })
 
         this.props.getUserToShowId(userId);

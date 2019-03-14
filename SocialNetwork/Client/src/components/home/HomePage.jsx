@@ -38,6 +38,7 @@ export default class HomePage extends Component {
             address: '',
             city: '',
             search: '',
+            category: '',
             profilePicUrl: placeholder_user_image,
             backgroundImageUrl: default_background_image,
             authorities: [],
@@ -53,6 +54,7 @@ export default class HomePage extends Component {
         this.loadAllPictures = this.loadAllPictures.bind(this);
         this.loadAllFriends = this.loadAllFriends.bind(this);
         this.searchResults = this.searchResults.bind(this);
+        this.findFriends = this.findFriends.bind(this);
     }
 
     componentDidMount() {
@@ -134,6 +136,27 @@ export default class HomePage extends Component {
         })
     }
 
+    findFriends = (userId, category) => {
+        requester.get(`/relationship/findFriends/${userId}`, (response) => {
+            this.setState({
+                friendsCandidatesArr: response.filter(user => user.status !== 0 && user.status !== 1),
+                userWaitingForAcceptingRequest: response.filter(user => user.status === 0 && user.starterOfAction === true),
+                usersReceivedRequestFromCurrentUser: response.filter(user => user.status === 0 && user.starterOfAction === false),
+                category: category,
+            })
+        }).catch(err => {
+            console.error('deatils err:', err)
+            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+
+            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
+                localStorage.clear();
+                this.props.history.push('/login');
+            }
+        })
+    }
+
     searchResults = (userId, search) => {
         this.setState({
             search
@@ -193,12 +216,12 @@ export default class HomePage extends Component {
                                 {loggedIn && <Route exact path="/home/comments/:id" render={props => <MainSharedContent {...props} {...this.state} getUserToShowId={this.getUserToShowId} />} />}
                                 {loggedIn && <Route exact path="/home/profile/:id" render={props => <UserProfilePage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
                                 {loggedIn && <Route exact path="/home/friends/:id" render={props => <UserFriendsAllPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} loadAllFriends={this.loadAllFriends} />} />}
-                                {loggedIn && <Route exact path="/home/findFriends/:id/:category?" component={UserFindFriendsPage} />}
+                                {loggedIn && <Route exact path="/home/findFriends/:id/:category?" render={(props) => <UserFindFriendsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} findFriends={this.findFriends} />} />}
                                 {loggedIn && (isRoot || isAdmin || isTheCurrentLoggedInUser) && <Route exact path="/home/users/edit/:id" render={props => <UserEditPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
                                 {(loggedIn && isRoot) && <Route exact path="/home/users/delete/:id" render={props => <UserDeletePage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
                                 {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/users/all/:id" render={props => <UserAllPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
                                 {loggedIn && <Route exact path="/home/gallery/:id" render={props => <UserGalleryPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} loadAllPictures={this.loadAllPictures} />} />}
-                                {loggedIn && <Route exact path="/home/users/search" render={(props) => <UserSearchResultsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} searchResults={this.searchResults} />} />}
+                                {loggedIn && <Route exact path="/home/users/search/" render={(props) => <UserSearchResultsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} searchResults={this.searchResults} />} />}
 
                                 <Route exact path="/error" component={ErrorPage} />
                                 <Route render={(props) => <Redirect to="/" {...props} />} />

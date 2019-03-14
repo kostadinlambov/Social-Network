@@ -49,7 +49,7 @@ const HeaderSection = (props) => {
                                     <NavLink to={`/home/profile/${props.id}`}>UPDATE INFO</NavLink>
                                 </button>
                                 <button className="button view-activity">
-                                    <NavLink to={`/home/${props.id}`}>VIEW ACTIVITY</NavLink>
+                                    <NavLink to={`/home/comments/${props.id}`}>VIEW ACTIVITY</NavLink>
                                 </button>
                             </div>
                         </div>

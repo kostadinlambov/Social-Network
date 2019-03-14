@@ -34,7 +34,7 @@ export default class Navbar extends Component {
         // const id = userService.getUserId()
 
         this.props.history.push({
-            pathname: "/home/users/search/" ,
+            pathname: "/home/users/search" ,
             state:{
                 search: this.state.search
             }
@@ -125,7 +125,7 @@ export default class Navbar extends Component {
 
                                     {loggedIn && <li className="nav-item"><NavLink exact to={`/home/comments/${userId}`} className="nav-link ">Home</NavLink></li>}
 
-                                    {loggedIn && <li className="nav-item"><NavLink exact to={`/home/findFriends/${userId}`} className="nav-link " >Find friends!</NavLink></li>}
+                                    {loggedIn && <li className="nav-item"><NavLink exact to={`/home/findFriends/${userId}/findFriends`} className="nav-link " >Find friends!</NavLink></li>}
 
                                     {loggedIn && <li className="nav-item"><NavLink exact to={`/home/findFriends/${userId}/requests`} className="nav-link fas fa-user-friends tooltipCustom"> <span className="tooltiptextCustom">Friend Requests</span></NavLink></li>}
                                     {loggedIn && <li className="nav-item"><NavLink exact to={`/home/friends/${userId}`} className="nav-link fas fa-envelope tooltipCustom"><span className="tooltiptextCustom">Messages</span></NavLink></li>}

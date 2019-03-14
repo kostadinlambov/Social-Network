@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import UserRow from './UserRow';
 import { requester, userService } from '../../infrastructure'
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
@@ -26,34 +25,11 @@ export default class UserFindFriendsPage extends Component {
     componentDidMount() {
         const userId = this.props.match.params.id;
         const category = this.props.match.params.category;
+
+        this.setState({ category, userId })
         debugger;
-        requester.get(`/relationship/findFriends/${userId}`, (response) => {
-            debugger;
-            console.log('friends all: ', response);
-
-            this.setState({
-                friendsCandidatesArr: response.filter(user => user.status !== 0 && user.status !== 1),
-                userWaitingForAcceptingRequest: response.filter(user => user.status === 0 && user.starterOfAction === true),
-                usersReceivedRequestFromCurrentUser: response.filter(user => user.status === 0 && user.starterOfAction === false),
-                category: category,
-            })
-
-            console.log('response: ', response)
-            console.log('friendsCandidatesArr: ', this.state.friendsCandidatesArr)
-            console.log('userWaitingForAcceptingRequest: ', this.state.userWaitingForAcceptingRequest)
-            console.log('usersReceivedRequestFromCurrentUser: ', this.state.usersReceivedRequestFromCurrentUser)
-
-        }).catch(err => {
-            console.error('deatils err:', err)
-            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-                position: toast.POSITION.TOP_RIGHT
-            });
-
-            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-                localStorage.clear();
-                this.props.history.push('/login');
-            }
-        })
+        this.props.getUserToShowId(userId);
+        this.props.findFriends(userId, category);
     }
 
     addFriend = (friendCandidateId, event) => {
@@ -67,7 +43,10 @@ export default class UserFindFriendsPage extends Component {
                     position: toast.POSITION.TOP_RIGHT
                 });
 
-                this.props.history.push("/home/findFriends/" + userService.getUserId())
+                this.props.findFriends(this.state.userId, this.state.category);
+
+
+                // this.props.history.push("/home/findFriends/" + userService.getUserId())
 
             } else {
                 console.log('error message: ', response.message);
@@ -98,7 +77,8 @@ export default class UserFindFriendsPage extends Component {
                     position: toast.POSITION.TOP_RIGHT
                 });
 
-                this.props.history.push("/home/findFriends/" + userService.getUserId())
+                this.props.findFriends(this.state.userId, this.state.category);
+                // this.props.history.push("/home/findFriends/" + userService.getUserId())
             } else {
                 console.log('error message: ', response.message);
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
@@ -128,7 +108,8 @@ export default class UserFindFriendsPage extends Component {
                     position: toast.POSITION.TOP_RIGHT
                 });
 
-                this.props.history.push("/home/findFriends/" + userService.getUserId())
+                this.props.findFriends(this.state.userId, this.state.category);
+                // this.props.history.push("/home/findFriends/" + userService.getUserId())
 
             } else {
                 console.log('error message: ', response.message);
@@ -150,7 +131,12 @@ export default class UserFindFriendsPage extends Component {
     }
 
     render() {
-        const requestLength = this.state.userWaitingForAcceptingRequest.length;
+        if (this.props.match.params.id !== this.props.id) {
+            this.props.getUserToShowId(this.props.match.params.id);
+        }
+        console.log('props: ', this.props)
+        debugger;
+        const requestLength = this.props.userWaitingForAcceptingRequest.length;
         let requests = '';
 
         if (requestLength > 0) {
@@ -158,11 +144,11 @@ export default class UserFindFriendsPage extends Component {
                 <Fragment>
                     <h3>Respond to Your Friend Requests</h3>
                     <hr className="my-2 mb-5 mt-2 col-md-8 mx-auto" />
-                    {this.state.userWaitingForAcceptingRequest.map((friend) =>
+                    {this.props.userWaitingForAcceptingRequest.map((friend) =>
                         <FriendRequest
                             key={friend.id}
-                            {...friend}
                             {...this.props}
+                            {...friend}
                             firstButtonText={'CONFIRM'}
                             secondButtonText={'REJECT'}
                             thirdButtonText={'VIEW PROFILE'}
@@ -175,7 +161,7 @@ export default class UserFindFriendsPage extends Component {
             )
         }
 
-        let waitingForResponseUsers = this.state.usersReceivedRequestFromCurrentUser.length;
+        let waitingForResponseUsers = this.props.usersReceivedRequestFromCurrentUser.length;
         let friendsCandidates = '';
 
         if (waitingForResponseUsers > 0) {
@@ -184,11 +170,11 @@ export default class UserFindFriendsPage extends Component {
                     <h3>Pending Requests</h3>
                     <hr className="my-2 mb-5 mt-2 col-md-8 mx-auto" />
                     {
-                        this.state.usersReceivedRequestFromCurrentUser.map((friend) =>
+                        this.props.usersReceivedRequestFromCurrentUser.map((friend) =>
                             <Friend
                                 key={friend.id}
-                                {...friend}
                                 {...this.props}
+                                {...friend}
                                 firstButtonLink={`/home/profile/${friend.id}`}
                                 secondButtonLink={`/`}
                                 firstButtonText={'VIEW PROFILE'}
@@ -201,7 +187,7 @@ export default class UserFindFriendsPage extends Component {
             )
         }
 
-        let friendsCandidatesArr = this.state.friendsCandidatesArr.length;
+        let friendsCandidatesArr = this.props.friendsCandidatesArr.length;
         let remainCandidates = '';
 
         if (friendsCandidatesArr > 0) {
@@ -210,11 +196,11 @@ export default class UserFindFriendsPage extends Component {
                     <h3>People You May Know</h3>
                     <hr className="my-2 mb-5 mt-3 col-md-8 mx-auto" />
                     {
-                        this.state.friendsCandidatesArr.map((friend) =>
+                        this.props.friendsCandidatesArr.map((friend) =>
                             <Friend
                                 key={friend.id}
-                                {...friend}
                                 {...this.props}
+                                {...friend}
                                 firstButtonLink={`/home/profile/${friend.id}`}
                                 secondButtonLink={`/`}
                                 firstButtonText={'VIEW PROFILE'}
@@ -241,7 +227,7 @@ export default class UserFindFriendsPage extends Component {
 
         const { category } = this.state
 
-        if (!requests && category) {
+        if (!requests && category === 'requests') {
             requests = (
                 <Fragment>
                     <h2>There are no friend requests!</h2>
@@ -252,13 +238,13 @@ export default class UserFindFriendsPage extends Component {
         return (
             <div className="container col-md-12 text-center">
                 <h1 className="text-center font-weight-bold display-5" style={{ 'margin': '1rem auto' }}>
-                    {!category ? 'Find Friends' : 'Friend Requests'}
+                    {category === 'findFriends' ? 'Find Friends' : 'Friend Requests'}
                 </h1>
                 <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" />
                 <section className="friend-section" >
                     {requests}
-                    {!category && friendsCandidates}
-                    {!category && remainCandidates}
+                    {friendsCandidates}
+                    {remainCandidates}
                     {noResult}
                 </section>
             </div>
