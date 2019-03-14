@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
-import UserRow from './UserRow';
 import { requester, userService } from '../../infrastructure'
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
@@ -101,7 +100,7 @@ export default class UserFriendsAllPage extends Component {
                             {
                                 isTheCurrentLoggedInUser ?
                                     (<button className="button view-activity">
-                                        <NavLink to={`/home/findFriends/${this.props.id}`}>FIND FRIENDS</NavLink>
+                                        <NavLink to={`/home/findFriends/${this.props.id}/findFriends`}>FIND FRIENDS</NavLink>
                                     </button>)
                                     : null
                             }

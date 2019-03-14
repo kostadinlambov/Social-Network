@@ -134,8 +134,17 @@ export default class UserFindFriendsPage extends Component {
         if (this.props.match.params.id !== this.props.id) {
             this.props.getUserToShowId(this.props.match.params.id);
         }
+
+        const categoryFromUrl = this.props.match.params.category
+        console.log('categoryFromUrl :', categoryFromUrl)
+        console.log('this.props.category :', this.props.category)
+
+        if(this.props.category !== categoryFromUrl){
+            this.props.findFriends(this.state.userId, categoryFromUrl)
+        }
+
         console.log('props: ', this.props)
-        debugger;
+
         const requestLength = this.props.userWaitingForAcceptingRequest.length;
         let requests = '';
 
@@ -225,15 +234,21 @@ export default class UserFindFriendsPage extends Component {
             )
         }
 
-        const { category } = this.state
+        const { category } = this.props;
+        let isRequestsSearch = category === 'requests';
 
-        if (!requests && category === 'requests') {
+        console.log('category: ',  category);
+        console.log('isRequestsSearch: ',  isRequestsSearch);
+        debugger;
+        if (!requests && isRequestsSearch) {
             requests = (
                 <Fragment>
                     <h2>There are no friend requests!</h2>
                     <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" />
                 </Fragment>)
         }
+
+        
 
         return (
             <div className="container col-md-12 text-center">
@@ -243,9 +258,9 @@ export default class UserFindFriendsPage extends Component {
                 <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" />
                 <section className="friend-section" >
                     {requests}
-                    {friendsCandidates}
-                    {remainCandidates}
-                    {noResult}
+                    {!isRequestsSearch && friendsCandidates}
+                    {!isRequestsSearch && remainCandidates}
+                    {!isRequestsSearch && noResult}
                 </section>
             </div>
         )
