@@ -34,7 +34,7 @@ public class Comment extends BaseEntity {
         this.user = user;
     }
 
-    @Column(name = "content", nullable = false)
+    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     public String getContent() {
         return this.content;
     }

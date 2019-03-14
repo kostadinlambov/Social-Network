@@ -1,6 +1,7 @@
 package kl.socialnetwork.domain.entities;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -8,7 +9,8 @@ import java.util.Set;
 public class Like extends BaseEntity {
 
     private Long count = 0L;
-    private Set<User> users;
+    private User user;
+    private Post post;
 
     public Like() {
     }
@@ -22,14 +24,23 @@ public class Like extends BaseEntity {
         this.count = count;
     }
 
-//    @OneToOne ?????
-    @ManyToOne(optional = false, targetEntity = User.class)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    public Set<User> getUsers() {
-        return this.users;
+    @ManyToOne(targetEntity = User.class)
+    @JoinColumn(name= "user_id", referencedColumnName = "id")
+    public User getUser() {
+        return this.user;
     }
 
-    public void setUsers(Set<User> users) {
-        this.users = users;
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @ManyToOne(targetEntity = Post.class)
+    @JoinColumn(name= "post_id", referencedColumnName = "id")
+    public Post getPost() {
+        return this.post;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
     }
 }

@@ -2,6 +2,7 @@ package kl.socialnetwork.domain.entities;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "posts")
@@ -9,8 +10,8 @@ public class Post extends BaseEntity {
     private User user;
     private String content;
     private String imageUrl;
-    private Like like;
     private LocalDateTime time;
+    private List<Like> like;
 
     public Post() {
     }
@@ -25,7 +26,7 @@ public class Post extends BaseEntity {
         this.user = user;
     }
 
-    @Column(name = "content", nullable = false)
+    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     public String getContent() {
         return this.content;
     }
@@ -43,15 +44,24 @@ public class Post extends BaseEntity {
         this.imageUrl = imageUrl;
     }
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "like_id")
-    public Like getLike() {
+    @OneToMany(targetEntity = Like.class, mappedBy = "post", cascade = CascadeType.ALL)
+    public List<Like> getLike() {
         return this.like;
     }
 
-    public void setLike(Like like) {
+    public void setLike(List<Like> like) {
         this.like = like;
     }
+
+    //    @OneToOne(optional = false)
+//    @JoinColumn(name = "like_id")
+//    public Like getLike() {
+//        return this.like;
+//    }
+//
+//    public void setLike(Like like) {
+//        this.like = like;
+//    }
 
     @Column(name = "time", nullable = false)
     public LocalDateTime getTime() {

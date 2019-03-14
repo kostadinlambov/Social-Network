@@ -45,6 +45,7 @@ public class ApplicationSecurityConfiguration
                 .authorizeRequests()
                 .antMatchers("/users/register",
                         "/",
+                        "/post/create",
                         "/favicon.ico",
                         "/**/*.png",
                         "/**/*.gif",

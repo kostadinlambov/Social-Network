@@ -1,18 +1,20 @@
 package kl.socialnetwork.domain.modles.serviceModels;
 
+import kl.socialnetwork.domain.entities.Like;
 import kl.socialnetwork.domain.entities.User;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-public class PictureServiceModel {
+public class PostServiceModel {
     private String id;
-    private String description;
     private User user;
+    private String content;
     private String imageUrl;
     private LocalDateTime time;
-    private String cloudinaryPublicId;
+    private List<Like> like;
 
-    public PictureServiceModel() {
+    public PostServiceModel() {
     }
 
     public String getId() {
@@ -23,20 +25,20 @@ public class PictureServiceModel {
         this.id = id;
     }
 
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public User getUser() {
         return this.user;
     }
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getContent() {
+        return this.content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getImageUrl() {
@@ -55,11 +57,11 @@ public class PictureServiceModel {
         this.time = time;
     }
 
-    public String getCloudinaryPublicId() {
-        return this.cloudinaryPublicId;
+    public List<Like> getLike() {
+        return this.like;
     }
 
-    public void setCloudinaryPublicId(String cloudinaryPublicId) {
-        this.cloudinaryPublicId = cloudinaryPublicId;
+    public void setLike(List<Like> like) {
+        this.like = like;
     }
 }

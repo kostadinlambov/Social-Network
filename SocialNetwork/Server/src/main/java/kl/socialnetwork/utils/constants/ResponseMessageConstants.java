@@ -49,5 +49,9 @@ public final class ResponseMessageConstants {
     //Picture Messages
     public static final String SUCCESSFUL_PICTURE_ALL_MESSAGE = "All pictures successfully loaded.";
 
+    //Post Messages
+    public static final String SUCCESSFUL_CREATE_POST_MESSAGE = "Post created successfully.";
+
+
 
 }

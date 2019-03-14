@@ -57,7 +57,7 @@ public class Message extends BaseEntity{
         this.subject = subject;
     }
 
-    @Column(name = "content", nullable = false)
+    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     public String getContent() {
         return this.content;
     }
