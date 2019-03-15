@@ -78,7 +78,6 @@ export default class UserFindFriendsPage extends Component {
                 });
 
                 this.props.findFriends(this.state.userId, this.state.category);
-                // this.props.history.push("/home/findFriends/" + userService.getUserId())
             } else {
                 console.log('error message: ', response.message);
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
@@ -109,8 +108,6 @@ export default class UserFindFriendsPage extends Component {
                 });
 
                 this.props.findFriends(this.state.userId, this.state.category);
-                // this.props.history.push("/home/findFriends/" + userService.getUserId())
-
             } else {
                 console.log('error message: ', response.message);
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
@@ -247,8 +244,6 @@ export default class UserFindFriendsPage extends Component {
                     <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" />
                 </Fragment>)
         }
-
-        
 
         return (
             <div className="container col-md-12 text-center">

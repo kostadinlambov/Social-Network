@@ -13,15 +13,9 @@ import java.io.IOException;
 
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
-//    private final LogsInterceptor logsInterceptor;
 
     public WebMvcConfiguration() {
     }
-
-
-//    public WebMvcConfiguration(LogsInterceptor logsInterceptor) {
-//        this.logsInterceptor = logsInterceptor;
-//    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -38,12 +32,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
                     }
                 });
     }
-//
-//    @Override
-//    public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(this.logsInterceptor);
-//
-//    }
+
 
     @Bean
     public WebMvcConfigurer webMvcConfigurer(){

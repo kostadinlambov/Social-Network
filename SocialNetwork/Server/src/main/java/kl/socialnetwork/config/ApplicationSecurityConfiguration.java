@@ -44,8 +44,7 @@ public class ApplicationSecurityConfiguration
                 .disable()
                 .authorizeRequests()
                 .antMatchers("/users/register",
-                        "/",
-
+                        "/**",
                         "/favicon.ico",
                         "/**/*.png",
                         "/**/*.gif",
@@ -54,7 +53,6 @@ public class ApplicationSecurityConfiguration
                         "/**/*.html",
                         "/**/*.css",
                         "/**/*.js"
-                        //                        "/**"
                 ).permitAll()
                 .antMatchers(
                         "/users/details/*",
@@ -71,7 +69,7 @@ public class ApplicationSecurityConfiguration
                         "/pictures/remove",
                         "/post/create",
                         "/post/all/*"
-                        ).hasAnyAuthority("ADMIN", "ROOT", "USER")
+                ).hasAnyAuthority("ADMIN", "ROOT", "USER")
                 .antMatchers(
                         "/users/promote",
                         "/users/demote",

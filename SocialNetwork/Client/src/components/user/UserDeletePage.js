@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import {NavLink } from 'react-router-dom';
-import { userService, requester, observer } from '../../infrastructure';
-import {withRootAuthorization} from '../../hocs/withAuthorization'
+import { userService, requester } from '../../infrastructure';
 import { Button, ButtonWithClickEvent } from '../common'
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
@@ -26,10 +25,7 @@ import { ToastComponent } from '../common'
     }
 
     componentDidMount = () => {
-        // const userId = userService.getUserId;
         const userId = this.props.match.params.id;
-        console.log("current User id: ", userId);
-        debugger;
 
         requester.get(`/users/details/${userId}`, (userData) => {
             console.log("userData: ", userData);
@@ -87,7 +83,6 @@ import { ToastComponent } from '../common'
             <div className="container mx-auto text-center " >
                 <h1 className="text-center font-weight-bold alert alert-danger position col-md-10 mx-auto mt-0">Are you sure you want to delete this User?</h1>
                 <hr className="my-2 mb-3 mt-3 col-md-8 mx-auto" />
-                {/* <div className="d-flex justify-content-center  "> */}
                 <div className="col-md-6 mx-auto text-center">
                     <table className="table table-hover mt-3 mx-auto text-center">
                         <thead>
@@ -166,7 +161,6 @@ import { ToastComponent } from '../common'
 
                 <hr className="my-2 mb-3 mt-3 col-md-8 mx-auto" />
             </div >
-            // </div >
         )
     }
 }

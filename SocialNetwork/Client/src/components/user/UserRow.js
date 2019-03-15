@@ -99,16 +99,13 @@ export default class UserRow extends Component {
                 <td className="col-md-5 d-flex justify-content-center" >
                     {(!userService.checkIfIsRoot(this.state.role) && !userService.isLoggedInUser(this.state.username)) &&
                         <h5>
-                            {/* <button className="btn App-button-primary" onClick={this.promote} >Promote</button> */}
                             <button className="btn App-button-primary btn-lg m-1" onClick={this.promote} >Promote</button>
                         </h5>}
                     {(!userService.checkIfIsRoot(this.state.role) && !userService.isLoggedInUser(this.state.username)) &&
                         <h5>
-                            {/* <button className="btn App-button-primary" onClick={this.demote} >Demote</button> */}
                             <button className="btn App-button-primary btn-lg m-1" onClick={this.demote} >Demote</button>
                         </h5>}
                     <h5>
-                        {/* <NavLink className="btn App-button-primary" to={`/home/profile/${this.state.id}`} role="button">Profile</NavLink> */}
                         <NavLink className="btn App-button-primary btn-lg m-1" to={`/home/profile/${this.state.id}`} role="button">Profile</NavLink>
                     </h5>
                 </td>

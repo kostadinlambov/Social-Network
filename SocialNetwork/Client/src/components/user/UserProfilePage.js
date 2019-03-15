@@ -1,13 +1,6 @@
-import React, { Component, Fragment } from 'react';
-import { NavLink } from 'react-router-dom'
-import { userService, requester } from '../../infrastructure';
+import React, { Component } from 'react';
+import { userService } from '../../infrastructure';
 import { Button, ButtonWithClickEvent } from '../common'
-import { toast } from 'react-toastify';
-import { ToastComponent } from '../../components/common';
-
-import placeholder_user_image from '../../assets/images/placeholder-profile-male.jpg'
-import default_background_image from '../../assets/images/default-background-image.jpg'
-
 
 export default class UserProfilePage extends Component {
     constructor(props) {
@@ -77,11 +70,7 @@ export default class UserProfilePage extends Component {
     }
 
     render = () => {
-        // if (!this.state.ready) {
-        //     return <h1 className="text-center pt-5 mt-5">Loading...</h1>
-            
-        // }
-
+      
         if(this.props.match.params.id !== this.props.id){
             this.props.getUserToShowId(this.props.match.params.id);
         }

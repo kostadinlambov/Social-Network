@@ -125,7 +125,6 @@ export default class UserEditPageForm extends Component {
         let showPicsButtons = true;
         if (loggedInUserName !== username && (loggedInRole !== "ROOT")) {
             showPicsButtons = false;
-            // this.props.history.push('/');
         }
         const errors = this.validate(username, email, firstName, lastName, address, city, profilePicUrl, backgroundImageUrl);
         const isEnabled = !Object.keys(errors).some(x => errors[x])

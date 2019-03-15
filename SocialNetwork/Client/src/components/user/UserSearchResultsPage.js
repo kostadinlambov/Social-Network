@@ -189,12 +189,6 @@ export default class UserSearchResultsPage extends Component {
             );
         }
 
-        console.log('friendsArrSearch: ', this.props.friendsArrSearch)
-        console.log('userWaitingForAcceptingRequest: ', this.props.userWaitingForAcceptingRequest)
-        console.log('frienusersReceivedRequestFromCurrentUserdsArrSearch: ', this.props.usersReceivedRequestFromCurrentUser)
-        console.log('friendsCandidatesArr: ', this.props.friendsCandidatesArr)
-        // debugger;
-
         const friendsArrLength = this.props.friendsArrSearch.length;
         let friends = '';
       

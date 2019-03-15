@@ -77,6 +77,7 @@ main .main-article-shared-content {
 
 .posts-section {
     width: 100%;
+    margin-bottom: 2rem;
 }
 
 
@@ -198,9 +199,16 @@ main .post {
 
 .post-content-section {
     width: 100%;
-    background: white;
+    /* background: white; */
     border-radius: 5px;
+    /* box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.3); */
+    
+}
+
+.post-element-wrapper{
+    margin-bottom: 1rem;
     box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.3);
+
 }
 
 .post-content-article {
@@ -287,18 +295,16 @@ main .post {
 .post-content{
     padding: 1rem;
     box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.3);
+    background: white;
 }
-
-
-
+.post-content>p{
+    background: white;
+}
 
 
 .post-media img {
     width: 100%;
 }
-
-
-
 
 
 /* main-article-shared-content-footer */
@@ -307,6 +313,8 @@ main .post {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background: white;
+    box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.3);
 
     /* width: 90%;
     margin: auto; */

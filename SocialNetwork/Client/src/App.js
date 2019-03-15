@@ -1,9 +1,8 @@
 import React, { Component, Fragment, lazy, Suspense } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import './styles/App.css';
-import { Footer, Header, Notifications } from './components/common';
-import { withRootAuthorization, withAdminAuthorization, withUserAuthorization } from './hocs/withAuthorization';
-import { ToastContainer, toast, Slide, Zoom, Flip, Bounce } from 'react-toastify';
+import { Footer } from './components/common';
+import { ToastContainer, toast, Zoom} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css'
 import Navbar from './components/home/NavBar';
 import { ToastComponent } from './components/common'
@@ -24,35 +23,12 @@ class App extends Component {
   }
 
   onLogout() {
-
     localStorage.clear();
-
     toast.success(<ToastComponent.successToast text='You have been successfully logged out!' />, {
       position: toast.POSITION.TOP_RIGHT
     });
 
     this.props.history.push('/login');
-
-    // requester.post('/users/logout', {}, (response) => {
-
-    //   if (response.success === true) {
-    //     console.log('success message: ', response.message);
-    //     debugger;
-    //     toast.success(<ToastComponent.successToast text={response.message} />, {
-    //       position: toast.POSITION.TOP_RIGHT
-    //     });
-    //   } else {
-    //     console.log('error logout message: ', response.message);
-    //     debugger;
-    //     toast.error(<ToastComponent.errorToast text={response.message} />, {
-    //       position: toast.POSITION.TOP_RIGHT
-    //     });
-    //     localStorage.clear();
-    //     this.props.history.push('/login');
-    //   }
-
-    // })
-
   }
 
   render() {
@@ -68,9 +44,6 @@ class App extends Component {
             {!loggedIn && <Route exact path="/register" component={RegisterPage} />}
             {!loggedIn && <Route exact path="/login" component={LoginPage} />}
             {loggedIn && <Route path="/home" component={HomePage} />}
-            {/* {loggedIn && <Route exact path="/home/profile/:id" component={UserProfilePage} />} */}
-            {/* <Route exact path="/profile" component={withAdminAuthorization(ProfilePage)} /> */}
-            {/* {loggedIn && <Route exact path="/home/friends/:id" component={UserFriendsPage} />} */}
             <Route exact path="/error" component={ErrorPage} />
             <Route component={ErrorPage} />
           </Switch>
