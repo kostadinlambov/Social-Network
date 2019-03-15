@@ -4,7 +4,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 public class PostCreateBindingModel {
-    private String userId;
+    private String timelineUserId;
+    private String loggedInUserId;
     private String content;
     private String imageUrl;
 
@@ -14,12 +15,24 @@ public class PostCreateBindingModel {
 
     @NotNull
     @NotEmpty
-    public String getUserId() {
-        return this.userId;
+    public String getTimelineUserId() {
+        return this.timelineUserId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setTimelineUserId(String timelineUserId) {
+        this.timelineUserId = timelineUserId;
+    }
+
+
+
+    @NotNull
+    @NotEmpty
+    public String getLoggedInUserId() {
+        return this.loggedInUserId;
+    }
+
+    public void setLoggedInUserId(String loggedInUserId) {
+        this.loggedInUserId = loggedInUserId;
     }
 
     @NotNull

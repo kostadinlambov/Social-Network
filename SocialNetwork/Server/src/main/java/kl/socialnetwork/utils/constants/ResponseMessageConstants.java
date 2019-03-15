@@ -51,6 +51,7 @@ public final class ResponseMessageConstants {
 
     //Post Messages
     public static final String SUCCESSFUL_CREATE_POST_MESSAGE = "Post created successfully.";
+    public static final String SUCCESSFUL_POST_ALL_MESSAGE = "All posts successfully loaded.";
 
 
 

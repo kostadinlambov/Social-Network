@@ -30,6 +30,8 @@ public class User extends BaseEntity implements UserDetails {
 
     private List<Picture> pictureList;
     private List<Like> likeList;
+    private List<Post> userPostList;
+    private List<Post> userTimelineAllPosts;
 
 
     private boolean isAccountNonExpired;
@@ -178,6 +180,24 @@ public class User extends BaseEntity implements UserDetails {
 
     public void setLikeList(List<Like> likeList) {
         this.likeList = likeList;
+    }
+
+    @OneToMany(mappedBy = "loggedInUser", cascade = CascadeType.ALL)
+    public List<Post> getUserPostList() {
+        return this.userPostList;
+    }
+
+    public void setUserPostList(List<Post> userPostList) {
+        this.userPostList = userPostList;
+    }
+
+    @OneToMany(mappedBy = "timelineUser", cascade = CascadeType.ALL)
+    public List<Post> getUserTimelineAllPosts() {
+        return this.userTimelineAllPosts;
+    }
+
+    public void setUserTimelineAllPosts(List<Post> userTimelineAllPosts) {
+        this.userTimelineAllPosts = userTimelineAllPosts;
     }
 
     @Override

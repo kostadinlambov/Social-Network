@@ -45,7 +45,7 @@ public class ApplicationSecurityConfiguration
                 .authorizeRequests()
                 .antMatchers("/users/register",
                         "/",
-                        "/post/create",
+
                         "/favicon.ico",
                         "/**/*.png",
                         "/**/*.gif",
@@ -68,7 +68,9 @@ public class ApplicationSecurityConfiguration
                         "/relationship/search",
                         "/pictures/all/*",
                         "/pictures/add",
-                        "/pictures/remove"
+                        "/pictures/remove",
+                        "/post/create",
+                        "/post/all/*"
                         ).hasAnyAuthority("ADMIN", "ROOT", "USER")
                 .antMatchers(
                         "/users/promote",

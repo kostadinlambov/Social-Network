@@ -4,7 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kl.socialnetwork.domain.modles.bindingModels.post.PostCreateBindingModel;
 import kl.socialnetwork.domain.modles.serviceModels.PostServiceModel;
-import kl.socialnetwork.domain.modles.viewModels.post.PostCreateViewModel;
+import kl.socialnetwork.domain.modles.viewModels.post.PostAllViewModel;
+import kl.socialnetwork.domain.modles.viewModels.user.UserAllViewModel;
 import kl.socialnetwork.services.CloudinaryService;
 import kl.socialnetwork.services.PostService;
 import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;
@@ -12,13 +13,14 @@ import kl.socialnetwork.utils.responseHandler.successResponse.SuccessResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static kl.socialnetwork.utils.constants.ResponseMessageConstants.*;
 
@@ -43,24 +45,45 @@ public class PostController {
     @PostMapping(value = "/create")
     public ResponseEntity<Object> registerUser(@RequestBody @Valid PostCreateBindingModel postCreateBindingModel) throws JsonProcessingException {
 
-        PostServiceModel postServiceModel = this.postService.createPost(postCreateBindingModel);
-        PostCreateViewModel postCreateViewModel = this.modelMapper.map(postServiceModel, PostCreateViewModel.class);
+        boolean post = this.postService.createPost(postCreateBindingModel);
 
-        System.out.println();
-
-        if (postCreateViewModel != null) {
-            postCreateViewModel.setLikeCount(0L);
-
+        if (post) {
             SuccessResponse successResponse = new SuccessResponse(
                     LocalDateTime.now(),
                     SUCCESSFUL_CREATE_POST_MESSAGE,
-                    postCreateViewModel,
+                    " ",
                     true);
 
             return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
         }
 
         throw new CustomException(SERVER_ERROR_MESSAGE);
+    }
+
+    @GetMapping(value = "/all/{id}")
+    public ResponseEntity<Object> getAllUsers(@PathVariable(value = "id") String timelineUserId) {
+
+        try {
+            List<PostServiceModel> postServiceAllPosts = this.postService.getAllPosts(timelineUserId);
+
+
+            List<PostAllViewModel> postAllViewModels =  postServiceAllPosts.stream().map(postServiceModel -> {
+                        PostAllViewModel postAllViewModel = this.modelMapper.map(postServiceModel, PostAllViewModel.class);
+                        postAllViewModel.setLikeCount(postServiceModel.getLike().size());
+
+                        return postAllViewModel;
+                    }).collect(Collectors.toList());
+
+            SuccessResponse successResponse = new SuccessResponse(
+                    LocalDateTime.now(),
+                    SUCCESSFUL_POST_ALL_MESSAGE,
+                    postAllViewModels,
+                    true);
+
+            return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
+        } catch (Exception e) {
+            throw new CustomException(SERVER_ERROR_MESSAGE);
+        }
     }
 
 }

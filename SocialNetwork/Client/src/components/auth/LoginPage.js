@@ -44,7 +44,6 @@ export default class LoginPage extends Component {
             console.log('response: ', response)
 
             if (response.error) {
-                // observer.trigger(observer.events.notification, { type: 'error', message: 'Incorrect credentials!' });
                 toast.error(<ToastComponent.errorToast text={' Incorrect credentials!'} />, {
                     position: toast.POSITION.TOP_RIGHT,
                 });
@@ -54,8 +53,6 @@ export default class LoginPage extends Component {
                 const token = response.split(' ')[1];
                 localStorage.setItem('token', token);
 
-                observer.trigger(observer.events.loginUser, token);
-                // observer.trigger(observer.events.notification, { type: 'success', message: 'You have successfully logged in!' });
                 toast.success(<ToastComponent.successToast text={' You have successfully logged in!'} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });

@@ -1,30 +1,31 @@
 import React, { Fragment, Component } from 'react';
 import { requester, userService } from '../../infrastructure/'
 import { toast } from 'react-toastify';
-import { ToastComponent } from '../common'
+import { ToastComponent } from '../common';
+import Post from './Post';
 import './css/MainSharedContent.css'
+
 // import './css/TimeLine.css';
 
-import benderPic from '../..//assets/images/Bender/Bender_1.jpeg';
-import fryPic from '../..//assets/images/Friends/PhilipJFry.jpg';
-import leelaPic from '../..//assets/images/Friends/Leela.jpg';
-import futuramaPic from '../..//assets/images/Futurama.jpg';
+
 
 class MainSharedContent extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            userId: '',
-            username:'',
+            loggedInUserId: '',
+            timelineUserId: '',
+            username: '',
             firstName: '',
             lastName: '',
             postId: '',
             userprofilePicUrl: '',
             likeCount: 0,
-            time: null,
+            time: '',
             content: '',
-            imageUrl: null,
+            imageUrl: '',
+            allPostsArr: [],
             touched: {
                 content: false,
             }
@@ -33,20 +34,55 @@ class MainSharedContent extends Component {
         this.onChangeHandler = this.onChangeHandler.bind(this);
         this.onSubmitHandler = this.onSubmitHandler.bind(this);
         this.autoGrow = this.autoGrow.bind(this);
+        this.getAllPosts = this.getAllPosts.bind(this);
     }
 
     componentDidMount = () => {
-        const userId = this.props.match.params.id;
-        
-        this.props.getUserToShowId(userId);
+        const timelineUserId = this.props.match.params.id;
+        const loggedInUserId = userService.getUserId();
 
-        this.setState({ userId: userId})
+        this.props.getUserToShowId(timelineUserId);
 
-        console.log("current User id: ", userId);
-        console.log("this.state.id: ", this.state.id);
-        console.log("this.props.id: ", this.props.id);
+        this.setState({loggedInUserId: loggedInUserId,  timelineUserId: timelineUserId });
 
         debugger;
+        this.getAllPosts(timelineUserId);
+        
+
+    }
+
+    getAllPosts(timelineUserId){
+        debugger;
+        requester.get('/post/all/'+ timelineUserId, (response) => {
+            console.log('posts all: ', response);
+            debugger;
+            if (response.success === true) {
+                toast.success(<ToastComponent.successToast text={response.message} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+                debugger;
+                this.setState({
+                    allPostsArr: response['payload'],
+                    content: '',
+                })
+            } else {
+                toast.error(<ToastComponent.errorToast text={response.message} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+            }
+        }).catch(err => {
+            console.error('deatils err:', err)
+            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+                // toast.error(<ToastComponent.errorToast text={`${error.name}: ${error.message}`} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+
+            if(err.status === 403 && err.message === 'Your JWT token is expired. Please log in!'){
+                localStorage.clear();
+                this.props.history.push('/login');
+
+            }
+        })
     }
 
     onChangeHandler(event) {
@@ -58,6 +94,8 @@ class MainSharedContent extends Component {
     }
 
     onSubmitHandler(event) {
+
+        const currentEvent = event;
         event.preventDefault();
         console.log('event: ', event);
 
@@ -67,19 +105,22 @@ class MainSharedContent extends Component {
 
         console.log('Submit this.state: ', this.state);
 
-        const { userId, content, imageUrl } = this.state;
+        const {timelineUserId,  loggedInUserId, content, imageUrl } = this.state;
 
         debugger;
 
 
-        requester.post('/post/create', { userId, content, imageUrl }, (response) => {
+        requester.post('/post/create', { timelineUserId, loggedInUserId, content, imageUrl }, (response) => {
             console.log('response: ', response)
 
             debugger;
             if (response.success === true) {
-                this.setState({
-                   ...response['payload']
-                })
+
+                this.getAllPosts(timelineUserId);
+
+                // this.setState({
+                //     ...response['payload']
+                // })
 
                 console.log('this.state: ', this.state);
                 debugger;
@@ -143,12 +184,17 @@ class MainSharedContent extends Component {
         scroll.style.height = scroll.scrollHeight + "px";
     }
 
+    textAreaExpand = () => {
+    
+    }
+
 
     render() {
         const { content } = this.state;
 
         const errors = this.validate(content);
         const isEnabled = !Object.keys(errors).some(x => errors[x])
+        const displayButon = isEnabled ? '' : 'hidden'
 
         const shouldMarkError = (field) => {
             const hasError = errors[field];
@@ -158,9 +204,11 @@ class MainSharedContent extends Component {
         }
 
         const imageClass = userService.getImageSize(this.props.imageUrl);
+        const loggedInUserProfilePicUrl = userService.getProfilePicUrl();
+        const loggedInUserFirstName = userService.getFirstName();
 
-        console.log('this.state: ', this.state);
-        debugger;
+        console.log('this.state.allPostsArr: ', this.state.allPostsArr);
+
 
         return (
 
@@ -172,7 +220,7 @@ class MainSharedContent extends Component {
                         <div className="write-post">
                             <div className="post">
                                 <div className="post-image">
-                                    <img className={imageClass} src={this.props.profilePicUrl} alt="" />
+                                    <img className={imageClass} src={loggedInUserProfilePicUrl} alt="" />
                                 </div>
                                 <div className="post-area-container">
 
@@ -189,16 +237,16 @@ class MainSharedContent extends Component {
                                                 onChange={this.onChangeHandler}
                                                 onBlur={this.handleBlur('content')}
                                                 aria-describedby="contentHelp"
-                                                placeholder={`What's on your mind, ${this.props.firstName}?`}
+                                                placeholder={`What's on your mind, ${loggedInUserFirstName}?`}
                                             >
                                             </textarea>
                                             {/* {shouldMarkError('post') && <small id="contentHelp" className="form-text alert alert-danger">Post content is required!</small>} */}
                                         </div>
 
                                         <div className="text-center">
-                                            <button disabled={!isEnabled} type="submit" className="btn App-button-primary btn-lg m-3">Post</button>
+                                            <button disabled={!isEnabled} style={{ 'visibility': `${displayButon}`, 'text-align': 'center' }} type="submit" className="btn App-button-primary btn-lg m-3">Post</button>
                                         </div>
-                                        
+
 
 
                                     </form>
@@ -208,6 +256,12 @@ class MainSharedContent extends Component {
                             </div>
                         </div>
                     </section>
+
+                    <section className="post-content-section">
+                    {this.state.allPostsArr.map((post) =>  <Post {...post} key={post.postId} /> )}
+                   
+                    </section>
+                   
 
                     {/* <section className="main-article-content-section">
                         <div className="main-article-shared-content-header">

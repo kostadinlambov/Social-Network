@@ -1,0 +1,81 @@
+package kl.socialnetwork.domain.modles.viewModels.post;
+
+import java.time.LocalDateTime;
+
+public class PostAllViewModel {
+    private String postId;
+    private String loggedInUserProfilePicUrl;
+    private String loggedInUserFirstName;
+    private String loggedInUserLastName;
+    private String content;
+    private String imageUrl;
+    private int likeCount;
+//    private LocalDateTime time;
+
+    public PostAllViewModel() {
+    }
+
+    public String getPostId() {
+        return this.postId;
+    }
+
+    public void setPostId(String postId) {
+        this.postId = postId;
+    }
+
+    public String getLoggedInUserProfilePicUrl() {
+        return this.loggedInUserProfilePicUrl;
+    }
+
+    public void setLoggedInUserProfilePicUrl(String loggedInUserProfilePicUrl) {
+        this.loggedInUserProfilePicUrl = loggedInUserProfilePicUrl;
+    }
+
+    public String getLoggedInUserFirstName() {
+        return this.loggedInUserFirstName;
+    }
+
+    public void setLoggedInUserFirstName(String loggedInUserFirstName) {
+        this.loggedInUserFirstName = loggedInUserFirstName;
+    }
+
+    public String getLoggedInUserLastName() {
+        return this.loggedInUserLastName;
+    }
+
+    public void setLoggedInUserLastName(String loggedInUserLastName) {
+        this.loggedInUserLastName = loggedInUserLastName;
+    }
+
+    public String getContent() {
+        return this.content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getImageUrl() {
+        return this.imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public int getLikeCount() {
+        return this.likeCount;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
+
+//    public LocalDateTime getTime() {
+//        return this.time;
+//    }
+//
+//    public void setTime(LocalDateTime time) {
+//        this.time = time;
+//    }
+}

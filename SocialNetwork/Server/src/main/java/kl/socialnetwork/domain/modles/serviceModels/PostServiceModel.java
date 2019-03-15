@@ -8,7 +8,8 @@ import java.util.List;
 
 public class PostServiceModel {
     private String id;
-    private User user;
+    private User loggedInUser;
+    private User timelineUser;
     private String content;
     private String imageUrl;
     private LocalDateTime time;
@@ -25,12 +26,20 @@ public class PostServiceModel {
         this.id = id;
     }
 
-    public User getUser() {
-        return this.user;
+    public User getLoggedInUser() {
+        return this.loggedInUser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setLoggedInUser(User loggedInUser) {
+        this.loggedInUser = loggedInUser;
+    }
+
+    public User getTimelineUser() {
+        return this.timelineUser;
+    }
+
+    public void setTimelineUser(User timelineUser) {
+        this.timelineUser = timelineUser;
     }
 
     public String getContent() {

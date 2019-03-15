@@ -7,23 +7,35 @@ import java.util.List;
 @Entity
 @Table(name = "posts")
 public class Post extends BaseEntity {
-    private User user;
+    private User loggedInUser;
+    private User timelineUser;
     private String content;
     private String imageUrl;
     private LocalDateTime time;
     private List<Like> like;
+    private List<Comment> commentList;
 
     public Post() {
     }
 
     @ManyToOne(optional = false, targetEntity = User.class)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    public User getUser() {
-        return this.user;
+    public User getLoggedInUser() {
+        return this.loggedInUser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setLoggedInUser(User loggedInUser) {
+        this.loggedInUser = loggedInUser;
+    }
+
+    @ManyToOne(optional = false, targetEntity = User.class)
+    @JoinColumn(name = "timeline_user_id", referencedColumnName = "id")
+    public User getTimelineUser() {
+        return this.timelineUser;
+    }
+
+    public void setTimelineUser(User timelineUser) {
+        this.timelineUser = timelineUser;
     }
 
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
@@ -51,6 +63,15 @@ public class Post extends BaseEntity {
 
     public void setLike(List<Like> like) {
         this.like = like;
+    }
+
+    @OneToMany(targetEntity = Comment.class, mappedBy = "post", cascade = CascadeType.ALL)
+    public List<Comment> getCommentList() {
+        return this.commentList;
+    }
+
+    public void setCommentList(List<Comment> commentList) {
+        this.commentList = commentList;
     }
 
     //    @OneToOne(optional = false)

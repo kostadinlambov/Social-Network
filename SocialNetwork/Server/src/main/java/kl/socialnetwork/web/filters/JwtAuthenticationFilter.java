@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
@@ -60,12 +61,16 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .orElse(null)
                 .getAuthority();
         String id = user.getId();
+        String profilePicUrl = user.getProfilePicUrl();
+        String firstName = user.getFirstName();
 
         String token = Jwts.builder()
                 .setSubject(user.getUsername())
                 .setExpiration(new Date(System.currentTimeMillis() + 1200000000))
                 .claim("role", authority)
                 .claim("id", id)
+                .claim("profilePicUrl", profilePicUrl)
+                .claim("firstName", firstName)
                 .signWith(SignatureAlgorithm.HS256, "Secret".getBytes())
                 .compact();
 

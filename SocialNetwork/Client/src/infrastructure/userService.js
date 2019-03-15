@@ -50,6 +50,26 @@ export default {
         }
     },
 
+    getProfilePicUrl: () => {
+        const token = localStorage.getItem('token')
+        if (token !== null && token !== undefined) {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            if (payload) {
+                return payload['profilePicUrl'];
+            }
+        }
+    },
+
+    getFirstName: () => {
+        const token = localStorage.getItem('token')
+        if (token !== null && token !== undefined) {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            if (payload) {
+                return payload['firstName'];
+            }
+        }
+    },
+
     isTheUserLoggedIn: () => {
         const token = localStorage.getItem('token')
         if (token !== null && token !== undefined) {
