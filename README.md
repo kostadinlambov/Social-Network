@@ -19,3 +19,7 @@ Features:
 - Deleting photos
 - Creating posts
 - Deleting posts
+
+#### Admin Credentials:
+- username: gosho
+- password: 1111
