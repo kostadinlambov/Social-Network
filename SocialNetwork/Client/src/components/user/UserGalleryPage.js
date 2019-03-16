@@ -55,7 +55,7 @@ export default class UserGalleryPage extends Component {
         data.append('loggedInUserId', this.state.id);
         console.log('loggedInUserId', this.state.id);
         debugger;
-        fetch('https://kl-social-network.herokuapp.com/pictures/add', {
+        fetch('http://localhost:8000/pictures/add', {
             method: 'POST',
             headers: {
                 ...this.getAuthHeader()

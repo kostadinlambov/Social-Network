@@ -74,6 +74,8 @@ public class PostController {
                         return postAllViewModel;
                     }).collect(Collectors.toList());
 
+
+
             SuccessResponse successResponse = new SuccessResponse(
                     LocalDateTime.now(),
                     SUCCESSFUL_POST_ALL_MESSAGE,

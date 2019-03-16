@@ -10,7 +10,7 @@ public class PostAllViewModel {
     private String content;
     private String imageUrl;
     private int likeCount;
-//    private LocalDateTime time;
+    private LocalDateTime time;
 
     public PostAllViewModel() {
     }
@@ -71,11 +71,11 @@ public class PostAllViewModel {
         this.likeCount = likeCount;
     }
 
-//    public LocalDateTime getTime() {
-//        return this.time;
-//    }
-//
-//    public void setTime(LocalDateTime time) {
-//        this.time = time;
-//    }
+    public LocalDateTime getTime() {
+        return this.time;
+    }
+
+    public void setTime(LocalDateTime time) {
+        this.time = time;
+    }
 }

@@ -5,6 +5,7 @@
   "dependencies": {
     "node-sass": "4.11.0",
     "react": "16.7.0",
+    "react-autosize-textarea": "6.0.0",
     "react-dom": "16.7.0",
     "react-router-dom": "4.4.0-beta.6",
     "react-scripts": "2.1.3",

@@ -77,7 +77,6 @@ main .main-article-shared-content {
 
 .posts-section {
     width: 100%;
-    margin-bottom: 2rem;
 }
 
 
@@ -153,7 +152,7 @@ main .main-article-shared-content {
 /* write-comment */
 .write-post {}
 
-main .post {
+.post {
     font-size: 1.5rem;
     display: flex;
     justify-content: start;
@@ -166,6 +165,7 @@ main .post {
     border-bottom-right-radius: 5px;
     box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.3);
     padding: 1rem;
+    margin-bottom: 2rem;
 }
 
 .post-area-container {
@@ -199,16 +199,15 @@ main .post {
 
 .post-content-section {
     width: 100%;
-    /* background: white; */
     border-radius: 5px;
     /* box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.3); */
-    
 }
 
-.post-element-wrapper{
+.post-wrapper{
     margin-bottom: 1rem;
-    box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.3);
-
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.3);
 }
 
 .post-content-article {
@@ -227,7 +226,7 @@ main .post {
     margin: auto;
     background: white;
     border-radius: 5px;
-    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
+    /* box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3); */
     padding: 1rem;
 
 }
@@ -293,12 +292,8 @@ main .post {
 
 
 .post-content{
-    padding: 1rem;
-    box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.3);
-    background: white;
-}
-.post-content>p{
-    background: white;
+    padding: 1.5rem;
+    box-shadow: 0 0 12px 1px rgba(0, 0, 0, 0.3);
 }
 
 
@@ -313,8 +308,7 @@ main .post {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: white;
-    box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.3);
+
 
     /* width: 90%;
     margin: auto; */
@@ -344,6 +338,21 @@ main .post {
 
 }
 
+.post-left-side-icons-container ul li.like-icon{
+    padding-right: 0.3rem;
+    border: none;
+    outline: none;
+   
+}
+
+
+.post-left-side-icons-container ul li.like-count{
+    padding-left: 0;
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: rgb(192, 192, 192);
+}
+
 .post-right-side-icons-container div.comment-icon {
     padding: 0 0;
 }
@@ -359,6 +368,20 @@ main .post {
     font-size: 1.2rem;
     font-weight: bold;
     color: rgb(192, 192, 192);
+}
+
+.like-button{
+    border: none;
+    background: none;
+    outline: none;
+    border: none;
+}
+
+.like-button i:hover{
+    cursor: pointer;
+    color: #40a3f4;
+    outline:none;
+    border: none;
 }
 
 

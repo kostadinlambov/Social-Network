@@ -4,9 +4,7 @@ import { toast } from 'react-toastify';
 import { ToastComponent } from '../common';
 import Post from './Post';
 import './css/MainSharedContent.css'
-
-// import './css/TimeLine.css';
-
+import TextareaAutosize from 'react-autosize-textarea';
 
 
 class MainSharedContent extends Component {
@@ -22,7 +20,8 @@ class MainSharedContent extends Component {
             postId: '',
             userprofilePicUrl: '',
             likeCount: 0,
-            time: '',
+            commentsCount: 0,
+            time: {},
             content: '',
             imageUrl: '',
             allPostsArr: [],
@@ -35,6 +34,7 @@ class MainSharedContent extends Component {
         this.onSubmitHandler = this.onSubmitHandler.bind(this);
         this.autoGrow = this.autoGrow.bind(this);
         this.getAllPosts = this.getAllPosts.bind(this);
+        this.addLike = this.addLike.bind(this);
     }
 
     componentDidMount = () => {
@@ -43,28 +43,29 @@ class MainSharedContent extends Component {
 
         this.props.getUserToShowId(timelineUserId);
 
-        this.setState({loggedInUserId: loggedInUserId,  timelineUserId: timelineUserId });
+        this.setState({ loggedInUserId: loggedInUserId, timelineUserId: timelineUserId });
 
         debugger;
         this.getAllPosts(timelineUserId);
-        
+
 
     }
 
-    getAllPosts(timelineUserId){
+    getAllPosts(timelineUserId) {
         debugger;
-        requester.get('/post/all/'+ timelineUserId, (response) => {
+        requester.get('/post/all/' + timelineUserId, (response) => {
             console.log('posts all: ', response);
             debugger;
             if (response.success === true) {
-                toast.success(<ToastComponent.successToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
+                // toast.success(<ToastComponent.successToast text={response.message} />, {
+                //     position: toast.POSITION.TOP_RIGHT
+                // });
                 debugger;
                 this.setState({
                     allPostsArr: response['payload'],
                     content: '',
                 })
+                console.log('time: ', response['payload'])
             } else {
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
@@ -77,7 +78,7 @@ class MainSharedContent extends Component {
                 position: toast.POSITION.TOP_RIGHT
             });
 
-            if(err.status === 403 && err.message === 'Your JWT token is expired. Please log in!'){
+            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
                 localStorage.clear();
                 this.props.history.push('/login');
 
@@ -105,7 +106,7 @@ class MainSharedContent extends Component {
 
         console.log('Submit this.state: ', this.state);
 
-        const {timelineUserId,  loggedInUserId, content, imageUrl } = this.state;
+        const { timelineUserId, loggedInUserId, content, imageUrl } = this.state;
 
         debugger;
 
@@ -184,6 +185,39 @@ class MainSharedContent extends Component {
         scroll.style.height = scroll.scrollHeight + "px";
     }
 
+    addLike = (postId, event) => {
+        event.preventDefault();
+        const requestBody = { postId, loggedInUserId: userService.getUserId() }
+        debugger;
+        console.log('requestBody: ', requestBody)
+        debugger;
+        requester.post('/like/add', requestBody, (response) => {
+            if (response.success) {
+                toast.success(<ToastComponent.successToast text={response.message} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+
+                this.getAllPosts(this.state.timelineUserId);
+            } else {
+                console.log('error message: ', response.message);
+                toast.error(<ToastComponent.errorToast text={response.message} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+            }
+        }).catch(err => {
+            console.error('Add Like err:', err)
+            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+
+            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
+                localStorage.clear();
+                this.props.history.push('/login');
+            }
+        })
+    }
+
+
     render() {
         const { content } = this.state;
 
@@ -202,7 +236,11 @@ class MainSharedContent extends Component {
         const loggedInUserProfilePicUrl = userService.getProfilePicUrl();
         const loggedInUserFirstName = userService.getFirstName();
 
+        const likesCount = this.state.likesCount;
+        const commentsCount = this.state.commentsCount;
+
         console.log('this.state.allPostsArr: ', this.state.allPostsArr);
+
 
         return (
 
@@ -221,7 +259,7 @@ class MainSharedContent extends Component {
                                     <form className="" onSubmit={this.onSubmitHandler}>
 
                                         <div className="form-group post-textarea-form-group">
-                                            <textarea
+                                            <TextareaAutosize
                                                 name="content"
                                                 id="content"
                                                 className="post-textarea"
@@ -233,13 +271,16 @@ class MainSharedContent extends Component {
                                                 aria-describedby="contentHelp"
                                                 placeholder={`What's on your mind, ${loggedInUserFirstName}?`}
                                             >
-                                            </textarea>
+                                            </TextareaAutosize>
                                             {/* {shouldMarkError('post') && <small id="contentHelp" className="form-text alert alert-danger">Post content is required!</small>} */}
                                         </div>
 
                                         <div className="text-center">
-                                            <button disabled={!isEnabled} style={{ 'visibility': `${displayButon}`, 'text-align': 'center' }} type="submit" className="btn App-button-primary btn-lg m-3">Post</button>
+                                            <button disabled={!isEnabled} style={{ 'visibility': `${displayButon}`, 'textAlign': 'center' }} type="submit" className="btn App-button-primary btn-lg m-3">Post</button>
                                         </div>
+
+
+
                                     </form>
 
                                 </div>
@@ -249,10 +290,89 @@ class MainSharedContent extends Component {
                     </section>
 
                     <section className="post-content-section">
-                    {this.state.allPostsArr.map((post) =>  <Post {...post} key={post.postId} /> )}
-                   
+                        {this.state.allPostsArr.map((post) => <Post {...post} key={post.postId} addLike={this.addLike} likesCount={likesCount} commentsCount={commentsCount} />)}
                     </section>
-                   
+
+
+                    {/* <section className="main-article-content-section">
+                        <div className="main-article-shared-content-header">
+                            <div className="main-article-shared-content-image">
+                                <img src={benderPic} alt="bender" />
+                            </div>
+                            <div className="main-article-shared-content-description">
+                                <p className="user-info">Bender Rodrigez <span className="user-info-span">shared a</span> link</p>
+                                <p className="description">Feb 27 18:40 PM &bull; via Instagram</p>
+                            </div>
+                        </div>
+                        <div className="main-article-shared-media">
+                            <img src={futuramaPic} alt="Futurama" />
+                        </div>
+                        <div className="main-article-shared-content-footer">
+                            <div className="main-article-left-side-icons-container">
+                                <ul>
+                                    <li>
+                                        <i className="fas fa-thumbs-up"></i>
+                                    </li>
+                                    <li>
+                                        <i className="fas fa-share"></i>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div className="main-article-right-side-icons-container">
+                                <div className="comment-icon">
+                                    <i className="fas fa-comments"></i>
+                                </div>
+                                <p>2</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section className="main-article-comments-section">
+                        <div className="main-article-comments-container">
+                            <div className="main-article-shared-content-image">
+                                <img src={fryPic} alt="" />
+                            </div>
+                            <div className="main-article-shared-content-description">
+                                <div className="comment-info">
+                                    <p className="user-info"> Philip J. Fry</p>
+                                    <p className="description"> 18:25 PM</p>
+                                </div>
+                                <p className="content">Philip J. Fry, commonly known simply by his surname Fry, is a fictional
+                                    character and the protagonist of the animated sitcom Futurama. He is voiced by Billy
+                                    West using a version of his own voice as he sounded when he was 25.[1][2] He is a
+                                    slacker delivery boy from the 20th century who becomes cryogenically frozen and
+                                    reawakens in the 30th century to become a delivery boy there with an intergalactic
+                                delivery company run by his 30th great nephew, Professor Hubert J. Farnsworth. </p>
+                            </div>
+                        </div>
+                        <div className="main-article-comments-container">
+                            <div className="main-article-shared-content-image">
+                                <img className="l" src={leelaPic} alt="" />
+                            </div>
+                            <div className="main-article-shared-content-description">
+                                <div className="comment-info">
+                                    <p className="user-info"> Turanga Leela</p>
+                                    <p className="description"> 11:25 AM</p>
+                                </div>
+                                <p className="content">Leela (full name Turanga Leela) is a fictional character from the
+                                    animated television series Futurama. Leela is spaceship captain, pilot, and head of all
+                                    aviation services on board the Planet Express Ship. Throughout the series, she has an
+                                    on-again, off-again relationship with and eventually marries Philip J. Fry, the central
+                                    character in the series and becomes the mother to Kif's offspring and in the comics
+                                 only, Elena Fry.</p>
+                            </div>
+                        </div>
+                        <div className="write-comment">
+                            <div className="comment">
+                                <div className="main-article-shared-content-image">
+                                    <img src={benderPic} alt="" />
+                                </div>
+                                <div className="comment-input">
+                                    <input type="text" placeholder="Write a comment..." />
+                                </div>
+                            </div>
+                        </div>
+                    </section> */}
                 </article>
             </Fragment>
         )

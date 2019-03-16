@@ -20,6 +20,7 @@ export default class UserFriendsAllPage extends Component {
     componentDidMount() {
         const userId = this.props.match.params.id;
         this.setState({ id: userId });
+        // this.props.loadAllFriends(userId);
     }
 
     removeFriend = (friendToRemoveId, event) => {

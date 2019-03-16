@@ -7,7 +7,6 @@ import { ToastContainer, toast, Slide, Zoom, Flip, Bounce } from 'react-toastify
 import 'react-toastify/dist/ReactToastify.min.css'
 import Navbar from './components/home/NavBar';
 import { ToastComponent } from './components/common'
-import { userService } from './infrastructure';
 
 const StartPage = lazy(() => import('./components/auth/StartPage'))
 const RegisterPage = lazy(() => import('./components/auth/RegisterPage'))
@@ -56,7 +55,9 @@ class App extends Component {
   }
 
   render() {
-    const loggedIn = userService.isTheUserLoggedIn();
+    const loggedIn = localStorage.getItem('token');
+    console.log(localStorage.getItem('token'))
+    console.log(localStorage.getItem('token') != null)
 
     return (
       <Fragment>
@@ -67,7 +68,7 @@ class App extends Component {
             <Route exact path="/" component={StartPage} />
             {!loggedIn && <Route exact path="/register" component={RegisterPage} />}
             {!loggedIn && <Route exact path="/login" component={LoginPage} />}
-            {loggedIn && <Route path="/home" component={HomePage} />}
+            {loggedIn && <Route path="/home/:id" component={withUserAuthorization(HomePage)} />}
             {/* {loggedIn && <Route exact path="/home/profile/:id" component={UserProfilePage} />} */}
             {/* <Route exact path="/profile" component={withAdminAuthorization(ProfilePage)} /> */}
             {/* {loggedIn && <Route exact path="/home/friends/:id" component={UserFriendsPage} />} */}

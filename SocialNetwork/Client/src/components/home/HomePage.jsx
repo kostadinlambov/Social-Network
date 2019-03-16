@@ -58,6 +58,7 @@ export default class HomePage extends Component {
     }
 
     componentDidMount() {
+        //   this.loadAllPictures(userService.getUserId())
     }
 
     getUserToShowId(getUserToShowId) {
@@ -124,6 +125,7 @@ export default class HomePage extends Component {
         }).catch(err => {
             console.error('deatils err:', err)
             toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+                // toast.error(<ToastComponent.errorToast text={`${error.name}: ${error.message}`} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
 
@@ -189,6 +191,11 @@ export default class HomePage extends Component {
 
 
     render() {
+        // if (!this.state.ready) {
+        //     // return <h1 className="text-center pt-5 mt-5">Loading...</h1>
+        //     return null;
+        // }
+
         const userToShowId = this.props.match.params;
 
         console.log(this.props.match.id)
@@ -234,6 +241,7 @@ export default class HomePage extends Component {
                     }
                 </main>
             </Fragment>
+
         );
     }
 }

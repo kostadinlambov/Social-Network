@@ -37,6 +37,7 @@ export default class UserAllPage extends Component {
         }).catch(err => {
             console.error('deatils err:', err)
             toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+                // toast.error(<ToastComponent.errorToast text={`${error.name}: ${error.message}`} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
 
@@ -57,6 +58,7 @@ export default class UserAllPage extends Component {
         return (
             <div className="container col-md-12 text-center">
                 <h1 className="text-center font-weight-bold display-5" style={{'margin': '1rem auto'}}>All Users</h1>
+                {/* <hr className="display-3 col-md-10" /> */}
                 <table className="table table-hover mt-3 w-80 mx-auto text-center">
                     <thead>
                         <tr className="row">
@@ -70,6 +72,7 @@ export default class UserAllPage extends Component {
                         {this.state.userArr.map((user, i) => <UserRow key={user.id} index={i + 1} {...this.props} {...user} />)}
                     </tbody>
                 </table>
+
             </div>
         )
     }
