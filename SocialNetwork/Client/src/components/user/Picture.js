@@ -1,14 +1,12 @@
 import React from 'react';
 import { userService } from '../../infrastructure'
 
-
 const Picture = (props) => {
     const imageClass = userService.getImageSize(props.imageUrl);
     const isRoot = userService.isRoot();
     const isTheCurrentLoggedInUser = (props.userId === userService.getUserId());
 
     return (
-
         <li>
             <div id="container">
                 <article className="card " id="contauner">

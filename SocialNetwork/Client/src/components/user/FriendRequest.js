@@ -38,7 +38,6 @@ export default class FriendRequest extends Component {
 
         const { id, firstName, lastName, firstButtonText, secondButtonText, firstButtonLink, secondButtonLink,
             firstButtonOnClick, secondButtonOnClick, thirdButtonText, thirdButtonLink, thirdButtonOnClick } = this.state;
-
         const backgroundImageUrl = this.state.backgroundImageUrl || default_background_image
         const profilePicUrl = this.state.profilePicUrl || placeholder_user_image
 

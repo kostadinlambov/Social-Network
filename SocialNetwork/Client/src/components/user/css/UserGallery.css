@@ -39,14 +39,10 @@ label#upload{
     overflow: hidden
 }
 
-/* .inner {
-} */
-
 #container:hover .uiButtonGroup {
     opacity: 1;
     transition: 1s ease-in;
 }
-
 
 .fbPhotoCurationControl {
     display: inline-block;

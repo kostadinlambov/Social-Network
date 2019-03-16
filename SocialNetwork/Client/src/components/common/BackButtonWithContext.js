@@ -1,7 +1,6 @@
 import React, {Component} from  'react';
 
 export default class BackButtonWithContext extends Component {
-
     static contextTypes = {
         router: () => true
     }

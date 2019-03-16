@@ -1,52 +1,7 @@
-/* .textarea-container {
-    position: relative;
-    height: 20px;
-    width: 97%;
-    margin-left: 1rem;
-}
-
-#post {
-    position: absolute;
-    width: 100%;
-    bottom: 0;
-}
-
-.post-container {
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    width: 100%;
-    margin: auto;
-    background: white;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-    box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.3);
-    padding: 1rem;
-}
-
-div.test {
-    position: relative;
-    height: 200px;
-}
-
-#texttype {
-    width: 200px;
-    position: absolute;
-    bottom: 0;
-} */
-
-/* ####################################################################### */
-
 
 main .main-section {
     display: flex;
     flex-direction: column;
-    /* justify-content: center; */
-    /* align-items: center; */
-    /* // background: white;
-    // border-radius: 5px;
-    // box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.3); */
-    /* padding: 1rem; */
 }
 
 
@@ -69,16 +24,11 @@ main .main-article-shared-content {
 }
 
 /* main-article-shared-content-header */
-
-
 /* main-article-comments-section */
-
 /* ################################################################ */
-
 .posts-section {
     width: 100%;
 }
-
 
 .posts-article-container {
     display: flex;
@@ -90,7 +40,6 @@ main .main-article-shared-content {
     /* border-radius: 5px; */
     box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.3);
     padding: 1rem;
-
 }
 
 .post-image {
@@ -101,15 +50,12 @@ main .main-article-shared-content {
     border-radius: 50%;
 }
 
-
 .post-image:before {
     display: block;
     content: '';
     padding-top: 100%;
 }
 
-
-/* // .l img { */
 .post-image .l {
     display: block;
     position: absolute;
@@ -117,8 +63,6 @@ main .main-article-shared-content {
     left: 0;
     width: auto;
     height: 100%;
-    /* width: 100%;
-    height: auto; */
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -129,8 +73,6 @@ main .main-article-shared-content {
     position: absolute;
     top: 0;
     left: 0;
-    /* width: auto; */
-    /* height: 100%; */
     width: 100%;
     height: auto;
     top: 50%;
@@ -150,7 +92,6 @@ main .main-article-shared-content {
 }
 
 /* write-comment */
-.write-post {}
 
 .post {
     font-size: 1.5rem;
@@ -178,11 +119,8 @@ main .main-article-shared-content {
     outline: none;
     resize: none ; 
     width: 90%;
-    /* height: 80px; */
     margin-left: 1rem;
     padding: 0.8rem 0.3rem;
-    /* padding-top: 0.8rem ;
-    padding-bottom: 0.8rem ; */
     border-top: 1px solid rgba(0, 0, 0, 0.3);
     border-bottom: 1px solid rgba(0, 0, 0, 0.3);
 }
@@ -192,10 +130,8 @@ main .main-article-shared-content {
         margin-top: 0.5rem;
 }
 
-
 /* ################################################################ */
 /* Post display */
-
 
 .post-content-section {
     width: 100%;
@@ -217,7 +153,6 @@ main .main-article-shared-content {
     align-items: center;
 }
 
-/* main-article-shared-content-header */
 .post-content-article-header {
     display: flex;
     justify-content: start;
@@ -249,8 +184,6 @@ main .main-article-shared-content {
     position: absolute;
     top: 0;
     left: 0;
-    /* width: auto; */
-    /* height: 100%; */
     width: 100%;
     height: auto;
     top: 50%;
@@ -265,8 +198,6 @@ main .main-article-shared-content {
     left: 0;
     width: auto; 
     height: 100%;
-    /* width: 100%;
-    height: auto; */
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -290,7 +221,6 @@ main .main-article-shared-content {
     color: rgb(192, 192, 192);
 }
 
-
 .post-content{
     padding: 1.5rem;
     box-shadow: 0 0 12px 1px rgba(0, 0, 0, 0.3);
@@ -307,9 +237,6 @@ main .main-article-shared-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* box-shadow: 0 0 12px 1px rgba(0, 0, 0, 0.3); */
-    /* width: 90%;
-    margin: auto; */
 }
 
 .post-left-side-icons-container {
@@ -332,17 +259,13 @@ main .main-article-shared-content {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    /* text-align: right; */
-
 }
 
 .post-left-side-icons-container ul li.like-icon{
     padding-right: 0.3rem;
     border: none;
     outline: none;
-   
 }
-
 
 .post-left-side-icons-container ul li.like-count{
     padding-left: 0;
@@ -358,7 +281,6 @@ main .main-article-shared-content {
 .post-right-side-icons-container p {
     padding: 0 1rem;
     font-size: 1.2rem;
-
 }
 
 .post-footer .fas,
@@ -388,9 +310,6 @@ main .main-article-shared-content {
     position: relative;
     /* overflow: hidden; */
 }
-
-/* .inner {
-} */
 
 #container:hover .uiButtonGroup {
     opacity: 1;
@@ -431,7 +350,6 @@ main .main-article-shared-content {
     color:white;
 
 }
-
 
 .post-button-fbPhotoCurationControl {
     display: inline-block;

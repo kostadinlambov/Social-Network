@@ -3,7 +3,6 @@ import React from 'react';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../components/common'
 
-
 export default {
     getPayload: () => {
         const token = localStorage.getItem('token')
@@ -18,7 +17,6 @@ export default {
 
     getUsername: () => {
         const token = localStorage.getItem('token')
-
         if (token !== null && token !== undefined) {
             const payload = JSON.parse(atob(token.split('.')[1]));
 
@@ -29,7 +27,6 @@ export default {
     },
 
     getUserId: () => {
-
         const token = localStorage.getItem('token')
         if (token !== null && token !== undefined) {
             const payload = JSON.parse(atob(token.split('.')[1]));
@@ -89,9 +86,7 @@ export default {
                 });
                 // throw new Error("Unauthorized");
             }
-
         }
-
         return false;
     },
 
@@ -153,13 +148,9 @@ export default {
     getImageSize(profilePicUrl, friendsGallery) {
         let img = new Image();
         img.src = profilePicUrl;
-        // console.log('this.width + x + this.height');
-        // console.log(img.width + 'x' + img.height);
-        // alert('ImageSize: ' + img.width + 'x' + img.height)
         if (img.width >= img.height && !friendsGallery) {
             return 'l'
         }
         return '';
-
     }
 } 

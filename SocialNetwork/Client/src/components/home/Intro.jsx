@@ -2,7 +2,6 @@ import React, { Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
 
 const Intro = (props) => {
-
     return (
         <Fragment >
             <article className="aside-article-intro">
@@ -22,9 +21,6 @@ const Intro = (props) => {
                 <button className="button update-info">
                     <NavLink className="about  " exact to={`/home/profile/${props.id}`}>UPDATE INFO</NavLink>
                 </button>
-                {/* <!-- <div className="aside-intro-update">
-                 <a className="active" href="{{ site.baseurl }}/about">UPDATE INFO</a>
-                 </div> --> */}
             </article>
         </Fragment>
     )

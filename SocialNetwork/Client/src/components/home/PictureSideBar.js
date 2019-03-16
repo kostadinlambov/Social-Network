@@ -1,7 +1,6 @@
 import React from 'react';
 import { userService } from '../../infrastructure'
 
-
 const PictureSideBar = (props) => {
     const imageClass = userService.getImageSize(props.imageUrl, true);
 

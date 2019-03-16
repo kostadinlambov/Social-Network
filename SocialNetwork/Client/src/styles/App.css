@@ -1,7 +1,6 @@
 @import url("../custom-css/styles.css");
 @import url("./tooltipCustom.css");
 
-
 .App {
   text-align: center;
 }
@@ -60,12 +59,10 @@
   box-shadow: 0 0 14px 1px rgba(0,0,0,.3)
 }
 
-
 .App-button-secondary{
   background:#40a3f4;
   color:white;
 }
-
 
 .App-button-secondary:hover{
   background: #3b5998;

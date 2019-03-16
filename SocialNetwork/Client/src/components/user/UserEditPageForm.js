@@ -58,7 +58,9 @@ export default class UserEditPageForm extends Component {
                     position: toast.POSITION.TOP_RIGHT
                 });
 
+                this.props.getUserToShowId(this.state.id);
                 this.props.history.push(`/home/profile/${this.state.id}`);
+
             } else {
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
@@ -125,7 +127,6 @@ export default class UserEditPageForm extends Component {
         let showPicsButtons = true;
         if (loggedInUserName !== username && (loggedInRole !== "ROOT")) {
             showPicsButtons = false;
-            // this.props.history.push('/');
         }
         const errors = this.validate(username, email, firstName, lastName, address, city, profilePicUrl, backgroundImageUrl);
         const isEnabled = !Object.keys(errors).some(x => errors[x])

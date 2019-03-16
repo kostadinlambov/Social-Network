@@ -1,10 +1,9 @@
-import React, { Fragment, Component } from 'react';
+import React, { Fragment} from 'react';
 import { NavLink } from 'react-router-dom';
 import { userService } from '../../infrastructure';
 import placeholder_user_image from '../../assets/images/placeholder-profile-male.jpg'
 
 const FriendsGallery = (props) => {
-
     return (
         <Fragment >
             <article className="aside-article-friends">

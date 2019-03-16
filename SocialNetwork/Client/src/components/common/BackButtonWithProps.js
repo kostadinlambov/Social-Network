@@ -10,7 +10,6 @@ export default class BackButtonWithProps extends Component {
         this.props.history.goBack()
     }
 
-
     render() {
         return (
             <button

@@ -57,10 +57,6 @@ export default class HomePage extends Component {
         this.findFriends = this.findFriends.bind(this);
     }
 
-    componentDidMount() {
-        //   this.loadAllPictures(userService.getUserId())
-    }
-
     getUserToShowId(getUserToShowId) {
         requester.get(`/users/details/${getUserToShowId}`, (userData) => {
             this.setState({
@@ -71,9 +67,6 @@ export default class HomePage extends Component {
             })
 
             if (userData.error) {
-                // toast.error(<ToastComponent.errorToast text={userData.message} />, {
-                //     position: toast.POSITION.TOP_RIGHT
-                // });
                 this.props.history.push("/");
             }
         }).catch(err => {
@@ -92,9 +85,6 @@ export default class HomePage extends Component {
     loadAllPictures = (userId) => {
         requester.get('/pictures/all/' + userId, (response) => {
             if (response.success === true) {
-                // toast.success(<ToastComponent.successToast text={response.message} />, {
-                //     position: toast.POSITION.TOP_RIGHT
-                // });
                 this.setState({
                     picturesArr: response['payload'],
                     id: userId
@@ -105,7 +95,6 @@ export default class HomePage extends Component {
                 });
             }
         }).catch(err => {
-            console.error('deatils err:', err)
             toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
@@ -123,9 +112,7 @@ export default class HomePage extends Component {
                 friendsArr: response
             })
         }).catch(err => {
-            console.error('deatils err:', err)
             toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-                // toast.error(<ToastComponent.errorToast text={`${error.name}: ${error.message}`} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
 
@@ -191,15 +178,7 @@ export default class HomePage extends Component {
 
 
     render() {
-        // if (!this.state.ready) {
-        //     // return <h1 className="text-center pt-5 mt-5">Loading...</h1>
-        //     return null;
-        // }
-
         const userToShowId = this.props.match.params;
-
-        console.log(this.props.match.id)
-
         const isRoot = userService.isRoot();
         const isAdmin = userService.isAdmin();
         const isTheCurrentLoggedInUser = this.checkIfCurrentUserIsLoggedInUser(userToShowId);

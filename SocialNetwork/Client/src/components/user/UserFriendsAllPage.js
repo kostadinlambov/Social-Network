@@ -6,7 +6,6 @@ import { ToastComponent } from '../common'
 import Friend from './Friend';
 import './css/UserFriends.css'
 
-
 export default class UserFriendsAllPage extends Component {
     constructor(props) {
         super(props)
@@ -20,18 +19,13 @@ export default class UserFriendsAllPage extends Component {
     componentDidMount() {
         const userId = this.props.match.params.id;
         this.setState({ id: userId });
-        // this.props.loadAllFriends(userId);
     }
 
     removeFriend = (friendToRemoveId, event) => {
         event.preventDefault();
         const requestBody = { loggedInUserId: this.props.id, friendToRemoveId: friendToRemoveId }
 
-        console.log('requestBody: ', requestBody)
-
         requester.post('/relationship/removeFriend', requestBody, (response) => {
-            console.log('RemoveFriend response: ', response)
-            debugger;
             if (response.success) {
                 toast.success(<ToastComponent.successToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
@@ -39,15 +33,11 @@ export default class UserFriendsAllPage extends Component {
 
                 this.props.loadAllFriends(this.props.id);
             } else {
-                debugger;
-                console.log('error message: ', response.message);
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
             }
         }).catch(err => {
-            debugger;
-            console.error('Remove Friend err:', err)
             toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
                 position: toast.POSITION.TOP_RIGHT
             });

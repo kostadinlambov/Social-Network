@@ -9,8 +9,6 @@
 
     main .aside-section {
         flex: 0 0 100%;
-        /* width: 100%; */
-        /* margin: auto; */
         display: block;
         width: 100%;
         margin-top: 0;
@@ -19,15 +17,11 @@
 
     main .main-section {
         flex: 0 0 100%;
-         /* width: 100%; */
-        /* margin: auto;  */
         display: block;
-        
     }
 
     main .main-article-header nav {
         margin: -4px auto 0;
-        
     }
 
     main .article-friends, 
@@ -37,14 +31,10 @@
     }
 }
 
-
-
 @media screen and (max-width: 690px) {
-
     html {
         font: 14px/1.5 "Helvetica", sans-serif;
     }
-
 
     body{
         display: block;
@@ -86,8 +76,6 @@
 
     /* // main */
 
-   
-   
     main .main-article-shared-content-header{
         box-shadow:none;
     }
@@ -111,14 +99,10 @@
     main .aside-article-intro>.aside-article-header{
         padding: 1rem 0 0 0;
     }
-
-
 }
 
 @media screen and (max-width: 400px) {
-
     header .site-logo{
         padding-right: 1rem;
     }
-    
 }

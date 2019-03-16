@@ -37,25 +37,18 @@ export default class UserFindFriendsPage extends Component {
         const requestBody = { loggedInUserId: userService.getUserId(), friendCandidateId: friendCandidateId }
 
         requester.post('/relationship/addFriend', requestBody, (response) => {
-            console.log('AddFriend response: ', response)
             if (response.success) {
                 toast.success(<ToastComponent.successToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
 
                 this.props.findFriends(this.state.userId, this.state.category);
-
-
-                // this.props.history.push("/home/findFriends/" + userService.getUserId())
-
             } else {
-                console.log('error message: ', response.message);
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
             }
         }).catch(err => {
-            console.error('Add Friend err:', err)
             toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
@@ -78,15 +71,12 @@ export default class UserFindFriendsPage extends Component {
                 });
 
                 this.props.findFriends(this.state.userId, this.state.category);
-                // this.props.history.push("/home/findFriends/" + userService.getUserId())
             } else {
-                console.log('error message: ', response.message);
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
             }
         }).catch(err => {
-            console.error('Remove Friend err:', err)
             toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
@@ -102,15 +92,12 @@ export default class UserFindFriendsPage extends Component {
         event.preventDefault();
         const requestBody = { loggedInUserId: userService.getUserId(), friendToRejectId: friendToRejectId }
         requester.post('/relationship/cancelRequest', requestBody, (response) => {
-            console.log('RejectFriend response: ', response)
             if (response.success) {
                 toast.success(<ToastComponent.successToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
 
                 this.props.findFriends(this.state.userId, this.state.category);
-                // this.props.history.push("/home/findFriends/" + userService.getUserId())
-
             } else {
                 console.log('error message: ', response.message);
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
@@ -136,14 +123,10 @@ export default class UserFindFriendsPage extends Component {
         }
 
         const categoryFromUrl = this.props.match.params.category
-        console.log('categoryFromUrl :', categoryFromUrl)
-        console.log('this.props.category :', this.props.category)
 
         if(this.props.category !== categoryFromUrl){
             this.props.findFriends(this.state.userId, categoryFromUrl)
         }
-
-        console.log('props: ', this.props)
 
         const requestLength = this.props.userWaitingForAcceptingRequest.length;
         let requests = '';
@@ -237,9 +220,6 @@ export default class UserFindFriendsPage extends Component {
         const { category } = this.props;
         let isRequestsSearch = category === 'requests';
 
-        console.log('category: ',  category);
-        console.log('isRequestsSearch: ',  isRequestsSearch);
-        debugger;
         if (!requests && isRequestsSearch) {
             requests = (
                 <Fragment>
@@ -247,8 +227,6 @@ export default class UserFindFriendsPage extends Component {
                     <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" />
                 </Fragment>)
         }
-
-        
 
         return (
             <div className="container col-md-12 text-center">

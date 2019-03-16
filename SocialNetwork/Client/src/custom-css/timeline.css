@@ -1,49 +1,44 @@
-.main-article-header {
-}
+.main-article-header {}
 
 .main-article-header nav {
     margin: -4rem auto 0.9rem auto;
 }
 
- .main-article-header ul {
+.main-article-header ul {
     flex: 1 1 100%;
     display: flex;
     justify-content: space-around;
     align-items: center;
     background: white;
-    /* padding: 0.5rem; */
     border-radius: 5px;
     box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.3);
 }
 
-
- .main-article-header ul li {
+.main-article-header ul li {
     list-style: none outside;
     flex: 1 1 100%;
 }
 
- .main-article-header ul li a {
+.main-article-header ul li a {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-decoration: none;
-    /* margin: 0.3rem; */
     color: rgb(192, 192, 192);
     font-weight: bold;
     padding-bottom: 0;
-
 }
 
- .main-article-header ul li a i {
+.main-article-header ul li a i {
     padding-top: 0.4rem;
 }
 
- .main-article-header ul li .active {
+.main-article-header ul li .active {
     color: rgb(64, 163, 244);
 }
 
- .main-article-header ul .active:after {
+.main-article-header ul .active:after {
     display: block;
     content: '';
     border-bottom: 3px solid rgb(64, 163, 244);
@@ -51,7 +46,7 @@
     margin: auto;
 }
 
- .main-article-header ul li a:hover{
+.main-article-header ul li a:hover {
     color: white;
     background: rgb(64, 163, 244);
     border-radius: 5px;
@@ -60,7 +55,7 @@
     z-index: 5;
 }
 
- .main-article-header ul .active:hover:after {
+.main-article-header ul .active:hover:after {
     display: none;
 }
 
@@ -68,33 +63,33 @@
     .main-article-header {
         margin-bottom: 0;
     }
-    .main-article-header ul{
+
+    .main-article-header ul {
         padding: 0.8rem 0;
     }
-   
-}
-
-@media screen and (max-width: 600px) {
 
 }
+
+@media screen and (max-width: 600px) {}
 
 @media screen and (max-width: 400px) {
-    .main-article-header ul{
+    .main-article-header ul {
         flex-direction: column;
         padding: 0.8rem 0;
 
     }
-    .main-article-header ul li{
+
+    .main-article-header ul li {
         display: block;
         flex: 1 1 100%;
         width: 50%;
     }
 
-    .main-article-header ul li a:hover{
+    .main-article-header ul li a:hover {
         color: rgb(64, 163, 244);
         background: white;
         border-radius: none;
-        border:none;
+        border: none;
         box-shadow: none;
         z-index: 5;
     }

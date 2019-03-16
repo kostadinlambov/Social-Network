@@ -60,9 +60,7 @@ const Post = (props) => {
                     <div className="btn uiButtonGroup fbPhotoCurationControl  delete-button" ><i className="far fa-trash-alt "></i></div>
                 </div>}
             </div>
-
         </Fragment>
-
     )
 }
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import UserRow from './UserRow';
-import { requester, observer } from '../../infrastructure/'
+import { requester } from '../../infrastructure/'
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
 
@@ -18,8 +18,6 @@ export default class UserAllPage extends Component {
         const userId = this.props.match.params.id;
         
         requester.get('/users/all/'+ userId, (response) => {
-            console.log('users all: ', response);
-            debugger;
             if (response.success === true) {
                 toast.success(<ToastComponent.successToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
@@ -35,9 +33,7 @@ export default class UserAllPage extends Component {
                 });
             }
         }).catch(err => {
-            console.error('deatils err:', err)
             toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-                // toast.error(<ToastComponent.errorToast text={`${error.name}: ${error.message}`} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
 
@@ -53,12 +49,10 @@ export default class UserAllPage extends Component {
         if(this.props.match.params.id !== this.props.id){
             this.props.getUserToShowId(this.props.match.params.id);
         }
-        debugger;
 
         return (
             <div className="container col-md-12 text-center">
                 <h1 className="text-center font-weight-bold display-5" style={{'margin': '1rem auto'}}>All Users</h1>
-                {/* <hr className="display-3 col-md-10" /> */}
                 <table className="table table-hover mt-3 w-80 mx-auto text-center">
                     <thead>
                         <tr className="row">

@@ -1,7 +1,5 @@
 .Register-form-container{
-    /* width: 30%; */
     margin: auto;
-
 }
 
 .Login-form-container{
@@ -12,8 +10,6 @@
 h1{
     text-align: center;
     margin: 3rem auto;
-    /* margin-top: 5rem;
-    margin-bottom: 5rem; */
 }
 
 .section-container{
@@ -43,9 +39,6 @@ h1{
 .error-text{
     color: red;
     position: absolute;
-    /* text-align: center; */
-    /* background: #F64417;
-    padding: 5px; */
 }
 
 .alert{

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
-import { userService, observer, requester } from '../../infrastructure'
+import { userService, requester } from '../../infrastructure'
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
 
@@ -26,23 +26,18 @@ export default class UserRow extends Component {
         event.preventDefault();
         const id = this.state.id;
         requester.post('/users/promote?id=' + id, id, (response) => {
-            console.log(response)
-            
             if (response.success) {
                 this.setState({role: 'ADMIN'})
                 toast.success(<ToastComponent.successToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
             } else {
-                console.log('error message: ', response.message);
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
             }
         }).catch(err => {
-            console.error('Promote err:', err)
             toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-                // toast.error(<ToastComponent.errorToast text={`${error.name}: ${error.message}`} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
 
@@ -57,23 +52,19 @@ export default class UserRow extends Component {
         event.preventDefault();
         const id = this.state.id;
         requester.post('/users/demote?id=' + id, id, (response) => {
-            console.log(response)
             if (response.success) {
                 this.setState({role: 'USER'})
                 toast.success(<ToastComponent.successToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
             } else {
-                console.log('error message: ', response.message);
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
             }
 
         }).catch(err => {
-            console.error('Demote err:', err)
             toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-                // toast.error(<ToastComponent.errorToast text={`${error.name}: ${error.message}`} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
 
@@ -99,16 +90,13 @@ export default class UserRow extends Component {
                 <td className="col-md-5 d-flex justify-content-center" >
                     {(!userService.checkIfIsRoot(this.state.role) && !userService.isLoggedInUser(this.state.username)) &&
                         <h5>
-                            {/* <button className="btn App-button-primary" onClick={this.promote} >Promote</button> */}
                             <button className="btn App-button-primary btn-lg m-1" onClick={this.promote} >Promote</button>
                         </h5>}
                     {(!userService.checkIfIsRoot(this.state.role) && !userService.isLoggedInUser(this.state.username)) &&
                         <h5>
-                            {/* <button className="btn App-button-primary" onClick={this.demote} >Demote</button> */}
                             <button className="btn App-button-primary btn-lg m-1" onClick={this.demote} >Demote</button>
                         </h5>}
                     <h5>
-                        {/* <NavLink className="btn App-button-primary" to={`/home/profile/${this.state.id}`} role="button">Profile</NavLink> */}
                         <NavLink className="btn App-button-primary btn-lg m-1" to={`/home/profile/${this.state.id}`} role="button">Profile</NavLink>
                     </h5>
                 </td>

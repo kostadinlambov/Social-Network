@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import userService from '../infrastructure/userService'
-import ErrorPage from '../components/common/ErrorPage';
 import { Redirect } from 'react-router-dom'
 
 function withAuthorization(WrapperComponent, roles) {

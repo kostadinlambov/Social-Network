@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import '../../styles/FormPages.css'
-import { requester, observer } from '../../infrastructure'
+import { requester } from '../../infrastructure'
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
 
@@ -48,7 +48,6 @@ export default class RegisterPage extends Component {
 
     onSubmitHandler(event) {
         event.preventDefault();
-        console.log('event: ', event);
 
         if (!this.canBeSubmitted()) {
             return;
@@ -57,26 +56,18 @@ export default class RegisterPage extends Component {
         const { touched, ...otherProps } = this.state;
 
         requester.post('/users/register', { ...otherProps }, (response) => {
-            console.log('response: ', response)
-
             if (response.success === true) {
-                console.log('success message: ', response.message);
                 toast.success(<ToastComponent.successToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
-                // observer.trigger(observer.events.notification, { type: 'success', message: response.message });
                 this.props.history.push('/login');
             } else {
-                console.log('error message: ', response.message);
-                // observer.trigger(observer.events.notification, { type: 'error', message: response.message });
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
 
             }
-
         }).catch(err => {
-            console.error('Register Errror:', err)
             toast.error(<ToastComponent.errorToast text={`${err.message}`} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
@@ -104,7 +95,6 @@ export default class RegisterPage extends Component {
         const testEmail = emailRegex.test(email)
         const testFirstName = firstLastNameRegex.test(firstName)
         const testLastName = firstLastNameRegex.test(lastName)
-        console.log('testEmail : ', testEmail)
         return {
             username: username.length < 4 || username.length > 16,
             email: email.length === 0 || !testEmail,
@@ -138,7 +128,6 @@ export default class RegisterPage extends Component {
                     <div className="section-container">
                         <section className="left-section">
                             <div className="form-group">
-                                {/* <label htmlFor="username" className={(shouldMarkError('username') ? "error-text-label" : "")}>Username</label> */}
                                 <label htmlFor="username" >Username</label>
                                 <input
                                     type="text"
@@ -274,9 +263,7 @@ export default class RegisterPage extends Component {
                     <div className="text-center">
                         <button disabled={!isEnabled} type="submit" className="btn App-button-primary btn-lg m-3">Register</button>
                     </div>
-
                 </form>
-                {/* <p>{JSON.stringify(this.state, null, 2)}</p> */}
             </div>
         )
     }

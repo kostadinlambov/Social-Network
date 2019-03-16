@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import '../../styles/FormPages.css';
 import requester from '../../infrastructure/requester';
-import observer from '../../infrastructure/observer';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
 
@@ -23,8 +22,6 @@ export default class LoginPage extends Component {
     }
 
     onChangeHandler(event) {
-        console.log('name: ', event.target.name)
-        console.log('value: ', event.target.value)
         this.setState({
             [event.target.name]: event.target.value
         });
@@ -32,7 +29,6 @@ export default class LoginPage extends Component {
 
     onSubmitHandler(event) {
         event.preventDefault();
-        console.log('event: ', event);
 
         if (!this.canBeSubmitted()) {
             return;
@@ -41,13 +37,10 @@ export default class LoginPage extends Component {
         const { touched, ...otherProps } = this.state;
 
         requester.post('/login', { ...otherProps }, (response) => {
-            console.log('response: ', response)
-
             if (response.error) {
                 toast.error(<ToastComponent.errorToast text={' Incorrect credentials!'} />, {
                     position: toast.POSITION.TOP_RIGHT,
                 });
-
 
             } else {
                 const token = response.split(' ')[1];
@@ -61,8 +54,6 @@ export default class LoginPage extends Component {
             }
 
         }).catch(err => {
-            console.log('Login Error (POST): ', err)
-
             // toast.error(<ToastComponent.errorToast text={`${err.message}`} />, {
             localStorage.clear();
 
@@ -84,7 +75,6 @@ export default class LoginPage extends Component {
 
     canBeSubmitted() {
         const { username, password } = this.state;
-
         const errors = this.validate(username, password);
         const isDisabled = Object.keys(errors).some(x => errors[x])
         return !isDisabled;
@@ -106,7 +96,6 @@ export default class LoginPage extends Component {
 
     render() {
         const { username, password } = this.state;
-
         const errors = this.validate(username, password);
         const isEnabled = !Object.keys(errors).some(x => errors[x])
 
@@ -123,7 +112,6 @@ export default class LoginPage extends Component {
                 <h1 className="mt-5 mb-5 text-center font-weight-bold ">Login</h1>
                 <form className="Login-form-container" onSubmit={this.onSubmitHandler}>
                     <div className="form-group">
-                        {/* <label htmlFor="username" className={(shouldMarkError('username') ? "error-text-label" : "")}>Username</label> */}
                         <label htmlFor="username">Username</label>
                         <input
                             type="text"
@@ -158,11 +146,7 @@ export default class LoginPage extends Component {
                     <div className="text-center">
                         <button disabled={!isEnabled} type="submit" className="btn App-button-primary btn-lg m-3">Login</button>
                     </div>
-
                 </form>
-
-                {/* <p>{JSON.stringify(this.state, null, 2)}</p> */}
-
             </div>
         )
     }

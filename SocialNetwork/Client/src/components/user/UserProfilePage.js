@@ -1,13 +1,6 @@
-import React, { Component, Fragment } from 'react';
-import { NavLink } from 'react-router-dom'
-import { userService, requester } from '../../infrastructure';
+import React, { Component } from 'react';
+import { userService } from '../../infrastructure';
 import { Button, ButtonWithClickEvent } from '../common'
-import { toast } from 'react-toastify';
-import { ToastComponent } from '../../components/common';
-
-import placeholder_user_image from '../../assets/images/placeholder-profile-male.jpg'
-import default_background_image from '../../assets/images/default-background-image.jpg'
-
 
 export default class UserProfilePage extends Component {
     constructor(props) {
@@ -92,7 +85,6 @@ export default class UserProfilePage extends Component {
         let showPicsButtons = true;
         if (loggedInUserName !== this.state.username && (loggedInRole !== "ROOT")) {
             showPicsButtons = false;
-            // this.props.history.push('/');
         }
 
         let authority;
@@ -109,7 +101,6 @@ export default class UserProfilePage extends Component {
 
                 <h1 className="text-center font-weight-bold" style={{ 'margin': '1rem auto' }}>Account Details</h1>
                 <hr className="my-2 mb-3 mt-3 col-md-8 mx-auto" />
-                {/* <div className="d-flex justify-content-center  "> */}
                 <div className="col-md-6 mx-auto text-center">
                     <table className="table table-hover mt-3 mx-auto text-center">
                         <thead>

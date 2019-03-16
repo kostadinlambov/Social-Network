@@ -53,8 +53,7 @@ export default class UserGalleryPage extends Component {
         let data = new FormData();
         data.append('file', this.state.file);
         data.append('loggedInUserId', this.state.id);
-        console.log('loggedInUserId', this.state.id);
-        debugger;
+
         fetch('http://localhost:8000/pictures/add', {
             method: 'POST',
             headers: {
@@ -68,11 +67,8 @@ export default class UserGalleryPage extends Component {
                         position: toast.POSITION.TOP_RIGHT
                     });
 
-                    debugger;
                     this.props.loadAllPictures(this.props.id);
-
                     this.setState({ ready: true });
-                    // this.loadAllPictures()
                 } else {
                     toast.error(<ToastComponent.errorToast text={response.message} />, {
                         position: toast.POSITION.TOP_RIGHT
@@ -80,7 +76,6 @@ export default class UserGalleryPage extends Component {
                 }
 
             }).catch(err => {
-                console.error('Upload Pic Err:', err)
                 toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
@@ -104,11 +99,7 @@ export default class UserGalleryPage extends Component {
         event.preventDefault();
         const requestBody = { loggedInUserId: userService.getUserId(), photoToRemoveId: photoToRemoveId }
 
-        console.log('requestBody: ', requestBody)
-        debugger;
         requester.post('/pictures/remove', requestBody, (response) => {
-            console.log('RemovePicture response: ', response)
-            debugger;
             if (response.success) {
                 toast.success(<ToastComponent.successToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
@@ -116,15 +107,11 @@ export default class UserGalleryPage extends Component {
 
                 this.props.loadAllPictures(this.props.id);
             } else {
-                debugger;
-                console.log('error message: ', response.message);
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
             }
         }).catch(err => {
-            debugger;
-            console.error('Remove Picture err:', err)
             toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
@@ -168,8 +155,6 @@ export default class UserGalleryPage extends Component {
                         </div>
 
                         { (isRoot ||  isTheCurrentLoggedInUser) &&    <div className="">
-                            {/* <h4 style={{ color: 'red' }}>{this.state.error}</h4>
-                            <h4 style={{ color: 'green' }}>{this.state.msg}</h4> */}
                             <button className="button update-info" >
                                 <label id="upload" htmlFor="fileUpload" > ADD PHOTO</label>
                                 <input id="fileUpload" onChange={this.onFileChange} type="file" />

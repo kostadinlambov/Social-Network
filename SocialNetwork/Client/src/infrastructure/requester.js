@@ -6,7 +6,6 @@ const getAuthHeader = () => {
     return (token && token.length)
         ? { 'Authorization': `Bearer ${token}` }
         : {}
-
 }
 
 export default {
@@ -117,58 +116,3 @@ function checkStatus(response) {
 
     }
 }
-
-// switch (err.status) {
-
-//     case 400:
-//         console.log('err:', err);
-
-//         if (err.error.errors) {
-//             for (const e of Object.values(err.error.errors)) {
-//                 this.toastrService.error(e.toString(), 'Error!');
-//             }
-//         }
-//         // else {
-//         //     this.toastrService.error(err['error']['message'], 'Error!');
-//         // }
-//         this.toastrService.error(err['error']['message'], 'Error!');
-
-//         break;
-//     case 401:
-//         if (err.error.errors) {
-//             for (const e of Object.values(err.error.errors)) {
-//                 this.toastrService.error(e.toString(), 'Error!');
-//             }
-//         }
-//         this.toastrService.error(err['error']['message'], 'Error!');
-//         break;
-//     case 403:
-//         this.toastrService.error('Incorrect credentials.', 'Error!');
-//         localStorage.clear();
-//         this.router.navigate(['/home']);
-//         break;
-//     case 404:
-//         this.toastrService.error(err['error']['message'], 'Error!');
-//         this.router.navigate(['/page-not-found']);
-//         break;
-
-//     case 500:
-//         this.toastrService.error(err['error']['message'], 'Error!');
-//         // this.router.navigate(['/server-error']);
-//         break;
-//     default:
-//         // this.toastrService.error('Server error.', 'Error!');
-//         this.toastrService.error(err['error']['message'], 'Error!');
-//         this.router.navigate(['/page-not-found']);
-//         break;
-// }
-
-// function checkStatus(response) {
-//     if (response.status >= 200 && response.status < 300) {
-//         return response
-//     } else {
-//         var error = new Error(response.statusText);
-//         error.response = response;
-//         throw error;
-//     }
-// }

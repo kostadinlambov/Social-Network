@@ -39,11 +39,7 @@ export default class UserSearchResultsPage extends Component {
         event.preventDefault();
         const requestBody = { loggedInUserId: userService.getUserId(), friendCandidateId: friendCandidateId }
 
-        console.log('requestBody: ', requestBody)
-        debugger;
         requester.post('/relationship/addFriend', requestBody, (response) => {
-            console.log('AddFriend response: ', response)
-            debugger;
             if (response.success) {
                 toast.success(<ToastComponent.successToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
@@ -51,15 +47,11 @@ export default class UserSearchResultsPage extends Component {
 
                 this.props.searchResults(this.state.userId, this.state.search);
             } else {
-                debugger;
-                console.log('error message: ', response.message);
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
             }
         }).catch(err => {
-            debugger;
-            console.error('Add Friend err:', err)
             toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
@@ -73,29 +65,20 @@ export default class UserSearchResultsPage extends Component {
 
     confirmRequest = (friendToAcceptId, event) => {
         event.preventDefault();
-
         const requestBody = { loggedInUserId: userService.getUserId(), friendToAcceptId: friendToAcceptId }
 
-        console.log('requestBody: ', requestBody)
-
         requester.post('/relationship/acceptFriend', requestBody, (response) => {
-            console.log('AcceptFriend response: ', response)
-            debugger;
             if (response.success) {
                 toast.success(<ToastComponent.successToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
                 this.props.searchResults(this.state.userId, this.state.search)
             } else {
-                debugger;
-                console.log('error message: ', response.message);
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
             }
         }).catch(err => {
-            debugger;
-            console.error('Remove Friend err:', err)
             toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
@@ -109,14 +92,9 @@ export default class UserSearchResultsPage extends Component {
 
     rejectRequest = (friendToRejectId, event) => {
         event.preventDefault();
-
         const requestBody = { loggedInUserId: userService.getUserId(), friendToRejectId: friendToRejectId }
 
-        console.log('requestBody: ', requestBody)
-
         requester.post('/relationship/cancelRequest', requestBody, (response) => {
-            console.log('RejectFriend response: ', response)
-            debugger;
             if (response.success) {
                 toast.success(<ToastComponent.successToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
@@ -124,15 +102,11 @@ export default class UserSearchResultsPage extends Component {
 
                 this.props.searchResults(this.state.userId, this.state.search);
             } else {
-                debugger;
-                console.log('error message: ', response.message);
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
             }
         }).catch(err => {
-            debugger;
-            console.error('Remove Friend err:', err)
             toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
@@ -146,10 +120,7 @@ export default class UserSearchResultsPage extends Component {
 
     removeFriend = (friendToRemoveId, event) => {
         event.preventDefault();
-
         const requestBody = { loggedInUserId: userService.getUserId(), friendToRemoveId: friendToRemoveId }
-
-        console.log('requestBody: ', requestBody)
 
         requester.post('/relationship/removeFriend', requestBody, (response) => {
             if (response.success) {
@@ -159,15 +130,11 @@ export default class UserSearchResultsPage extends Component {
 
                 this.props.searchResults(this.state.userId, this.state.search)
             } else {
-                debugger;
-                console.log('error message: ', response.message);
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
             }
         }).catch(err => {
-            debugger;
-            console.error('Remove Friend err:', err)
             toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
@@ -188,12 +155,6 @@ export default class UserSearchResultsPage extends Component {
                 () => this.props.searchResults(userId, search)
             );
         }
-
-        console.log('friendsArrSearch: ', this.props.friendsArrSearch)
-        console.log('userWaitingForAcceptingRequest: ', this.props.userWaitingForAcceptingRequest)
-        console.log('frienusersReceivedRequestFromCurrentUserdsArrSearch: ', this.props.usersReceivedRequestFromCurrentUser)
-        console.log('friendsCandidatesArr: ', this.props.friendsCandidatesArr)
-        // debugger;
 
         const friendsArrLength = this.props.friendsArrSearch.length;
         let friends = '';
