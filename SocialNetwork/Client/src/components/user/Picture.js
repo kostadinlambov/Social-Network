@@ -15,11 +15,6 @@ const Picture = (props) => {
                     <div className="media">
                         <img className={imageClass} src={props.imageUrl} alt="pic1" />
                     </div>
-                    {/* <div className="content">
-                                <h3 className="card-title">Philip J. Fry</h3>
-                                <p></p>
-                </div> */}
-                    {/* <div className="fbPhotoCurationControl uiButtonGroup far fa-trash-alt" id="delete-button"></div> */}
                     <div  onClick={props.removePhoto.bind(this, props.id)}>
                    { (isRoot ||  isTheCurrentLoggedInUser) &&  <div className="btn fbPhotoCurationControl inner uiButtonGroup delete-button" ><i className="far fa-trash-alt "></i></div>} 
                     </div>

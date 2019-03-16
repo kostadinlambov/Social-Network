@@ -44,7 +44,6 @@ public class ApplicationSecurityConfiguration
                 .disable()
                 .authorizeRequests()
                 .antMatchers("/users/register",
-                        "/like/add",
 //                        "/**",
                         "/favicon.ico",
                         "/**/*.png",
@@ -69,8 +68,10 @@ public class ApplicationSecurityConfiguration
                         "/pictures/add",
                         "/pictures/remove",
                         "/post/create",
-                        "/post/all/*"
-                ).hasAnyAuthority("ADMIN", "ROOT", "USER")
+                        "/post/all/*",
+                        "/post/remove",
+                        "/like/add"
+                        ).hasAnyAuthority("ADMIN", "ROOT", "USER")
                 .antMatchers(
                         "/users/promote",
                         "/users/demote",

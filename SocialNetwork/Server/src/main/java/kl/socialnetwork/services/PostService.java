@@ -11,4 +11,6 @@ public interface PostService {
     boolean createPost(PostCreateBindingModel postCreateBindingModel);
 
     List<PostServiceModel> getAllPosts(String timelineUserId);
+
+    boolean deletePost(String loggedInUserId, String postToRemoveId);
 }

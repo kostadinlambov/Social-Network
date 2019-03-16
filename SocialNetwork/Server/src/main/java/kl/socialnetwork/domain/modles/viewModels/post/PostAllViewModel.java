@@ -7,6 +7,8 @@ public class PostAllViewModel {
     private String loggedInUserProfilePicUrl;
     private String loggedInUserFirstName;
     private String loggedInUserLastName;
+    private String loggedInUserId;
+    private String timelineUserId;
     private String content;
     private String imageUrl;
     private int likeCount;
@@ -77,5 +79,21 @@ public class PostAllViewModel {
 
     public void setTime(LocalDateTime time) {
         this.time = time;
+    }
+
+    public String getLoggedInUserId() {
+        return this.loggedInUserId;
+    }
+
+    public void setLoggedInUserId(String loggedInUserId) {
+        this.loggedInUserId = loggedInUserId;
+    }
+
+    public String getTimelineUserId() {
+        return this.timelineUserId;
+    }
+
+    public void setTimelineUserId(String timelineUserId) {
+        this.timelineUserId = timelineUserId;
     }
 }

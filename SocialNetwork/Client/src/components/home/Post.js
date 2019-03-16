@@ -4,19 +4,18 @@ import { userService } from '../../infrastructure'
 const Post = (props) => {
     const imageClass = userService.getImageSize(props.imageUrl);
     const imageClassUserPick = userService.getImageSize(props.loggedInUserProfilePicUrl);
-    const isRoot = userService.isRoot();
-    const isTheCurrentLoggedInUser = (props.userId === userService.getUserId());
 
-    const dayTime = props.time.hour <= 12 ?  'AM' : 'PM';
-    const month = props.time.month.substring(0, 1) +  props.time.month.substring(1, 5).toLowerCase()
-    const hour = props.time.hour < 10 ? '0'+props.time.hour: props.time.hour;
+    let isRoot = userService.isRoot();
+    let isPostCreator = (props.loggedInUserId === userService.getUserId());
+    let isTimeLineUser = (props.currentTimelineUserId === userService.getUserId());
 
-    const time = month + ' ' + props.time.dayOfMonth+ ' ' + hour + ':' + props.time.minute + ' '+ dayTime
-
+    const dayTime = props.time.hour <= 12 ? 'AM' : 'PM';
+    const month = props.time.month.substring(0, 1) + props.time.month.substring(1, 5).toLowerCase()
+    const hour = props.time.hour < 10 ? '0' + props.time.hour : props.time.hour;
 
     return (
         <Fragment>
-            <div className="post-wrapper">
+            <div className="post-wrapper" id="container">
                 <div className="post-content-article-header ">
                     <div className="post-content-article-image">
                         <img className={imageClassUserPick} src={props.loggedInUserProfilePicUrl} alt="bender" />
@@ -37,10 +36,10 @@ const Post = (props) => {
                 <div className="post-footer">
                     <div className="post-left-side-icons-container">
                         <ul>
-                            <li class="like-icon">
+                            <li className="like-icon">
                                 <div className="like-button" onClick={props.addLike.bind(this, props.postId)}> <i className="fas fa-thumbs-up"></i></div>
                             </li>
-                            <li class="like-count">
+                            <li className="like-count">
                                 <div >{props.likeCount}</div>
                             </li>
                             <li>
@@ -48,6 +47,7 @@ const Post = (props) => {
                             </li>
                         </ul>
                     </div>
+
                     <div className="post-right-side-icons-container">
                         <div className="comment-icon">
                             <i className="fas fa-comments"></i>
@@ -55,6 +55,10 @@ const Post = (props) => {
                         <p>{props.commentsCount}</p>
                     </div>
                 </div>
+
+                {(isRoot || isPostCreator || isTimeLineUser) &&  <div onClick={props.removePost.bind(this, props.postId)}>
+                    <div className="btn uiButtonGroup fbPhotoCurationControl  delete-button" ><i className="far fa-trash-alt "></i></div>
+                </div>}
             </div>
 
         </Fragment>

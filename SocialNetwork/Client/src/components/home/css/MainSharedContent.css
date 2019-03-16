@@ -175,9 +175,9 @@ main .main-article-shared-content {
 .post-textarea{
     overflow: hidden;
     border: none; 
-    /* outline: none; */
+    outline: none;
     resize: none ; 
-    width: 95%;
+    width: 90%;
     /* height: 80px; */
     margin-left: 1rem;
     padding: 0.8rem 0.3rem;
@@ -207,7 +207,7 @@ main .main-article-shared-content {
     margin-bottom: 1rem;
     background: white;
     border-radius: 5px;
-    box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 15px 2px rgba(0, 0, 0, 0.4);
 }
 
 .post-content-article {
@@ -301,15 +301,13 @@ main .main-article-shared-content {
     width: 100%;
 }
 
-
 /* main-article-shared-content-footer */
 
 .post-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-
+    /* box-shadow: 0 0 12px 1px rgba(0, 0, 0, 0.3); */
     /* width: 90%;
     margin: auto; */
 }
@@ -348,7 +346,7 @@ main .main-article-shared-content {
 
 .post-left-side-icons-container ul li.like-count{
     padding-left: 0;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     font-weight: bold;
     color: rgb(192, 192, 192);
 }
@@ -382,6 +380,68 @@ main .main-article-shared-content {
     color: #40a3f4;
     outline:none;
     border: none;
+}
+
+/* Remove button */
+
+#container, #create-post-button-container {
+    position: relative;
+    /* overflow: hidden; */
+}
+
+/* .inner {
+} */
+
+#container:hover .uiButtonGroup {
+    opacity: 1;
+    transition: 1.5s ease-in;
+}
+
+.fbPhotoCurationControl {
+    display: inline-block;
+    margin-right: 8px;
+    margin-top: 7px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 7;
+    opacity: 0;
+}
+
+.fbPhotoCurationControl .uiButtonGroup {
+    border: none;
+}
+.uiButtonGroup {
+    border-radius: 3px;
+    display: inline-block;
+    padding: 0;
+    white-space: nowrap;
+    border: 1px solid rgba(0, 0, 0, .35);
+    padding: 2px 9px 4px 8px;
+}
+
+.delete-button{
+    background-clip: padding-box;
+    background-color: rgb(246, 84, 50);
+    color:white;
+}
+
+.delete-button:hover{
+    background-color: rgb(167, 28, 19);
+    color:white;
+
+}
+
+
+.post-button-fbPhotoCurationControl {
+    display: inline-block;
+    margin-right: 8px;
+    margin-top: 7px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 7;
+    opacity: 1;
 }
 
 

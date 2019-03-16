@@ -1,9 +1,7 @@
 .main-article-header {
-    /* margin-bottom: 1rem; */
 }
 
 .main-article-header nav {
-    /* margin: 0rem auto 2rem auto; */
     margin: -4rem auto 0.9rem auto;
 }
 
@@ -36,8 +34,6 @@
     padding-bottom: 0;
 
 }
-
-
 
  .main-article-header ul li a i {
     padding-top: 0.4rem;
@@ -78,15 +74,11 @@
    
 }
 
-
 @media screen and (max-width: 600px) {
-    
 
 }
 
 @media screen and (max-width: 400px) {
-    
-
     .main-article-header ul{
         flex-direction: column;
         padding: 0.8rem 0;
@@ -95,7 +87,6 @@
     .main-article-header ul li{
         display: block;
         flex: 1 1 100%;
-        /* // border: 1px solid rgb(64, 163, 244); */
         width: 50%;
     }
 
@@ -107,11 +98,4 @@
         box-shadow: none;
         z-index: 5;
     }
-    
-
 }
-
-/* // @media screen and (max-width: 600px) {
-
-   
-// } */

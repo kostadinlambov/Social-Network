@@ -8,6 +8,7 @@ import kl.socialnetwork.domain.modles.viewModels.post.PostAllViewModel;
 import kl.socialnetwork.domain.modles.viewModels.user.UserAllViewModel;
 import kl.socialnetwork.services.CloudinaryService;
 import kl.socialnetwork.services.PostService;
+import kl.socialnetwork.utils.constants.ResponseMessageConstants;
 import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;
 import kl.socialnetwork.utils.responseHandler.successResponse.SuccessResponse;
 import org.modelmapper.ModelMapper;
@@ -18,8 +19,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static kl.socialnetwork.utils.constants.ResponseMessageConstants.*;
@@ -86,6 +89,27 @@ public class PostController {
         } catch (Exception e) {
             throw new CustomException(SERVER_ERROR_MESSAGE);
         }
+    }
+
+    @PostMapping(value = "/remove")
+    public ResponseEntity removePost(@RequestBody Map<String, Object> body) throws IOException {
+        String loggedInUserId = (String) body.get("loggedInUserId");
+        String postToRemoveId = (String) body.get("postToRemoveId");
+
+        boolean result = this.postService.deletePost(loggedInUserId, postToRemoveId);
+
+        if (result) {
+            SuccessResponse successResponse = new SuccessResponse(
+                    LocalDateTime.now(),
+                    "Post successfully deleted!",
+                    "",
+                    true
+            );
+
+            return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
+        }
+
+        throw new CustomException(ResponseMessageConstants.SERVER_ERROR_MESSAGE);
     }
 
 }

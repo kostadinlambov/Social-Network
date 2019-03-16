@@ -81,7 +81,7 @@ public class PicturesController {
     }
 
     @PostMapping(value = "/remove")
-    public ResponseEntity addPicture(@RequestBody Map<String, Object> body) throws IOException {
+    public ResponseEntity removePicture(@RequestBody Map<String, Object> body) throws IOException {
        String loggedInUserId = (String) body.get("loggedInUserId");
        String photoToRemoveId = (String) body.get("photoToRemoveId");
 

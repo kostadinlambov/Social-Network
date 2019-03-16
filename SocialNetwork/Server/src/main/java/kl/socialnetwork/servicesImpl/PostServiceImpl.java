@@ -1,14 +1,13 @@
 package kl.socialnetwork.servicesImpl;
 
-import kl.socialnetwork.domain.entities.Picture;
 import kl.socialnetwork.domain.entities.Post;
 import kl.socialnetwork.domain.entities.User;
+import kl.socialnetwork.domain.entities.UserRole;
 import kl.socialnetwork.domain.modles.bindingModels.post.PostCreateBindingModel;
-import kl.socialnetwork.domain.modles.serviceModels.PictureServiceModel;
 import kl.socialnetwork.domain.modles.serviceModels.PostServiceModel;
-import kl.socialnetwork.domain.modles.viewModels.post.PostAllViewModel;
 import kl.socialnetwork.repositories.LikeRepository;
 import kl.socialnetwork.repositories.PostRepository;
+import kl.socialnetwork.repositories.RoleRepository;
 import kl.socialnetwork.repositories.UserRepository;
 import kl.socialnetwork.services.PostService;
 import kl.socialnetwork.utils.constants.ResponseMessageConstants;
@@ -29,14 +28,16 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
+    private final RoleRepository roleRepository;
     private final ModelMapper modelMapper;
 
 
     @Autowired
-    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, LikeRepository likeRepository, ModelMapper modelMapper) {
+    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, LikeRepository likeRepository, RoleRepository roleRepository, ModelMapper modelMapper) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.likeRepository = likeRepository;
+        this.roleRepository = roleRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -79,5 +80,31 @@ public class PostServiceImpl implements PostService {
                 .map(post -> this.modelMapper
                         .map(post, PostServiceModel.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean deletePost(String loggedInUserId, String postToRemoveId) {
+        User loggedInUser = this.userRepository.findById(loggedInUserId).orElse(null);
+        Post postToRemove = this.postRepository.findById(postToRemoveId).orElse(null);
+
+        if (loggedInUser != null && postToRemove != null) {
+            UserRole rootRole = this.roleRepository.findByAuthority("ROOT");
+            boolean hasRootAuthority = loggedInUser.getAuthorities().contains(rootRole);
+            boolean isPostCreator = postToRemove.getLoggedInUser().getId().equals(loggedInUserId);
+            boolean isTimeLineUser= postToRemove.getTimelineUser().getId().equals(loggedInUserId);
+
+            if (hasRootAuthority || isPostCreator || isTimeLineUser) {
+                try {
+                    this.postRepository.delete(postToRemove);
+                    return true;
+                } catch (Exception e) {
+                    throw new CustomException(ResponseMessageConstants.SERVER_ERROR_MESSAGE);
+                }
+            }else{
+                throw new CustomException("Unauthorized!");
+            }
+        }
+
+        return false;
     }
 }
