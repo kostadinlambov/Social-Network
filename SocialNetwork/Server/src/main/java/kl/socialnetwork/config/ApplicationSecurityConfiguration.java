@@ -70,7 +70,9 @@ public class ApplicationSecurityConfiguration
                         "/post/create",
                         "/post/all/*",
                         "/post/remove",
-                        "/like/add"
+                        "/like/add",
+                        "/comment/create",
+                        "/comment/remove"
                         ).hasAnyAuthority("ADMIN", "ROOT", "USER")
                 .antMatchers(
                         "/users/promote",

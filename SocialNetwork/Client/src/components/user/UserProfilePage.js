@@ -19,12 +19,10 @@ export default class UserProfilePage extends Component {
             authorities: [],
             ready: false
         }
-
     }
 
     componentDidMount = () => {
         const userId = this.props.match.params.id;
-        console.log("current User id: ", userId);
 
         this.setState({id: userId});
         this.props.getUserToShowId(userId);
@@ -32,8 +30,6 @@ export default class UserProfilePage extends Component {
 
 
     onSubmitHandlerDelete = (e) => {
-        console.log(this.props.id)
-
         this.props.history.push({
             pathname: "/home/users/delete/" + this.props.id,
         });
@@ -42,12 +38,7 @@ export default class UserProfilePage extends Component {
 
     onSubmitHandlerEdit = (e) => {
         // e.preventDefault();
-        console.log(this.state.id)
         this.setState({...this.props})
-        console.log('this.state: ', this.state)
-        console.log('this.props: ', this.props)
-        debugger;
-
         const id = this.state.id;
         
         this.props.history.push({
@@ -61,9 +52,6 @@ export default class UserProfilePage extends Component {
     componetnDidUpdate(prevProps, prevState){
         const newId = this.props.match.params.id;
         const lastId = prevProps.id;
-        console.log('prevProps: ', prevProps)
-        console.log('newId: ', newId)
-        console.log('lastId: ', lastId)
         if(newId !== lastId){
             this.props.getUserToShowId(newId);
         }
@@ -98,7 +86,6 @@ export default class UserProfilePage extends Component {
 
         return (
             <div className="container mx-auto text-center " >
-
                 <h1 className="text-center font-weight-bold" style={{ 'margin': '1rem auto' }}>Account Details</h1>
                 <hr className="my-2 mb-3 mt-3 col-md-8 mx-auto" />
                 <div className="col-md-6 mx-auto text-center">
@@ -177,12 +164,8 @@ export default class UserProfilePage extends Component {
 
                     </div >
                 </div >
-
                 <hr className="my-2 mb-3 mt-3 col-md-8 mx-auto" />
             </div >
-            // </div >
-
         )
     }
-
 }

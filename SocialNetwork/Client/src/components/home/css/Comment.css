@@ -1,0 +1,119 @@
+/* main-article-comments-section */
+
+.main-article-comments-section {
+    width: 100%;
+}
+
+
+.main-article-comments-container {
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    width: 100%;
+    margin: auto;
+    /* border-radius: 5px; */
+    /* box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.3); */
+    padding: 1rem;
+
+}
+
+.comment-wrapper{
+    /* margin-bottom: 1rem; */
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.3);
+}
+
+.main-article-shared-content-image {
+    flex: 0 0 7%;
+    width: 3rem;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+main .main-article-shared-content-image:before {
+    display: block;
+    content: '';
+    padding-top: 100%;
+}
+
+/* // .l img { */
+.main-article-shared-content-image .l {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: auto;
+    height: 100%;
+    /* width: 100%;
+    height: auto; */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.main-article-shared-content-description {
+    flex: 0 0 86%;
+}
+
+.main-article-shared-content-description .comment-info {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-top: 0.3rem;
+}
+
+/* write-comment */
+.write-comment {}
+
+main .comment {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
+    margin: auto;
+    background: white;
+    /* border-radius: 5px;  */
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    /* box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.3); */
+    padding: 1rem;
+}
+
+main .comment-input {
+    width: 100%
+}
+
+main .comment-input input {
+    border: none;
+
+    outline: none;
+    margin: 0 1rem;
+    /* padding-top: 1rem; */
+    font-size: 1.2rem;
+
+}
+
+main .comment-input:after {
+    display: block;
+    content: '';
+    border-bottom: 1px solid rgb(192, 192, 192);
+    padding-right: 2rem;
+    margin: 0 1rem;
+
+    width: 80%
+}
+
+.content{
+    background: rgb(244, 244, 244);
+    padding: 0.8rem;
+    border-radius: 30px;
+
+}
+
+p.content > span{
+    color: rgb(64, 163, 244);
+    font-weight: bold;
+    font-size: 1.2rem;
+}

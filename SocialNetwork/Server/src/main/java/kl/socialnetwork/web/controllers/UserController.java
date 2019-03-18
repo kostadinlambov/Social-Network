@@ -74,7 +74,6 @@ public class UserController {
     @GetMapping(value = "/all/{id}")
     public ResponseEntity<Object> getAllUsers(@PathVariable(value = "id") String userId) throws JsonProcessingException {
 
-
         List<UserAllViewModel> allUser = this.userService
                 .getAllUsers(userId)
                 .stream()
@@ -149,7 +148,7 @@ public class UserController {
             SuccessResponse successResponse = new SuccessResponse(
                     LocalDateTime.now(),
                     SUCCESSFUL_USER_PROFILE_EDIT_MESSAGE,
-                    "",
+                    " ",
                     true);
             return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
         }
@@ -165,7 +164,7 @@ public class UserController {
             SuccessResponse successResponse = new SuccessResponse(
                     LocalDateTime.now(),
                     SUCCESSFUL_USER_PROMOTED_MESSAGE,
-                    "",
+                    "  ",
                     true);
             return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
         }

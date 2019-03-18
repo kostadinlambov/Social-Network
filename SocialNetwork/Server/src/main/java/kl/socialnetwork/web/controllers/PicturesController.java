@@ -41,7 +41,7 @@ public class PicturesController {
     }
 
     @GetMapping(value = "/all/{id}")
-    public ResponseEntity<Object> getAllUsers(@PathVariable(value = "id") String userId) throws JsonProcessingException {
+    public ResponseEntity<Object> getAllPictures(@PathVariable(value = "id") String userId) throws JsonProcessingException {
         List<PictureAllViewModel> pictureAllViewModels = this.pictureService
                 .getAllPicturesByUserId(userId)
                 .stream()

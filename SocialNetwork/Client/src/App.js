@@ -39,7 +39,7 @@ class App extends Component {
       <Fragment>
         <Navbar loggedIn={localStorage.getItem('token') != null} onLogout={this.onLogout} {...this.props} />
         <ToastContainer transition={Zoom} closeButton={false} />
-        <Suspense fallback={<h1 className="text-center pt-5 mt-5">Fallback App.js Loading...</h1>}>
+        <Suspense fallback={<h1 className="text-center pt-5 mt-5">Loading...</h1>}>
           <Switch>
             <Route exact path="/" component={StartPage} />
             {!loggedIn && <Route exact path="/register" component={RegisterPage} />}

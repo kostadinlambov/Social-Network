@@ -1,6 +1,10 @@
 package kl.socialnetwork.domain.modles.viewModels.post;
 
+import kl.socialnetwork.domain.entities.Comment;
+import kl.socialnetwork.domain.modles.viewModels.comment.CommentAllViewModel;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class PostAllViewModel {
     private String postId;
@@ -13,6 +17,7 @@ public class PostAllViewModel {
     private String imageUrl;
     private int likeCount;
     private LocalDateTime time;
+    private List<CommentAllViewModel> commentList;
 
     public PostAllViewModel() {
     }
@@ -95,5 +100,13 @@ public class PostAllViewModel {
 
     public void setTimelineUserId(String timelineUserId) {
         this.timelineUserId = timelineUserId;
+    }
+
+    public List<CommentAllViewModel> getCommentList() {
+        return this.commentList;
+    }
+
+    public void setCommentList(List<CommentAllViewModel> commentList) {
+        this.commentList = commentList;
     }
 }

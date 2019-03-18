@@ -1,5 +1,4 @@
-import React, { Component } from 'react'
-
+import React from 'react'
 
 const ButtonWithClickEvent = (props) => {
     const { buttonClass, text, onClick } = props;

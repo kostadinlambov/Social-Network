@@ -1,9 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
-import benderPic from '../..//assets/images/Bender/Bender_1.jpeg';
-import { requester, userService, observer } from '../../infrastructure'
-import { toast } from 'react-toastify';
-import { ToastComponent } from '../common'
+import { userService, observer } from '../../infrastructure'
 
 import './css/Navbar.css';
 

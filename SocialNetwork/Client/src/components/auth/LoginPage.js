@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import '../../styles/FormPages.css';
-import requester from '../../infrastructure/requester';
+import {requester, observer, userService} from '../../infrastructure';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
 
@@ -45,6 +45,12 @@ export default class LoginPage extends Component {
             } else {
                 const token = response.split(' ')[1];
                 localStorage.setItem('token', token);
+
+                // observer.trigger(observer.events.loginUser, {
+                //     loggedInUserId: userService.getUserId(),
+                //     loggedInUserName: userService.getUsername(),
+                //     profilePicUrl: userService.getProfilePicUrl(),
+                // })
 
                 toast.success(<ToastComponent.successToast text={' You have successfully logged in!'} />, {
                     position: toast.POSITION.TOP_RIGHT

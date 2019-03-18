@@ -30,8 +30,13 @@ public class User extends BaseEntity implements UserDetails {
 
     private List<Picture> pictureList;
     private List<Like> likeList;
+
     private List<Post> userPostList;
     private List<Post> userTimelineAllPosts;
+
+    private List<Comment> createdCommentsList;
+    private List<Comment> userTimelineAllComments;
+
 
 
     private boolean isAccountNonExpired;
@@ -198,6 +203,24 @@ public class User extends BaseEntity implements UserDetails {
 
     public void setUserTimelineAllPosts(List<Post> userTimelineAllPosts) {
         this.userTimelineAllPosts = userTimelineAllPosts;
+    }
+
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    public List<Comment> getCreatedCommentsList() {
+        return this.createdCommentsList;
+    }
+
+    public void setCreatedCommentsList(List<Comment> createdCommentsList) {
+        this.createdCommentsList = createdCommentsList;
+    }
+
+    @OneToMany(mappedBy = "timelineUser", cascade = CascadeType.ALL)
+    public List<Comment> getUserTimelineAllComments() {
+        return this.userTimelineAllComments;
+    }
+
+    public void setUserTimelineAllComments(List<Comment> userTimelineAllComments) {
+        this.userTimelineAllComments = userTimelineAllComments;
     }
 
     @Override

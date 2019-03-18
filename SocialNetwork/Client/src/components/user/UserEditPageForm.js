@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
-import { userService, requester } from '../../infrastructure';
+import { userService, requester, observer } from '../../infrastructure';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
 import '../../styles/FormPages.css'
@@ -52,11 +52,20 @@ export default class UserEditPageForm extends Component {
         const loggedInUserId = userService.getUserId();
 
         requester.put('/users/update/'+ loggedInUserId, { ...otherProps }, (response) => {
-
             if (response.success === true) {
                 toast.success(<ToastComponent.successToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
+
+
+                // if(this.state.id == userService.getUserId()){
+                //     observer.trigger(observer.events.loginUser, {
+                //         loggedInUserId: userService.getUserId(),
+                //         loggedInUserName: userService.getUsername(),
+                //         profilePicUrl: this.state.profilePicUrl,
+                //     })
+                // }
+                
 
                 this.props.getUserToShowId(this.state.id);
                 this.props.history.push(`/home/profile/${this.state.id}`);
@@ -145,7 +154,7 @@ export default class UserEditPageForm extends Component {
 
                     <div className="section-container w-100 mx-auto text-center">
                         <section className="left-section">
-                            <div className="form-group">
+                            {/* <div className="form-group">
                                 <label htmlFor="username" className="font-weight-bold" >Username</label>
                                 <input
                                     type="text"
@@ -159,7 +168,7 @@ export default class UserEditPageForm extends Component {
                                     placeholder="Enter username"
                                 />
                                 {shouldMarkError('username') && <small id="usernameHelp" className="form-text alert alert-danger"> {(!this.state.username ? 'Username is required!' : 'Username should be at least 4 and maximum 16 characters long!')}</small>}
-                            </div>
+                            </div> */}
 
                             <div className="form-group">
                                 <label htmlFor="firstName" className="font-weight-bold" >First Name</label>
@@ -212,7 +221,7 @@ export default class UserEditPageForm extends Component {
                         </section>
 
                         <section className="right-section">
-                            <div className="form-group">
+                            {/* <div className="form-group">
                                 <label htmlFor="email" className="font-weight-bold">Email Address</label>
                                 <input
                                     type="email"
@@ -227,7 +236,7 @@ export default class UserEditPageForm extends Component {
 
                                 />
                                 {shouldMarkError('email') && <small id="emailHelp" className="form-text alert alert-danger">{(!this.state.email ? 'Email is required!' : 'Invalid e-mail address!')}</small>}
-                            </div>
+                            </div> */}
 
                             <div className="form-group">
                                 <label htmlFor="lastName" className="font-weight-bold">Last Name</label>

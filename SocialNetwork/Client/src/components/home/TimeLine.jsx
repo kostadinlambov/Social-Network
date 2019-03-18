@@ -2,7 +2,6 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 const TimeLine = (props) => {
-    console.log('TimeLine props :', props)
     return (
         <article className="main-article-header">
             <nav>

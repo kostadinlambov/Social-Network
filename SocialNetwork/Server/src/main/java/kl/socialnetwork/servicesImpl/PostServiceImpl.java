@@ -1,5 +1,6 @@
 package kl.socialnetwork.servicesImpl;
 
+import kl.socialnetwork.domain.entities.Comment;
 import kl.socialnetwork.domain.entities.Post;
 import kl.socialnetwork.domain.entities.User;
 import kl.socialnetwork.domain.entities.UserRole;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,7 +43,6 @@ public class PostServiceImpl implements PostService {
         this.modelMapper = modelMapper;
     }
 
-
     @Override
     public boolean createPost(PostCreateBindingModel postCreateBindingModel) {
         User loggedInUser = this.userRepository
@@ -52,7 +53,7 @@ public class PostServiceImpl implements PostService {
                 .findById(postCreateBindingModel.getTimelineUserId())
                 .orElse(null);
 
-        if(loggedInUser != null && timelineUser != null){
+        if (loggedInUser != null && timelineUser != null) {
 
             PostServiceModel postServiceModel = new PostServiceModel();
             postServiceModel.setLoggedInUser(loggedInUser);
@@ -61,11 +62,11 @@ public class PostServiceImpl implements PostService {
             postServiceModel.setImageUrl(postCreateBindingModel.getImageUrl());
             postServiceModel.setTime(LocalDateTime.now());
             postServiceModel.setLike(new ArrayList<>());
+            postServiceModel.setCommentList(new ArrayList<>());
 
             Post post = this.modelMapper.map(postServiceModel, Post.class);
 
             return this.postRepository.saveAndFlush(post) != null;
-
         }
 
         throw new CustomException(ResponseMessageConstants.SERVER_ERROR_MESSAGE);
@@ -79,6 +80,20 @@ public class PostServiceImpl implements PostService {
                 .stream()
                 .map(post -> this.modelMapper
                         .map(post, PostServiceModel.class))
+                .peek(postServiceModel -> {
+                    List<Comment> commentList = postServiceModel.getCommentList()
+                            .stream()
+                            .sorted((comment1, comment2) -> {
+                                if (comment1.getTime().isAfter(comment2.getTime())) {
+                                    return 1;
+                                } else if (comment1.getTime().isBefore(comment2.getTime())) {
+                                    return -1;
+                                }
+                                return 0;
+                            }).collect(Collectors.toList());
+
+                    postServiceModel.setCommentList(commentList);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -91,7 +106,7 @@ public class PostServiceImpl implements PostService {
             UserRole rootRole = this.roleRepository.findByAuthority("ROOT");
             boolean hasRootAuthority = loggedInUser.getAuthorities().contains(rootRole);
             boolean isPostCreator = postToRemove.getLoggedInUser().getId().equals(loggedInUserId);
-            boolean isTimeLineUser= postToRemove.getTimelineUser().getId().equals(loggedInUserId);
+            boolean isTimeLineUser = postToRemove.getTimelineUser().getId().equals(loggedInUserId);
 
             if (hasRootAuthority || isPostCreator || isTimeLineUser) {
                 try {
@@ -100,7 +115,7 @@ public class PostServiceImpl implements PostService {
                 } catch (Exception e) {
                     throw new CustomException(ResponseMessageConstants.SERVER_ERROR_MESSAGE);
                 }
-            }else{
+            } else {
                 throw new CustomException("Unauthorized!");
             }
         }

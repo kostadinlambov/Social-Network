@@ -1,5 +1,6 @@
 package kl.socialnetwork.domain.modles.serviceModels;
 
+import kl.socialnetwork.domain.entities.Comment;
 import kl.socialnetwork.domain.entities.Like;
 import kl.socialnetwork.domain.entities.User;
 
@@ -14,6 +15,8 @@ public class PostServiceModel {
     private String imageUrl;
     private LocalDateTime time;
     private List<Like> like;
+    private List<Comment> commentList;
+
 
     public PostServiceModel() {
     }
@@ -72,5 +75,13 @@ public class PostServiceModel {
 
     public void setLike(List<Like> like) {
         this.like = like;
+    }
+
+    public List<Comment> getCommentList() {
+        return this.commentList;
+    }
+
+    public void setCommentList(List<Comment> commentList) {
+        this.commentList = commentList;
     }
 }

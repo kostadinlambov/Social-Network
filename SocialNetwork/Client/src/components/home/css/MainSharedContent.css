@@ -43,7 +43,7 @@ main .main-article-shared-content {
 }
 
 .post-image {
-    flex: 1 0 10%;
+    flex: 0 0 7%;
     width: 3rem;
     position: relative;
     overflow: hidden;
@@ -80,7 +80,7 @@ main .main-article-shared-content {
     transform: translate(-50%, -50%);
 }
 
-.main-article-shared-content-description {
+/* .main-article-shared-content-description {
     flex: 0 0 86%;
 }
 
@@ -89,7 +89,7 @@ main .main-article-shared-content {
     justify-content: space-between;
     align-items: center;
     padding-bottom: 0.3rem;
-}
+} */
 
 /* write-comment */
 
@@ -104,7 +104,7 @@ main .main-article-shared-content {
     /* border-radius: 5px;  */
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
-    box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.3);
     padding: 1rem;
     margin-bottom: 2rem;
 }
@@ -125,9 +125,9 @@ main .main-article-shared-content {
     border-bottom: 1px solid rgba(0, 0, 0, 0.3);
 }
 
-.post-textarea-form-group{
+#post-textarea-form-group{
         margin-bottom: 0rem;
-        margin-top: 0.5rem;
+        margin-top: 0.1rem;
 }
 
 /* ################################################################ */
@@ -140,10 +140,10 @@ main .main-article-shared-content {
 }
 
 .post-wrapper{
-    margin-bottom: 1rem;
+    /* margin-bottom: 1rem; */
     background: white;
     border-radius: 5px;
-    box-shadow: 0 0 15px 2px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.3);
 }
 
 .post-content-article {
@@ -223,7 +223,7 @@ main .main-article-shared-content {
 
 .post-content{
     padding: 1.5rem;
-    box-shadow: 0 0 12px 1px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
 }
 
 
@@ -306,7 +306,7 @@ main .main-article-shared-content {
 
 /* Remove button */
 
-#container, #create-post-button-container {
+#container, #create-post-button-container, #create-comment-button-container {
     position: relative;
     /* overflow: hidden; */
 }

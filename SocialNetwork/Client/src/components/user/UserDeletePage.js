@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {NavLink } from 'react-router-dom';
-import { userService, requester, observer } from '../../infrastructure';
+import { userService, requester } from '../../infrastructure';
 import { Button, ButtonWithClickEvent } from '../common'
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
@@ -78,7 +78,6 @@ import { ToastComponent } from '../common'
         const isAdmin = userService.isAdmin();
         const isRoot = userService.isRoot();
 
-        debugger;
         return (
             <div className="container mx-auto text-center " >
                 <h1 className="text-center font-weight-bold alert alert-danger position col-md-10 mx-auto mt-0">Are you sure you want to delete this User?</h1>
@@ -161,7 +160,6 @@ import { ToastComponent } from '../common'
 
                 <hr className="my-2 mb-3 mt-3 col-md-8 mx-auto" />
             </div >
-            // </div >
         )
     }
 }

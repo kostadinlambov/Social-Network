@@ -32,8 +32,7 @@ export default class UserGalleryPage extends Component {
         this.props.loadAllPictures(userId);
     }
    
-    uploadFile = (event) => {
-        debugger;
+    uploadFile = () => {
         this.setState({ error: '', msg: '' });
 
         if (!this.state.file) {
@@ -137,7 +136,7 @@ export default class UserGalleryPage extends Component {
         }
 
         if (!this.state.ready) {
-            return <h1 className="text-center pt-5 mt-5">Uploading File...</h1>
+            return <h1 className="text-center pt-5 mt-5">Uploading Photo...</h1>
         }
 
         const isRoot = userService.isRoot();

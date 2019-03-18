@@ -12,7 +12,6 @@ public class PostCreateBindingModel {
     public PostCreateBindingModel() {
     }
 
-
     @NotNull
     @NotEmpty
     public String getTimelineUserId() {
@@ -22,8 +21,6 @@ public class PostCreateBindingModel {
     public void setTimelineUserId(String timelineUserId) {
         this.timelineUserId = timelineUserId;
     }
-
-
 
     @NotNull
     @NotEmpty

@@ -46,7 +46,7 @@ public class PostController {
 
 
     @PostMapping(value = "/create")
-    public ResponseEntity<Object> registerUser(@RequestBody @Valid PostCreateBindingModel postCreateBindingModel) throws JsonProcessingException {
+    public ResponseEntity<Object> createPost(@RequestBody @Valid PostCreateBindingModel postCreateBindingModel) throws JsonProcessingException {
 
         boolean post = this.postService.createPost(postCreateBindingModel);
 
@@ -64,7 +64,7 @@ public class PostController {
     }
 
     @GetMapping(value = "/all/{id}")
-    public ResponseEntity<Object> getAllUsers(@PathVariable(value = "id") String timelineUserId) {
+    public ResponseEntity<Object> getAllPosts(@PathVariable(value = "id") String timelineUserId) {
 
         try {
             List<PostServiceModel> postServiceAllPosts = this.postService.getAllPosts(timelineUserId);
