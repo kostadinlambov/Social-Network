@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "messages")
 public class Message extends BaseEntity{
-
     private User fromUser;
     private User toUser;
     private Relationship relationship;

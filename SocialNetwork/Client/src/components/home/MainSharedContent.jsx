@@ -40,9 +40,10 @@ class MainSharedContent extends Component {
 
     getAllPosts(timelineUserId) {
         requester.get('/post/all/' + timelineUserId, (response) => {
-            if (response.success === true) {
+            if (response) {
                 this.setState({
-                    allPostsArr: response['payload'],
+                    allPostsArr: response,
+                    // allPostsArr: response['payload'],
                     content: '',
                 })
             } else {
@@ -180,8 +181,8 @@ class MainSharedContent extends Component {
         }
 
         const loggedInUserProfilePicUrl = this.props.profilePicUrl;
-
         return (
+           
             <Fragment >
                 <article className="main-article-shared-content">
 

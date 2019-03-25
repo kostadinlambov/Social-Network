@@ -37,8 +37,6 @@ public class User extends BaseEntity implements UserDetails {
     private List<Comment> createdCommentsList;
     private List<Comment> userTimelineAllComments;
 
-
-
     private boolean isAccountNonExpired;
     private boolean isAccountNonLocked;
     private boolean isCredentialsNonExpired;

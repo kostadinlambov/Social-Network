@@ -14,7 +14,7 @@ export default class ErrorPage extends Component {
             <h3>The link you followed may be broken, or the page may have been removed.</h3>
 
             <div className="mt-5" >
-                <img src={socialMedia} alt="SoftUni lofo" />
+                <img src={socialMedia} alt="pic" />
             </div>
             <div className="text-center mt-5">
                 <BackButton

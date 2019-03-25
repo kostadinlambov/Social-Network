@@ -14,6 +14,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -42,6 +44,9 @@ public class ApplicationSecurityConfiguration
                 .and()
                 .csrf()
                 .disable()
+//                .cors().disable()
+//                .csrf().csrfTokenRepository(csrfTokenRepository())
+//                .and()
                 .authorizeRequests()
                 .antMatchers("/users/register",
 //                        "/**",
@@ -53,7 +58,8 @@ public class ApplicationSecurityConfiguration
                         "/**/*.html",
                         "/**/*.css",
                         "/**/*.js"
-                ).permitAll()
+
+                        ).permitAll()
                 .antMatchers(
                         "/users/details/*",
                         "/users/update/*",
@@ -68,8 +74,8 @@ public class ApplicationSecurityConfiguration
                         "/pictures/add",
                         "/pictures/remove",
                         "/post/create",
-                        "/post/all/*",
                         "/post/remove",
+                        "/post/all/*",
                         "/like/add",
                         "/comment/create",
                         "/comment/remove"
@@ -126,4 +132,10 @@ public class ApplicationSecurityConfiguration
                 .userDetailsService(this.userService)
                 .passwordEncoder(this.bCryptPasswordEncoder);
     }
+
+//    private CsrfTokenRepository csrfTokenRepository(){
+//        HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
+//        repository.setSessionAttributeName("_csrf");
+//        return repository;
+//    }
 }

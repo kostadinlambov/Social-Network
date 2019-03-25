@@ -286,7 +286,6 @@ export default class UserEditPageForm extends Component {
                                 {shouldMarkError('backgroundImageUrl') && <small id="backgroundImageUrlHelp" className="form-text alert alert-danger">{(!this.state.backgroundImageUrl ? 'Cover Image Url is required!' : '')}</small>}
                             </div>}
 
-
                         </section>
                     </div>
                     <hr className="my-2 mb-3 mt-3 col-md-12 mx-auto"></hr>

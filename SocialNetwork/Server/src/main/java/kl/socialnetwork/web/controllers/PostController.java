@@ -63,33 +63,63 @@ public class PostController {
         throw new CustomException(SERVER_ERROR_MESSAGE);
     }
 
-    @GetMapping(value = "/all/{id}")
-    public ResponseEntity<Object> getAllPosts(@PathVariable(value = "id") String timelineUserId) {
+    @GetMapping(value = "/all/{id}", produces = "application/json")
+    public List<PostAllViewModel> getAllPosts(@PathVariable(value = "id") String timelineUserId) {
 
         try {
             List<PostServiceModel> postServiceAllPosts = this.postService.getAllPosts(timelineUserId);
 
 
-            List<PostAllViewModel> postAllViewModels =  postServiceAllPosts.stream().map(postServiceModel -> {
-                        PostAllViewModel postAllViewModel = this.modelMapper.map(postServiceModel, PostAllViewModel.class);
-                        postAllViewModel.setLikeCount(postServiceModel.getLike().size());
+            List<PostAllViewModel> postAllViewModels = postServiceAllPosts.stream().map(postServiceModel -> {
+                PostAllViewModel postAllViewModel = this.modelMapper.map(postServiceModel, PostAllViewModel.class);
+                postAllViewModel.setLikeCount(postServiceModel.getLike().size());
+                postAllViewModel.setPostId(postServiceModel.getId());
+                return postAllViewModel;
+            }).collect(Collectors.toList());
 
-                        return postAllViewModel;
-                    }).collect(Collectors.toList());
+            return postAllViewModels;
 
-
-
-            SuccessResponse successResponse = new SuccessResponse(
-                    LocalDateTime.now(),
-                    SUCCESSFUL_POST_ALL_MESSAGE,
-                    postAllViewModels,
-                    true);
-
-            return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
+//            SuccessResponse successResponse = new SuccessResponse(
+//                    LocalDateTime.now(),
+//                    SUCCESSFUL_POST_ALL_MESSAGE,
+//                    postAllViewModels,
+//                    true);
+//
+//            return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
         } catch (Exception e) {
             throw new CustomException(SERVER_ERROR_MESSAGE);
         }
     }
+
+//    @GetMapping(value = "/all/{id}")
+//    public ResponseEntity<Object> getAllPosts(@PathVariable(value = "id") String timelineUserId) {
+//
+//        try {
+//            List<PostServiceModel> postServiceAllPosts = this.postService.getAllPosts(timelineUserId);
+//
+//
+//            List<PostAllViewModel> postAllViewModels =  postServiceAllPosts.stream().map(postServiceModel -> {
+//                PostAllViewModel postAllViewModel = this.modelMapper.map(postServiceModel, PostAllViewModel.class);
+//                postAllViewModel.setLikeCount(postServiceModel.getLike().size());
+//
+//                return postAllViewModel;
+//            }).collect(Collectors.toList());
+//
+//
+//
+//            SuccessResponse successResponse = new SuccessResponse(
+//                    LocalDateTime.now(),
+//                    SUCCESSFUL_POST_ALL_MESSAGE,
+//                    postAllViewModels,
+//                    true);
+//
+//            return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
+//        } catch (Exception e) {
+//            throw new CustomException(SERVER_ERROR_MESSAGE);
+//        }
+//    }
+//
+
 
     @PostMapping(value = "/remove")
     public ResponseEntity removePost(@RequestBody Map<String, Object> body) throws IOException {
