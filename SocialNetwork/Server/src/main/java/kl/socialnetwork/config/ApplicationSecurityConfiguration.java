@@ -59,6 +59,7 @@ public class ApplicationSecurityConfiguration
                         "/**/*.css",
                         "/**/*.js"
 
+
                         ).permitAll()
                 .antMatchers(
                         "/users/details/*",
@@ -75,10 +76,10 @@ public class ApplicationSecurityConfiguration
                         "/pictures/remove",
                         "/post/create",
                         "/post/remove",
-                        "/post/all/*",
                         "/like/add",
                         "/comment/create",
-                        "/comment/remove"
+                        "/comment/remove",
+                        "/post/all/*"
                         ).hasAnyAuthority("ADMIN", "ROOT", "USER")
                 .antMatchers(
                         "/users/promote",
