@@ -1,6 +1,5 @@
 package kl.socialnetwork.web.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kl.socialnetwork.domain.modles.viewModels.picture.PictureAllViewModel;
 import kl.socialnetwork.services.CloudinaryService;
@@ -21,11 +20,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static kl.socialnetwork.utils.constants.ResponseMessageConstants.SUCCESSFUL_PICTURE_ALL_MESSAGE;
+import static kl.socialnetwork.utils.constants.ResponseMessageConstants.SERVER_ERROR_MESSAGE;
 
 @RestController()
 @RequestMapping(value = "/pictures")
-public class PicturesController {
+public class PictureController {
 
     private final PictureService pictureService;
     private final CloudinaryService cloudinaryService;
@@ -33,7 +32,7 @@ public class PicturesController {
     private final ObjectMapper objectMapper;
 
     @Autowired
-    public PicturesController(PictureService pictureService, CloudinaryService cloudinaryService, ModelMapper modelMapper, ObjectMapper objectMapper) {
+    public PictureController(PictureService pictureService, CloudinaryService cloudinaryService, ModelMapper modelMapper, ObjectMapper objectMapper) {
         this.pictureService = pictureService;
         this.cloudinaryService = cloudinaryService;
         this.modelMapper = modelMapper;
@@ -41,22 +40,19 @@ public class PicturesController {
     }
 
     @GetMapping(value = "/all/{id}")
-    public ResponseEntity<Object> getAllPictures(@PathVariable(value = "id") String userId) throws JsonProcessingException {
-        List<PictureAllViewModel> pictureAllViewModels = this.pictureService
-                .getAllPicturesByUserId(userId)
-                .stream()
-                .map(x -> this.modelMapper.map(x, PictureAllViewModel.class))
-                .collect(Collectors.toList());
-
-        SuccessResponse successResponse = new SuccessResponse(
-                LocalDateTime.now(),
-                SUCCESSFUL_PICTURE_ALL_MESSAGE,
-                pictureAllViewModels,
-                true);
-
-        return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
-
+    @ResponseBody
+    public List<PictureAllViewModel> getAllPictures(@PathVariable(value = "id") String userId) {
+        try {
+            return this.pictureService
+                    .getAllPicturesByUserId(userId)
+                    .stream()
+                    .map(x -> this.modelMapper.map(x, PictureAllViewModel.class))
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new CustomException(SERVER_ERROR_MESSAGE);
+        }
     }
+
 
     @PostMapping(value = "/add")
     public ResponseEntity addPicture(
@@ -69,7 +65,7 @@ public class PicturesController {
         if (result) {
             SuccessResponse successResponse = new SuccessResponse(
                     LocalDateTime.now(),
-                    "Successfully uploaded file!",
+                    "Successfully uploaded picture!",
                     "",
                     true
             );
@@ -82,8 +78,8 @@ public class PicturesController {
 
     @PostMapping(value = "/remove")
     public ResponseEntity removePicture(@RequestBody Map<String, Object> body) throws IOException {
-       String loggedInUserId = (String) body.get("loggedInUserId");
-       String photoToRemoveId = (String) body.get("photoToRemoveId");
+        String loggedInUserId = (String) body.get("loggedInUserId");
+        String photoToRemoveId = (String) body.get("photoToRemoveId");
 
         boolean result = this.pictureService.deletePicture(loggedInUserId, photoToRemoveId);
 

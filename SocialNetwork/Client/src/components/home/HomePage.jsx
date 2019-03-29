@@ -84,9 +84,10 @@ export default class HomePage extends Component {
 
     loadAllPictures = (userId) => {
         requester.get('/pictures/all/' + userId, (response) => {
-            if (response.success === true) {
+            if (response) {
                 this.setState({
-                    picturesArr: response['payload'],
+                    picturesArr: response,
+                    // picturesArr: response['payload'],
                     id: userId
                 })
             } else {
