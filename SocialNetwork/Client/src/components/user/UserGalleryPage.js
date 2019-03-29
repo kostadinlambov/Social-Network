@@ -31,7 +31,7 @@ export default class UserGalleryPage extends Component {
         this.setState({ id: userId });
         this.props.loadAllPictures(userId);
     }
-   
+
     uploadFile = () => {
         this.setState({ error: '', msg: '' });
 
@@ -131,7 +131,7 @@ export default class UserGalleryPage extends Component {
     }
 
     render() {
-        if(this.props.match.params.id !== this.props.id){
+        if (this.props.match.params.id !== this.props.id) {
             this.props.getUserToShowId(this.props.match.params.id);
         }
 
@@ -153,10 +153,11 @@ export default class UserGalleryPage extends Component {
                             <h3 className="aside-article-title">Photos</h3>
                         </div>
 
-                        { (isRoot ||  isTheCurrentLoggedInUser) &&    <div className="">
-                            <button className="button update-info" >
-                                <label id="upload" htmlFor="fileUpload" > ADD PHOTO</label>
-                                <input id="fileUpload" onChange={this.onFileChange} type="file" />
+                        {(isRoot || isTheCurrentLoggedInUser) && <div className="">
+                            <button className="button update-info"> 
+                                <label className="cursor-pointer" id="upload" htmlFor="fileUpload" > ADD PHOTO
+                                <input className="cursor-pointer" id="fileUpload" onChange={this.onFileChange} type="file" />
+                                </label>
                             </button>
                         </div>}
 

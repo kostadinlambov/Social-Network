@@ -30,6 +30,11 @@ label#upload{
     margin-bottom: 0;
 }
 
+
+.cursor-pointer{
+    cursor: pointer;
+}
+
 .username-gallery{
     color:#40a3f4;
 }

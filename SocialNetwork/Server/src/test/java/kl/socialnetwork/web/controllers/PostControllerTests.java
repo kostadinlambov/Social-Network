@@ -1,15 +1,18 @@
 package kl.socialnetwork.web.controllers;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kl.socialnetwork.config.ApplicationSecurityConfiguration;
 import kl.socialnetwork.domain.entities.Like;
 import kl.socialnetwork.domain.entities.Post;
 import kl.socialnetwork.domain.entities.User;
+import kl.socialnetwork.domain.modles.bindingModels.post.PostCreateBindingModel;
 import kl.socialnetwork.domain.modles.serviceModels.PostServiceModel;
 import kl.socialnetwork.repositories.PostRepository;
 import kl.socialnetwork.repositories.UserRepository;
 import kl.socialnetwork.services.PostService;
 import kl.socialnetwork.testUtils.PostsUtils;
+import kl.socialnetwork.testUtils.TestUtil;
 import kl.socialnetwork.testUtils.UsersUtils;
 import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;
 import org.junit.Assert;
@@ -28,17 +31,25 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockServletContext;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.servlet.ServletContext;
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static kl.socialnetwork.utils.constants.ResponseMessageConstants.SERVER_ERROR_MESSAGE;
+import static kl.socialnetwork.utils.constants.ResponseMessageConstants.SUCCESSFUL_CREATE_POST_MESSAGE;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
@@ -62,9 +73,6 @@ public class PostControllerTests {
     @MockBean
     private PostService postServiceMock;
 
-    @Autowired
-    private PostController postController;
-
     @Before
     public void setup() {
         mvc = MockMvcBuilders
@@ -75,8 +83,17 @@ public class PostControllerTests {
     }
 
     @Test
+    public void givenWac_whenServletContext_thenItProvidesPostController() {
+        ServletContext servletContext = context.getServletContext();
+
+        Assert.assertNotNull(servletContext);
+        Assert.assertTrue(servletContext instanceof MockServletContext);
+        Assert.assertNotNull(context.getBean("postController"));
+    }
+
+    @Test
     @WithMockUser(authorities = "USER")
-    public void all_when2Posts_2Posts() throws Exception {
+    public void getAllPosts_when2Posts_2Posts() throws Exception {
         List<User> users = UsersUtils.getUsers(2);
         List<PostServiceModel> posts = PostsUtils.getPostServiceModels(2, users.get(0), users.get(1));
 
@@ -102,7 +119,7 @@ public class PostControllerTests {
 
     @Test()
     @WithMockUser(authorities = "USER")
-    public void all_whenPostWithoutCreator_throwException() throws Exception {
+    public void getAllPosts_whenGetAllPostsThrowsException_throwCustomException() throws Exception {
         when(this.postServiceMock.getAllPosts("1"))
                 .thenThrow(new NullPointerException());
 
@@ -111,7 +128,6 @@ public class PostControllerTests {
                 .andExpect(status().isInternalServerError())
                 .andReturn().getResolvedException();
 
-        assert resolvedException != null;
         Assert.assertEquals(SERVER_ERROR_MESSAGE, resolvedException.getMessage());
         Assert.assertEquals(CustomException.class, resolvedException.getClass());
 
@@ -120,74 +136,106 @@ public class PostControllerTests {
     }
 
     @Test()
-    public void all_whenUnAuthorized_403Forbidden() throws Exception {
+    public void getAllPosts_whenUnAuthorized_403Forbidden() throws Exception {
         this.mvc
                 .perform(get("/post/all/{id}", "1"))
                 .andExpect(status().isForbidden());
     }
 
 
-//    @Test
-//    @WithMockUser()
-//    public void getAllPosts_when2Posts_2Posts() throws Exception {
-//        User firstUser = new User();
-//        firstUser.setId("1");
-//        firstUser.setFirstName("Pesho");
-//        firstUser.setLastName("Peshov");
-//        firstUser.setUsername("pesho");
-//        firstUser.setEmail("pesho@abv.bg");
-//        firstUser.setCity("Sofia");
-//        firstUser.setProfilePicUrl("profilePic");
-//        firstUser.setBackgroundImageUrl("backgroundPic");
-//
-//        User secondUser = new User();
-//        secondUser.setId("2");
-//        secondUser.setFirstName("Gosho");
-//        secondUser.setLastName("Goshev");
-//        secondUser.setUsername("gosho");
-//        secondUser.setEmail("gosho@abv.bg");
-//        secondUser.setCity("Plovdiv");
-//        secondUser.setProfilePicUrl("profilePic2");
-//        secondUser.setBackgroundImageUrl("backgroundPic2");
-////
-//        LocalDateTime time = LocalDateTime.now();
-////
-//        PostServiceModel firstPost = new PostServiceModel();
-//        firstPost.setId("1");
-//        firstPost.setContent("content first post");
-//        firstPost.setTimelineUser(firstUser);
-//        firstPost.setLoggedInUser(firstUser);
-//        firstPost.setLike(null);
-//        firstPost.setTime(time);
-//        firstPost.setImageUrl("imageUrl");
-//        firstPost.setCommentList(new ArrayList<>());
-//
-//        PostServiceModel secondPost = new PostServiceModel();
-//        secondPost.setId("2");
-//        secondPost.setContent("content second post");
-//        secondPost.setTimelineUser(secondUser);
-//        secondPost.setLoggedInUser(firstUser);
-//        secondPost.setLike(null);
-//        secondPost.setTime(time);
-//        secondPost.setImageUrl("imageUrl second user");
-//        secondPost.setCommentList(new ArrayList<>());
-////
-//        when(this.postServiceMock.getAllPosts("1"))
-//                .thenReturn(Arrays.asList(firstPost, secondPost));
-//
-//        ResultActions resultActions = this.mvc
-//                .perform(get("/post/all/{id}", "1"))
-//                .andExpect(status().isOk())
-//                .andExpect(content().contentType("application/json;charset=UTF-8"));
-////                .andExpect(jsonPath("$", hasSize(2)))
-////                .andExpect(jsonPath("$[0].id", is("1")))
-////                .andExpect(jsonPath("$[0].content", is("content first post")));
-//
-//        verify(this.postServiceMock, times(1)).getAllPosts("1");
-//        verifyNoMoreInteractions(this.postServiceMock);
-//
-//
-//    }
+    @Test
+    @WithMockUser(authorities = "USER")
+    public void createPost_whenInputsAreValid_createPost() throws Exception {
+        PostCreateBindingModel postCreateBindingModel = PostsUtils.getPostCreateBindingModels(1).get(0);
 
+        when(postServiceMock.createPost(any(PostCreateBindingModel.class)))
+                .thenReturn(true);
+
+        this.mvc
+                .perform(post("/post/create")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(TestUtil.convertObjectToJsonString(postCreateBindingModel)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(TestUtil.TEXT_PLAIN_UTF8))
+                .andExpect(jsonPath("$.success").value("true"))
+                .andExpect(jsonPath("$.message").value(SUCCESSFUL_CREATE_POST_MESSAGE));
+
+        verify(this.postServiceMock, times(1)).createPost(any());
+        verifyNoMoreInteractions(this.postServiceMock);
+    }
+
+    @Test
+    @WithMockUser(authorities = "USER")
+    public void createPost_whenCreatePostReturnsFalse_throwCustomException() throws Exception {
+        PostCreateBindingModel postCreateBindingModel = PostsUtils.getPostCreateBindingModels(1).get(0);
+
+        when(postServiceMock.createPost(any(PostCreateBindingModel.class)))
+                .thenReturn(false);
+
+        Exception resolvedException = this.mvc
+                .perform(post("/post/create")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(TestUtil.convertObjectToJsonString(postCreateBindingModel)))
+                .andDo(print())
+                .andExpect(status().isInternalServerError())
+                .andReturn().getResolvedException();
+
+        Assert.assertEquals(SERVER_ERROR_MESSAGE, resolvedException.getMessage());
+        Assert.assertEquals(CustomException.class, resolvedException.getClass());
+
+        verify(postServiceMock, times(1)).createPost(any());
+        verifyNoMoreInteractions(postServiceMock);
+    }
+
+    @Test
+    @WithMockUser(authorities = "USER")
+    public void removePost_whenDeletePostReturnsTrue_deletePost() throws Exception {
+        when(postServiceMock.deletePost(anyString(), anyString()))
+                .thenReturn(true);
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.putIfAbsent("loggedInUserId", "1");
+        requestBody.putIfAbsent("postToRemoveId", "2");
+
+        this.mvc
+                .perform(post("/post/remove")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(TestUtil.convertObjectToJsonString(requestBody)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(TestUtil.TEXT_PLAIN_UTF8))
+                .andExpect(jsonPath("$.success").value("true"))
+                .andExpect(jsonPath("$.message").value("Post successfully deleted!"));
+
+        verify(this.postServiceMock, times(1)).deletePost(anyString(), anyString());
+        verifyNoMoreInteractions(this.postServiceMock);
+    }
+
+
+    @Test
+    @WithMockUser(authorities = "USER")
+    public void removePost_whenDeletePostReturnsFalse_throwCustomException() throws Exception {
+        when(postServiceMock.deletePost(anyString(), anyString()))
+                .thenReturn(false);
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.putIfAbsent("loggedInUserId", "1");
+        requestBody.putIfAbsent("postToRemoveId", "2");
+
+        Exception resolvedException = this.mvc
+                .perform(post("/post/remove")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(TestUtil.convertObjectToJsonString(requestBody)))
+                .andDo(print())
+                .andExpect(status().isInternalServerError())
+                .andReturn().getResolvedException();
+
+        Assert.assertEquals(SERVER_ERROR_MESSAGE, resolvedException.getMessage());
+        Assert.assertEquals(CustomException.class, resolvedException.getClass());
+
+        verify(postServiceMock, times(1)).deletePost(anyString(), anyString());
+        verifyNoMoreInteractions(postServiceMock);
+    }
 
 }

@@ -17,11 +17,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -47,11 +49,13 @@ public class PostController {
     }
 
 
-    @PostMapping(value = "/create")
-    public ResponseEntity<Object> createPost(@RequestBody @Valid PostCreateBindingModel postCreateBindingModel) throws JsonProcessingException {
+    @PostMapping (value = "/create")
+    @ResponseBody
+    public ResponseEntity<Object> createPost(@RequestBody @Valid PostCreateBindingModel postCreateBindingModel, Authentication principal) throws JsonProcessingException {
+        //TODO - Use principalName to get LoggedIn User
+//        String principalName = principal.getName();
 
         boolean post = this.postService.createPost(postCreateBindingModel);
-
         if (post) {
             SuccessResponse successResponse = new SuccessResponse(
                     LocalDateTime.now(),

@@ -2,6 +2,7 @@ package kl.socialnetwork.testUtils;
 
 import kl.socialnetwork.domain.entities.Post;
 import kl.socialnetwork.domain.entities.User;
+import kl.socialnetwork.domain.modles.bindingModels.post.PostCreateBindingModel;
 import kl.socialnetwork.domain.modles.serviceModels.PostServiceModel;
 
 import java.time.LocalDateTime;
@@ -60,5 +61,14 @@ public class PostsUtils {
                 .collect(Collectors.toList());
     }
 
-
+    public static List<PostCreateBindingModel> getPostCreateBindingModels(int count) {
+        return IntStream.range(0, count)
+                .mapToObj(index -> new PostCreateBindingModel() {{
+                    setContent("post " + index + " content");
+                    setLoggedInUserId("loggedInUserId" + index);
+                    setTimelineUserId("timelineUserId" + index);
+                    setImageUrl("ImageUrl" + index);
+                }})
+                .collect(Collectors.toList());
+    }
 }
