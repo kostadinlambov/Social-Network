@@ -39,20 +39,17 @@ public class CommentController {
     }
 
     @PostMapping(value = "/create")
+    @ResponseBody
     public ResponseEntity<Object> createComment(@RequestBody @Valid CommentCreateBindingModel commentCreateBindingModel) throws JsonProcessingException {
-
         boolean comment = this.commentService.createComment(commentCreateBindingModel);
-
         if (comment) {
             SuccessResponse successResponse = new SuccessResponse(
                     LocalDateTime.now(),
                     SUCCESSFUL_CREATE_COMMENT_MESSAGE,
-                    "Comment created!",
+                    "",
                     true);
-
             return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
         }
-
         throw new CustomException(SERVER_ERROR_MESSAGE);
     }
 
@@ -62,7 +59,6 @@ public class CommentController {
         String commentToRemoveId = (String) body.get("commentToRemoveId");
 
         boolean result = this.commentService.deleteComment(loggedInUserId, commentToRemoveId);
-
         if (result) {
             SuccessResponse successResponse = new SuccessResponse(
                     LocalDateTime.now(),
@@ -70,11 +66,8 @@ public class CommentController {
                     "",
                     true
             );
-
             return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
         }
-
         throw new CustomException(ResponseMessageConstants.SERVER_ERROR_MESSAGE);
     }
-
 }

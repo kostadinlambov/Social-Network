@@ -1,6 +1,7 @@
-package kl.socialnetwork.validations;
+package kl.socialnetwork.validations.annotations;
 
 import kl.socialnetwork.domain.modles.bindingModels.user.UserRegisterBindingModel;
+import kl.socialnetwork.validations.annotations.PasswordMatching;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintValidator;

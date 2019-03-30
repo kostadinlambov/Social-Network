@@ -72,29 +72,22 @@ public class UserController {
 
 
     @GetMapping(value = "/all/{id}")
-    public ResponseEntity<Object> getAllUsers(@PathVariable(value = "id") String userId) throws JsonProcessingException {
+    @ResponseBody
+    public List<UserAllViewModel> getAllUsers(@PathVariable(value = "id") String userId){
+        try {
+            return this.userService
+                    .getAllUsers(userId)
+                    .stream()
+                    .map(x -> {
+                        UserAllViewModel userAllViewModel = this.modelMapper.map(x, UserAllViewModel.class);
+                        userAllViewModel.setRole(x.extractAuthority());
+                        return userAllViewModel;
+                    })
+                    .collect(Collectors.toList());
 
-        List<UserAllViewModel> allUser = this.userService
-                .getAllUsers(userId)
-                .stream()
-                .map(x -> {
-                    UserAllViewModel userAllViewModel = this.modelMapper.map(x, UserAllViewModel.class);
-                    userAllViewModel.setRole(x.extractAuthority());
-                    return userAllViewModel;
-                })
-                .collect(Collectors.toList());
-
-        if(allUser.size() > 0){
-            SuccessResponse successResponse = new SuccessResponse(
-                     LocalDateTime.now(),
-                    SUCCESSFUL_USER_ALL_MESSAGE,
-                    allUser,
-                    true);
-
-            System.out.println(this.objectMapper.writeValueAsString(successResponse));
-            return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
+        } catch (Exception e) {
+            throw new CustomException(SERVER_ERROR_MESSAGE);
         }
-        throw new CustomException(SERVER_ERROR_MESSAGE);
     }
 
     @GetMapping(value = "/details/{id}")

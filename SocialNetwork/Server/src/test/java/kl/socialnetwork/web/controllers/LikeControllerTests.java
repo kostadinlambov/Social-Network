@@ -1,15 +1,9 @@
 package kl.socialnetwork.web.controllers;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import kl.socialnetwork.domain.entities.User;
-import kl.socialnetwork.domain.modles.bindingModels.post.PostCreateBindingModel;
-import kl.socialnetwork.domain.modles.serviceModels.PostServiceModel;
 import kl.socialnetwork.services.LikeService;
 import kl.socialnetwork.services.PostService;
-import kl.socialnetwork.testUtils.PostsUtils;
 import kl.socialnetwork.testUtils.TestUtil;
-import kl.socialnetwork.testUtils.UsersUtils;
 import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;
 import org.junit.Assert;
 import org.junit.Before;
@@ -30,11 +24,9 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.ServletContext;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static kl.socialnetwork.utils.constants.ResponseMessageConstants.SERVER_ERROR_MESSAGE;
-import static kl.socialnetwork.utils.constants.ResponseMessageConstants.SUCCESSFUL_CREATE_POST_MESSAGE;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;

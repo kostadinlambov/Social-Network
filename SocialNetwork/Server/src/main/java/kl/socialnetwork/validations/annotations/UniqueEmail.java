@@ -1,4 +1,4 @@
-package kl.socialnetwork.validations;
+package kl.socialnetwork.validations.annotations;
 
 import org.springframework.stereotype.Component;
 
@@ -10,14 +10,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Component
-@Constraint(validatedBy = PasswordValidator.class)
+@Constraint(validatedBy = UniqueEmailValidator.class)
 @Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Password {
-    String message() default "Invalid password format.";
-    int minLength() default 8;
-    int maxLength() default 30;
-    boolean containsOnlyLettersAndDigits() default false;
+public @interface UniqueEmail {
+    String message() default "E-mail already exists.";
 
     Class<?>[] groups() default {};
 

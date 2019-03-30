@@ -18,13 +18,10 @@ export default class UserAllPage extends Component {
         const userId = this.props.match.params.id;
         
         requester.get('/users/all/'+ userId, (response) => {
-            if (response.success === true) {
-                toast.success(<ToastComponent.successToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-                debugger;
+            if (response) {
                 this.setState({
-                    userArr: response['payload'],
+                    userArr: response,
+                    // userArr: response['payload'],
                     id: userId
                 })
             } else {

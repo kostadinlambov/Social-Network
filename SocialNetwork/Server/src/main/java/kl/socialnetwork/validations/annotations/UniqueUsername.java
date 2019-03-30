@@ -1,4 +1,4 @@
-package kl.socialnetwork.validations;
+package kl.socialnetwork.validations.annotations;
 
 import org.springframework.stereotype.Component;
 
@@ -10,11 +10,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Component
-@Constraint(validatedBy = UniqueEmailValidator.class)
+@Constraint(validatedBy = UniqueUsernameValidator.class)
 @Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface UniqueEmail {
-    String message() default "E-mail already exists.";
+public @interface UniqueUsername {
+    String message() default "Username already exists.";
 
     Class<?>[] groups() default {};
 

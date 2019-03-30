@@ -1,10 +1,10 @@
 package kl.socialnetwork.domain.modles.bindingModels.user;
 
 import kl.socialnetwork.utils.constants.ValidationMessageConstants;
-import kl.socialnetwork.validations.Password;
-import kl.socialnetwork.validations.PasswordMatching;
-import kl.socialnetwork.validations.UniqueEmail;
-import kl.socialnetwork.validations.UniqueUsername;
+import kl.socialnetwork.validations.annotations.Password;
+import kl.socialnetwork.validations.annotations.PasswordMatching;
+import kl.socialnetwork.validations.annotations.UniqueEmail;
+import kl.socialnetwork.validations.annotations.UniqueUsername;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;

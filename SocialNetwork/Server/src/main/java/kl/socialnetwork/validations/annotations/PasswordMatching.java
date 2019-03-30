@@ -1,4 +1,4 @@
-package kl.socialnetwork.validations;
+package kl.socialnetwork.validations.annotations;
 
 
 import org.springframework.stereotype.Component;

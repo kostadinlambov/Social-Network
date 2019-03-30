@@ -2,7 +2,7 @@ package kl.socialnetwork.domain.modles.bindingModels.user;
 
 
 import kl.socialnetwork.utils.constants.ValidationMessageConstants;
-import kl.socialnetwork.validations.Password;
+import kl.socialnetwork.validations.annotations.Password;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;

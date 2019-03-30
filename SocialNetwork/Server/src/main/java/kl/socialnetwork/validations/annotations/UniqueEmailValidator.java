@@ -1,4 +1,5 @@
-package kl.socialnetwork.validations;
+package kl.socialnetwork.validations.annotations;
+
 
 import kl.socialnetwork.domain.entities.User;
 import kl.socialnetwork.services.UserService;
@@ -9,23 +10,23 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 @Component
-public class UniqueUsernameValidator implements ConstraintValidator<UniqueUsername,String> {
+public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail,String> {
 
     private UserService userService;
 
     @Autowired
-    public UniqueUsernameValidator(UserService userService) {
+    public UniqueEmailValidator(UserService userService) {
         this.userService = userService;
     }
 
     @Override
-    public void initialize(UniqueUsername username) {
+    public void initialize(UniqueEmail email) {
 
     }
 
     @Override
-    public boolean isValid(String username, ConstraintValidatorContext constraintValidatorContext) {
-        User user = this.userService.getByUsernameValidation(username);
+    public boolean isValid(String email, ConstraintValidatorContext constraintValidatorContext) {
+        User user = this.userService.getByEmailValidation(email);
         return user == null;
     }
 }

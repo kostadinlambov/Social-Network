@@ -1,6 +1,5 @@
 package kl.socialnetwork.services;
 
-import kl.socialnetwork.domain.entities.Picture;
 import kl.socialnetwork.domain.modles.serviceModels.PictureServiceModel;
 import org.springframework.web.multipart.MultipartFile;
 

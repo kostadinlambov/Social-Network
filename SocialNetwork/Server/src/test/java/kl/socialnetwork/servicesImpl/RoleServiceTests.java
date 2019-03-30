@@ -1,4 +1,4 @@
-package kl.socialnetwork.services;
+package kl.socialnetwork.servicesImpl;
 
 import kl.socialnetwork.repositories.RoleRepository;
 import kl.socialnetwork.services.RoleService;

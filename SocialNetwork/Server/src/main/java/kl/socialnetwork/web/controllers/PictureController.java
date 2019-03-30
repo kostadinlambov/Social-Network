@@ -55,7 +55,7 @@ public class PictureController {
 
 
     @PostMapping(value = "/add")
-    public ResponseEntity addPicture(
+    public ResponseEntity<Object> addPicture(
             @RequestParam(name = "loggedInUserId") String loggedInUserId,
             @RequestParam(name = "file") MultipartFile file
     ) throws IOException {
@@ -77,7 +77,7 @@ public class PictureController {
     }
 
     @PostMapping(value = "/remove")
-    public ResponseEntity removePicture(@RequestBody Map<String, Object> body) throws IOException {
+    public ResponseEntity<Object> removePicture(@RequestBody Map<String, Object> body) throws IOException {
         String loggedInUserId = (String) body.get("loggedInUserId");
         String photoToRemoveId = (String) body.get("photoToRemoveId");
 

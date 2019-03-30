@@ -133,17 +133,10 @@ public class PictureControllerTests {
 
     @Test()
     public void addPicture_whenUnAuthorized_403Forbidden() throws Exception {
-        MockMultipartFile pictureFile =
-                new MockMultipartFile("data", "filename.txt", "text/plain", "some xml".getBytes());
-
-        when(pictureServiceMock.addPicture(anyString(), any(MultipartFile.class)))
-                .thenReturn(true);
-
         this.mvc
-                .perform(MockMvcRequestBuilders.multipart("/pictures/add")
-                        .file("file", pictureFile.getBytes())
-                        .param("loggedInUserId", "1"))
-                .andDo(print());
+                .perform(MockMvcRequestBuilders.multipart("/pictures/add"))
+                .andDo(print())
+                .andExpect(status().isForbidden());
     }
 
     @Test

@@ -2,9 +2,6 @@ package kl.socialnetwork.web.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kl.socialnetwork.domain.modles.bindingModels.post.PostCreateBindingModel;
-import kl.socialnetwork.domain.modles.serviceModels.PostServiceModel;
-import kl.socialnetwork.domain.modles.viewModels.post.PostAllViewModel;
 import kl.socialnetwork.services.CloudinaryService;
 import kl.socialnetwork.services.LikeService;
 import kl.socialnetwork.services.PostService;
@@ -17,13 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-
-import static kl.socialnetwork.utils.constants.ResponseMessageConstants.*;
 
 @RestController()
 @RequestMapping(value = "/like")
