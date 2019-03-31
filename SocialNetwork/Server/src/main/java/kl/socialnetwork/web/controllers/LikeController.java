@@ -34,7 +34,7 @@ public class LikeController {
 
 
     @PostMapping(value = "/add")
-    public ResponseEntity addLike(@RequestBody Map<String, Object> body) throws JsonProcessingException {
+    public ResponseEntity addLike(@RequestBody Map<String, Object> body) throws Exception {
         String postId = (String) body.get("postId");
         String loggedInUserId = (String) body.get("loggedInUserId");
 

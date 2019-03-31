@@ -2,7 +2,7 @@ package kl.socialnetwork.services;
 
 public interface LikeService {
 
-    boolean addLike(String postId, String loggedInUserId);
+    boolean addLike(String postId, String loggedInUserId) throws Exception;
 
-    int getAllLikesForPost(String postId);
+    int getAllLikesForPost(String postId) throws Exception;
 }
