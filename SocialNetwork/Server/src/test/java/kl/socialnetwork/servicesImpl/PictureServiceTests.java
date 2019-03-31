@@ -1,172 +1,363 @@
-//package kl.socialnetwork;
-//
-//
-//import kl.socialnetwork.domain.entities.Picture;
-//import kl.socialnetwork.domain.entities.User;
-//import kl.socialnetwork.domain.entities.UserRole;
-//import kl.socialnetwork.domain.modles.serviceModels.PictureServiceModel;
-//import kl.socialnetwork.repositories.PictureRepository;
-//import kl.socialnetwork.repositories.RoleRepository;
-//import kl.socialnetwork.repositories.UserRepository;
-//import kl.socialnetwork.services.CloudinaryService;
-//import kl.socialnetwork.services.PictureService;
-//import kl.socialnetwork.servicesImpl.PictureServiceImpl;
-//import kl.socialnetwork.web.controllers.PicturesController;
-//import org.junit.Assert;
-//import org.junit.Test;
-//import org.junit.runner.RunWith;
-//import org.mockito.Mockito;
-//import org.modelmapper.ModelMapper;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
-//import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-//import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-//import org.springframework.mock.web.MockMultipartFile;
-//import org.springframework.test.context.junit4.SpringRunner;
-//import org.springframework.web.multipart.MultipartFile;
-//
-//import javax.management.relation.Role;
-//import java.io.IOException;
-//import java.time.LocalDateTime;
-//import java.util.ArrayList;
-//import java.util.Arrays;
-//import java.util.HashSet;
-//import java.util.List;
-//
-//import static org.hamcrest.core.Is.is;
-//
-//@RunWith(SpringRunner.class)
-//@DataJpaTest
-//@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-//public class PictureServiceTests {
-//    @Autowired
-//    private PictureRepository pictureRepository;
-//    @Autowired
-//    private RoleRepository roleRepository;
-//    @Autowired
-//    private UserRepository userRepository;
-////
-//    private PictureService pictureService;
-//    private CloudinaryService cloudinaryServiceMock;
-//    private MultipartFile multipartFileMock;
-//    private ModelMapper modelMapper;
-//
-//    public void init() {
-//        this.modelMapper = new ModelMapper();
-//        cloudinaryServiceMock = Mockito.mock(CloudinaryService.class);
-//        multipartFileMock = new MockMultipartFile("testFile", "testFile".getBytes());
-////        Mockito.when(cloudinaryServiceMock.uploadImage(multipartFileMock,"uuid")).then();
-//        pictureService = new PictureServiceImpl(this.pictureRepository, this.userRepository,
-//                this.roleRepository, cloudinaryServiceMock, this.modelMapper);
-//    }
-//
-////    @Test
-////    public void pictureService_savePicturesWithCorrectValues_ReturnsCorrect() throws IOException {
-////        CloudinaryService cloudinaryServiceMock = Mockito.mock(CloudinaryService.class);
-////        MultipartFile multipartFileMock = new MockMultipartFile("testFile", "testFile".getBytes());
-//////        Mockito.when(cloudinaryServiceMock.uploadImage(multipartFileMock,"uuid")).then();
-////
-////        PictureService pictureService = new PictureServiceImpl(this.pictureRepository, this.userRepository, this.roleRepository, cloudinaryServiceMock, this.modelMapper);
-////
-//////        UserRole role = new UserRole();
-//////        role.setAuthority("ROOT");
-//////
-//////        User user = new User();
-//////        user.setPassword("password");
-//////        user.setAuthorities(new HashSet<>(Arrays.asList(role)));
-//////        user.setFirstName("pesho");
-//////        user.setLastName("peshov");
-//////        user.setUsername("pesho");
-//////        user.setEmail("pesho@abv.bg");
-//////        user.setCity("Paris");
-//////        user.setAddress("SedlmayerSrasse 14");
-//////        user.setAccountNonExpired(true);
-//////        user.setAccountNonLocked(true);
-//////        user.setBackgroundImageUrl("url");
-//////        user.setCredentialsNonExpired(true);
-//////        user.setEnabled(true);
-//////        user.setDeleted(false);
-//////        user.setProfilePicUrl("profile_pic");
-//////
-//////        User savedUser = this.userRepository.saveAndFlush(user);
-////
-//////        User user = Mockito.mock(User.class);
-//////        Mockito.when(user.getId()).thenReturn("userId");
-//////
-//////        LocalDateTime time = LocalDateTime.now();
-//////        Picture picture = new Picture();
-//////        picture.setCloudinaryPublicId("public_id");
-//////        picture.setTime(time);
-//////        picture.setUser(savedUser);
-//////        picture.setImageUrl("imageUrl");
-//////        picture.setDescription("description");
-//////
-//////
-//////        boolean actual = pictureService.addPicture(savedUser.getId(), multipartFileMock);
-//////
-//////        Assert.assertTrue(actual);
-////
-////    }
-//
-////    @Test
-////    public void pictureService_getAllPicturesByUserIdWithCorrectValues_ReturnsCorrect() throws IOException {
-////        User user1 = Mockito.mock(User.class);
-////        Mockito.when(user1.getId()).thenReturn("userId");
-////
-////        LocalDateTime time = LocalDateTime.now();
-////
-//////        List<Picture> pictureList = new ArrayList<>(List.of(
-//////                new Picture() {{
-//////                    setId("1");
-//////                    setCloudinaryPublicId("public_id");
-//////                    setTime(time);
-//////                    setUser(user1);
-//////                    setDescription("");
-//////                    setImageUrl("imageUrl");
-//////                    setDescription("description");
-//////                }}
-//////        ));
-////
-////        Picture picture = new Picture();
-////        picture.setId("1");
-////        picture.setCloudinaryPublicId("public_id");
-////        picture.setTime(time);
-////        picture.setUser(user1);
-////        picture.setDescription("");
-////        picture.setImageUrl("imageUrl");
-////        picture.setDescription("description");
-////
-////        Picture picture1 = this.pictureRepository.saveAndFlush(picture);
-////
-////        List<PictureServiceModel> allPicturesByUserId = pictureService.getAllPicturesByUserId("1");
-////
-////        Assert.assertThat(allPicturesByUserId.size(), is(1));
-////
-////    }
-//
-//
-//    @Test
-//    public void pictureService_testMethodWithCorrectValues_ReturnsCorrect() throws IOException {
-////        User user1 = Mockito.mock(User.class);
-////        Mockito.when(user1.getId()).thenReturn("userId");
-////
-////        LocalDateTime time = LocalDateTime.now();
-////        Picture picture = new Picture();
-////        picture.setId("1");
-////        picture.setCloudinaryPublicId("public_id");
-////        picture.setTime(time);
-////        picture.setUser(user1);
-////        picture.setDescription("");
-////        picture.setImageUrl("imageUrl");
-////        picture.setDescription("description");
-//
-//
-//        String actual = this.pictureService.testMethod("test");
-//        String expected = "true";
-//
-//        Assert.assertThat(expected, is(actual));
-//
-//    }
-//
-//
-//}
+package kl.socialnetwork.servicesImpl;
+
+import kl.socialnetwork.domain.entities.Comment;
+import kl.socialnetwork.domain.entities.Picture;
+import kl.socialnetwork.domain.entities.Post;
+import kl.socialnetwork.domain.entities.User;
+import kl.socialnetwork.domain.modles.bindingModels.post.PostCreateBindingModel;
+import kl.socialnetwork.domain.modles.serviceModels.PictureServiceModel;
+import kl.socialnetwork.domain.modles.serviceModels.PostServiceModel;
+import kl.socialnetwork.repositories.PictureRepository;
+import kl.socialnetwork.repositories.PostRepository;
+import kl.socialnetwork.repositories.UserRepository;
+import kl.socialnetwork.services.CloudinaryService;
+import kl.socialnetwork.services.PictureService;
+import kl.socialnetwork.services.PostService;
+import kl.socialnetwork.testUtils.CommentsUtils;
+import kl.socialnetwork.testUtils.PictureUtils;
+import kl.socialnetwork.testUtils.PostsUtils;
+import kl.socialnetwork.testUtils.UsersUtils;
+import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;
+import kl.socialnetwork.validations.serviceValidation.services.CloudinaryValidationService;
+import kl.socialnetwork.validations.serviceValidation.services.PictureValidationService;
+import kl.socialnetwork.validations.serviceValidation.services.PostValidationService;
+import kl.socialnetwork.validations.serviceValidation.services.UserValidationService;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class PictureServiceTests {
+    @Autowired
+    private PictureService pictureService;
+
+    @MockBean
+    private UserRepository mockUserRepository;
+
+    @MockBean
+    private PictureRepository mockPictureRepository;
+
+    @MockBean
+    private CloudinaryService mockCloudinaryService;
+
+    @MockBean
+    private CloudinaryValidationService mockCloudinaryValidationService;
+
+    @MockBean
+    private UserValidationService mockUserValidationService;
+
+    @MockBean
+    private PictureValidationService mockPictureValidation;
+
+    private List<Picture> pictureList;
+
+    @Before
+    public void setUpTest() {
+        pictureList = new ArrayList<>();
+
+    }
+
+    @Test
+    public void getAllPicturesByUserId_when2Pictures_2Pictures() {
+        // Arrange
+
+        when(mockPictureRepository.findAllByUserId("1"))
+                .thenReturn(pictureList);
+
+        User user = UsersUtils.createUser();
+        List<Picture> pictures = PictureUtils.getPictures(2, user);
+        pictureList.addAll(pictures);
+
+        // Act
+        List<PictureServiceModel> allPictures = pictureService.getAllPicturesByUserId("1");
+
+        // Assert
+        Picture expected = pictures.get(0);
+        PictureServiceModel actual = allPictures.get(0);
+
+        assertEquals(2, allPictures.size());
+        assertEquals(expected.getCloudinaryPublicId(), actual.getCloudinaryPublicId());
+        assertEquals(expected.getDescription(), actual.getDescription());
+        assertEquals(expected.getImageUrl(), actual.getImageUrl());
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getUser().getId(), actual.getUser().getId());
+
+        verify(mockPictureRepository).findAllByUserId(any());
+        verifyNoMoreInteractions(mockPictureRepository);
+    }
+
+    @Test
+    public void getAllPicturesByUserId_whenNoPictures_returnEmptyCollection() {
+        pictureList.clear();
+        List<PictureServiceModel> allPictures = pictureService.getAllPicturesByUserId("1");
+
+        assertTrue(allPictures.isEmpty());
+    }
+
+    @Test
+    public void addPicture_whenUsersAndCloudinaryUploadMapAreValid_addPicture() throws Exception {
+        // Arrange
+        Map<String, Object> uploadMap = new HashMap<>();
+        uploadMap.put("public_id", "public_id");
+        uploadMap.put("url", "url");
+
+        when(mockCloudinaryService.uploadImage(any(MultipartFile.class), anyString()))
+                .thenReturn(uploadMap);
+
+        when(mockCloudinaryValidationService.isValid(anyMap()))
+                .thenReturn(true);
+
+        when(mockUserValidationService.isValid(any())).thenReturn(true);
+
+        when(mockUserRepository.findById(any()))
+                .thenReturn(java.util.Optional.of(new User()));
+
+        MockMultipartFile pictureFile =
+                new MockMultipartFile("data", "filename.txt", "text/plain", "some xml".getBytes());
+
+        // Act
+        pictureService.addPicture("1", pictureFile);
+
+        // Assert
+        verify(mockPictureRepository).save(any());
+        verifyNoMoreInteractions(mockPictureRepository);
+    }
+
+    @Test(expected = Exception.class)
+    public void addPicture_whenUserIsNotValid_throwException() throws Exception {
+        // Arrange
+        Map<String, Object> uploadMap = new HashMap<>();
+        uploadMap.put("public_id", "public_id");
+        uploadMap.put("url", "url");
+
+        when(mockCloudinaryService.uploadImage(any(MultipartFile.class), anyString()))
+                .thenReturn(uploadMap);
+
+        when(mockCloudinaryValidationService.isValid(anyMap()))
+                .thenReturn(true);
+
+        when(mockUserValidationService.isValid(any())).thenReturn(false);
+
+        when(mockUserRepository.findById(any()))
+                .thenReturn(java.util.Optional.of(new User()));
+
+        MockMultipartFile pictureFile =
+                new MockMultipartFile("data", "filename.txt", "text/plain", "some xml".getBytes());
+
+        // Act
+        pictureService.addPicture("1", pictureFile);
+
+        // Assert
+        verify(mockPictureRepository).save(any());
+        verifyNoMoreInteractions(mockPictureRepository);
+    }
+
+
+    @Test(expected = Exception.class)
+    public void addPicture_whenCloudinaryUploadMapIsNotValid_throwException() throws Exception {
+        // Arrange
+        when(mockCloudinaryService.uploadImage(any(MultipartFile.class), anyString()))
+                .thenReturn(new HashMap());
+
+        when(mockCloudinaryValidationService.isValid(anyMap()))
+                .thenReturn(false);
+
+        when(mockUserValidationService.isValid(any())).thenReturn(true);
+
+        when(mockUserRepository.findById(any()))
+                .thenReturn(java.util.Optional.of(new User()));
+
+        MockMultipartFile pictureFile =
+                new MockMultipartFile("data", "filename.txt", "text/plain", "some xml".getBytes());
+
+        // Act
+        pictureService.addPicture("1", pictureFile);
+
+        // Assert
+        verify(mockPictureRepository).save(any());
+        verifyNoMoreInteractions(mockPictureRepository);
+    }
+
+    @Test(expected = Exception.class)
+    public void addPicture_whenUsersAndCloudinaryUploadMapAreNotValid_throwException() throws Exception {
+        // Arrange
+        when(mockCloudinaryService.uploadImage(any(MultipartFile.class), anyString()))
+                .thenReturn(new HashMap());
+
+        when(mockCloudinaryValidationService.isValid(anyMap()))
+                .thenReturn(false);
+
+        when(mockUserValidationService.isValid(any())).thenReturn(false);
+
+        when(mockUserRepository.findById(any()))
+                .thenReturn(java.util.Optional.of(new User()));
+
+        MockMultipartFile pictureFile =
+                new MockMultipartFile("data", "filename.txt", "text/plain", "some xml".getBytes());
+
+        // Act
+        pictureService.addPicture("1", pictureFile);
+
+        // Assert
+        verify(mockPictureRepository).save(any());
+        verifyNoMoreInteractions(mockPictureRepository);
+    }
+
+    @Test
+    public void deletePicture_whenUserAndPictureAreValid_deletePicture() throws Exception {
+        // Arrange
+        User user = UsersUtils.createUser();
+        Picture picture = PictureUtils.createPicture(user);
+
+        when(mockUserRepository.findById(any()))
+                .thenReturn(java.util.Optional.of(user));
+
+        when(mockUserValidationService.isValid(any()))
+                .thenReturn(true);
+
+        when(mockPictureRepository.findById(any()))
+                .thenReturn(java.util.Optional.of(picture));
+
+        when(mockPictureValidation.isValid(any()))
+                .thenReturn(true);
+
+        when(mockCloudinaryService.deleteImage(anyString()))
+                .thenReturn(true);
+
+        // Act
+        pictureService.deletePicture("1", "1");
+
+        // Assert
+        verify(mockPictureRepository).delete(any());
+    }
+
+    @Test(expected = Exception.class)
+    public void deletePicture_whenUserIsNotValid_throwException() throws Exception {
+        // Arrange
+        User user = UsersUtils.createUser();
+        Picture picture = PictureUtils.createPicture(user);
+
+        when(mockUserRepository.findById(any()))
+                .thenReturn(java.util.Optional.of(user));
+
+        when(mockUserValidationService.isValid(any()))
+                .thenReturn(false);
+
+        when(mockPictureRepository.findById(any()))
+                .thenReturn(java.util.Optional.of(picture));
+
+        when(mockPictureValidation.isValid(any()))
+                .thenReturn(true);
+
+        when(mockCloudinaryService.deleteImage(anyString()))
+                .thenReturn(true);
+
+        // Act
+        pictureService.deletePicture("1", "1");
+
+        // Assert
+        verify(mockPictureRepository).delete(any());
+    }
+
+    @Test(expected = Exception.class)
+    public void deletePicture_whenPictureIsNotValid_throwException() throws Exception {
+        // Arrange
+        User user = UsersUtils.createUser();
+        Picture picture = PictureUtils.createPicture(user);
+
+        when(mockUserRepository.findById(any()))
+                .thenReturn(java.util.Optional.of(user));
+
+        when(mockUserValidationService.isValid(any()))
+                .thenReturn(true);
+
+        when(mockPictureRepository.findById(any()))
+                .thenReturn(java.util.Optional.of(picture));
+
+        when(mockPictureValidation.isValid(any()))
+                .thenReturn(false);
+
+        when(mockCloudinaryService.deleteImage(anyString()))
+                .thenReturn(true);
+
+        // Act
+        pictureService.deletePicture("1", "1");
+
+        // Assert
+        verify(mockPictureRepository).delete(any());
+    }
+
+    @Test(expected = Exception.class)
+    public void deletePicture_whenUserAndPictureAreNotValid_throwException() throws Exception {
+        // Arrange
+        User user = UsersUtils.createUser();
+        Picture picture = PictureUtils.createPicture(user);
+
+        when(mockUserRepository.findById(any()))
+                .thenReturn(java.util.Optional.of(user));
+
+        when(mockUserValidationService.isValid(any()))
+                .thenReturn(false);
+
+        when(mockPictureRepository.findById(any()))
+                .thenReturn(java.util.Optional.of(picture));
+
+        when(mockPictureValidation.isValid(any()))
+                .thenReturn(false);
+
+        when(mockCloudinaryService.deleteImage(anyString()))
+                .thenReturn(true);
+
+        // Act
+        pictureService.deletePicture("1", "1");
+
+        // Assert
+        verify(mockPictureRepository).delete(any());
+    }
+
+    @Test(expected = CustomException.class)
+    public void deletePicture_whenUserIsNotAuthorized_throwException() throws Exception {
+        // Arrange
+        User user = UsersUtils.createUser();
+        Picture picture = PictureUtils.createPicture(user);
+
+        when(mockUserRepository.findById(any()))
+                .thenReturn(java.util.Optional.of(user));
+
+        when(mockUserValidationService.isValid(any()))
+                .thenReturn(true);
+
+        when(mockPictureRepository.findById(any()))
+                .thenReturn(java.util.Optional.of(picture));
+
+        when(mockPictureValidation.isValid(any()))
+                .thenReturn(true);
+
+        when(mockCloudinaryService.deleteImage(anyString()))
+                .thenReturn(true);
+
+        // Act
+        pictureService.deletePicture("5", "1");
+
+        // Assert
+        verify(mockPictureRepository).delete(any());
+    }
+}

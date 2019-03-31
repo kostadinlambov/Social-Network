@@ -53,11 +53,7 @@ public class PostServiceTests {
     @MockBean
     private UserValidationService mockUserValidationService;
 
-    @MockBean
-    private UserService mockUserService;
-
-
-     List<Post> postList;
+    private List<Post> postList;
 
     @Before
     public void setUpTest() {
@@ -98,7 +94,7 @@ public class PostServiceTests {
     }
 
     @Test
-    public void getAllPosts_whenNoPosts_returnEmptyPosts(){
+    public void getAllPosts_whenNoPosts_returnEmptyPosts() {
         postList.clear();
         List<PostServiceModel> allPosts = postService.getAllPosts("1");
 
@@ -230,7 +226,6 @@ public class PostServiceTests {
         // Assert
         verify(mockPostRepository).delete(any());
     }
-
 
     @Test(expected = Exception.class)
     public void deletePost_whenUserAndPostAreNotValid_throwException() throws Exception {

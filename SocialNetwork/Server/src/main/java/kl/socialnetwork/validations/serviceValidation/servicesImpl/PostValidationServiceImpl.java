@@ -3,9 +3,9 @@ package kl.socialnetwork.validations.serviceValidation.servicesImpl;
 import kl.socialnetwork.domain.entities.Post;
 import kl.socialnetwork.domain.modles.bindingModels.post.PostCreateBindingModel;
 import kl.socialnetwork.validations.serviceValidation.services.PostValidationService;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class PostValidationServiceImpl implements PostValidationService {
 
     @Override

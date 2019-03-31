@@ -40,7 +40,7 @@ public class CommentController {
 
     @PostMapping(value = "/create")
     @ResponseBody
-    public ResponseEntity<Object> createComment(@RequestBody @Valid CommentCreateBindingModel commentCreateBindingModel) throws JsonProcessingException {
+    public ResponseEntity<Object> createComment(@RequestBody @Valid CommentCreateBindingModel commentCreateBindingModel) throws Exception {
         boolean comment = this.commentService.createComment(commentCreateBindingModel);
         if (comment) {
             SuccessResponse successResponse = new SuccessResponse(
@@ -54,7 +54,7 @@ public class CommentController {
     }
 
     @PostMapping(value = "/remove")
-    public ResponseEntity removeComment(@RequestBody Map<String, Object> body) throws IOException {
+    public ResponseEntity removeComment(@RequestBody Map<String, Object> body) throws Exception {
         String loggedInUserId = (String) body.get("loggedInUserId");
         String commentToRemoveId = (String) body.get("commentToRemoveId");
 

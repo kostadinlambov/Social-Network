@@ -8,10 +8,10 @@ import java.util.List;
 
 public interface PictureService {
 
-    boolean addPicture(String loggedInUserId, MultipartFile file) throws IOException;
+    boolean addPicture(String loggedInUserId, MultipartFile file) throws Exception;
 
     List<PictureServiceModel> getAllPicturesByUserId(String userId);
 
-    boolean deletePicture(String loggedInUserId, String photoToRemoveId);
+    boolean deletePicture(String loggedInUserId, String photoToRemoveId) throws Exception;
 
 }

@@ -4,8 +4,8 @@ import kl.socialnetwork.domain.modles.bindingModels.comment.CommentCreateBinding
 
 public interface CommentService {
 
-    boolean createComment(CommentCreateBindingModel commentCreateBindingModel);
+    boolean createComment(CommentCreateBindingModel commentCreateBindingModel) throws Exception;
 
 
-    boolean deleteComment(String loggedInUserId, String commentToRemoveId);
+    boolean deleteComment(String loggedInUserId, String commentToRemoveId) throws Exception;
 }

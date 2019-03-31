@@ -10,18 +10,22 @@ import kl.socialnetwork.repositories.UserRepository;
 import kl.socialnetwork.services.CloudinaryService;
 import kl.socialnetwork.services.PictureService;
 import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;
+import kl.socialnetwork.validations.serviceValidation.services.CloudinaryValidationService;
+import kl.socialnetwork.validations.serviceValidation.services.PictureValidationService;
+import kl.socialnetwork.validations.serviceValidation.services.UserValidationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static kl.socialnetwork.utils.constants.ResponseMessageConstants.SERVER_ERROR_MESSAGE;
 
 @Service
 @Transactional
@@ -31,41 +35,45 @@ public class PictureServiceImpl implements PictureService {
     private final RoleRepository roleRepository;
     private final CloudinaryService cloudinaryService;
     private final ModelMapper modelMapper;
+    private final UserValidationService userValidation;
+    private final PictureValidationService pictureValidation;
+    private final CloudinaryValidationService cloudinaryValidation;
 
     @Autowired
     public PictureServiceImpl(PictureRepository pictureRepository, UserRepository userRepository,
-                              RoleRepository roleRepository, CloudinaryService cloudinaryService, ModelMapper modelMapper) {
+                              RoleRepository roleRepository, CloudinaryService cloudinaryService, ModelMapper modelMapper, UserValidationService userValidation, PictureValidationService pictureValidation, CloudinaryValidationService cloudinaryValidation) {
         this.pictureRepository = pictureRepository;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.cloudinaryService = cloudinaryService;
         this.modelMapper = modelMapper;
+        this.userValidation = userValidation;
+        this.pictureValidation = pictureValidation;
+        this.cloudinaryValidation = cloudinaryValidation;
     }
 
     @Override
-    public boolean addPicture(String loggedInUserId, MultipartFile file) throws IOException {
+    public boolean addPicture(String loggedInUserId, MultipartFile file) throws Exception {
         User user = this.userRepository.findById(loggedInUserId).orElse(null);
 
-        if (user != null) {
-            String cloudinaryPublicId = UUID.randomUUID().toString();
-            Map uploadMap = this.cloudinaryService.uploadImage(file, cloudinaryPublicId);
-
-            Picture picture = new Picture();
-            picture.setImageUrl(uploadMap.get("url").toString());
-            picture.setUser(user);
-            picture.setTime(LocalDateTime.now());
-            picture.setCloudinaryPublicId(uploadMap.get("public_id").toString());
-            picture.setCloudinaryPublicId(cloudinaryPublicId);
-
-//            return this.pictureRepository.saveAndFlush(picture) != null;
-            return this.savePicture(picture);
+        if (!userValidation.isValid(user)) {
+            throw new Exception(SERVER_ERROR_MESSAGE);
         }
 
-        return false;
-    }
+        String cloudinaryPublicId = UUID.randomUUID().toString();
+        Map uploadMap = this.cloudinaryService.uploadImage(file, cloudinaryPublicId);
 
-    public boolean savePicture(Picture picture) {
-        return this.pictureRepository.saveAndFlush(picture) != null;
+        if (!cloudinaryValidation.isValid(uploadMap)) {
+            throw new Exception(SERVER_ERROR_MESSAGE);
+        }
+
+        Picture picture = new Picture();
+        picture.setImageUrl(uploadMap.get("url").toString());
+        picture.setUser(user);
+        picture.setTime(LocalDateTime.now());
+        picture.setCloudinaryPublicId(uploadMap.get("public_id").toString());
+
+        return this.pictureRepository.save(picture) != null;
     }
 
     @Override
@@ -80,31 +88,32 @@ public class PictureServiceImpl implements PictureService {
     }
 
     @Override
-    public boolean deletePicture(String loggedInUserId, String photoToRemoveId) {
+    public boolean deletePicture(String loggedInUserId, String photoToRemoveId) throws Exception {
         User loggedInUser = this.userRepository.findById(loggedInUserId).orElse(null);
         Picture photoToRemove = this.pictureRepository.findById(photoToRemoveId).orElse(null);
 
-        if (loggedInUser != null && photoToRemove != null) {
-            UserRole rootRole = this.roleRepository.findByAuthority("ROOT");
-            boolean hasRootAuthority = loggedInUser.getAuthorities().contains(rootRole);
-            boolean pictureOwnershipCheck = photoToRemove.getUser().getId().equals(loggedInUserId);
-
-            if (hasRootAuthority || pictureOwnershipCheck) {
-                try {
-                    this.pictureRepository.delete(photoToRemove);
-
-                    String cloudinaryPublicId = photoToRemove.getCloudinaryPublicId();
-                    this.cloudinaryService.deleteImage(cloudinaryPublicId);
-
-                    return true;
-                } catch (Exception e) {
-                    throw new CustomException("Unauthorized!");
-                }
-            }
+        if (!userValidation.isValid(loggedInUser) || !pictureValidation.isValid(photoToRemove)) {
+            throw new Exception(SERVER_ERROR_MESSAGE);
         }
 
-        return false;
+
+        UserRole rootRole = this.roleRepository.findByAuthority("ROOT");
+        boolean hasRootAuthority = loggedInUser.getAuthorities().contains(rootRole);
+        boolean pictureOwnershipCheck = photoToRemove.getUser().getId().equals(loggedInUserId);
+
+        if (hasRootAuthority || pictureOwnershipCheck) {
+            try {
+                this.pictureRepository.delete(photoToRemove);
+
+                String cloudinaryPublicId = photoToRemove.getCloudinaryPublicId();
+                this.cloudinaryService.deleteImage(cloudinaryPublicId);
+
+                return true;
+            } catch (Exception e) {
+                throw new Exception(SERVER_ERROR_MESSAGE);
+            }
+        }else{
+            throw new CustomException("Unauthorized!");
+        }
     }
-
-
 }
