@@ -1,4 +1,4 @@
-//package kl.socialnetwork.validations.serviceValidation.implementations;
+//package kl.socialnetwork.validations.serviceValidation.servicesImpl;
 //
 //
 //import org.springframework.stereotype.Component;

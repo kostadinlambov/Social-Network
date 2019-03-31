@@ -1,0 +1,22 @@
+package kl.socialnetwork.validations.serviceValidation.servicesImpl;
+
+import kl.socialnetwork.domain.entities.Post;
+import kl.socialnetwork.domain.modles.bindingModels.post.PostCreateBindingModel;
+import kl.socialnetwork.validations.serviceValidation.services.PostValidationService;
+import org.springframework.stereotype.Service;
+
+@Service
+public class PostValidationServiceImpl implements PostValidationService {
+
+    @Override
+    public boolean isValid(Post post) {
+        return post != null;
+    }
+
+    @Override
+    public boolean isValid(PostCreateBindingModel postCreateBindingModel) {
+        return postCreateBindingModel != null;
+    }
+
+
+}

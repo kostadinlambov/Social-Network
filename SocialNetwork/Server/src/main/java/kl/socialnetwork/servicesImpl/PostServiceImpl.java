@@ -13,6 +13,8 @@ import kl.socialnetwork.repositories.UserRepository;
 import kl.socialnetwork.services.PostService;
 import kl.socialnetwork.utils.constants.ResponseMessageConstants;
 import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;
+import kl.socialnetwork.validations.serviceValidation.services.PostValidationService;
+import kl.socialnetwork.validations.serviceValidation.services.UserValidationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static kl.socialnetwork.utils.constants.ResponseMessageConstants.SERVER_ERROR_MESSAGE;
+
 @Service
 @Transactional
 public class PostServiceImpl implements PostService {
@@ -31,44 +35,52 @@ public class PostServiceImpl implements PostService {
     private final LikeRepository likeRepository;
     private final RoleRepository roleRepository;
     private final ModelMapper modelMapper;
+    private final PostValidationService postValidationService;
+    private final UserValidationService userValidationService;
 
 
     @Autowired
-    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, LikeRepository likeRepository, RoleRepository roleRepository, ModelMapper modelMapper) {
+    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, LikeRepository likeRepository, RoleRepository roleRepository, ModelMapper modelMapper, PostValidationService postValidationService, UserValidationService userValidationService) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.likeRepository = likeRepository;
         this.roleRepository = roleRepository;
         this.modelMapper = modelMapper;
+        this.postValidationService = postValidationService;
+        this.userValidationService = userValidationService;
     }
 
     @Override
-    public boolean createPost(PostCreateBindingModel postCreateBindingModel) {
+    public boolean createPost(PostCreateBindingModel postCreateBindingModel) throws Exception {
+        if (!postValidationService.isValid(postCreateBindingModel)) {
+            throw new Exception(SERVER_ERROR_MESSAGE);
+        }
+
         User loggedInUser = this.userRepository
                 .findById(postCreateBindingModel.getLoggedInUserId())
-                .orElse(null);
+                .filter(userValidationService::isValid)
+                .orElseThrow(Exception::new);
 
         User timelineUser = this.userRepository
                 .findById(postCreateBindingModel.getTimelineUserId())
-                .orElse(null);
+                .filter(userValidationService::isValid)
+                .orElseThrow(Exception::new);
 
-        if (loggedInUser != null && timelineUser != null) {
+        PostServiceModel postServiceModel = new PostServiceModel();
+        postServiceModel.setLoggedInUser(loggedInUser);
+        postServiceModel.setTimelineUser(timelineUser);
+        postServiceModel.setContent(postCreateBindingModel.getContent());
+        postServiceModel.setImageUrl(postCreateBindingModel.getImageUrl());
+        postServiceModel.setTime(LocalDateTime.now());
+        postServiceModel.setLike(new ArrayList<>());
+        postServiceModel.setCommentList(new ArrayList<>());
 
-            PostServiceModel postServiceModel = new PostServiceModel();
-            postServiceModel.setLoggedInUser(loggedInUser);
-            postServiceModel.setTimelineUser(timelineUser);
-            postServiceModel.setContent(postCreateBindingModel.getContent());
-            postServiceModel.setImageUrl(postCreateBindingModel.getImageUrl());
-            postServiceModel.setTime(LocalDateTime.now());
-            postServiceModel.setLike(new ArrayList<>());
-            postServiceModel.setCommentList(new ArrayList<>());
+        Post post = this.modelMapper.map(postServiceModel, Post.class);
 
-            Post post = this.modelMapper.map(postServiceModel, Post.class);
-
-            return this.postRepository.saveAndFlush(post) != null;
+        if (postValidationService.isValid(post)) {
+            return this.postRepository.save(post) != null;
         }
-
-        throw new CustomException(ResponseMessageConstants.SERVER_ERROR_MESSAGE);
+        return false;
     }
 
     @Override
@@ -97,28 +109,28 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public boolean deletePost(String loggedInUserId, String postToRemoveId) {
+    public boolean deletePost(String loggedInUserId, String postToRemoveId) throws Exception {
         User loggedInUser = this.userRepository.findById(loggedInUserId).orElse(null);
         Post postToRemove = this.postRepository.findById(postToRemoveId).orElse(null);
 
-        if (loggedInUser != null && postToRemove != null) {
-            UserRole rootRole = this.roleRepository.findByAuthority("ROOT");
-            boolean hasRootAuthority = loggedInUser.getAuthorities().contains(rootRole);
-            boolean isPostCreator = postToRemove.getLoggedInUser().getId().equals(loggedInUserId);
-            boolean isTimeLineUser = postToRemove.getTimelineUser().getId().equals(loggedInUserId);
-
-            if (hasRootAuthority || isPostCreator || isTimeLineUser) {
-                try {
-                    this.postRepository.delete(postToRemove);
-                    return true;
-                } catch (Exception e) {
-                    throw new CustomException(ResponseMessageConstants.SERVER_ERROR_MESSAGE);
-                }
-            } else {
-                throw new CustomException("Unauthorized!");
-            }
+        if (!userValidationService.isValid(loggedInUser) || !postValidationService.isValid(postToRemove)) {
+            throw new Exception(SERVER_ERROR_MESSAGE);
         }
 
-        return false;
+        UserRole rootRole = this.roleRepository.findByAuthority("ROOT");
+        boolean hasRootAuthority = loggedInUser.getAuthorities().contains(rootRole);
+        boolean isPostCreator = postToRemove.getLoggedInUser().getId().equals(loggedInUserId);
+        boolean isTimeLineUser = postToRemove.getTimelineUser().getId().equals(loggedInUserId);
+
+        if (hasRootAuthority || isPostCreator || isTimeLineUser) {
+            try {
+                this.postRepository.delete(postToRemove);
+                return true;
+            } catch (Exception e) {
+                throw new Exception(SERVER_ERROR_MESSAGE);
+            }
+        } else {
+            throw new CustomException("Unauthorized!");
+        }
     }
 }

@@ -47,7 +47,7 @@ public class PostController {
 
     @PostMapping (value = "/create")
     @ResponseBody
-    public ResponseEntity<Object> createPost(@RequestBody @Valid PostCreateBindingModel postCreateBindingModel, Authentication principal) throws JsonProcessingException {
+    public ResponseEntity<Object> createPost(@RequestBody @Valid PostCreateBindingModel postCreateBindingModel, Authentication principal) throws Exception {
         //TODO - Use principalName to get LoggedIn User
 //        String principalName = principal.getName();
 
@@ -84,7 +84,7 @@ public class PostController {
     }
 
     @PostMapping(value = "/remove")
-    public ResponseEntity removePost(@RequestBody Map<String, Object> body) throws IOException {
+    public ResponseEntity removePost(@RequestBody Map<String, Object> body) throws Exception {
         String loggedInUserId = (String) body.get("loggedInUserId");
         String postToRemoveId = (String) body.get("postToRemoveId");
 
