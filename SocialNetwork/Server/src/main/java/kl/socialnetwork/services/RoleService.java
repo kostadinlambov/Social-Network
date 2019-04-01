@@ -3,9 +3,7 @@ package kl.socialnetwork.services;
 import kl.socialnetwork.domain.entities.UserRole;
 
 public interface RoleService {
-    void persist(UserRole role);
+    boolean persist(UserRole role) throws Exception;
 
     UserRole getByName(String name);
-
-    String testMethod(String test);
 }
