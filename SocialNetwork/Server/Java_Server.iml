@@ -135,6 +135,7 @@
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.4.11" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpmime:4.5.7" level="project" />
     <orderEntry type="library" name="Maven: com.googlecode.json-simple:json-simple:1.1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.json:json:20180813" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.security:spring-security-test:5.1.4.RELEASE" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: com.h2database:h2:1.4.197" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.jayway.jsonpath:json-path-assert:2.4.0" level="project" />

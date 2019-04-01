@@ -102,17 +102,12 @@ public class PictureServiceImpl implements PictureService {
         boolean pictureOwnershipCheck = photoToRemove.getUser().getId().equals(loggedInUserId);
 
         if (hasRootAuthority || pictureOwnershipCheck) {
-            try {
-                this.pictureRepository.delete(photoToRemove);
+            this.pictureRepository.delete(photoToRemove);
 
-                String cloudinaryPublicId = photoToRemove.getCloudinaryPublicId();
-                this.cloudinaryService.deleteImage(cloudinaryPublicId);
+            String cloudinaryPublicId = photoToRemove.getCloudinaryPublicId();
 
-                return true;
-            } catch (Exception e) {
-                throw new Exception(SERVER_ERROR_MESSAGE);
-            }
-        }else{
+            return this.cloudinaryService.deleteImage(cloudinaryPublicId);
+        } else {
             throw new CustomException("Unauthorized!");
         }
     }
