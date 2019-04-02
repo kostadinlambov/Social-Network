@@ -47,7 +47,7 @@ public class UsersUtils {
                 .collect(Collectors.toList());
     }
 
-    public static List<UserServiceModel> getUserServiceModels(int count, User loggedInUser, User timeLineUser, UserRole role) {
+    public static List<UserServiceModel> getUserServiceModels(int count, UserRole role) {
         LocalDateTime time = LocalDateTime.now();
 
         return IntStream.range(0, count)

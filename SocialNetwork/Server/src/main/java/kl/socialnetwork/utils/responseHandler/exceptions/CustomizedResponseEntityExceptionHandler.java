@@ -1,6 +1,8 @@
 package kl.socialnetwork.utils.responseHandler.exceptions;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kl.socialnetwork.utils.constants.ResponseMessageConstants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,7 +21,6 @@ import java.util.Date;
 @ControllerAdvice
 @RestController
 public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
-
 
   @ExceptionHandler(Exception.class)
   public final ResponseEntity<ExceptionResponse> handleAllExceptions(Exception ex, WebRequest request) {

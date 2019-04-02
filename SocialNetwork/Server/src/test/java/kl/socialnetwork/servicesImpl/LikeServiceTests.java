@@ -141,7 +141,7 @@ public class LikeServiceTests {
         when(mockUserRepository.findById(any()))
                 .thenReturn(java.util.Optional.of(user));
 
-        when(mockUserValidationService.isValid(any())).thenReturn(true);
+        when(mockUserValidationService.isValid(any(User.class))).thenReturn(true);
 
         when(mockLikeRepository.findByUserAndPost(user, post))
                 .thenReturn(null);
@@ -169,7 +169,7 @@ public class LikeServiceTests {
         when(mockUserRepository.findById(any()))
                 .thenReturn(java.util.Optional.of(user));
 
-        when(mockUserValidationService.isValid(any()))
+        when(mockUserValidationService.isValid(any(User.class)))
                 .thenReturn(false);
 
         when(mockLikeRepository.findByUserAndPost(user, post))
@@ -198,7 +198,7 @@ public class LikeServiceTests {
         when(mockUserRepository.findById(any()))
                 .thenReturn(java.util.Optional.of(user));
 
-        when(mockUserValidationService.isValid(any()))
+        when(mockUserValidationService.isValid(any(User.class)))
                 .thenReturn(true);
 
         when(mockLikeRepository.findByUserAndPost(user, post))
@@ -227,7 +227,7 @@ public class LikeServiceTests {
         when(mockUserRepository.findById(any()))
                 .thenReturn(java.util.Optional.of(user));
 
-        when(mockUserValidationService.isValid(any()))
+        when(mockUserValidationService.isValid(any(User.class)))
                 .thenReturn(false);
 
         when(mockLikeRepository.findByUserAndPost(user, post))
@@ -257,7 +257,7 @@ public class LikeServiceTests {
         when(mockUserRepository.findById(any()))
                 .thenReturn(java.util.Optional.of(user));
 
-        when(mockUserValidationService.isValid(any()))
+        when(mockUserValidationService.isValid(any(User.class)))
                 .thenReturn(true);
 
         when(mockLikeRepository.findByUserAndPost(user, post))

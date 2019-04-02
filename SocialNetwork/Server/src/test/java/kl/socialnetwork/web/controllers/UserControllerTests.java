@@ -75,7 +75,7 @@ public class UserControllerTests {
     public void getAllUsers_when2Users_2Users() throws Exception {
         UserRole adminRole = RolesUtils.createAdminRole();
         List<User> users = UsersUtils.getUsers(2);
-        List<UserServiceModel> userServiceModels = UsersUtils.getUserServiceModels(2, users.get(0), users.get(1), adminRole);
+        List<UserServiceModel> userServiceModels = UsersUtils.getUserServiceModels(2, adminRole);
 
         when(this.userServiceMock.getAllUsers("1"))
                 .thenReturn(userServiceModels);
@@ -103,7 +103,7 @@ public class UserControllerTests {
     @WithMockUser(authorities = "ADMIN")
     public void getAllUsers_whenGetAllUsersThrowsException_throwCustomException() throws Exception {
         when(this.userServiceMock.getAllUsers("1"))
-                .thenThrow(new NullPointerException());
+                .thenThrow(new CustomException(SERVER_ERROR_MESSAGE));
 
         Exception resolvedException = this.mvc
                 .perform(get("/users/all/{id}", "1"))

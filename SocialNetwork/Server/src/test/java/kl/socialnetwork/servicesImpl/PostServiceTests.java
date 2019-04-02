@@ -112,7 +112,7 @@ public class PostServiceTests {
         when(mockPostValidationService.isValid(any(Post.class)))
                 .thenReturn(true);
 
-        when(mockUserValidationService.isValid(any())).thenReturn(true);
+        when(mockUserValidationService.isValid(any(User.class))).thenReturn(true);
 
         when(mockUserRepository.findById(any()))
                 .thenReturn(java.util.Optional.of(new User()));
@@ -161,7 +161,7 @@ public class PostServiceTests {
         when(mockPostValidationService.isValid(any(PostCreateBindingModel.class)))
                 .thenReturn(false);
 
-        when(mockUserValidationService.isValid(any())).thenReturn(false);
+        when(mockUserValidationService.isValid(any(User.class))).thenReturn(false);
 
         when(mockUserRepository.findById(any()))
                 .thenReturn(java.util.Optional.of(new User()));
@@ -188,7 +188,7 @@ public class PostServiceTests {
         when(mockPostValidationService.isValid(any(Post.class)))
                 .thenReturn(true);
 
-        when(mockUserValidationService.isValid(any())).thenReturn(true);
+        when(mockUserValidationService.isValid(any(User.class))).thenReturn(true);
 
         // Act
         postService.deletePost("1", "1");
@@ -203,7 +203,7 @@ public class PostServiceTests {
         when(mockPostValidationService.isValid(any(Post.class)))
                 .thenReturn(true);
 
-        when(mockUserValidationService.isValid(any())).thenReturn(false);
+        when(mockUserValidationService.isValid(any(User.class))).thenReturn(false);
 
         // Act
         postService.deletePost("1", "1");
@@ -218,7 +218,7 @@ public class PostServiceTests {
         when(mockPostValidationService.isValid(any(Post.class)))
                 .thenReturn(false);
 
-        when(mockUserValidationService.isValid(any())).thenReturn(true);
+        when(mockUserValidationService.isValid(any(User.class))).thenReturn(true);
 
         // Act
         postService.deletePost("1", "1");
@@ -233,7 +233,7 @@ public class PostServiceTests {
         when(mockPostValidationService.isValid(any(Post.class)))
                 .thenReturn(false);
 
-        when(mockUserValidationService.isValid(any())).thenReturn(false);
+        when(mockUserValidationService.isValid(any(User.class))).thenReturn(false);
 
         // Act
         postService.deletePost("1", "1");
@@ -257,7 +257,7 @@ public class PostServiceTests {
         when(mockPostValidationService.isValid(any(Post.class)))
                 .thenReturn(true);
 
-        when(mockUserValidationService.isValid(any())).thenReturn(true);
+        when(mockUserValidationService.isValid(any(User.class))).thenReturn(true);
 
         // Act
         postService.deletePost("5", "1");

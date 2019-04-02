@@ -46,7 +46,6 @@ public class UserController {
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> registerUser(@RequestBody @Valid UserRegisterBindingModel userRegisterBindingModel) throws JsonProcessingException {
-//        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
 
         if (!userRegisterBindingModel.getPassword().equals(userRegisterBindingModel.getConfirmPassword())) {
             throw new BadRequestException(PASSWORDS_MISMATCH_ERROR_MESSAGE);
@@ -55,83 +54,72 @@ public class UserController {
         UserServiceModel user = modelMapper.map(userRegisterBindingModel, UserServiceModel.class);
         UserCreateViewModel savedUser = this.userService.createUser(user);
 
-        if (user != null) {
-            SuccessResponse successResponse = new SuccessResponse(
-                    LocalDateTime.now(),
-                    SUCCESSFUL_REGISTER_MESSAGE,
-                    savedUser,
-                    true);
+        SuccessResponse successResponse = new SuccessResponse(
+                LocalDateTime.now(),
+                SUCCESSFUL_REGISTER_MESSAGE,
+                savedUser,
+                true);
 
-            System.out.println(this.objectMapper.writeValueAsString(successResponse));
+        System.out.println(this.objectMapper.writeValueAsString(successResponse));
 
-            return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
-        }
-
-        throw new CustomException(SERVER_ERROR_MESSAGE);
+        return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
     }
 
-
     @GetMapping(value = "/all/{id}")
-    @ResponseBody
-    public List<UserAllViewModel> getAllUsers(@PathVariable(value = "id") String userId){
-        try {
-            return this.userService
-                    .getAllUsers(userId)
-                    .stream()
-                    .map(x -> {
-                        UserAllViewModel userAllViewModel = this.modelMapper.map(x, UserAllViewModel.class);
-                        userAllViewModel.setRole(x.extractAuthority());
-                        return userAllViewModel;
-                    })
-                    .collect(Collectors.toList());
+    public List<UserAllViewModel> getAllUsers(@PathVariable(value = "id") String userId) throws Exception {
+        List<UserServiceModel> allUsers = this.userService.getAllUsers(userId);
 
-        } catch (Exception e) {
-            throw new CustomException(SERVER_ERROR_MESSAGE);
-        }
+        return allUsers.stream()
+                .map(x -> {
+                    UserAllViewModel userAllViewModel = this.modelMapper.map(x, UserAllViewModel.class);
+                    userAllViewModel.setRole(x.extractAuthority());
+                    return userAllViewModel;
+                })
+                .collect(Collectors.toList());
     }
 
     @GetMapping(value = "/details/{id}")
-    public ResponseEntity getDetails(@PathVariable String id) throws JsonProcessingException {
+    public ResponseEntity getDetails(@PathVariable String id) throws Exception {
         UserDetailsViewModel user = this.userService.getById(id);
 
-        SuccessResponse successResponse = new SuccessResponse(
-                LocalDateTime.now(),
-                SUCCESSFUL_USER_DETAILS_FOUND_MESSAGE,
-                user,
-                true
-        );
+//        SuccessResponse successResponse = new SuccessResponse(
+//                LocalDateTime.now(),
+//                SUCCESSFUL_USER_DETAILS_FOUND_MESSAGE,
+//                user,
+//                true
+//        );
         return new ResponseEntity<>(this.objectMapper.writeValueAsString(user), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/details/username/{username}")
-    public ResponseEntity getDetailsByUsername(@PathVariable String username) throws JsonProcessingException {
-        UserDetailsViewModel user = this.userService.getByUsername(username);
-
-        SuccessResponse successResponse = new SuccessResponse(
-                LocalDateTime.now(),
-                SUCCESSFUL_USER_DETAILS_FOUND_MESSAGE,
-                user,
-                true
-        );
-        return new ResponseEntity<>(this.objectMapper.writeValueAsString(user), HttpStatus.OK);
-    }
+//    @GetMapping(value = "/details/username/{username}")
+//    public ResponseEntity getDetailsByUsername(@PathVariable String username) throws JsonProcessingException {
+//        UserDetailsViewModel user = this.userService.getByUsername(username);
+//
+////        SuccessResponse successResponse = new SuccessResponse(
+////                LocalDateTime.now(),
+////                SUCCESSFUL_USER_DETAILS_FOUND_MESSAGE,
+////                user,
+////                true
+////        );
+//        return new ResponseEntity<>(this.objectMapper.writeValueAsString(user), HttpStatus.OK);
+//    }
 
     @GetMapping(value = "/editDetails/{id}")
-    public ResponseEntity getEditDetails(@PathVariable String id) throws JsonProcessingException {
+    public ResponseEntity getEditDetails(@PathVariable String id) throws Exception {
         UserEditViewModel user = this.userService.editById(id);
 
-        SuccessResponse successResponse = new SuccessResponse(
-                LocalDateTime.now(),
-                SUCCESSFUL_USER_DETAILS_FOUND_MESSAGE,
-                user,
-                true
-        );
+//        SuccessResponse successResponse = new SuccessResponse(
+//                LocalDateTime.now(),
+//                SUCCESSFUL_USER_DETAILS_FOUND_MESSAGE,
+//                user,
+//                true
+//        );
         return new ResponseEntity<>(this.objectMapper.writeValueAsString(user), HttpStatus.OK);
     }
 
     @PutMapping(value = "/update/{id}")
     public ResponseEntity updateUser(@RequestBody @Valid UserUpdateBindingModel userUpdateBindingModel,
-                                     @PathVariable(value = "id") String loggedInUserId) throws JsonProcessingException {
+                                     @PathVariable(value = "id") String loggedInUserId) throws Exception {
 
         UserServiceModel userServiceModel = this.modelMapper.map(userUpdateBindingModel, UserServiceModel.class);
 
@@ -145,6 +133,7 @@ public class UserController {
                     true);
             return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
         }
+
         throw new CustomException(ResponseMessageConstants.SERVER_ERROR_MESSAGE);
     }
 
@@ -181,17 +170,19 @@ public class UserController {
 
 
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<Object> deleteUser(@PathVariable String id) throws JsonProcessingException {
-        boolean result = this.userService.deleteUserById(id);
-        if (result) {
+    public ResponseEntity<Object> deleteUser(@PathVariable String id) {
+        try{
+            this.userService.deleteUserById(id);
+
             SuccessResponse successResponse = new SuccessResponse(
                     LocalDateTime.now(),
                     SUCCESSFUL_USER_DELETE_MESSAGE,
                     "",
                     true);
             return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
+        }catch (Exception e){
+            throw new CustomException(SERVER_ERROR_MESSAGE);
         }
-        throw new CustomException(ResponseMessageConstants.SERVER_ERROR_MESSAGE);
     }
 
 //    @PostMapping(value = "/logout")

@@ -125,7 +125,7 @@ public class PictureServiceTests {
         when(mockCloudinaryValidationService.isValid(anyMap()))
                 .thenReturn(true);
 
-        when(mockUserValidationService.isValid(any())).thenReturn(true);
+        when(mockUserValidationService.isValid(any(User.class))).thenReturn(true);
 
         when(mockUserRepository.findById(any()))
                 .thenReturn(java.util.Optional.of(new User()));
@@ -154,7 +154,7 @@ public class PictureServiceTests {
         when(mockCloudinaryValidationService.isValid(anyMap()))
                 .thenReturn(true);
 
-        when(mockUserValidationService.isValid(any())).thenReturn(false);
+        when(mockUserValidationService.isValid(any(User.class))).thenReturn(false);
 
         when(mockUserRepository.findById(any()))
                 .thenReturn(java.util.Optional.of(new User()));
@@ -180,7 +180,7 @@ public class PictureServiceTests {
         when(mockCloudinaryValidationService.isValid(anyMap()))
                 .thenReturn(false);
 
-        when(mockUserValidationService.isValid(any())).thenReturn(true);
+        when(mockUserValidationService.isValid(any(User.class))).thenReturn(true);
 
         when(mockUserRepository.findById(any()))
                 .thenReturn(java.util.Optional.of(new User()));
@@ -205,7 +205,7 @@ public class PictureServiceTests {
         when(mockCloudinaryValidationService.isValid(anyMap()))
                 .thenReturn(false);
 
-        when(mockUserValidationService.isValid(any())).thenReturn(false);
+        when(mockUserValidationService.isValid(any(User.class))).thenReturn(false);
 
         when(mockUserRepository.findById(any()))
                 .thenReturn(java.util.Optional.of(new User()));
@@ -230,7 +230,7 @@ public class PictureServiceTests {
         when(mockUserRepository.findById(any()))
                 .thenReturn(java.util.Optional.of(user));
 
-        when(mockUserValidationService.isValid(any()))
+        when(mockUserValidationService.isValid(any(User.class)))
                 .thenReturn(true);
 
         when(mockPictureRepository.findById(any()))
@@ -258,7 +258,7 @@ public class PictureServiceTests {
         when(mockUserRepository.findById(any()))
                 .thenReturn(java.util.Optional.of(user));
 
-        when(mockUserValidationService.isValid(any()))
+        when(mockUserValidationService.isValid(any(User.class)))
                 .thenReturn(false);
 
         when(mockPictureRepository.findById(any()))
@@ -286,7 +286,7 @@ public class PictureServiceTests {
         when(mockUserRepository.findById(any()))
                 .thenReturn(java.util.Optional.of(user));
 
-        when(mockUserValidationService.isValid(any()))
+        when(mockUserValidationService.isValid(any(User.class)))
                 .thenReturn(true);
 
         when(mockPictureRepository.findById(any()))
@@ -314,7 +314,7 @@ public class PictureServiceTests {
         when(mockUserRepository.findById(any()))
                 .thenReturn(java.util.Optional.of(user));
 
-        when(mockUserValidationService.isValid(any()))
+        when(mockUserValidationService.isValid(any(User.class)))
                 .thenReturn(false);
 
         when(mockPictureRepository.findById(any()))
@@ -342,7 +342,7 @@ public class PictureServiceTests {
         when(mockUserRepository.findById(any()))
                 .thenReturn(java.util.Optional.of(user));
 
-        when(mockUserValidationService.isValid(any()))
+        when(mockUserValidationService.isValid(any(User.class)))
                 .thenReturn(true);
 
         when(mockPictureRepository.findById(any()))

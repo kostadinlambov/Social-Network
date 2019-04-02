@@ -73,7 +73,7 @@ public class CommentServiceTests {
         when(mockPostValidationService.isValid(any(Post.class)))
                 .thenReturn(true);
 
-        when(mockUserValidationService.isValid(any())).thenReturn(true);
+        when(mockUserValidationService.isValid(any(User.class))).thenReturn(true);
 
         when(mockUserRepository.findById(any()))
                 .thenReturn(java.util.Optional.of(new User()));
@@ -100,7 +100,7 @@ public class CommentServiceTests {
         when(mockPostValidationService.isValid(any(Post.class)))
                 .thenReturn(true);
 
-        when(mockUserValidationService.isValid(any())).thenReturn(true);
+        when(mockUserValidationService.isValid(any(User.class))).thenReturn(true);
 
         when(mockUserRepository.findById(any()))
                 .thenReturn(java.util.Optional.of(new User()));
@@ -126,7 +126,7 @@ public class CommentServiceTests {
         when(mockPostValidationService.isValid(any(Post.class)))
                 .thenReturn(true);
 
-        when(mockUserValidationService.isValid(any())).thenReturn(false);
+        when(mockUserValidationService.isValid(any(User.class))).thenReturn(false);
 
         when(mockUserRepository.findById(any()))
                 .thenReturn(java.util.Optional.of(new User()));
@@ -153,7 +153,7 @@ public class CommentServiceTests {
         when(mockPostValidationService.isValid(any(Post.class)))
                 .thenReturn(false);
 
-        when(mockUserValidationService.isValid(any())).thenReturn(true);
+        when(mockUserValidationService.isValid(any(User.class))).thenReturn(true);
 
         when(mockUserRepository.findById(any()))
                 .thenReturn(java.util.Optional.of(new User()));
@@ -180,7 +180,7 @@ public class CommentServiceTests {
         when(mockPostValidationService.isValid(any(Post.class)))
                 .thenReturn(false);
 
-        when(mockUserValidationService.isValid(any())).thenReturn(false);
+        when(mockUserValidationService.isValid(any(User.class))).thenReturn(false);
 
         when(mockUserRepository.findById(any()))
                 .thenReturn(null);
@@ -212,7 +212,7 @@ public class CommentServiceTests {
         when(mockCommentRepository.findById(any()))
                 .thenReturn(java.util.Optional.of(comment));
 
-        when(mockUserValidationService.isValid(any()))
+        when(mockUserValidationService.isValid(any(User.class)))
                 .thenReturn(true);
 
 //         Act
@@ -232,7 +232,7 @@ public class CommentServiceTests {
         when(mockUserRepository.findById(any()))
                 .thenReturn(java.util.Optional.of(user));
 
-        when(mockUserValidationService.isValid(any()))
+        when(mockUserValidationService.isValid(any(User.class)))
                 .thenReturn(false);
 
         when(mockCommentValidationService.isValid(any(Comment.class)))
@@ -258,7 +258,7 @@ public class CommentServiceTests {
         when(mockUserRepository.findById(any()))
                 .thenReturn(java.util.Optional.of(user));
 
-        when(mockUserValidationService.isValid(any()))
+        when(mockUserValidationService.isValid(any(User.class)))
                 .thenReturn(true);
 
         when(mockCommentRepository.findById(any()))
@@ -285,7 +285,7 @@ public class CommentServiceTests {
         when(mockUserRepository.findById(any()))
                 .thenReturn(java.util.Optional.of(user));
 
-        when(mockUserValidationService.isValid(any()))
+        when(mockUserValidationService.isValid(any(User.class)))
                 .thenReturn(false);
 
         when(mockCommentRepository.findById(any()))
@@ -312,7 +312,7 @@ public class CommentServiceTests {
         when(mockUserRepository.findById(any()))
                 .thenReturn(java.util.Optional.of(users.get(0)));
 
-        when(mockUserValidationService.isValid(any()))
+        when(mockUserValidationService.isValid(any(User.class)))
                 .thenReturn(true);
 
         when(mockCommentRepository.findById(any()))

@@ -56,8 +56,6 @@ public class ApplicationSecurityConfiguration
                         "/**/*.html",
                         "/**/*.css",
                         "/**/*.js"
-
-
                         ).permitAll()
                 .antMatchers(
                         "/users/details/*",
