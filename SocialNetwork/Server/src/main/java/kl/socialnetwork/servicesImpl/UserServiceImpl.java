@@ -4,13 +4,11 @@ import kl.socialnetwork.domain.entities.User;
 import kl.socialnetwork.domain.entities.UserRole;
 import kl.socialnetwork.domain.modles.serviceModels.UserServiceModel;
 import kl.socialnetwork.domain.modles.viewModels.user.UserCreateViewModel;
-import kl.socialnetwork.domain.modles.viewModels.user.UserDeleteViewModel;
 import kl.socialnetwork.domain.modles.viewModels.user.UserDetailsViewModel;
 import kl.socialnetwork.domain.modles.viewModels.user.UserEditViewModel;
 import kl.socialnetwork.repositories.RoleRepository;
 import kl.socialnetwork.repositories.UserRepository;
 import kl.socialnetwork.services.UserService;
-import kl.socialnetwork.utils.constants.ResponseMessageConstants;
 import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;
 import kl.socialnetwork.validations.serviceValidation.services.UserValidationService;
 import org.modelmapper.ModelMapper;
@@ -104,7 +102,6 @@ public class UserServiceImpl implements UserService {
         return this.userRepository.save(userEntity) != null;
     }
 
-
     @Override
     public List<UserServiceModel> getAllUsers(String userId) throws Exception {
         User userById = this.userRepository.findById(userId).orElse(null);
@@ -144,7 +141,6 @@ public class UserServiceImpl implements UserService {
         return this.modelMapper.map(user, UserEditViewModel.class);
     }
 
-
     @Override
     public User getByEmailValidation(String email) {
         return this.userRepository.findByEmail(email);
@@ -154,7 +150,6 @@ public class UserServiceImpl implements UserService {
     public User getByUsernameValidation(String username) {
         return this.userRepository.findByUsername(username).orElse(null);
     }
-
 
     @Override
     public void deleteUserById(String id) throws Exception {
@@ -167,22 +162,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = this.userRepository
+        return this.userRepository
                 .findByUsername(username)
-                .orElse(null);
-
-        if (user == null) throw new UsernameNotFoundException("No such user.");
-
-        return user;
+                .filter(userValidation::isValid)
+                .orElseThrow(() -> new UsernameNotFoundException("No such user."));
     }
 
     @Override
-    public boolean promoteUser(String id) {
-        User user = this.userRepository
-                .findById(id)
-                .orElse(null);
-
-        if (user == null) return false;
+    public boolean promoteUser(String id) throws Exception {
+        User user = this.userRepository.findById(id)
+                .filter(userValidation::isValid)
+                .orElseThrow(Exception::new);
 
         String userAuthority = this.getUserAuthority(user.getId());
 
@@ -190,21 +180,20 @@ public class UserServiceImpl implements UserService {
             case "USER":
                 user.setAuthorities(this.getAuthorities("ADMIN"));
                 break;
+            case "ROOT":
+                throw new CustomException("You can't change ROOT authority!");
             default:
-                throw new CustomException("There is no role, higher than Admin");
+                throw new CustomException("There is no role, higher than Admin!");
         }
 
-        this.userRepository.saveAndFlush(user);
-        return true;
+        return this.userRepository.save(user) != null;
     }
 
     @Override
-    public boolean demoteUser(String id) {
-        User user = this.userRepository
-                .findById(id)
-                .orElse(null);
-
-        if (user == null) return false;
+    public boolean demoteUser(String id) throws Exception {
+        User user = this.userRepository.findById(id)
+                .filter(userValidation::isValid)
+                .orElseThrow(Exception::new);
 
         String userAuthority = this.getUserAuthority(user.getId());
 
@@ -212,12 +201,13 @@ public class UserServiceImpl implements UserService {
             case "ADMIN":
                 user.setAuthorities(this.getAuthorities("USER"));
                 break;
+            case "ROOT":
+                throw new CustomException("You can't change ROOT authority!");
             default:
-                throw new CustomException("There is no role, lower than USER");
+                throw new CustomException("There is no role, lower than USER!");
         }
 
-        this.userRepository.saveAndFlush(user);
-        return true;
+        return this.userRepository.save(user) != null;
     }
 
     private List<UserRole> getUserRoles(User userById) {
@@ -248,34 +238,4 @@ public class UserServiceImpl implements UserService {
                 .get()
                 .getAuthority();
     }
-
-    //    @Override
-//    public UserDetailsViewModel getByUsername(String username) {
-//        User user = this.userRepository.findById(username).orElse(null);
-//
-//        if (user != null) {
-//            return this.modelMapper.map(user, UserDetailsViewModel.class);
-//        }
-//
-//        throw new CustomException(USER_NOT_FOUND_ERROR_MESSAGE);
-//    }
-
-    //    @Override
-//    public User getByFirstName(String firstName) {
-//        return this.userRepository.findAllByFirstName(firstName);
-//    }
-
-
-//    @Override
-//    public UserDeleteViewModel deleteUserByEmail(String email) {
-//
-//        User user = this.userRepository.findByEmail(email);
-//
-//        if (user != null) {
-//            this.userRepository.delete(user);
-//            return this.modelMapper.map(user, UserDeleteViewModel.class);
-//        }
-//        return null;
-//    }
-
 }

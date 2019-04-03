@@ -24,9 +24,9 @@ public interface UserService extends UserDetailsService {
 
     List<UserServiceModel> getAllUsers(String userId) throws Exception;
 
-    boolean promoteUser(String id);
+    boolean promoteUser(String id) throws Exception;
 
-    boolean demoteUser(String id);
+    boolean demoteUser(String id) throws Exception;
 
     void deleteUserById(String id) throws Exception;
 }

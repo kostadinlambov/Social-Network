@@ -22,6 +22,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
@@ -673,5 +674,228 @@ public class UserServiceTests {
 
         // Act
         userService.deleteUserById("invalid_id");
+    }
+
+    @Test
+    public void loadUserByUsername_whenUserIdIsValid_returnUser() throws Exception {
+        // Arrange
+        User user = UsersUtils.createUser();
+
+        when(mockUserRepository.findByUsername(anyString()))
+                .thenReturn(java.util.Optional.of(user));
+
+        when(mockUserValidationService.isValid(any(User.class)))
+                .thenReturn(true);
+
+        // Act
+        userService.loadUserByUsername("username");
+
+        // Assert
+        verify(mockUserRepository).findByUsername(anyString());
+        verify(mockUserRepository, times(1)).findByUsername(anyString());
+    }
+
+    @Test
+    public void loadUserByUsername_whenUserWithThatNameDontExist_throwException() throws Exception {
+        // Arrange
+        User user = UsersUtils.createUser();
+
+        when(mockUserRepository.findByUsername(anyString()))
+                .thenReturn(java.util.Optional.of(user));
+
+        when(mockUserValidationService.isValid(any(User.class)))
+                .thenReturn(false);
+
+        thrown.expect(UsernameNotFoundException.class);
+        thrown.expectMessage("No such user.");
+
+        // Act
+        userService.loadUserByUsername("invalid_username");
+
+        // Assert
+        verify(mockUserRepository).findByUsername(anyString());
+        verify(mockUserRepository, times(1)).findByUsername(anyString());
+    }
+
+    @Test
+    public void promoteUser_whenUserIdIsValidFromDbAndUserHasUserAuthority_promoteUserAuthorityToAdmin() throws Exception {
+        // Arrange
+        UserRole userRole = RolesUtils.createUserRole();
+        UserRole adminRole = RolesUtils.createAdminRole();
+
+        User user = UsersUtils.createUser();
+        user.getAuthorities().add(userRole);
+
+        when(mockUserRepository.findById(anyString()))
+                .thenReturn(java.util.Optional.of(user));
+
+        when(mockUserValidationService.isValid(any(User.class)))
+                .thenReturn(true);
+
+        when(mockRoleRepository.getByAuthority("ADMIN"))
+                .thenReturn(adminRole);
+
+        // Act
+        userService.promoteUser("userId");
+
+        // Assert
+        verify(mockUserRepository).save(any(User.class));
+        verify(mockUserRepository, times(1)).save(any(User.class));
+    }
+
+    @Test
+    public void promoteUser_whenUserIdIsValidFromDbAndUserHasAdminAuthority_throwException() throws Exception {
+        // Arrange
+        UserRole adminRole = RolesUtils.createAdminRole();
+
+        User user = UsersUtils.createUser();
+        user.getAuthorities().add(adminRole);
+
+        when(mockUserRepository.findById(anyString()))
+                .thenReturn(java.util.Optional.of(user));
+
+        when(mockUserValidationService.isValid(any(User.class)))
+                .thenReturn(true);
+
+        when(mockRoleRepository.getByAuthority("ADMIN"))
+                .thenReturn(adminRole);
+
+        thrown.expect(CustomException.class);
+        thrown.expectMessage("There is no role, higher than Admin!");
+
+        // Act
+        userService.promoteUser("userId");
+    }
+
+    @Test
+    public void promoteUser_whenUserIdIsValidFromDbAndUserHasRootAuthority_throwException() throws Exception {
+        // Arrange
+        UserRole rootRole = RolesUtils.createRootRole();
+
+        User user = UsersUtils.createUser();
+        user.getAuthorities().add(rootRole);
+
+        when(mockUserRepository.findById(anyString()))
+                .thenReturn(java.util.Optional.of(user));
+
+        when(mockUserValidationService.isValid(any(User.class)))
+                .thenReturn(true);
+
+        thrown.expect(CustomException.class);
+        thrown.expectMessage("You can't change ROOT authority!");
+
+        // Act
+        userService.promoteUser("userId");
+    }
+
+    @Test
+    public void promoteUser_whenUserWithThatIdDontExist_throwException() throws Exception {
+        // Arrange
+        UserRole userRole = RolesUtils.createUserRole();
+
+        User user = UsersUtils.createUser();
+        user.getAuthorities().add(userRole);
+
+        when(mockUserRepository.findById(anyString()))
+                .thenReturn(java.util.Optional.of(user));
+
+        when(mockUserValidationService.isValid(any(User.class)))
+                .thenReturn(false);
+
+        thrown.expect(Exception.class);
+
+        // Act
+        userService.promoteUser("userId");
+    }
+
+    @Test
+    public void demoteUser_whenUserIdIsValidFromDbAndUserHasAdminAuthority_demoteUserAuthorityToUser() throws Exception {
+        // Arrange
+        UserRole userRole = RolesUtils.createUserRole();
+        UserRole adminRole = RolesUtils.createAdminRole();
+
+        User user = UsersUtils.createUser();
+        user.getAuthorities().add(adminRole);
+
+        when(mockUserRepository.findById(anyString()))
+                .thenReturn(java.util.Optional.of(user));
+
+        when(mockUserValidationService.isValid(any(User.class)))
+                .thenReturn(true);
+
+        when(mockRoleRepository.getByAuthority("USER"))
+                .thenReturn(userRole);
+
+        // Act
+        userService.demoteUser("userId");
+
+        // Assert
+        verify(mockUserRepository).save(any(User.class));
+        verify(mockUserRepository, times(1)).save(any(User.class));
+    }
+
+    @Test
+    public void demoteUser_whenUserIdIsValidFromDbAndUserHasUserAuthority_throwException() throws Exception {
+        // Arrange
+        UserRole userRole = RolesUtils.createUserRole();
+
+        User user = UsersUtils.createUser();
+        user.getAuthorities().add(userRole);
+
+        when(mockUserRepository.findById(anyString()))
+                .thenReturn(java.util.Optional.of(user));
+
+        when(mockUserValidationService.isValid(any(User.class)))
+                .thenReturn(true);
+
+        when(mockRoleRepository.getByAuthority("USER"))
+                .thenReturn(userRole);
+
+        thrown.expect(CustomException.class);
+        thrown.expectMessage("There is no role, lower than USER!");
+
+        // Act
+        userService.demoteUser("userId");
+    }
+
+    @Test
+    public void demoteUser_whenUserIdIsValidFromDbAndUserHasRootAuthority_throwException() throws Exception {
+        // Arrange
+        UserRole rootRole = RolesUtils.createRootRole();
+
+        User user = UsersUtils.createUser();
+        user.getAuthorities().add(rootRole);
+
+        when(mockUserRepository.findById(anyString()))
+                .thenReturn(java.util.Optional.of(user));
+
+        when(mockUserValidationService.isValid(any(User.class)))
+                .thenReturn(true);
+
+        thrown.expect(CustomException.class);
+        thrown.expectMessage("You can't change ROOT authority!");
+
+        // Act
+        userService.demoteUser("userId");
+    }
+
+    @Test
+    public void demoteUser_whenUserWithThatIdDontExist_throwException() throws Exception {
+        // Arrange
+        UserRole adminRole = RolesUtils.createAdminRole();
+
+        User user = UsersUtils.createUser();
+        user.getAuthorities().add(adminRole);
+
+        when(mockUserRepository.findById(anyString()))
+                .thenReturn(java.util.Optional.of(user));
+
+        when(mockUserValidationService.isValid(any(User.class)))
+                .thenReturn(false);
+
+        thrown.expect(Exception.class);
+
+        // Act
+        userService.demoteUser("userId");
     }
 }

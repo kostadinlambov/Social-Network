@@ -54,11 +54,7 @@ public class UserController {
         UserServiceModel user = modelMapper.map(userRegisterBindingModel, UserServiceModel.class);
         UserCreateViewModel savedUser = this.userService.createUser(user);
 
-        SuccessResponse successResponse = new SuccessResponse(
-                LocalDateTime.now(),
-                SUCCESSFUL_REGISTER_MESSAGE,
-                savedUser,
-                true);
+        SuccessResponse successResponse = successResponseBuilder(LocalDateTime.now(), SUCCESSFUL_REGISTER_MESSAGE, savedUser, true);
 
         System.out.println(this.objectMapper.writeValueAsString(successResponse));
 
@@ -82,38 +78,13 @@ public class UserController {
     public ResponseEntity getDetails(@PathVariable String id) throws Exception {
         UserDetailsViewModel user = this.userService.getById(id);
 
-//        SuccessResponse successResponse = new SuccessResponse(
-//                LocalDateTime.now(),
-//                SUCCESSFUL_USER_DETAILS_FOUND_MESSAGE,
-//                user,
-//                true
-//        );
         return new ResponseEntity<>(this.objectMapper.writeValueAsString(user), HttpStatus.OK);
     }
-
-//    @GetMapping(value = "/details/username/{username}")
-//    public ResponseEntity getDetailsByUsername(@PathVariable String username) throws JsonProcessingException {
-//        UserDetailsViewModel user = this.userService.getByUsername(username);
-//
-////        SuccessResponse successResponse = new SuccessResponse(
-////                LocalDateTime.now(),
-////                SUCCESSFUL_USER_DETAILS_FOUND_MESSAGE,
-////                user,
-////                true
-////        );
-//        return new ResponseEntity<>(this.objectMapper.writeValueAsString(user), HttpStatus.OK);
-//    }
 
     @GetMapping(value = "/editDetails/{id}")
     public ResponseEntity getEditDetails(@PathVariable String id) throws Exception {
         UserEditViewModel user = this.userService.editById(id);
 
-//        SuccessResponse successResponse = new SuccessResponse(
-//                LocalDateTime.now(),
-//                SUCCESSFUL_USER_DETAILS_FOUND_MESSAGE,
-//                user,
-//                true
-//        );
         return new ResponseEntity<>(this.objectMapper.writeValueAsString(user), HttpStatus.OK);
     }
 
@@ -126,64 +97,54 @@ public class UserController {
         boolean result = this.userService.updateUser(userServiceModel, loggedInUserId);
 
         if (result) {
-            SuccessResponse successResponse = new SuccessResponse(
-                    LocalDateTime.now(),
-                    SUCCESSFUL_USER_PROFILE_EDIT_MESSAGE,
-                    " ",
-                    true);
+            SuccessResponse successResponse = successResponseBuilder(LocalDateTime.now(), SUCCESSFUL_USER_PROFILE_EDIT_MESSAGE, "", true);
             return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
         }
 
         throw new CustomException(ResponseMessageConstants.SERVER_ERROR_MESSAGE);
     }
 
-
     @PostMapping(value = "/promote")
-    public ResponseEntity promoteUser(@RequestParam(name = "id") String id) throws JsonProcessingException {
+    public ResponseEntity promoteUser(@RequestParam(name = "id") String id) throws Exception {
         boolean resultOfPromoting = this.userService.promoteUser(id);
 
         if (resultOfPromoting) {
-            SuccessResponse successResponse = new SuccessResponse(
-                    LocalDateTime.now(),
-                    SUCCESSFUL_USER_PROMOTED_MESSAGE,
-                    "  ",
-                    true);
+            SuccessResponse successResponse = successResponseBuilder(LocalDateTime.now(), SUCCESSFUL_USER_PROMOTED_MESSAGE, "", true);
             return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
         }
+
         throw new CustomException(USER_FAILURE_PROMOTING_MESSAGE);
     }
 
     @PostMapping(value = "/demote")
-    public ResponseEntity demoteUser(@RequestParam(name = "id") String id) throws JsonProcessingException {
+    public ResponseEntity demoteUser(@RequestParam(name = "id") String id) throws Exception {
         boolean resultOfDemoting = this.userService.demoteUser(id);
 
         if (resultOfDemoting) {
-            SuccessResponse successResponse = new SuccessResponse(
-                    LocalDateTime.now(),
-                    SUCCESSFUL_USER_DEMOTED_MESSAGE,
-                    "",
-                    true);
+
+            SuccessResponse successResponse = successResponseBuilder(LocalDateTime.now(), SUCCESSFUL_USER_DEMOTED_MESSAGE, "", true);
             return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
         }
         throw new CustomException(USER_FAILURE_DEMOTING_MESSAGE);
     }
 
-
     @DeleteMapping(value = "/delete/{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable String id) {
-        try{
+        try {
             this.userService.deleteUserById(id);
 
-            SuccessResponse successResponse = new SuccessResponse(
-                    LocalDateTime.now(),
-                    SUCCESSFUL_USER_DELETE_MESSAGE,
-                    "",
-                    true);
+            SuccessResponse successResponse = successResponseBuilder(LocalDateTime.now(), SUCCESSFUL_USER_DELETE_MESSAGE, "", true);
+
             return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CustomException(SERVER_ERROR_MESSAGE);
         }
     }
+
+    private SuccessResponse successResponseBuilder(LocalDateTime timestamp, String message, Object payload, boolean success) {
+        return new SuccessResponse(timestamp, message, payload, success);
+    }
+
 
 //    @PostMapping(value = "/logout")
 //    public ResponseEntity<Object> logout(HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
@@ -198,5 +159,4 @@ public class UserController {
 //                true);
 //        return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
 //    }
-
 }
