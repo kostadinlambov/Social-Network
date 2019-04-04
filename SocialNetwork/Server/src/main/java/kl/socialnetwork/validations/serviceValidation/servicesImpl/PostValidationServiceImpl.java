@@ -17,6 +17,4 @@ public class PostValidationServiceImpl implements PostValidationService {
     public boolean isValid(PostCreateBindingModel postCreateBindingModel) {
         return postCreateBindingModel != null;
     }
-
-
 }

@@ -29,6 +29,6 @@ public class CloudinaryValidationServiceImpl implements CloudinaryValidationServ
     }
 
     private boolean hasUrl(Map uploadMap) {
-        return uploadMap.get("public_id") != null;
+        return uploadMap.get("url") != null;
     }
 }
