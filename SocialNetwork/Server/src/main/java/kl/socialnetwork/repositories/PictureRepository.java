@@ -8,7 +8,5 @@ import java.util.List;
 
 @Repository
 public interface PictureRepository extends JpaRepository<Picture, String> {
-
     List<Picture> findAllByUserId(String userId);
-
 }

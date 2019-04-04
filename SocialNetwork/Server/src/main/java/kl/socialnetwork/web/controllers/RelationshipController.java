@@ -36,7 +36,7 @@ public class RelationshipController {
     }
 
     @GetMapping(value = "/friends/{id}", produces = "application/json")
-    public List<FriendsAllViewModel> findAllFriends(@PathVariable String id) {
+    public List<FriendsAllViewModel> findAllFriends(@PathVariable String id) throws Exception {
         List<RelationshipServiceModel> allFriends = this.relationshipService.findAllUserRelationshipsWithStatus(id);
 
         List<FriendsAllViewModel> friendsAllViewModels = allFriends.stream().map(relationshipServiceModel -> {
@@ -60,7 +60,7 @@ public class RelationshipController {
 
 
     @PostMapping(value = "/addFriend")
-    public ResponseEntity addFriend(@RequestBody Map<String, Object> body) throws JsonProcessingException {
+    public ResponseEntity addFriend(@RequestBody Map<String, Object> body) throws Exception {
         String loggedInUserId = (String) body.get("loggedInUserId");
         String friendCandidateId = (String) body.get("friendCandidateId");
 
@@ -81,7 +81,7 @@ public class RelationshipController {
     }
 
     @PostMapping(value = "/removeFriend")
-    public ResponseEntity removeFriend(@RequestBody Map<String, Object> body) throws JsonProcessingException {
+    public ResponseEntity removeFriend(@RequestBody Map<String, Object> body) throws Exception {
         String loggedInUserId = (String) body.get("loggedInUserId");
         String friendToRemoveId = (String) body.get("friendToRemoveId");
 
@@ -102,7 +102,7 @@ public class RelationshipController {
     }
 
     @PostMapping(value = "/acceptFriend")
-    public ResponseEntity acceptFriend(@RequestBody Map<String, Object> body) throws JsonProcessingException {
+    public ResponseEntity acceptFriend(@RequestBody Map<String, Object> body) throws Exception {
         String loggedInUserId = (String) body.get("loggedInUserId");
         String friendToAcceptId = (String) body.get("friendToAcceptId");
 
@@ -122,7 +122,7 @@ public class RelationshipController {
     }
 
     @PostMapping(value = "/cancelRequest")
-    public ResponseEntity cancelFriendshipRequest(@RequestBody Map<String, Object> body) throws JsonProcessingException {
+    public ResponseEntity cancelFriendshipRequest(@RequestBody Map<String, Object> body) throws Exception {
         String loggedInUserId = (String) body.get("loggedInUserId");
         String friendToRejectId = (String) body.get("friendToRejectId");
 
