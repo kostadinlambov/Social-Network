@@ -56,6 +56,8 @@ export default class RegisterPage extends Component {
         const { touched, ...otherProps } = this.state;
 
         requester.post('/users/register', { ...otherProps }, (response) => {
+            console.log(response);
+            debugger;
             if (response.success === true) {
                 toast.success(<ToastComponent.successToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT

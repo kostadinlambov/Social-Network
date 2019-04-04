@@ -82,6 +82,8 @@ export default {
 
 
 function checkStatus(response) {
+    console.log(response)
+    debugger;
     if (response.status >= 200 && response.status < 300) {
         return response.json()
     } else {
@@ -99,6 +101,7 @@ function checkStatus(response) {
         } else if (response.status === 400) {
             console.log('err response: ', response)
             error.message = 'Internal Server Error: Bad request'
+            // error.message = response.message
             error.status = 400;
             error.type = 'cors'
             throw error;
