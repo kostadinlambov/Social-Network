@@ -1,8 +1,7 @@
 package kl.socialnetwork.web.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kl.socialnetwork.domain.modles.bindingModels.comment.CommentCreateBindingModel;
+import kl.socialnetwork.domain.models.bindingModels.comment.CommentCreateBindingModel;
 import kl.socialnetwork.services.CloudinaryService;
 import kl.socialnetwork.services.CommentService;
 import kl.socialnetwork.utils.constants.ResponseMessageConstants;
@@ -15,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Map;
 

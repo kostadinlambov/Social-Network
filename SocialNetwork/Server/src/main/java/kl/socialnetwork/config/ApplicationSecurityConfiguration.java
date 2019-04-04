@@ -60,6 +60,7 @@ public class ApplicationSecurityConfiguration
                 .antMatchers(
                         "/users/details/*",
                         "/users/update/*",
+//                        "/users/editDetails/*",
                         "/relationship/friends/*",
                         "/relationship/findFriends/*",
                         "/relationship/addFriend",
@@ -80,15 +81,14 @@ public class ApplicationSecurityConfiguration
                 .antMatchers(
                         "/users/promote",
                         "/users/demote",
-                        "/users/details/username",
-                        "/users/editDetails",
                         "/users/all/*",
+                        "/users/details/username",
                         "/logs/all",
                         "/logs/findByUserName",
                         "/logs/clear",
                         "/logs/clearByName"
                 ).hasAnyAuthority("ADMIN", "ROOT")
-                .antMatchers("/users/delete").hasAuthority("ROOT")
+                .antMatchers("/users/delete/*").hasAuthority("ROOT")
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), this.mapper))

@@ -1,18 +1,13 @@
 package kl.socialnetwork.servicesImpl;
 
 
-import kl.socialnetwork.domain.entities.Comment;
 import kl.socialnetwork.domain.entities.Like;
 import kl.socialnetwork.domain.entities.Post;
 import kl.socialnetwork.domain.entities.User;
-import kl.socialnetwork.domain.modles.bindingModels.post.PostCreateBindingModel;
-import kl.socialnetwork.domain.modles.serviceModels.PostServiceModel;
 import kl.socialnetwork.repositories.LikeRepository;
 import kl.socialnetwork.repositories.PostRepository;
 import kl.socialnetwork.repositories.UserRepository;
 import kl.socialnetwork.services.LikeService;
-import kl.socialnetwork.services.PostService;
-import kl.socialnetwork.testUtils.CommentsUtils;
 import kl.socialnetwork.testUtils.LikesUtils;
 import kl.socialnetwork.testUtils.PostsUtils;
 import kl.socialnetwork.testUtils.UsersUtils;

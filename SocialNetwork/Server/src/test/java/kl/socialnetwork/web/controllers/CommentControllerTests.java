@@ -1,9 +1,8 @@
 package kl.socialnetwork.web.controllers;
 
 
-import kl.socialnetwork.domain.modles.bindingModels.comment.CommentCreateBindingModel;
+import kl.socialnetwork.domain.models.bindingModels.comment.CommentCreateBindingModel;
 import kl.socialnetwork.services.CommentService;
-import kl.socialnetwork.services.PostService;
 import kl.socialnetwork.testUtils.CommentsUtils;
 import kl.socialnetwork.testUtils.TestUtil;
 import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;

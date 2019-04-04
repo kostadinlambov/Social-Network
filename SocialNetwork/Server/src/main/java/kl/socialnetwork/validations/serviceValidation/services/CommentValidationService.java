@@ -1,9 +1,7 @@
 package kl.socialnetwork.validations.serviceValidation.services;
 
 import kl.socialnetwork.domain.entities.Comment;
-import kl.socialnetwork.domain.entities.Post;
-import kl.socialnetwork.domain.modles.bindingModels.comment.CommentCreateBindingModel;
-import kl.socialnetwork.domain.modles.bindingModels.post.PostCreateBindingModel;
+import kl.socialnetwork.domain.models.bindingModels.comment.CommentCreateBindingModel;
 
 public interface CommentValidationService {
     boolean isValid(Comment comment);

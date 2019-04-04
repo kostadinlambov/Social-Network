@@ -1,7 +1,7 @@
 package kl.socialnetwork.services;
 
-import kl.socialnetwork.domain.modles.bindingModels.post.PostCreateBindingModel;
-import kl.socialnetwork.domain.modles.serviceModels.PostServiceModel;
+import kl.socialnetwork.domain.models.bindingModels.post.PostCreateBindingModel;
+import kl.socialnetwork.domain.models.serviceModels.PostServiceModel;
 
 import java.util.List;
 

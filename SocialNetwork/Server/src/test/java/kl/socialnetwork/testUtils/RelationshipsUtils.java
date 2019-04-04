@@ -2,7 +2,7 @@ package kl.socialnetwork.testUtils;
 
 import kl.socialnetwork.domain.entities.Relationship;
 import kl.socialnetwork.domain.entities.User;
-import kl.socialnetwork.domain.modles.serviceModels.RelationshipServiceModel;
+import kl.socialnetwork.domain.models.serviceModels.RelationshipServiceModel;
 
 import java.time.LocalDateTime;
 import java.util.List;

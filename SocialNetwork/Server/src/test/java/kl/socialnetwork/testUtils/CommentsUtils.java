@@ -3,13 +3,10 @@ package kl.socialnetwork.testUtils;
 import kl.socialnetwork.domain.entities.Comment;
 import kl.socialnetwork.domain.entities.Post;
 import kl.socialnetwork.domain.entities.User;
-import kl.socialnetwork.domain.modles.bindingModels.comment.CommentCreateBindingModel;
-import kl.socialnetwork.domain.modles.bindingModels.post.PostCreateBindingModel;
-import kl.socialnetwork.domain.modles.serviceModels.CommentServiceModel;
-import kl.socialnetwork.domain.modles.serviceModels.PostServiceModel;
+import kl.socialnetwork.domain.models.bindingModels.comment.CommentCreateBindingModel;
+import kl.socialnetwork.domain.models.serviceModels.CommentServiceModel;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;

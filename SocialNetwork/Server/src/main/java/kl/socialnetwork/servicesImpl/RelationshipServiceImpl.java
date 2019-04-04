@@ -2,8 +2,8 @@ package kl.socialnetwork.servicesImpl;
 
 import kl.socialnetwork.domain.entities.Relationship;
 import kl.socialnetwork.domain.entities.User;
-import kl.socialnetwork.domain.modles.serviceModels.RelationshipServiceModel;
-import kl.socialnetwork.domain.modles.viewModels.relationship.FriendsCandidatesViewModel;
+import kl.socialnetwork.domain.models.serviceModels.RelationshipServiceModel;
+import kl.socialnetwork.domain.models.viewModels.relationship.FriendsCandidatesViewModel;
 import kl.socialnetwork.repositories.RelationshipRepository;
 import kl.socialnetwork.repositories.UserRepository;
 import kl.socialnetwork.services.RelationshipService;

@@ -2,7 +2,7 @@ package kl.socialnetwork.validations.serviceValidation.servicesImpl;
 
 import kl.socialnetwork.domain.entities.Post;
 import kl.socialnetwork.domain.entities.User;
-import kl.socialnetwork.domain.modles.bindingModels.post.PostCreateBindingModel;
+import kl.socialnetwork.domain.models.bindingModels.post.PostCreateBindingModel;
 import kl.socialnetwork.testUtils.PostsUtils;
 import kl.socialnetwork.testUtils.UsersUtils;
 import kl.socialnetwork.validations.serviceValidation.services.PostValidationService;

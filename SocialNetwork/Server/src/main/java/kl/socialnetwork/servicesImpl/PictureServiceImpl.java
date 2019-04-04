@@ -3,7 +3,7 @@ package kl.socialnetwork.servicesImpl;
 import kl.socialnetwork.domain.entities.Picture;
 import kl.socialnetwork.domain.entities.User;
 import kl.socialnetwork.domain.entities.UserRole;
-import kl.socialnetwork.domain.modles.serviceModels.PictureServiceModel;
+import kl.socialnetwork.domain.models.serviceModels.PictureServiceModel;
 import kl.socialnetwork.repositories.PictureRepository;
 import kl.socialnetwork.repositories.RoleRepository;
 import kl.socialnetwork.repositories.UserRepository;

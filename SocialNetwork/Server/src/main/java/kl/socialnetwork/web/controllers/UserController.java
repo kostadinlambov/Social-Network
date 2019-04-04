@@ -2,18 +2,19 @@ package kl.socialnetwork.web.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kl.socialnetwork.domain.modles.bindingModels.user.UserRegisterBindingModel;
-import kl.socialnetwork.domain.modles.bindingModels.user.UserUpdateBindingModel;
-import kl.socialnetwork.domain.modles.serviceModels.UserServiceModel;
-import kl.socialnetwork.domain.modles.viewModels.user.UserAllViewModel;
-import kl.socialnetwork.domain.modles.viewModels.user.UserCreateViewModel;
-import kl.socialnetwork.domain.modles.viewModels.user.UserDetailsViewModel;
-import kl.socialnetwork.domain.modles.viewModels.user.UserEditViewModel;
+import kl.socialnetwork.domain.models.bindingModels.user.UserRegisterBindingModel;
+import kl.socialnetwork.domain.models.bindingModels.user.UserUpdateBindingModel;
+import kl.socialnetwork.domain.models.serviceModels.UserServiceModel;
+import kl.socialnetwork.domain.models.viewModels.user.UserAllViewModel;
+import kl.socialnetwork.domain.models.viewModels.user.UserCreateViewModel;
+import kl.socialnetwork.domain.models.viewModels.user.UserDetailsViewModel;
+import kl.socialnetwork.domain.models.viewModels.user.UserEditViewModel;
 import kl.socialnetwork.services.UserService;
 import kl.socialnetwork.utils.constants.ResponseMessageConstants;
 import kl.socialnetwork.utils.responseHandler.exceptions.BadRequestException;
 import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;
 import kl.socialnetwork.utils.responseHandler.successResponse.SuccessResponse;
+import kl.socialnetwork.validations.serviceValidation.services.UserValidationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,27 +37,31 @@ public class UserController {
     private final UserService userService;
     private final ModelMapper modelMapper;
     private final ObjectMapper objectMapper;
+    private final UserValidationService userValidationService;
 
     @Autowired
-    public UserController(UserService userService, ModelMapper modelMapper, ObjectMapper objectMapper) {
+    public UserController(UserService userService, ModelMapper modelMapper, ObjectMapper objectMapper, UserValidationService userValidationService) {
         this.userService = userService;
         this.modelMapper = modelMapper;
         this.objectMapper = objectMapper;
+        this.userValidationService = userValidationService;
     }
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> registerUser(@RequestBody @Valid UserRegisterBindingModel userRegisterBindingModel) throws JsonProcessingException {
+    public ResponseEntity<Object> registerUser(@RequestBody @Valid UserRegisterBindingModel userRegisterBindingModel) throws Exception {
 
-        if (!userRegisterBindingModel.getPassword().equals(userRegisterBindingModel.getConfirmPassword())) {
+        if (!userValidationService.isValid(userRegisterBindingModel.getPassword(), userRegisterBindingModel.getConfirmPassword())) {
             throw new BadRequestException(PASSWORDS_MISMATCH_ERROR_MESSAGE);
+        }
+
+        if (!userValidationService.isValid(userRegisterBindingModel)) {
+            throw new Exception(SERVER_ERROR_MESSAGE);
         }
 
         UserServiceModel user = modelMapper.map(userRegisterBindingModel, UserServiceModel.class);
         UserCreateViewModel savedUser = this.userService.createUser(user);
 
         SuccessResponse successResponse = successResponseBuilder(LocalDateTime.now(), SUCCESSFUL_REGISTER_MESSAGE, savedUser, true);
-
-        System.out.println(this.objectMapper.writeValueAsString(successResponse));
 
         return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
     }
@@ -81,19 +86,15 @@ public class UserController {
         return new ResponseEntity<>(this.objectMapper.writeValueAsString(user), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/editDetails/{id}")
-    public ResponseEntity getEditDetails(@PathVariable String id) throws Exception {
-        UserEditViewModel user = this.userService.editById(id);
-
-        return new ResponseEntity<>(this.objectMapper.writeValueAsString(user), HttpStatus.OK);
-    }
-
     @PutMapping(value = "/update/{id}")
     public ResponseEntity updateUser(@RequestBody @Valid UserUpdateBindingModel userUpdateBindingModel,
                                      @PathVariable(value = "id") String loggedInUserId) throws Exception {
 
-        UserServiceModel userServiceModel = this.modelMapper.map(userUpdateBindingModel, UserServiceModel.class);
+        if(!userValidationService.isValid(userUpdateBindingModel)){
+            throw new Exception(SERVER_ERROR_MESSAGE);
+        }
 
+        UserServiceModel userServiceModel = this.modelMapper.map(userUpdateBindingModel, UserServiceModel.class);
         boolean result = this.userService.updateUser(userServiceModel, loggedInUserId);
 
         if (result) {
@@ -101,8 +102,21 @@ public class UserController {
             return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
         }
 
-        throw new CustomException(ResponseMessageConstants.SERVER_ERROR_MESSAGE);
+        throw new CustomException(SERVER_ERROR_MESSAGE);
     }
+
+    @DeleteMapping(value = "/delete/{id}")
+    public ResponseEntity<Object> deleteUser(@PathVariable String id) throws Exception {
+            boolean result = this.userService.deleteUserById(id);
+
+            if(result){
+                SuccessResponse successResponse = successResponseBuilder(LocalDateTime.now(), SUCCESSFUL_USER_DELETE_MESSAGE, "", true);
+                return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
+            }
+
+            throw new CustomException(SERVER_ERROR_MESSAGE);
+    }
+
 
     @PostMapping(value = "/promote")
     public ResponseEntity promoteUser(@RequestParam(name = "id") String id) throws Exception {
@@ -128,35 +142,17 @@ public class UserController {
         throw new CustomException(USER_FAILURE_DEMOTING_MESSAGE);
     }
 
-    @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<Object> deleteUser(@PathVariable String id) {
-        try {
-            this.userService.deleteUserById(id);
-
-            SuccessResponse successResponse = successResponseBuilder(LocalDateTime.now(), SUCCESSFUL_USER_DELETE_MESSAGE, "", true);
-
-            return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
-        } catch (Exception e) {
-            throw new CustomException(SERVER_ERROR_MESSAGE);
-        }
-    }
 
     private SuccessResponse successResponseBuilder(LocalDateTime timestamp, String message, Object payload, boolean success) {
         return new SuccessResponse(timestamp, message, payload, success);
     }
 
 
-//    @PostMapping(value = "/logout")
-//    public ResponseEntity<Object> logout(HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if(authentication != null){
-//            new SecurityContextLogoutHandler().logout(request, response, authentication);
-//        }
-//        SuccessResponse successResponse = new SuccessResponse(
-//                LocalDateTime.now(),
-//                "You have been successfully logged out!",
-//                "",
-//                true);
-//        return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
+//    @GetMapping(value = "/editDetails/{id}")
+//    public ResponseEntity getEditDetails(@PathVariable String id) throws Exception {
+//        UserEditViewModel user = this.userService.editById(id);
+//
+//        return new ResponseEntity<>(this.objectMapper.writeValueAsString(user), HttpStatus.OK);
 //    }
+
 }

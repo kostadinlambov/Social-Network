@@ -1,7 +1,7 @@
 package kl.socialnetwork.web.controllers;
 
 import kl.socialnetwork.domain.entities.User;
-import kl.socialnetwork.domain.modles.serviceModels.PictureServiceModel;
+import kl.socialnetwork.domain.models.serviceModels.PictureServiceModel;
 import kl.socialnetwork.services.PictureService;
 import kl.socialnetwork.testUtils.PictureUtils;
 import kl.socialnetwork.testUtils.TestUtil;

@@ -1,10 +1,10 @@
 package kl.socialnetwork.services;
 
 import kl.socialnetwork.domain.entities.User;
-import kl.socialnetwork.domain.modles.serviceModels.UserServiceModel;
-import kl.socialnetwork.domain.modles.viewModels.user.UserCreateViewModel;
-import kl.socialnetwork.domain.modles.viewModels.user.UserDetailsViewModel;
-import kl.socialnetwork.domain.modles.viewModels.user.UserEditViewModel;
+import kl.socialnetwork.domain.models.serviceModels.UserServiceModel;
+import kl.socialnetwork.domain.models.viewModels.user.UserCreateViewModel;
+import kl.socialnetwork.domain.models.viewModels.user.UserDetailsViewModel;
+import kl.socialnetwork.domain.models.viewModels.user.UserEditViewModel;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
@@ -28,5 +28,5 @@ public interface UserService extends UserDetailsService {
 
     boolean demoteUser(String id) throws Exception;
 
-    void deleteUserById(String id) throws Exception;
+    boolean deleteUserById(String id) throws Exception;
 }

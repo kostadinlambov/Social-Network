@@ -3,7 +3,7 @@ package kl.socialnetwork.validations.serviceValidation.servicesImpl;
 import kl.socialnetwork.domain.entities.Comment;
 import kl.socialnetwork.domain.entities.Post;
 import kl.socialnetwork.domain.entities.User;
-import kl.socialnetwork.domain.modles.bindingModels.comment.CommentCreateBindingModel;
+import kl.socialnetwork.domain.models.bindingModels.comment.CommentCreateBindingModel;
 import kl.socialnetwork.testUtils.CommentsUtils;
 import kl.socialnetwork.testUtils.PostsUtils;
 import kl.socialnetwork.testUtils.UsersUtils;

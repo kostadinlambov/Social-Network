@@ -2,10 +2,10 @@ package kl.socialnetwork.servicesImpl;
 
 import kl.socialnetwork.domain.entities.User;
 import kl.socialnetwork.domain.entities.UserRole;
-import kl.socialnetwork.domain.modles.serviceModels.UserServiceModel;
-import kl.socialnetwork.domain.modles.viewModels.user.UserCreateViewModel;
-import kl.socialnetwork.domain.modles.viewModels.user.UserDetailsViewModel;
-import kl.socialnetwork.domain.modles.viewModels.user.UserEditViewModel;
+import kl.socialnetwork.domain.models.serviceModels.UserServiceModel;
+import kl.socialnetwork.domain.models.viewModels.user.UserCreateViewModel;
+import kl.socialnetwork.domain.models.viewModels.user.UserDetailsViewModel;
+import kl.socialnetwork.domain.models.viewModels.user.UserEditViewModel;
 import kl.socialnetwork.repositories.RoleRepository;
 import kl.socialnetwork.repositories.UserRepository;
 import kl.socialnetwork.services.UserService;
@@ -152,12 +152,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUserById(String id) throws Exception {
+    public boolean deleteUserById(String id) throws Exception {
        this.userRepository.findById(id)
                 .filter(userValidation::isValid)
                 .orElseThrow(Exception::new);
 
-        this.userRepository.deleteById(id);
+        try {
+            this.userRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            throw new Exception(SERVER_ERROR_MESSAGE);
+        }
     }
 
     @Override

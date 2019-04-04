@@ -20,7 +20,7 @@ public class CloudinaryValidationServiceImpl implements CloudinaryValidationServ
 
     @Override
     public boolean isValid(String public_id) {
-        return public_id != null;
+            return public_id != null;
     }
 
 

@@ -1,10 +1,9 @@
 package kl.socialnetwork.web.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kl.socialnetwork.domain.modles.bindingModels.post.PostCreateBindingModel;
-import kl.socialnetwork.domain.modles.serviceModels.PostServiceModel;
-import kl.socialnetwork.domain.modles.viewModels.post.PostAllViewModel;
+import kl.socialnetwork.domain.models.bindingModels.post.PostCreateBindingModel;
+import kl.socialnetwork.domain.models.serviceModels.PostServiceModel;
+import kl.socialnetwork.domain.models.viewModels.post.PostAllViewModel;
 import kl.socialnetwork.services.CloudinaryService;
 import kl.socialnetwork.services.PostService;
 import kl.socialnetwork.utils.constants.ResponseMessageConstants;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -91,17 +89,12 @@ public class PostController {
         boolean result = this.postService.deletePost(loggedInUserId, postToRemoveId);
 
         if (result) {
-            SuccessResponse successResponse = new SuccessResponse(
-                    LocalDateTime.now(),
-                    "Post successfully deleted!",
-                    "",
-                    true
-            );
+            SuccessResponse successResponse = new SuccessResponse(LocalDateTime.now(), "Post successfully deleted!", "", true);
 
             return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
         }
 
-        throw new CustomException(ResponseMessageConstants.SERVER_ERROR_MESSAGE);
+        throw new CustomException(SERVER_ERROR_MESSAGE);
     }
 
 }

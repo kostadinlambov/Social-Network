@@ -1,7 +1,7 @@
 package kl.socialnetwork.validations.serviceValidation.services;
 
 import kl.socialnetwork.domain.entities.Post;
-import kl.socialnetwork.domain.modles.bindingModels.post.PostCreateBindingModel;
+import kl.socialnetwork.domain.models.bindingModels.post.PostCreateBindingModel;
 
 public interface PostValidationService {
     boolean isValid(Post post);

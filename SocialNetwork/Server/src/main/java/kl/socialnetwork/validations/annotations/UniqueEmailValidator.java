@@ -19,10 +19,10 @@ public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail,Str
         this.userService = userService;
     }
 
-    @Override
-    public void initialize(UniqueEmail email) {
-
-    }
+//    @Override
+//    public void initialize(UniqueEmail email) {
+//
+//    }
 
     @Override
     public boolean isValid(String email, ConstraintValidatorContext constraintValidatorContext) {

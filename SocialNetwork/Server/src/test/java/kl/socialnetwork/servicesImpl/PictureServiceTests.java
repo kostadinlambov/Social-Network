@@ -1,26 +1,17 @@
 package kl.socialnetwork.servicesImpl;
 
-import kl.socialnetwork.domain.entities.Comment;
 import kl.socialnetwork.domain.entities.Picture;
-import kl.socialnetwork.domain.entities.Post;
 import kl.socialnetwork.domain.entities.User;
-import kl.socialnetwork.domain.modles.bindingModels.post.PostCreateBindingModel;
-import kl.socialnetwork.domain.modles.serviceModels.PictureServiceModel;
-import kl.socialnetwork.domain.modles.serviceModels.PostServiceModel;
+import kl.socialnetwork.domain.models.serviceModels.PictureServiceModel;
 import kl.socialnetwork.repositories.PictureRepository;
-import kl.socialnetwork.repositories.PostRepository;
 import kl.socialnetwork.repositories.UserRepository;
 import kl.socialnetwork.services.CloudinaryService;
 import kl.socialnetwork.services.PictureService;
-import kl.socialnetwork.services.PostService;
-import kl.socialnetwork.testUtils.CommentsUtils;
 import kl.socialnetwork.testUtils.PictureUtils;
-import kl.socialnetwork.testUtils.PostsUtils;
 import kl.socialnetwork.testUtils.UsersUtils;
 import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;
 import kl.socialnetwork.validations.serviceValidation.services.CloudinaryValidationService;
 import kl.socialnetwork.validations.serviceValidation.services.PictureValidationService;
-import kl.socialnetwork.validations.serviceValidation.services.PostValidationService;
 import kl.socialnetwork.validations.serviceValidation.services.UserValidationService;
 import org.junit.Before;
 import org.junit.Test;

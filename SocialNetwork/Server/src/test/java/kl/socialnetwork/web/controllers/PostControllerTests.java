@@ -2,8 +2,8 @@ package kl.socialnetwork.web.controllers;
 
 
 import kl.socialnetwork.domain.entities.User;
-import kl.socialnetwork.domain.modles.bindingModels.post.PostCreateBindingModel;
-import kl.socialnetwork.domain.modles.serviceModels.PostServiceModel;
+import kl.socialnetwork.domain.models.bindingModels.post.PostCreateBindingModel;
+import kl.socialnetwork.domain.models.serviceModels.PostServiceModel;
 import kl.socialnetwork.services.PostService;
 import kl.socialnetwork.testUtils.PostsUtils;
 import kl.socialnetwork.testUtils.TestUtil;

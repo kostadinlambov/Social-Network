@@ -1,6 +1,6 @@
 package kl.socialnetwork.services;
 
-import kl.socialnetwork.domain.modles.bindingModels.comment.CommentCreateBindingModel;
+import kl.socialnetwork.domain.models.bindingModels.comment.CommentCreateBindingModel;
 
 public interface CommentService {
 

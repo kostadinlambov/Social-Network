@@ -1,7 +1,7 @@
 package kl.socialnetwork.web.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kl.socialnetwork.domain.modles.viewModels.picture.PictureAllViewModel;
+import kl.socialnetwork.domain.models.viewModels.picture.PictureAllViewModel;
 import kl.socialnetwork.services.CloudinaryService;
 import kl.socialnetwork.services.PictureService;
 import kl.socialnetwork.utils.constants.ResponseMessageConstants;
@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
