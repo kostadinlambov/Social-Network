@@ -1,10 +1,15 @@
 package kl.socialnetwork.web.controllers;
 
 
+import kl.socialnetwork.domain.entities.Comment;
+import kl.socialnetwork.domain.entities.Post;
 import kl.socialnetwork.domain.entities.User;
 import kl.socialnetwork.domain.models.bindingModels.post.PostCreateBindingModel;
 import kl.socialnetwork.domain.models.serviceModels.PostServiceModel;
+import kl.socialnetwork.domain.models.viewModels.comment.CommentAllViewModel;
+import kl.socialnetwork.domain.models.viewModels.post.PostAllViewModel;
 import kl.socialnetwork.services.PostService;
+import kl.socialnetwork.testUtils.CommentsUtils;
 import kl.socialnetwork.testUtils.PostsUtils;
 import kl.socialnetwork.testUtils.TestUtil;
 import kl.socialnetwork.testUtils.UsersUtils;
@@ -78,22 +83,46 @@ public class PostControllerTests {
     @WithMockUser(authorities = "USER")
     public void getAllPosts_when2Posts_2Posts() throws Exception {
         List<User> users = UsersUtils.getUsers(2);
+        User firstUser = users.get(0);
+        User secondUser = users.get(1);
+        Post post = PostsUtils.createPost(firstUser, firstUser);
+
+        List<Comment> comments = CommentsUtils.getComments(2, firstUser, firstUser, post);
+
         List<PostServiceModel> posts = PostsUtils.getPostServiceModels(2, users.get(0), users.get(1));
+
+        posts.get(0).getCommentList().addAll(comments);
+        posts.get(1).getCommentList().addAll(comments);
+
+        List<PostAllViewModel> postAllViewModels = PostsUtils.getPostAllViewModels(2);
+        List<CommentAllViewModel> commentAllViewModels = CommentsUtils.getCommentAllViewModels(2);
+
+        postAllViewModels.get(0).getCommentList().addAll(commentAllViewModels);
+        postAllViewModels.get(1).getCommentList().addAll(commentAllViewModels);
 
         when(this.postServiceMock.getAllPosts("1"))
                 .thenReturn(posts);
+
+        CommentAllViewModel firstComment = postAllViewModels.get(0).getCommentList().get(0);
 
         this.mvc
                 .perform(get("/post/all/{id}", "1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-//              .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(content().contentTypeCompatibleWith("application/json"))
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].postId", is("1")))
-                .andExpect(jsonPath("$[0].content", is("content 0 post")))
-                .andExpect(jsonPath("$[1].postId", is("2")))
-                .andExpect(jsonPath("$[1].content", is("content 1 post")));
+                .andExpect(jsonPath("$[0].postId", is(postAllViewModels.get(0).getPostId())))
+                .andExpect(jsonPath("$[0].content", is(postAllViewModels.get(0).getContent())))
+//                .andExpect(jsonPath("$[0].commentList[0].commentId", is(firstComment.getCommentId())))
+                .andExpect(jsonPath("$[0].commentList[0].content", is(firstComment.getContent())))
+                .andExpect(jsonPath("$[0].commentList[0].creatorFirstName", is(firstComment.getCreatorFirstName())))
+                .andExpect(jsonPath("$[0].commentList[0].creatorLastName", is(firstComment.getCreatorLastName())))
+                .andExpect(jsonPath("$[0].commentList[0].creatorProfilePicUrl", is(firstComment.getCreatorProfilePicUrl())))
+//                .andExpect(jsonPath("$[0].commentList[0].imageUrl", is(firstComment.getImageUrl())))
+                .andExpect(jsonPath("$[0].commentList[0].timelineUserId", is(firstComment.getTimelineUserId())))
+//                .andExpect(jsonPath("$[0].commentList[0].time", is(firstComment.getTime())))
+                .andExpect(jsonPath("$[1].postId", is(postAllViewModels.get(1).getPostId())))
+                .andExpect(jsonPath("$[1].content", is(postAllViewModels.get(1).getContent())));
 
         verify(this.postServiceMock, times(1)).getAllPosts("1");
         verifyNoMoreInteractions(this.postServiceMock);

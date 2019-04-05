@@ -42,7 +42,6 @@ public class PostController {
         this.objectMapper = objectMapper;
     }
 
-
     @PostMapping (value = "/create")
     @ResponseBody
     public ResponseEntity<Object> createPost(@RequestBody @Valid PostCreateBindingModel postCreateBindingModel, Authentication principal) throws Exception {
@@ -62,7 +61,6 @@ public class PostController {
 
         throw new CustomException(SERVER_ERROR_MESSAGE);
     }
-
 
     @GetMapping(value = "/all/{id}")
     @ResponseBody

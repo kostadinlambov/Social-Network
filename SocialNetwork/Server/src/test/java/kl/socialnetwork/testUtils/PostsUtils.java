@@ -4,6 +4,8 @@ import kl.socialnetwork.domain.entities.Post;
 import kl.socialnetwork.domain.entities.User;
 import kl.socialnetwork.domain.models.bindingModels.post.PostCreateBindingModel;
 import kl.socialnetwork.domain.models.serviceModels.PostServiceModel;
+import kl.socialnetwork.domain.models.viewModels.comment.CommentAllViewModel;
+import kl.socialnetwork.domain.models.viewModels.post.PostAllViewModel;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -56,6 +58,26 @@ public class PostsUtils {
                     setLike(new ArrayList<>());
                     setTime(time);
                     setImageUrl("imageUrl" + index);
+                    setCommentList(new ArrayList<>());
+                }})
+                .collect(Collectors.toList());
+    }
+
+    public static List<PostAllViewModel> getPostAllViewModels(int count) {
+        LocalDateTime time = LocalDateTime.now();
+
+        return IntStream.range(0, count)
+                .mapToObj(index -> new PostAllViewModel() {{
+                    setPostId(String.valueOf(index + 1));
+                    setLoggedInUserId("loggedInUserId " + index + 1);
+                    setTimelineUserId("timelineUserId " + index + 1);
+                    setLoggedInUserFirstName("firstName " + index + 1);
+                    setLoggedInUserLastName("lastName " + index + 1);
+                    setContent("content " + index + " post");
+                    setTime(time);
+                    setLoggedInUserProfilePicUrl("profilePicUrl " + index);
+                    setImageUrl("imageUrl " + index);
+                    setLikeCount(index);
                     setCommentList(new ArrayList<>());
                 }})
                 .collect(Collectors.toList());

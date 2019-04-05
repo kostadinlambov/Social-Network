@@ -5,7 +5,6 @@ import kl.socialnetwork.domain.models.serviceModels.RelationshipServiceModel;
 import kl.socialnetwork.domain.models.viewModels.relationship.FriendsAllViewModel;
 import kl.socialnetwork.domain.models.viewModels.relationship.FriendsCandidatesViewModel;
 import kl.socialnetwork.services.RelationshipService;
-import kl.socialnetwork.utils.constants.ResponseMessageConstants;
 import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;
 import kl.socialnetwork.utils.responseHandler.successResponse.SuccessResponse;
 import org.modelmapper.ModelMapper;
@@ -18,6 +17,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static kl.socialnetwork.utils.constants.ResponseMessageConstants.*;
 
 @RestController
 @RequestMapping(value = "/relationship")
@@ -42,21 +43,12 @@ public class RelationshipController {
             if (!relationshipServiceModel.getUserOne().getId().equals(id)) {
                 return this.modelMapper.map(relationshipServiceModel.getUserOne(), FriendsAllViewModel.class);
             }
+
             return this.modelMapper.map(relationshipServiceModel.getUserTwo(), FriendsAllViewModel.class);
         }).collect(Collectors.toList());
 
         return friendsAllViewModels;
     }
-
-
-    @GetMapping(value = "/findFriends/{id}", produces = "application/json")
-    public List<FriendsCandidatesViewModel> findAllNotFriends(@PathVariable String id) {
-
-        List<FriendsCandidatesViewModel> allNotFriends = this.relationshipService.findAllFriendCandidates(id);
-
-        return allNotFriends;
-    }
-
 
     @PostMapping(value = "/addFriend")
     public ResponseEntity addFriend(@RequestBody Map<String, Object> body) throws Exception {
@@ -66,17 +58,12 @@ public class RelationshipController {
         boolean result = this.relationshipService.createRequestForAddingFriend(loggedInUserId, friendCandidateId);
 
         if (result) {
-            SuccessResponse successResponse = new SuccessResponse(
-                    LocalDateTime.now(),
-                    "Your friend request have been successfully submitted!",
-                    "",
-                    true
-            );
+            SuccessResponse successResponse = new SuccessResponse(LocalDateTime.now(), SUCCESSFUL_FRIEND_REQUEST_SUBMISSION_MESSAGE, "", true);
 
             return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
         }
 
-        throw new CustomException(ResponseMessageConstants.SERVER_ERROR_MESSAGE);
+        throw new CustomException(SERVER_ERROR_MESSAGE);
     }
 
     @PostMapping(value = "/removeFriend")
@@ -87,17 +74,11 @@ public class RelationshipController {
         boolean result = this.relationshipService.removeFriend(loggedInUserId, friendToRemoveId);
 
         if (result) {
-            SuccessResponse successResponse = new SuccessResponse(
-                    LocalDateTime.now(),
-                    "User was removed from your friends list!",
-                    "",
-                    true
-            );
-
+            SuccessResponse successResponse = new SuccessResponse(LocalDateTime.now(), SUCCESSFUL_FRIEND_REMOVE_MESSAGE, "", true);
             return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
         }
 
-        throw new CustomException(ResponseMessageConstants.SERVER_ERROR_MESSAGE);
+        throw new CustomException(SERVER_ERROR_MESSAGE);
     }
 
     @PostMapping(value = "/acceptFriend")
@@ -108,16 +89,10 @@ public class RelationshipController {
         boolean result = this.relationshipService.acceptFriend(loggedInUserId, friendToAcceptId);
 
         if (result) {
-            SuccessResponse successResponse = new SuccessResponse(
-                    LocalDateTime.now(),
-                    "User was added successfully to your friends list!",
-                    "",
-                    true
-            );
-
+            SuccessResponse successResponse = new SuccessResponse(LocalDateTime.now(), SUCCESSFUL_ADDED_FRIEND_MESSAGE, "", true);
             return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
         }
-        throw new CustomException(ResponseMessageConstants.SERVER_ERROR_MESSAGE);
+        throw new CustomException(SERVER_ERROR_MESSAGE);
     }
 
     @PostMapping(value = "/cancelRequest")
@@ -128,25 +103,24 @@ public class RelationshipController {
         boolean result = this.relationshipService.cancelFriendshipRequest(loggedInUserId, friendToRejectId);
 
         if (result) {
-            SuccessResponse successResponse = new SuccessResponse(
-                    LocalDateTime.now(),
-                    "Request was successfully rejected!",
-                    "",
-                    true
-            );
-
+            SuccessResponse successResponse = new SuccessResponse(LocalDateTime.now(), SUCCESSFUL_REJECT_FRIEND_REQUEST_MESSAGE, "", true);
             return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
         }
 
-        throw new CustomException(ResponseMessageConstants.SERVER_ERROR_MESSAGE);
+        throw new CustomException(SERVER_ERROR_MESSAGE);
     }
 
     @PostMapping(value = "/search", produces = "application/json")
-    public List<FriendsCandidatesViewModel> searchUsers(@RequestBody Map<String, Object> body){
+    public List<FriendsCandidatesViewModel> searchUsers(@RequestBody Map<String, Object> body) {
         String loggedInUserId = (String) body.get("loggedInUserId");
         String search = (String) body.get("search");
 
         return this.relationshipService.searchUsers(loggedInUserId, search);
+    }
+
+    @GetMapping(value = "/findFriends/{id}", produces = "application/json")
+    public List<FriendsCandidatesViewModel> findAllNotFriends(@PathVariable String id) {
+        return this.relationshipService.findAllFriendCandidates(id);
     }
 }
 

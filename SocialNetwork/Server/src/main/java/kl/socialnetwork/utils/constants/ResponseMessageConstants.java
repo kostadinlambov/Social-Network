@@ -56,6 +56,12 @@ public final class ResponseMessageConstants {
     //Comment Messages
     public static final String SUCCESSFUL_CREATE_COMMENT_MESSAGE = "Comment created successfully.";
 
+    // Relationship Messages
+    public static final String SUCCESSFUL_FRIEND_REQUEST_SUBMISSION_MESSAGE = "Your friend request have been successfully submitted!";
+    public static final String SUCCESSFUL_FRIEND_REMOVE_MESSAGE = "User was removed from your friends list!";
+    public static final String SUCCESSFUL_ADDED_FRIEND_MESSAGE = "User was added successfully to your friends list!";
+    public static final String SUCCESSFUL_REJECT_FRIEND_REQUEST_MESSAGE = "Request was successfully rejected!";
+
 
 
 

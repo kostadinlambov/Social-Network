@@ -5,6 +5,7 @@ import kl.socialnetwork.domain.entities.Post;
 import kl.socialnetwork.domain.entities.User;
 import kl.socialnetwork.domain.models.bindingModels.comment.CommentCreateBindingModel;
 import kl.socialnetwork.domain.models.serviceModels.CommentServiceModel;
+import kl.socialnetwork.domain.models.viewModels.comment.CommentAllViewModel;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -63,6 +64,23 @@ public class CommentsUtils {
                     setLoggedInUserId("loggedInUserId" + index);
                     setTimelineUserId("timelineUserId" + index);
                     setImageUrl("ImageUrl" + index);
+                }})
+                .collect(Collectors.toList());
+    }
+
+    public static List<CommentAllViewModel> getCommentAllViewModels(int count) {
+        return IntStream.range(0, count)
+                .mapToObj(index -> new CommentAllViewModel() {{
+                    setCommentId(String.valueOf(index + 1));
+                    setPostId(String.valueOf(index + 1));
+                    setCreatorId(String.valueOf(index + 1));
+                    setTimelineUserId(String.valueOf(index + 1));
+                    setCreatorFirstName("Pesho " + index);
+                    setCreatorLastName("Peshov " + index);
+                    setCreatorProfilePicUrl("profilePic " + index);
+                    setContent("content " + index + " comment");
+                    setTime(LocalDateTime.now().plusSeconds((long)index));
+                    setImageUrl("imageUrl " + index);
                 }})
                 .collect(Collectors.toList());
     }

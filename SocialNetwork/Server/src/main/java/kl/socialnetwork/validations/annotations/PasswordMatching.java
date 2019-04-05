@@ -1,6 +1,5 @@
 package kl.socialnetwork.validations.annotations;
 
-
 import org.springframework.stereotype.Component;
 
 import javax.validation.Constraint;

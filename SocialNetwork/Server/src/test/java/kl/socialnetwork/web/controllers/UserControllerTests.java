@@ -3,13 +3,11 @@ package kl.socialnetwork.web.controllers;
 
 import kl.socialnetwork.domain.entities.User;
 import kl.socialnetwork.domain.entities.UserRole;
-import kl.socialnetwork.domain.models.bindingModels.post.PostCreateBindingModel;
 import kl.socialnetwork.domain.models.bindingModels.user.UserRegisterBindingModel;
 import kl.socialnetwork.domain.models.bindingModels.user.UserUpdateBindingModel;
 import kl.socialnetwork.domain.models.serviceModels.UserServiceModel;
 import kl.socialnetwork.domain.models.viewModels.user.UserCreateViewModel;
 import kl.socialnetwork.domain.models.viewModels.user.UserDetailsViewModel;
-import kl.socialnetwork.domain.models.viewModels.user.UserEditViewModel;
 import kl.socialnetwork.services.UserService;
 import kl.socialnetwork.testUtils.RolesUtils;
 import kl.socialnetwork.testUtils.TestUtil;
@@ -31,10 +29,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletContext;
 import java.util.List;
