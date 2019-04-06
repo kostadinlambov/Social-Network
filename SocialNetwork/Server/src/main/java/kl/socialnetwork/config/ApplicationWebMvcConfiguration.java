@@ -1,10 +1,13 @@
 package kl.socialnetwork.config;
 
+import kl.socialnetwork.web.interceptors.LogsInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.PathResourceResolver;
@@ -12,9 +15,17 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 import java.io.IOException;
 
 @Configuration
-public class WebMvcConfiguration implements WebMvcConfigurer {
+public class ApplicationWebMvcConfiguration implements WebMvcConfigurer {
+    private final LogsInterceptor logsInterceptor;
 
-    public WebMvcConfiguration() {
+    @Autowired
+    public ApplicationWebMvcConfiguration(LogsInterceptor logsInterceptor) {
+        this.logsInterceptor = logsInterceptor;
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(logsInterceptor);
     }
 
     @Override
@@ -33,10 +44,9 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
                 });
     }
 
-
     @Bean
-    public WebMvcConfigurer webMvcConfigurer(){
-        return new WebMvcConfigurer(){
+    public WebMvcConfigurer webMvcConfigurer() {
+        return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
@@ -46,6 +56,4 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
             }
         };
     }
-
-
 }

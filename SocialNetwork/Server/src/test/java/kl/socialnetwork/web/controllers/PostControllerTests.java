@@ -1,6 +1,5 @@
 package kl.socialnetwork.web.controllers;
 
-
 import kl.socialnetwork.domain.entities.Comment;
 import kl.socialnetwork.domain.entities.Post;
 import kl.socialnetwork.domain.entities.User;
@@ -113,21 +112,17 @@ public class PostControllerTests {
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].postId", is(postAllViewModels.get(0).getPostId())))
                 .andExpect(jsonPath("$[0].content", is(postAllViewModels.get(0).getContent())))
-//                .andExpect(jsonPath("$[0].commentList[0].commentId", is(firstComment.getCommentId())))
                 .andExpect(jsonPath("$[0].commentList[0].content", is(firstComment.getContent())))
                 .andExpect(jsonPath("$[0].commentList[0].creatorFirstName", is(firstComment.getCreatorFirstName())))
                 .andExpect(jsonPath("$[0].commentList[0].creatorLastName", is(firstComment.getCreatorLastName())))
                 .andExpect(jsonPath("$[0].commentList[0].creatorProfilePicUrl", is(firstComment.getCreatorProfilePicUrl())))
-//                .andExpect(jsonPath("$[0].commentList[0].imageUrl", is(firstComment.getImageUrl())))
                 .andExpect(jsonPath("$[0].commentList[0].timelineUserId", is(firstComment.getTimelineUserId())))
-//                .andExpect(jsonPath("$[0].commentList[0].time", is(firstComment.getTime())))
                 .andExpect(jsonPath("$[1].postId", is(postAllViewModels.get(1).getPostId())))
                 .andExpect(jsonPath("$[1].content", is(postAllViewModels.get(1).getContent())));
 
         verify(this.postServiceMock, times(1)).getAllPosts("1");
         verifyNoMoreInteractions(this.postServiceMock);
     }
-
 
     @Test()
     @WithMockUser(authorities = "USER")
@@ -249,5 +244,4 @@ public class PostControllerTests {
         verify(postServiceMock, times(1)).deletePost(anyString(), anyString());
         verifyNoMoreInteractions(postServiceMock);
     }
-
 }
