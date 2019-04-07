@@ -55,6 +55,7 @@ export default class Navbar extends Component {
     render() {
         const role = userService.getRole();
         const isAdmin = userService.isAdmin();
+        const isRoot = userService.isRoot();
         const userId = userService.getUserId();
 
         const { loggedIn, onLogout } = this.props;
@@ -93,10 +94,12 @@ export default class Navbar extends Component {
                             <nav className="nav-main">
                                 <ul className="nav-ul">
                                     {loggedIn && <li className="nav-item"><NavLink exact to={`/home/profile/${userId}`} className="nav-link  fas fa-user tooltipCustom"  > {userService.getUsername()}<span className="tooltiptextCustom">Profile</span></NavLink></li>}
+                                   
                                     {loggedIn && <li className="nav-item"><NavLink exact to={`/home/comments/${userId}`} className="nav-link ">Home</NavLink></li>}
                                     {loggedIn && <li className="nav-item"><NavLink exact to={`/home/findFriends/${userId}/findFriends`} className="nav-link " >Find friends!</NavLink></li>}
                                     {loggedIn && <li className="nav-item"><NavLink exact to={`/home/findFriends/${userId}/requests`} className="nav-link fas fa-user-friends tooltipCustom"> <span className="tooltiptextCustom">Friend Requests</span></NavLink></li>}
                                     {loggedIn && <li className="nav-item"><NavLink exact to={`/home/friends/${userId}`} className="nav-link fas fa-envelope tooltipCustom"><span className="tooltiptextCustom">Messages</span></NavLink></li>}
+                                    {(loggedIn && (isRoot || isAdmin)) && <li className="nav-item"><NavLink exact to={`/home/logs/${userId}`} className="nav-link"> Logs</NavLink></li>}
                                     {loggedIn && <li className="nav-item"><NavLink exact to="#" className="nav-link " onClick={onLogout} >Logout</NavLink></li>}
                                     {!loggedIn && <li className="nav-item"><NavLink exact to="/login" className="nav-link" >Login</NavLink></li>}
                                     {!loggedIn && <li className="nav-item"><NavLink exact to="/register" className="nav-link" >Register</NavLink></li>}

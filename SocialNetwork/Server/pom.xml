@@ -2,28 +2,26 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-    <groupId>kl.tennis-shop</groupId>
-    <artifactId>tennis-shop</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
-
-    <name>tennis-shop</name>
-    <description>Spring Boot Project</description>
-
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.4.RELEASE</version>
+        <version>2.1.3.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
+    <groupId>kl</groupId>
+    <artifactId>kl-social-network</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <packaging>jar</packaging>
+
+    <name>kl-social-network</name>
+    <description>Social Network Project with Spring Boot</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>10</java.version>
-        <thymeleaf.version>3.0.9.RELEASE</thymeleaf.version>
-        <thymeleaf-layout-dialect.version>2.2.0</thymeleaf-layout-dialect.version>
+        <java.version>11</java.version>
         <skipTests>true</skipTests>
     </properties>
 
@@ -34,11 +32,34 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>
@@ -46,33 +67,31 @@
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <scope>provided</scope>
         </dependency>
+
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-java8time</artifactId>
+            <version>3.0.1.RELEASE</version>
+        </dependency>
+
         <dependency>
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>
-            <version>2.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
+            <version>2.3.2</version>
         </dependency>
 
-        <!--https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-            <version>2.0.3.RELEASE</version>
-        </dependency>
 
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
@@ -86,61 +105,73 @@
             <version>1.0.14</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.json/json -->
         <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.4.0-b180725.0427</version>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20180813</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+<!--        <dependency>-->
+<!--            <groupId>com.google.code.gson</groupId>-->
+<!--            <artifactId>gson</artifactId>-->
+<!--            <version>2.8.5</version>-->
+<!--        </dependency>-->
+
+
+
+        <!--Tests dependencies-->
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-rest</artifactId>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>1.3.3</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.thymeleaf.extras</groupId>
-            <artifactId>thymeleaf-extras-java8time</artifactId>
-            <version>3.0.1.RELEASE</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.session</groupId>
-            <artifactId>spring-session-core</artifactId>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+            <!--<scope>test</scope>-->
         </dependency>
 
         <!--<dependency>-->
-        <!--<groupId>org.thymeleaf.extras</groupId>-->
-        <!--<artifactId>thymeleaf-extras-springsecurity4</artifactId>-->
-        <!--<version>3.0.2.RELEASE</version>-->
+        <!--<groupId>com.h2database</groupId>-->
+        <!--<artifactId>h2</artifactId>-->
+        <!--<version>1.4.198</version>-->
+        <!--<scope>test</scope>-->
         <!--</dependency>-->
 
+        <!-- https://mvnrepository.com/artifact/com.jayway.jsonpath/json-path -->
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>2.4.0</version>
+        </dependency>
 
-        <!--Import From Spring Data-->
-        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-validator -->
+        <!-- https://mvnrepository.com/artifact/com.jayway.jsonpath/json-path-assert -->
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path-assert</artifactId>
+            <version>2.4.0</version>
+            <scope>test</scope>
+        </dependency>
+
+
+        <!--&lt;!&ndash; https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core &ndash;&gt;-->
         <!--<dependency>-->
-        <!--<groupId>org.hibernate</groupId>-->
-        <!--<artifactId>hibernate-validator</artifactId>-->
-        <!--<version>6.0.10.Final</version>-->
-        <!--</dependency>-->
-        <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.glassfish/javax.el &ndash;&gt;-->
-        <!--<dependency>-->
-        <!--<groupId>org.glassfish</groupId>-->
-        <!--<artifactId>javax.el</artifactId>-->
-        <!--<version>3.0.1-b08</version>-->
+        <!--<groupId>com.fasterxml.jackson.core</groupId>-->
+        <!--<artifactId>jackson-core</artifactId>-->
+        <!--<version>2.9.8</version>-->
         <!--</dependency>-->
 
+        <!--&lt;!&ndash; https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind &ndash;&gt;-->
+        <!--<dependency>-->
+        <!--<groupId>com.fasterxml.jackson.core</groupId>-->
+        <!--<artifactId>jackson-databind</artifactId>-->
+        <!--<version>2.9.8</version>-->
+        <!--</dependency>-->
     </dependencies>
 
     <build>
@@ -148,6 +179,16 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -163,7 +204,8 @@
                             <outputDirectory>${basedir}/src/main/resources/static</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${basedir}/../Client/dist/Client</directory>
+                                    <directory>${basedir}/../Client/build</directory>
+                                    <!--<directory>${basedir}/../Client/dist/Client</directory>-->
                                 </resource>
                             </resources>
                         </configuration>
@@ -173,12 +215,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <!--<version>3.0.0-M3</version>-->
                 <version>2.12.4</version>
                 <configuration>
                     <skipTests>${skipTests}</skipTests>
                 </configuration>
             </plugin>
         </plugins>
-
     </build>
+
 </project>

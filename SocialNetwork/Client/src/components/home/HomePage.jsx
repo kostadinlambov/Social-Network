@@ -22,6 +22,7 @@ const UserAllPage = lazy(() => import('../../components/user/UserAllPage'))
 const UserEditPage = lazy(() => import('../../components/user/UserEditPage'))
 const UserDeletePage = lazy(() => import('../../components/user/UserDeletePage'))
 const UserGalleryPage = lazy(() => import('../../components/user/UserGalleryPage'))
+const UserLogsPage = lazy(() => import('../../components/user/UserLogsPage'))
 
 const ErrorPage = lazy(() => import('../../components/common/ErrorPage'))
 
@@ -87,7 +88,6 @@ export default class HomePage extends Component {
             if (response) {
                 this.setState({
                     picturesArr: response,
-                    // picturesArr: response['payload'],
                     id: userId
                 })
             } else {
@@ -177,7 +177,6 @@ export default class HomePage extends Component {
         return this.state.id === userService.getUserId();
     }
 
-
     render() {
         const userToShowId = this.props.match.params;
         const isRoot = userService.isRoot();
@@ -200,6 +199,7 @@ export default class HomePage extends Component {
                                 {loggedIn && (isRoot || isAdmin || isTheCurrentLoggedInUser) && <Route exact path="/home/users/edit/:id" render={props => <UserEditPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
                                 {(loggedIn && isRoot) && <Route exact path="/home/users/delete/:id" render={props => <UserDeletePage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
                                 {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/users/all/:id" render={props => <UserAllPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
+                                {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/logs/:id" render={props => <UserLogsPage {...props} getUserToShowId={this.getUserToShowId} searchResults={this.searchResults} {...this.state} />} />}
                                 {loggedIn && <Route exact path="/home/gallery/:id" render={props => <UserGalleryPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} loadAllPictures={this.loadAllPictures} />} />}
                                 {loggedIn && <Route exact path="/home/users/search/" render={(props) => <UserSearchResultsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} searchResults={this.searchResults} />} />}
 
@@ -221,7 +221,6 @@ export default class HomePage extends Component {
                     }
                 </main>
             </Fragment>
-
         );
     }
 }

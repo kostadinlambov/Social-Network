@@ -82,7 +82,7 @@ export default {
 
 
 function checkStatus(response) {
-    console.log(response)
+    // console.log(response)
     debugger;
     if (response.status >= 200 && response.status < 300) {
         return response.json()
