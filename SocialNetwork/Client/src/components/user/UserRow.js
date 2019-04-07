@@ -78,26 +78,29 @@ export default class UserRow extends Component {
     render = () => {
         return (
             <tr className="row" >
-                <td className="col-md-1" >
-                    <h5>{this.state.index}</h5>
+                <td className="col-md-1 font-weight-bold" >
+                    {this.state.index}
+                    {/* <h5>{this.state.index}</h5> */}
                 </td>
-                <td className="col-md-3" >
-                    <h5>{this.state.username}</h5>
+                <td className="col-md-2 username-color" >
+                    {this.state.username}
+                    {/* <h5>{this.state.username}</h5> */}
                 </td>
-                <td className="col-md-3" >
-                    <h5>{this.state.role}</h5>
+                <td className="col-md-2" >
+                    {this.state.role}
+                    {/* <h5>{this.state.role}</h5> */}
                 </td>
-                <td className="col-md-5 d-flex justify-content-center" >
+                <td className="col-md-7 d-flex justify-content-center" >
                     {(!userService.checkIfIsRoot(this.state.role) && !userService.isLoggedInUser(this.state.username)) &&
                         <h5>
-                            <button className="btn App-button-primary btn-lg m-1" onClick={this.promote} >Promote</button>
+                            <button className="btn App-button-primary  m-1" onClick={this.promote} >Promote</button>
                         </h5>}
                     {(!userService.checkIfIsRoot(this.state.role) && !userService.isLoggedInUser(this.state.username)) &&
                         <h5>
-                            <button className="btn App-button-primary btn-lg m-1" onClick={this.demote} >Demote</button>
+                            <button className="btn App-button-primary  m-1" onClick={this.demote} >Demote</button>
                         </h5>}
                     <h5>
-                        <NavLink className="btn App-button-primary btn-lg m-1" to={`/home/profile/${this.state.id}`} role="button">Profile</NavLink>
+                        <NavLink className="btn App-button-primary m-1" to={`/home/profile/${this.state.id}`} role="button">Profile</NavLink>
                     </h5>
                 </td>
             </tr>

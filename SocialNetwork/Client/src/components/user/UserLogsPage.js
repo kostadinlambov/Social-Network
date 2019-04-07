@@ -167,8 +167,9 @@ export default class UserLogsPage extends Component {
             <Fragment >
                 <article className="main-article-shared-content">
                     <section className="logs-content-section">
-                        <div className="container col-md-12 text-center mx-auto">
-                            <h1 className="text-center font-weight-bold display-5 mt-5" style={{ 'margin': '1rem auto' }}>Server Logs History</h1>
+                        <div className="container col-md-11 text-center mx-auto mb-4">
+                            {/* <h1 className="text-center font-weight-bold display-5 mt-4" >Server Logs History</h1> */}
+                            <h1 className="text-center font-weight-bold mt-4" style={{ 'margin': '1rem auto' }}>Server Logs History</h1>
                             <hr className="my-2 mb-5 mt-3 col-md-10 mx-auto" />
 
                             {/* <form className="form-inline my-2 my-lg-0" onSubmit={this.searchFriend}> */}

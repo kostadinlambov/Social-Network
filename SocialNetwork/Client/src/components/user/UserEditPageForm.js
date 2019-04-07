@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
 import { userService, requester, observer } from '../../infrastructure';
 import { toast } from 'react-toastify';
@@ -51,7 +51,7 @@ export default class UserEditPageForm extends Component {
         const { touched, ...otherProps } = this.state;
         const loggedInUserId = userService.getUserId();
 
-        requester.put('/users/update/'+ loggedInUserId, { ...otherProps }, (response) => {
+        requester.put('/users/update/' + loggedInUserId, { ...otherProps }, (response) => {
             if (response.success === true) {
                 toast.success(<ToastComponent.successToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
@@ -65,7 +65,7 @@ export default class UserEditPageForm extends Component {
                 //         profilePicUrl: this.state.profilePicUrl,
                 //     })
                 // }
-                
+
 
                 this.props.getUserToShowId(this.state.id);
                 this.props.history.push(`/home/profile/${this.state.id}`);
@@ -147,14 +147,18 @@ export default class UserEditPageForm extends Component {
             return hasError ? shouldShow : false;
         }
         return (
-            <div className="container ">
-                <h1 className="text-center font-weight-bold " style={{ 'margin': '1rem auto' }}>Edit Account</h1>
-                <hr className="my-2 mb-3 mt-3 col-md-12 mx-auto"></hr>
-                <form className="Register-form-container  " onSubmit={this.onSubmitHandler} >
+            <Fragment>
+                <article className="main-article-shared-content">
+                    <section className="form-content-section">
+                        <div className="container mb-4">
+                            <h1 className="text-center font-weight-bold mt-4" style={{ 'margin': '1rem auto' }}>Edit Account</h1>
+                            <hr className="my-2 mb-3 mt-3 col-md-10 mx-auto"></hr>
 
-                    <div className="section-container w-100 mx-auto text-center">
-                        <section className="left-section">
-                            {/* <div className="form-group">
+                            <form className="Register-form-container  " onSubmit={this.onSubmitHandler} >
+
+                                <div className="section-container w-100 mx-auto text-center">
+                                    <section className="left-section">
+                                        {/* <div className="form-group">
                                 <label htmlFor="username" className="font-weight-bold" >Username</label>
                                 <input
                                     type="text"
@@ -170,58 +174,58 @@ export default class UserEditPageForm extends Component {
                                 {shouldMarkError('username') && <small id="usernameHelp" className="form-text alert alert-danger"> {(!this.state.username ? 'Username is required!' : 'Username should be at least 4 and maximum 16 characters long!')}</small>}
                             </div> */}
 
-                            <div className="form-group">
-                                <label htmlFor="firstName" className="font-weight-bold" >First Name</label>
-                                <input
-                                    type="text"
-                                    className={"form-control " + (shouldMarkError('firstName') ? "error" : "")}
-                                    id="firstName"
-                                    name="firstName"
-                                    value={this.state.firstName}
-                                    onChange={this.onChangeHandler}
-                                    onBlur={this.handleBlur('firstName')}
-                                    aria-describedby="firstNameHelp"
-                                    placeholder="Enter first name"
-                                />
-                                {shouldMarkError('firstName') && <small id="firstNameHelp" className="form-text alert alert-danger">{(!this.state.firstName ? 'First Name is required!' : 'First Name must start with a capital letter and contain only letters!')}</small>}
-                            </div>
+                                        <div className="form-group">
+                                            <label htmlFor="firstName" className="font-weight-bold" >First Name</label>
+                                            <input
+                                                type="text"
+                                                className={"form-control " + (shouldMarkError('firstName') ? "error" : "")}
+                                                id="firstName"
+                                                name="firstName"
+                                                value={this.state.firstName}
+                                                onChange={this.onChangeHandler}
+                                                onBlur={this.handleBlur('firstName')}
+                                                aria-describedby="firstNameHelp"
+                                                placeholder="Enter first name"
+                                            />
+                                            {shouldMarkError('firstName') && <small id="firstNameHelp" className="form-text alert alert-danger">{(!this.state.firstName ? 'First Name is required!' : 'First Name must start with a capital letter and contain only letters!')}</small>}
+                                        </div>
 
-                            <div className="form-group">
-                                <label htmlFor="address" className="font-weight-bold" >Address</label>
-                                <input
-                                    type="text"
-                                    className={"form-control " + (shouldMarkError('address') ? "error" : "")}
-                                    id="address"
-                                    name="address"
-                                    value={this.state.address}
-                                    onChange={this.onChangeHandler}
-                                    onBlur={this.handleBlur('address')}
-                                    aria-describedby="addressHelp"
-                                    placeholder="Enter address"
-                                />
-                                {shouldMarkError('address') && <small id="addressHelp" className="form-text alert alert-danger">{(!this.state.address ? 'Address is required!' : '')}</small>}
-                            </div>
+                                        <div className="form-group">
+                                            <label htmlFor="address" className="font-weight-bold" >Address</label>
+                                            <input
+                                                type="text"
+                                                className={"form-control " + (shouldMarkError('address') ? "error" : "")}
+                                                id="address"
+                                                name="address"
+                                                value={this.state.address}
+                                                onChange={this.onChangeHandler}
+                                                onBlur={this.handleBlur('address')}
+                                                aria-describedby="addressHelp"
+                                                placeholder="Enter address"
+                                            />
+                                            {shouldMarkError('address') && <small id="addressHelp" className="form-text alert alert-danger">{(!this.state.address ? 'Address is required!' : '')}</small>}
+                                        </div>
 
-                            {showPicsButtons && <div className="form-group">
-                                <label htmlFor="profilePicUrl" className="font-weight-bold" >Profile image url</label>
-                                <input
-                                    type="text"
-                                    className={"form-control " + (shouldMarkError('profilePicUrl') ? "error" : "")}
-                                    id="profilePicUrl"
-                                    name="profilePicUrl"
-                                    value={this.state.profilePicUrl}
-                                    onChange={this.onChangeHandler}
-                                    onBlur={this.handleBlur('profilePicUrl')}
-                                    aria-describedby="profilePicUrlHelp"
-                                    placeholder="Enter profile image url"
-                                />
-                                {shouldMarkError('profilePicUrl') && <small id="profilePicUrl" className="form-text alert alert-danger">{(!this.state.profilePicUrl ? 'Profile Image Url is required!' : '')}</small>}
-                            </div>}
+                                        {showPicsButtons && <div className="form-group">
+                                            <label htmlFor="profilePicUrl" className="font-weight-bold" >Profile image url</label>
+                                            <input
+                                                type="text"
+                                                className={"form-control " + (shouldMarkError('profilePicUrl') ? "error" : "")}
+                                                id="profilePicUrl"
+                                                name="profilePicUrl"
+                                                value={this.state.profilePicUrl}
+                                                onChange={this.onChangeHandler}
+                                                onBlur={this.handleBlur('profilePicUrl')}
+                                                aria-describedby="profilePicUrlHelp"
+                                                placeholder="Enter profile image url"
+                                            />
+                                            {shouldMarkError('profilePicUrl') && <small id="profilePicUrl" className="form-text alert alert-danger">{(!this.state.profilePicUrl ? 'Profile Image Url is required!' : '')}</small>}
+                                        </div>}
 
-                        </section>
+                                    </section>
 
-                        <section className="right-section">
-                            {/* <div className="form-group">
+                                    <section className="right-section">
+                                        {/* <div className="form-group">
                                 <label htmlFor="email" className="font-weight-bold">Email Address</label>
                                 <input
                                     type="email"
@@ -238,64 +242,68 @@ export default class UserEditPageForm extends Component {
                                 {shouldMarkError('email') && <small id="emailHelp" className="form-text alert alert-danger">{(!this.state.email ? 'Email is required!' : 'Invalid e-mail address!')}</small>}
                             </div> */}
 
-                            <div className="form-group">
-                                <label htmlFor="lastName" className="font-weight-bold">Last Name</label>
-                                <input
-                                    type="text"
-                                    className={"form-control " + (shouldMarkError('lastName') ? "error" : "")}
-                                    id="lastName"
-                                    name="lastName"
-                                    value={this.state.lastName}
-                                    onChange={this.onChangeHandler}
-                                    onBlur={this.handleBlur('lastName')}
-                                    aria-describedby="lastNameHelp"
-                                    placeholder="Enter last name"
-                                />
-                                {shouldMarkError('lastName') && <small id="lastNameHelp" className="form-text alert alert-danger">{(!this.state.lastName ? 'Last Name is required!' : 'Last Name must start with a capital letter and contain only letters!')}</small>}
-                            </div>
+                                        <div className="form-group">
+                                            <label htmlFor="lastName" className="font-weight-bold">Last Name</label>
+                                            <input
+                                                type="text"
+                                                className={"form-control " + (shouldMarkError('lastName') ? "error" : "")}
+                                                id="lastName"
+                                                name="lastName"
+                                                value={this.state.lastName}
+                                                onChange={this.onChangeHandler}
+                                                onBlur={this.handleBlur('lastName')}
+                                                aria-describedby="lastNameHelp"
+                                                placeholder="Enter last name"
+                                            />
+                                            {shouldMarkError('lastName') && <small id="lastNameHelp" className="form-text alert alert-danger">{(!this.state.lastName ? 'Last Name is required!' : 'Last Name must start with a capital letter and contain only letters!')}</small>}
+                                        </div>
 
-                            <div className="form-group">
-                                <label htmlFor="city" className="font-weight-bold">City</label>
-                                <input
-                                    type="text"
-                                    className={"form-control " + (shouldMarkError('city') ? "error" : "")}
-                                    id="city"
-                                    name="city"
-                                    value={this.state.city}
-                                    onChange={this.onChangeHandler}
-                                    onBlur={this.handleBlur('city')}
-                                    aria-describedby="cityHelp"
-                                    placeholder="Enter city"
-                                />
-                                {shouldMarkError('city') && <small id="cityHelp" className="form-text alert alert-danger">{(!this.state.city ? 'City is required!' : '')}</small>}
-                            </div>
+                                        <div className="form-group">
+                                            <label htmlFor="city" className="font-weight-bold">City</label>
+                                            <input
+                                                type="text"
+                                                className={"form-control " + (shouldMarkError('city') ? "error" : "")}
+                                                id="city"
+                                                name="city"
+                                                value={this.state.city}
+                                                onChange={this.onChangeHandler}
+                                                onBlur={this.handleBlur('city')}
+                                                aria-describedby="cityHelp"
+                                                placeholder="Enter city"
+                                            />
+                                            {shouldMarkError('city') && <small id="cityHelp" className="form-text alert alert-danger">{(!this.state.city ? 'City is required!' : '')}</small>}
+                                        </div>
 
-                            {showPicsButtons && <div className="form-group">
-                                <label htmlFor="backgroundImageUrl" className="font-weight-bold" >Cover image url</label>
-                                <input
-                                    type="text"
-                                    className={"form-control " + (shouldMarkError('backgroundImageUrl') ? "error" : "")}
-                                    id="backgroundImageUrl"
-                                    name="backgroundImageUrl"
-                                    value={this.state.backgroundImageUrl}
-                                    onChange={this.onChangeHandler}
-                                    onBlur={this.handleBlur('backgroundImageUrl')}
-                                    aria-describedby="backgroundImageUrlHelp"
-                                    placeholder="Enter cover image url"
-                                />
-                                {shouldMarkError('backgroundImageUrl') && <small id="backgroundImageUrlHelp" className="form-text alert alert-danger">{(!this.state.backgroundImageUrl ? 'Cover Image Url is required!' : '')}</small>}
-                            </div>}
+                                        {showPicsButtons && <div className="form-group">
+                                            <label htmlFor="backgroundImageUrl" className="font-weight-bold" >Cover image url</label>
+                                            <input
+                                                type="text"
+                                                className={"form-control " + (shouldMarkError('backgroundImageUrl') ? "error" : "")}
+                                                id="backgroundImageUrl"
+                                                name="backgroundImageUrl"
+                                                value={this.state.backgroundImageUrl}
+                                                onChange={this.onChangeHandler}
+                                                onBlur={this.handleBlur('backgroundImageUrl')}
+                                                aria-describedby="backgroundImageUrlHelp"
+                                                placeholder="Enter cover image url"
+                                            />
+                                            {shouldMarkError('backgroundImageUrl') && <small id="backgroundImageUrlHelp" className="form-text alert alert-danger">{(!this.state.backgroundImageUrl ? 'Cover Image Url is required!' : '')}</small>}
+                                        </div>}
+                                    </section>
+                                </div>
+                                <hr className="my-2 mb-3 mt-3 col-md-10 mx-auto"></hr>
+                                <div className="text-center">
+                                    <button disabled={!isEnabled} type="submit" className="btn App-button-primary btn-lg m-3">Edit</button>
+                                    <NavLink className="btn App-button-primary btn-lg m-3" to={`/home/profile/${this.props.id}`} role="button">Cancel</NavLink>
+                                    {(isAdmin || isRoot) && <NavLink className="btn App-button-primary btn-lg m-3" to={`/home/users/all/${userService.getUserId()}`} role="button">All Users</NavLink>}
+                                </div>
+                            </form>
+                        </div>
 
-                        </section>
-                    </div>
-                    <hr className="my-2 mb-3 mt-3 col-md-12 mx-auto"></hr>
-                    <div className="text-center">
-                        <button disabled={!isEnabled} type="submit" className="btn App-button-primary btn-lg m-3">Edit</button>
-                        <NavLink className="btn App-button-primary btn-lg m-3" to={`/home/profile/${this.props.id}`} role="button">Cancel</NavLink>
-                        {(isAdmin || isRoot) && <NavLink className="btn App-button-primary btn-lg m-3" to={`/home/users/all/${userService.getUserId()}`} role="button">All Users</NavLink>}
-                    </div>
-                </form>
-            </div>
+
+                    </section>
+                </article>
+            </Fragment>
         )
     }
 }

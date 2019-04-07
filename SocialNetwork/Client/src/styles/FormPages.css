@@ -25,7 +25,7 @@ h1{
 
 .form-group{
     position: relative;
-    margin-bottom: 3.0rem; 
+    margin-bottom: 3.8rem; 
 }
 
 .error{
@@ -61,6 +61,41 @@ input.error:focus{
     box-shadow: 0 1px 1px rgba(229, 103, 23, 0.075) inset, 0 0 10px rgba(229, 103, 23, 0.8);
     outline: 0 none;
 }
+
+.form-content-section {
+    width: 100%;
+    border-radius: 5px;
+    box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.3);
+    background: white;
+}
+
+.form-content-section input{
+    background: #eee;
+ }
+
+ .register-form-content-section{
+    width: 80%;
+    margin: 5rem auto;
+    border-radius: 5px;
+    box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.3);
+    background: white;
+ }
+
+ .register-form-content-section input{
+    background: #eee;
+ }
+
+ .login-form-content-section{
+    width: 50%;
+    margin: 5rem auto;
+    border-radius: 5px;
+    box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.3);
+    background: white;
+ }
+
+ .login-form-content-section input{
+    background: #eee;
+ }
 
 
 

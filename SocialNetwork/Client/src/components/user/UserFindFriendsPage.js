@@ -124,7 +124,7 @@ export default class UserFindFriendsPage extends Component {
 
         const categoryFromUrl = this.props.match.params.category
 
-        if(this.props.category !== categoryFromUrl){
+        if (this.props.category !== categoryFromUrl) {
             this.props.findFriends(this.state.userId, categoryFromUrl)
         }
 
@@ -134,8 +134,8 @@ export default class UserFindFriendsPage extends Component {
         if (requestLength > 0) {
             requests = (
                 <Fragment>
-                    <h3>Respond to Your Friend Requests</h3>
-                    <hr className="my-2 mb-5 mt-2 col-md-8 mx-auto" />
+                    <h3 className="mt-5">Respond to Your Friend Requests</h3>
+                    <hr className="my-2 mb-4 mt-2 col-md-8 mx-auto" />
                     {this.props.userWaitingForAcceptingRequest.map((friend) =>
                         <FriendRequest
                             key={friend.id}
@@ -148,7 +148,7 @@ export default class UserFindFriendsPage extends Component {
                             secondButtonOnClick={this.rejectRequest}
                             thirdButtonLink={`/home/profile/${friend.id}`}
                         />)}
-                    <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" />
+                    {/* <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" /> */}
                 </Fragment>
             )
         }
@@ -159,8 +159,8 @@ export default class UserFindFriendsPage extends Component {
         if (waitingForResponseUsers > 0) {
             friendsCandidates = (
                 <Fragment>
-                    <h3>Pending Requests</h3>
-                    <hr className="my-2 mb-5 mt-2 col-md-8 mx-auto" />
+                    <h3 className="mt-5">Pending Requests</h3>
+                    <hr className="my-2 mb-4 mt-2 col-md-8 mx-auto" />
                     {
                         this.props.usersReceivedRequestFromCurrentUser.map((friend) =>
                             <Friend
@@ -174,7 +174,7 @@ export default class UserFindFriendsPage extends Component {
                                 secondButtonOnClick={this.rejectRequest}
                             />)
                     }
-                    <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" />
+                    {/* <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" /> */}
                 </Fragment>
             )
         }
@@ -185,8 +185,8 @@ export default class UserFindFriendsPage extends Component {
         if (friendsCandidatesArr > 0) {
             remainCandidates = (
                 <Fragment>
-                    <h3>People You May Know</h3>
-                    <hr className="my-2 mb-5 mt-3 col-md-8 mx-auto" />
+                    <h3 className="mt-5">People You May Know</h3>
+                    <hr className="my-2 mb-4 mt-3 col-md-8 mx-auto" />
                     {
                         this.props.friendsCandidatesArr.map((friend) =>
                             <Friend
@@ -201,7 +201,7 @@ export default class UserFindFriendsPage extends Component {
                             />)
 
                     }
-                    <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" />
+                    {/* <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" /> */}
                 </Fragment>
             )
         }
@@ -224,23 +224,30 @@ export default class UserFindFriendsPage extends Component {
             requests = (
                 <Fragment>
                     <h2>There are no friend requests!</h2>
-                    <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" />
+                    <hr className="my-2 mb-5 mt-3 col-md-10 mx-auto" />
                 </Fragment>)
         }
 
         return (
-            <div className="container col-md-12 text-center">
-                <h1 className="text-center font-weight-bold display-5" style={{ 'margin': '1rem auto' }}>
-                    {category === 'findFriends' ? 'Find Friends' : 'Friend Requests'}
-                </h1>
-                <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" />
-                <section className="friend-section" >
-                    {requests}
-                    {!isRequestsSearch && friendsCandidates}
-                    {!isRequestsSearch && remainCandidates}
-                    {!isRequestsSearch && noResult}
-                </section>
-            </div>
+            <Fragment>
+                <article className="main-article-shared-content">
+                    <section className="friend-content-section">
+                        <div className="container col-md-12 text-center mb-5">
+                            <h1 className="text-center font-weight-bold mt-4" style={{ 'margin': '1rem auto' }}>
+                                {category === 'findFriends' ? 'Find Friends' : 'Friend Requests'}
+                            </h1>
+                            <hr className="my-2 mb-5 mt-3 col-md-10 mx-auto" />
+                            <section className="friend-section" >
+                                {requests}
+                                {!isRequestsSearch && friendsCandidates}
+                                {!isRequestsSearch && remainCandidates}
+                                {!isRequestsSearch && noResult}
+                            </section>
+                        </div>
+
+                    </section>
+                </article>
+            </Fragment>
         )
     }
 }

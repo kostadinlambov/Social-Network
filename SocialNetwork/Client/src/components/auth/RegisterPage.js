@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import '../../styles/FormPages.css'
 import { requester } from '../../infrastructure'
 import { toast } from 'react-toastify';
-import { ToastComponent } from '../common'
+import { ToastComponent } from '../common';
 
 import placeholder_user_image from '../../assets/images/placeholder-profile-male.jpg'
 import default_background_image from '../../assets/images/default-background-image.jpg'
@@ -123,150 +123,159 @@ export default class RegisterPage extends Component {
 
 
         return (
-            <div className="container pt-5">
-                <h1 className="mt-5 mb-5 text-center font-weight-bold ">Register</h1>
-                <form className="Register-form-container" onSubmit={this.onSubmitHandler}>
+            <Fragment>
+                    <section className="pt-3">
+                        <div className="container register-form-content-section pb-4 ">
+                            {/* <h1 className="mt-5 mb-5 text-center font-weight-bold ">Register</h1> */}
 
-                    <div className="section-container">
-                        <section className="left-section">
-                            <div className="form-group">
-                                <label htmlFor="username" >Username</label>
-                                <input
-                                    type="text"
-                                    className={"form-control " + (shouldMarkError('username') ? "error" : "")}
-                                    id="username"
-                                    name="username"
-                                    value={this.state.username}
-                                    onChange={this.onChangeHandler}
-                                    onBlur={this.handleBlur('username')}
-                                    aria-describedby="usernameHelp"
-                                    placeholder="Enter username"
-                                />
-                                {shouldMarkError('username') && <small id="usernameHelp" className="form-text alert alert-danger"> {(!this.state.username ? 'Username is required!' : 'Username should be at least 4 and maximum 16 characters long!')}</small>}
-                            </div>
+                            <h1 className="text-center font-weight-bold mt-4" style={{ 'margin': '1rem auto',  'padding-top': '2rem' }}>Register</h1>
+                            <hr className="my-2 mb-4 mt-3 col-md-8 mx-auto"></hr>
 
-                            <div className="form-group">
-                                <label htmlFor="firstName" >First Name</label>
-                                <input
-                                    type="text"
-                                    className={"form-control " + (shouldMarkError('firstName') ? "error" : "")}
-                                    id="firstName"
-                                    name="firstName"
-                                    value={this.state.firstName}
-                                    onChange={this.onChangeHandler}
-                                    onBlur={this.handleBlur('firstName')}
-                                    aria-describedby="firstNameHelp"
-                                    placeholder="Enter first name"
-                                />
-                                {shouldMarkError('firstName') && <small id="firstNameHelp" className="form-text alert alert-danger">{(!this.state.firstName ? 'First Name is required!' : 'First Name must start with a capital letter and contain only letters!')}</small>}
-                            </div>
+                            <form className="Register-form-container" onSubmit={this.onSubmitHandler}>
 
-                            <div className="form-group">
-                                <label htmlFor="address" >Address</label>
-                                <input
-                                    type="text"
-                                    className={"form-control " + (shouldMarkError('address') ? "error" : "")}
-                                    id="address"
-                                    name="address"
-                                    value={this.state.address}
-                                    onChange={this.onChangeHandler}
-                                    onBlur={this.handleBlur('address')}
-                                    aria-describedby="addressHelp"
-                                    placeholder="Enter address"
-                                />
-                                {shouldMarkError('address') && <small id="addressHelp" className="form-text alert alert-danger">{(!this.state.address ? 'Address is required!' : '')}</small>}
-                            </div>
+                                <div className="section-container">
+                                    <section className="left-section">
+                                        <div className="form-group">
+                                            <label htmlFor="username" >Username</label>
+                                            <input
+                                                type="text"
+                                                className={"form-control " + (shouldMarkError('username') ? "error" : "")}
+                                                id="username"
+                                                name="username"
+                                                value={this.state.username}
+                                                onChange={this.onChangeHandler}
+                                                onBlur={this.handleBlur('username')}
+                                                aria-describedby="usernameHelp"
+                                                placeholder="Enter username"
+                                            />
+                                            {shouldMarkError('username') && <small id="usernameHelp" className="form-text alert alert-danger"> {(!this.state.username ? 'Username is required!' : 'Username should be at least 4 and maximum 16 characters long!')}</small>}
+                                        </div>
 
-                            <div className="form-group">
-                                <label htmlFor="password" >Password</label>
-                                <input
-                                    type="password"
-                                    className={"form-control " + (shouldMarkError('password') ? "error" : "")}
-                                    id="password"
-                                    name="password"
-                                    value={this.state.password}
-                                    onChange={this.onChangeHandler}
-                                    onBlur={this.handleBlur('password')}
-                                    aria-describedby="passwordHelp"
-                                    placeholder="Enter password"
-                                />
-                                {shouldMarkError('password') && <small id="passwordHelp" className="form-text alert alert-danger">{(!this.state.password ? 'Password is required!' : 'Password should be at least 4 and maximum 16 characters long!')}</small>}
-                            </div>
-                        </section>
+                                        <div className="form-group">
+                                            <label htmlFor="firstName" >First Name</label>
+                                            <input
+                                                type="text"
+                                                className={"form-control " + (shouldMarkError('firstName') ? "error" : "")}
+                                                id="firstName"
+                                                name="firstName"
+                                                value={this.state.firstName}
+                                                onChange={this.onChangeHandler}
+                                                onBlur={this.handleBlur('firstName')}
+                                                aria-describedby="firstNameHelp"
+                                                placeholder="Enter first name"
+                                            />
+                                            {shouldMarkError('firstName') && <small id="firstNameHelp" className="form-text alert alert-danger">{(!this.state.firstName ? 'First Name is required!' : 'First Name must start with a capital letter and contain only letters!')}</small>}
+                                        </div>
 
-                        <section className="right-section">
-                            <div className="form-group">
-                                <label htmlFor="email" >Email Address</label>
-                                <input
-                                    type="email"
-                                    className={"form-control " + (shouldMarkError('email') ? "error" : "")}
-                                    id="email"
-                                    name="email"
-                                    value={this.state.email}
-                                    onChange={this.onChangeHandler}
-                                    onBlur={this.handleBlur('email')}
-                                    aria-describedby="emailHelp"
-                                    placeholder="Enter email"
+                                        <div className="form-group">
+                                            <label htmlFor="address" >Address</label>
+                                            <input
+                                                type="text"
+                                                className={"form-control " + (shouldMarkError('address') ? "error" : "")}
+                                                id="address"
+                                                name="address"
+                                                value={this.state.address}
+                                                onChange={this.onChangeHandler}
+                                                onBlur={this.handleBlur('address')}
+                                                aria-describedby="addressHelp"
+                                                placeholder="Enter address"
+                                            />
+                                            {shouldMarkError('address') && <small id="addressHelp" className="form-text alert alert-danger">{(!this.state.address ? 'Address is required!' : '')}</small>}
+                                        </div>
 
-                                />
-                                {shouldMarkError('email') && <small id="emailHelp" className="form-text alert alert-danger">{(!this.state.email ? 'Email is required!' : 'Invalid e-mail address!')}</small>}
-                            </div>
+                                        <div className="form-group">
+                                            <label htmlFor="password" >Password</label>
+                                            <input
+                                                type="password"
+                                                className={"form-control " + (shouldMarkError('password') ? "error" : "")}
+                                                id="password"
+                                                name="password"
+                                                value={this.state.password}
+                                                onChange={this.onChangeHandler}
+                                                onBlur={this.handleBlur('password')}
+                                                aria-describedby="passwordHelp"
+                                                placeholder="Enter password"
+                                            />
+                                            {shouldMarkError('password') && <small id="passwordHelp" className="form-text alert alert-danger">{(!this.state.password ? 'Password is required!' : 'Password should be at least 4 and maximum 16 characters long!')}</small>}
+                                        </div>
+                                    </section>
 
-                            <div className="form-group">
-                                <label htmlFor="lastName" >Last Name</label>
-                                <input
-                                    type="text"
-                                    className={"form-control " + (shouldMarkError('lastName') ? "error" : "")}
-                                    id="lastName"
-                                    name="lastName"
-                                    value={this.state.lastName}
-                                    onChange={this.onChangeHandler}
-                                    onBlur={this.handleBlur('lastName')}
-                                    aria-describedby="lastNameHelp"
-                                    placeholder="Enter last name"
-                                />
-                                {shouldMarkError('lastName') && <small id="lastNameHelp" className="form-text alert alert-danger">{(!this.state.lastName ? 'Last Name is required!' : 'Last Name must start with a capital letter and contain only letters!')}</small>}
-                            </div>
+                                    <section className="right-section">
+                                        <div className="form-group">
+                                            <label htmlFor="email" >Email Address</label>
+                                            <input
+                                                type="email"
+                                                className={"form-control " + (shouldMarkError('email') ? "error" : "")}
+                                                id="email"
+                                                name="email"
+                                                value={this.state.email}
+                                                onChange={this.onChangeHandler}
+                                                onBlur={this.handleBlur('email')}
+                                                aria-describedby="emailHelp"
+                                                placeholder="Enter email"
 
-                            <div className="form-group">
-                                <label htmlFor="city" >City</label>
-                                <input
-                                    type="text"
-                                    className={"form-control " + (shouldMarkError('city') ? "error" : "")}
-                                    id="city"
-                                    name="city"
-                                    value={this.state.city}
-                                    onChange={this.onChangeHandler}
-                                    onBlur={this.handleBlur('city')}
-                                    aria-describedby="cityHelp"
-                                    placeholder="Enter city"
-                                />
-                                {shouldMarkError('city') && <small id="cityHelp" className="form-text alert alert-danger">{(!this.state.city ? 'City is required!' : '')}</small>}
-                            </div>
+                                            />
+                                            {shouldMarkError('email') && <small id="emailHelp" className="form-text alert alert-danger">{(!this.state.email ? 'Email is required!' : 'Invalid e-mail address!')}</small>}
+                                        </div>
 
-                            <div className="form-group">
-                                <label htmlFor="confirmPassword" >Confirm Password</label>
-                                <input
-                                    type="password"
-                                    className={"form-control " + (shouldMarkError('confirmPassword') ? "error" : "")}
-                                    id="confirmPassword"
-                                    name="confirmPassword"
-                                    value={this.state.confirmPassword}
-                                    onChange={this.onChangeHandler}
-                                    onBlur={this.handleBlur('confirmPassword')}
-                                    aria-describedby="confirmPasswordHelp"
-                                    placeholder="Confirm your password"
-                                />
-                                {shouldMarkError('confirmPassword') && <small id="confirmPasswordHelp" className="form-text alert alert-danger">Passwords do not match!</small>}
-                            </div>
-                        </section>
-                    </div>
+                                        <div className="form-group">
+                                            <label htmlFor="lastName" >Last Name</label>
+                                            <input
+                                                type="text"
+                                                className={"form-control " + (shouldMarkError('lastName') ? "error" : "")}
+                                                id="lastName"
+                                                name="lastName"
+                                                value={this.state.lastName}
+                                                onChange={this.onChangeHandler}
+                                                onBlur={this.handleBlur('lastName')}
+                                                aria-describedby="lastNameHelp"
+                                                placeholder="Enter last name"
+                                            />
+                                            {shouldMarkError('lastName') && <small id="lastNameHelp" className="form-text alert alert-danger">{(!this.state.lastName ? 'Last Name is required!' : 'Last Name must start with a capital letter and contain only letters!')}</small>}
+                                        </div>
 
-                    <div className="text-center">
-                        <button disabled={!isEnabled} type="submit" className="btn App-button-primary btn-lg m-3">Register</button>
-                    </div>
-                </form>
-            </div>
+                                        <div className="form-group">
+                                            <label htmlFor="city" >City</label>
+                                            <input
+                                                type="text"
+                                                className={"form-control " + (shouldMarkError('city') ? "error" : "")}
+                                                id="city"
+                                                name="city"
+                                                value={this.state.city}
+                                                onChange={this.onChangeHandler}
+                                                onBlur={this.handleBlur('city')}
+                                                aria-describedby="cityHelp"
+                                                placeholder="Enter city"
+                                            />
+                                            {shouldMarkError('city') && <small id="cityHelp" className="form-text alert alert-danger">{(!this.state.city ? 'City is required!' : '')}</small>}
+                                        </div>
+
+                                        <div className="form-group">
+                                            <label htmlFor="confirmPassword" >Confirm Password</label>
+                                            <input
+                                                type="password"
+                                                className={"form-control " + (shouldMarkError('confirmPassword') ? "error" : "")}
+                                                id="confirmPassword"
+                                                name="confirmPassword"
+                                                value={this.state.confirmPassword}
+                                                onChange={this.onChangeHandler}
+                                                onBlur={this.handleBlur('confirmPassword')}
+                                                aria-describedby="confirmPasswordHelp"
+                                                placeholder="Confirm your password"
+                                            />
+                                            {shouldMarkError('confirmPassword') && <small id="confirmPasswordHelp" className="form-text alert alert-danger">Passwords do not match!</small>}
+                                        </div>
+                                    </section>
+                                </div>
+
+                                <div className="text-center">
+                                    <button disabled={!isEnabled} type="submit" className="btn App-button-primary btn-lg m-3">Register</button>
+                                </div>
+                            </form>
+                        </div>
+
+                    </section>
+            </Fragment>
         )
     }
 };

@@ -28,7 +28,7 @@ export default class UserSearchResultsPage extends Component {
     componentDidMount() {
         const userId = userService.getUserId();
         const search = this.props.location.state.search;
-        
+
         this.setState({ search })
 
         this.props.getUserToShowId(userId);
@@ -158,12 +158,12 @@ export default class UserSearchResultsPage extends Component {
 
         const friendsArrLength = this.props.friendsArrSearch.length;
         let friends = '';
-      
+
         if (friendsArrLength > 0) {
             friends = (
                 <Fragment>
-                    <h3>Users From Your Friend List</h3>
-                    <hr className="my-2 mb-5 mt-2 col-md-8 mx-auto" />
+                    <h3 className="mt-5">Users From Your Friend List</h3>
+                    <hr className="my-2 mb-4 mt-2 col-md-8 mx-auto" />
                     {this.props.friendsArrSearch.map((friend) =>
                         <Friend
                             key={friend.id}
@@ -175,7 +175,6 @@ export default class UserSearchResultsPage extends Component {
                             secondButtonText={'REMOVE'}
                             secondButtonOnClick={this.removeFriend}
                         />)}
-                    <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" />
                 </Fragment>
             )
         }
@@ -186,8 +185,8 @@ export default class UserSearchResultsPage extends Component {
         if (requestLength > 0) {
             requests = (
                 <Fragment>
-                    <h3>Respond to Your Friend Requests</h3>
-                    <hr className="my-2 mb-5 mt-2 col-md-8 mx-auto" />
+                    <h3 className="mt-5">Respond to Your Friend Requests</h3>
+                    <hr className="my-2 mb-4 mt-2 col-md-8 mx-auto" />
                     {this.props.userWaitingForAcceptingRequest.map((friend) =>
                         <FriendRequest
                             key={friend.id}
@@ -200,7 +199,6 @@ export default class UserSearchResultsPage extends Component {
                             secondButtonOnClick={this.rejectRequest}
                             thirdButtonLink={`/home/profile/${friend.id}`}
                         />)}
-                    <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" />
                 </Fragment>
             )
         }
@@ -211,8 +209,8 @@ export default class UserSearchResultsPage extends Component {
         if (waitingForResponseUsers > 0) {
             friendsCandidates = (
                 <Fragment>
-                    <h3>Pending Requests</h3>
-                    <hr className="my-2 mb-5 mt-2 col-md-8 mx-auto" />
+                    <h3 className="mt-5">Pending Requests</h3>
+                    <hr className="my-2 mb-4 mt-2 col-md-8 mx-auto" />
                     {
                         this.props.usersReceivedRequestFromCurrentUser.map((friend) =>
                             <Friend
@@ -226,7 +224,6 @@ export default class UserSearchResultsPage extends Component {
                                 secondButtonOnClick={this.rejectRequest}
                             />)
                     }
-                    <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" />
                 </Fragment>
             )
         }
@@ -237,8 +234,8 @@ export default class UserSearchResultsPage extends Component {
         if (friendsCandidatesArr > 0) {
             remainCandidates = (
                 <Fragment>
-                    <h3>People You May Know</h3>
-                    <hr className="my-2 mb-5 mt-3 col-md-8 mx-auto" />
+                    <h3 className="mt-5">People You May Know</h3>
+                    <hr className="my-2 mb-4 mt-3 col-md-8 mx-auto" />
                     {
                         this.props.friendsCandidatesArr.map((friend) =>
                             <Friend
@@ -253,7 +250,6 @@ export default class UserSearchResultsPage extends Component {
                             />)
 
                     }
-                    <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" />
                 </Fragment>
             )
         }
@@ -263,24 +259,30 @@ export default class UserSearchResultsPage extends Component {
         if (!friends && !requests && !friendsCandidates && !remainCandidates) {
             noResult = (
                 <Fragment>
-                    <h2>No results for "{this.state.search}"</h2>
-                    <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" />
+                    <h2>No results for <span className="App-secondary-color">"{this.state.search}"</span></h2>
+                    <hr className="my-2 mb-5 mt-3 col-md-10 mx-auto" />
                 </Fragment>
             )
         }
 
         return (
-            <div className="container col-md-12 text-center">
-                <h1 className="text-center font-weight-bold display-5" style={{ 'margin': '1rem auto' }}>Search Results</h1>
-                <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" />
-                <section className="friend-section" >
-                    {friends}
-                    {requests}
-                    {friendsCandidates}
-                    {remainCandidates}
-                    {noResult}
-                </section>
-            </div>
+            <Fragment>
+                <article className="main-article-shared-content">
+                    <section className="friend-content-section">
+                        <div className="container col-md-12 text-center mb-5">
+                            <h1 className="text-center font-weight-bold mt-4" style={{ 'margin': '1rem auto' }}>Search Results</h1>
+                            <hr className="my-2 mb-4 mt-3 col-md-10 mx-auto" />
+                            <section className="friend-section" >
+                                {friends}
+                                {requests}
+                                {friendsCandidates}
+                                {remainCandidates}
+                                {noResult}
+                            </section>
+                        </div>
+                    </section>
+                </article>
+            </Fragment>
         )
     }
 }

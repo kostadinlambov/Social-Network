@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import '../../styles/FormPages.css';
-import {requester, observer, userService} from '../../infrastructure';
+import { requester, observer, userService } from '../../infrastructure';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
 
@@ -55,7 +55,7 @@ export default class LoginPage extends Component {
                 toast.success(<ToastComponent.successToast text={' You have successfully logged in!'} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
-                
+
                 this.props.history.push('/');
             }
 
@@ -70,10 +70,10 @@ export default class LoginPage extends Component {
             //     });
 
             // } else {
-                
-                toast.error(<ToastComponent.errorToast text={`${err.message}`} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
+
+            toast.error(<ToastComponent.errorToast text={`${err.message}`} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
             // }
 
         })
@@ -113,47 +113,53 @@ export default class LoginPage extends Component {
         }
 
         return (
-            <div className="container pt-5">
+            <section className="pt-3">
+                <div className="container login-form-content-section pb-4 " >
 
-                <h1 className="mt-5 mb-5 text-center font-weight-bold ">Login</h1>
-                <form className="Login-form-container" onSubmit={this.onSubmitHandler}>
-                    <div className="form-group">
-                        <label htmlFor="username">Username</label>
-                        <input
-                            type="text"
-                            className={"form-control " + (shouldMarkError('username') ? "error" : "")}
-                            id="username"
-                            name="username"
-                            value={this.state.username}
-                            onChange={this.onChangeHandler}
-                            onBlur={this.handleBlur('username')}
-                            aria-describedby="usernameHelp"
-                            placeholder="Enter username"
-                        />
-                        {shouldMarkError('username') && <small id="usernameHelp" className="form-text alert alert-danger">Username is required!</small>}
-                    </div>
+                    {/* <h1 className="mt-5 mb-5 text-center font-weight-bold ">Login</h1> */}
 
-                    <div className="form-group">
-                        <label htmlFor="password" >Password</label>
-                        <input
-                            type="password"
-                            className={"form-control " + (shouldMarkError('password') ? "error" : "")}
-                            id="password"
-                            name="password"
-                            value={this.state.password}
-                            onChange={this.onChangeHandler}
-                            onBlur={this.handleBlur('password')}
-                            aria-describedby="passwordHelp"
-                            placeholder="Enter password"
-                        />
-                        {shouldMarkError('password') && <small id="passwordHelp" className="form-text alert alert-danger">Password is required!</small>}
-                    </div>
+                    <h1 className="text-center font-weight-bold mt-4" style={{ 'margin': '1rem auto', 'padding-top': '2rem' }}>Login</h1>
+                    <hr className="my-2 mb-4 mt-3 col-md-8 mx-auto"></hr>
 
-                    <div className="text-center">
-                        <button disabled={!isEnabled} type="submit" className="btn App-button-primary btn-lg m-3">Login</button>
-                    </div>
-                </form>
-            </div>
+                    <form className="Login-form-container" onSubmit={this.onSubmitHandler}>
+                        <div className="form-group">
+                            <label htmlFor="username">Username</label>
+                            <input
+                                type="text"
+                                className={"form-control " + (shouldMarkError('username') ? "error" : "")}
+                                id="username"
+                                name="username"
+                                value={this.state.username}
+                                onChange={this.onChangeHandler}
+                                onBlur={this.handleBlur('username')}
+                                aria-describedby="usernameHelp"
+                                placeholder="Enter username"
+                            />
+                            {shouldMarkError('username') && <small id="usernameHelp" className="form-text alert alert-danger">Username is required!</small>}
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="password" >Password</label>
+                            <input
+                                type="password"
+                                className={"form-control " + (shouldMarkError('password') ? "error" : "")}
+                                id="password"
+                                name="password"
+                                value={this.state.password}
+                                onChange={this.onChangeHandler}
+                                onBlur={this.handleBlur('password')}
+                                aria-describedby="passwordHelp"
+                                placeholder="Enter password"
+                            />
+                            {shouldMarkError('password') && <small id="passwordHelp" className="form-text alert alert-danger">Password is required!</small>}
+                        </div>
+
+                        <div className="text-center">
+                            <button disabled={!isEnabled} type="submit" className="btn App-button-primary btn-lg m-3">Login</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
         )
     }
 };
