@@ -45,9 +45,6 @@ public class PostController {
     @PostMapping (value = "/create")
     @ResponseBody
     public ResponseEntity<Object> createPost(@RequestBody @Valid PostCreateBindingModel postCreateBindingModel, Authentication principal) throws Exception {
-        //TODO - Use principalName to get LoggedIn User
-//        String principalName = principal.getName();
-
         boolean post = this.postService.createPost(postCreateBindingModel);
         if (post) {
             SuccessResponse successResponse = new SuccessResponse(

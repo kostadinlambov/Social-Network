@@ -3,18 +3,14 @@ package kl.socialnetwork.web.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kl.socialnetwork.domain.models.serviceModels.LoggerServiceModel;
-import kl.socialnetwork.domain.models.serviceModels.UserServiceModel;
 import kl.socialnetwork.domain.models.viewModels.logger.LoggerViewModel;
-import kl.socialnetwork.domain.models.viewModels.user.UserAllViewModel;
 import kl.socialnetwork.services.LoggerService;
-import kl.socialnetwork.utils.constants.ResponseMessageConstants;
 import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;
 import kl.socialnetwork.utils.responseHandler.successResponse.SuccessResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -22,8 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static kl.socialnetwork.utils.constants.ResponseMessageConstants.SERVER_ERROR_MESSAGE;
-
+import static kl.socialnetwork.utils.constants.ResponseMessageConstants.*;
 
 @RestController
 @RequestMapping(value = "/logs")
@@ -40,8 +35,8 @@ public class LoggerController {
     }
 
     @GetMapping(value = "/all")
-    public List<LoggerViewModel> allLogs(Authentication principal) {
-        List<LoggerServiceModel> allLogs = this.loggerService.getAllLogs(principal);
+    public List<LoggerViewModel> allLogs() {
+        List<LoggerServiceModel> allLogs = this.loggerService.getAllLogs();
 
         return allLogs.stream()
                 .map(this::parseDate)
@@ -62,11 +57,7 @@ public class LoggerController {
         boolean result = this.loggerService.deleteAll();
 
         if (result) {
-            SuccessResponse successResponse = new SuccessResponse(
-                    LocalDateTime.now(),
-                    "Logs have been successfully deleted.",
-                    "",
-                    true);
+            SuccessResponse successResponse = new SuccessResponse(LocalDateTime.now(), SUCCESSFUL_LOGS_DELETING_MESSAGE, "", true);
             return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
         }
         throw new CustomException(SERVER_ERROR_MESSAGE);
@@ -77,16 +68,11 @@ public class LoggerController {
         boolean result = this.loggerService.deleteByName(username);
 
         if (result) {
-            SuccessResponse successResponse = new SuccessResponse(
-                    LocalDateTime.now(),
-                    "Logs have been successfully deleted.",
-                    "",
-                    true);
+            SuccessResponse successResponse = new SuccessResponse(LocalDateTime.now(), SUCCESSFUL_USER_LOGS_DELETING_MESSAGE, "", true);
             return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
         }
         throw new CustomException(SERVER_ERROR_MESSAGE);
     }
-
 
     private LoggerViewModel parseDate(LoggerServiceModel x) {
         LoggerViewModel loggerViewModel = new LoggerViewModel();

@@ -45,19 +45,8 @@ public class LoggerServiceImpl implements LoggerService {
     }
 
     @Override
-    public void saveLog(Logger logger) {
-        Logger logger1 = this.loggerRepository.saveAndFlush(logger);
-        System.out.println(logger1);
-        if(logger1 != null) {
-            System.out.println("Log was written successfully");
-        }else{
-            System.out.println("Failure log saving");
-        }
-    }
-
-    @Override
     public boolean createLog(String method, String principal, String tableName, String action) {
-        if(!loggerValidation.isValid(method, principal, tableName, action)){
+        if (!loggerValidation.isValid(method, principal, tableName, action)) {
             throw new CustomException(FAILURE_LOGS_SAVING_MESSAGE);
         }
 
@@ -68,7 +57,7 @@ public class LoggerServiceImpl implements LoggerService {
         loggerServiceModel.setAction(action);
         loggerServiceModel.setTime(LocalDateTime.now());
 
-        if(!loggerValidation.isValid(loggerServiceModel)){
+        if (!loggerValidation.isValid(loggerServiceModel)) {
             throw new CustomException(FAILURE_LOGS_SAVING_MESSAGE);
         }
 
@@ -76,7 +65,7 @@ public class LoggerServiceImpl implements LoggerService {
 
         Logger savedLog = this.loggerRepository.save(logger);
 
-        if(savedLog != null){
+        if (savedLog != null) {
             return true;
         }
 
@@ -84,29 +73,28 @@ public class LoggerServiceImpl implements LoggerService {
     }
 
     @Override
-    public List<LoggerServiceModel> getAllLogs(Authentication principal) {
-        String authority =  getUserAuthority(principal);
+    public List<LoggerServiceModel> getAllLogs() {
+        return this.loggerRepository
+                .findAllByOrderByTimeDesc()
+                .stream()
+                .map(x -> this.modelMapper.map(x, LoggerServiceModel.class))
+                .collect(Collectors.toUnmodifiableList());
 
-        if (!authority.equals("USER")) {
-            return this.loggerRepository
-                    .findAllByOrderByTimeDesc()
-                    .stream()
-                    .map(x -> this.modelMapper.map(x, LoggerServiceModel.class))
-                    .collect(Collectors.toUnmodifiableList());
-        }
-
-        throw new CustomException(UNAUTHORIZED_SERVER_ERROR_MESSAGE);
     }
 
     @Override
     public List<LoggerServiceModel> getLogsByUsername(String username) {
+        if (!loggerValidation.isValid(username)) {
+            throw new CustomException(SERVER_ERROR_MESSAGE);
+        }
+
         List<LoggerServiceModel> logsByUsername = this.loggerRepository
                 .findAllByUsernameOrderByTimeDesc(username)
                 .stream()
                 .map(x -> this.modelMapper.map(x, LoggerServiceModel.class))
                 .collect(Collectors.toUnmodifiableList());
 
-        if(logsByUsername.size() == 0){
+        if (logsByUsername.size() == 0) {
             throw new CustomException(FAILURE_LOGS_NOT_FOUND_MESSAGE);
         }
 
@@ -115,39 +103,28 @@ public class LoggerServiceImpl implements LoggerService {
 
     @Override
     public boolean deleteAll() {
-        try{
+        try {
             this.loggerRepository.deleteAll();
-
-        }catch (Exception e){
+            return true;
+        } catch (Exception e) {
             throw new CustomException(FAILURE_LOGS_CLEARING_ERROR_MESSAGE);
         }
-        return true;
     }
 
     @Override
     public boolean deleteByName(String username) {
-        List<Logger> loggers = new ArrayList<>();
-        try{
-            loggers =  this.loggerRepository.deleteAllByUsername(username);
-
-        }catch (Exception e){
-            throw new CustomException(FAILURE_LOGS_CLEARING_ERROR_MESSAGE);
+        if (!loggerValidation.isValid(username)) {
+            throw new CustomException(SERVER_ERROR_MESSAGE);
         }
 
-        if(loggers.size() == 0){
+        List<Logger> loggers = this.loggerRepository.deleteAllByUsername(username);
+
+        if (loggers.size() == 0) {
             throw new CustomException(FAILURE_LOGS_NOT_FOUND_MESSAGE);
         }
         return true;
     }
 
-    private String getUserAuthority(Authentication principal) {
-        return principal
-                .getAuthorities()
-                .stream()
-                .findFirst()
-                .get()
-                .getAuthority();
-    }
 
 //    @Scheduled(cron = "* */30 * * * *")
 //    public void testSchedule(){

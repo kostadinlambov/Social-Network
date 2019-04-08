@@ -1,16 +1,12 @@
 package kl.socialnetwork.services;
 
-import kl.socialnetwork.domain.entities.Logger;
 import kl.socialnetwork.domain.models.serviceModels.LoggerServiceModel;
-import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
 public interface LoggerService {
 
-    void saveLog(Logger logger);
-
-    List<LoggerServiceModel> getAllLogs(Authentication principal);
+    List<LoggerServiceModel> getAllLogs();
 
     List<LoggerServiceModel> getLogsByUsername(String username);
 

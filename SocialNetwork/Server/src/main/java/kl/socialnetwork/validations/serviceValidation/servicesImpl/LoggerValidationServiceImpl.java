@@ -15,4 +15,9 @@ public class LoggerValidationServiceImpl implements LoggerValidationService {
     public boolean isValid(String method, String principal, String tableName, String action) {
         return method != null && principal != null && tableName != null && action != null;
     }
+
+    @Override
+    public boolean isValid(String username) {
+        return username != null;
+    }
 }
