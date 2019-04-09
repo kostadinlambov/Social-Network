@@ -118,7 +118,7 @@ export default class LoginPage extends Component {
 
                     {/* <h1 className="mt-5 mb-5 text-center font-weight-bold ">Login</h1> */}
 
-                    <h1 className="text-center font-weight-bold mt-4" style={{ 'margin': '1rem auto', 'padding-top': '2rem' }}>Login</h1>
+                    <h1 className="text-center font-weight-bold mt-4" style={{ 'margin': '1rem auto', 'paddingTop': '2rem' }}>Login</h1>
                     <hr className="my-2 mb-4 mt-3 col-md-8 mx-auto"></hr>
 
                     <form className="Login-form-container" onSubmit={this.onSubmitHandler}>

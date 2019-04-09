@@ -2,8 +2,9 @@ import React, { Component, Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
 import { userService, requester, observer } from '../../infrastructure';
 import { toast } from 'react-toastify';
-import { ToastComponent } from '../common'
-import '../../styles/FormPages.css'
+import { ToastComponent } from '../common';
+import '../../styles/FormPages.css';
+import $ from 'jquery'
 
 export default class UserEditPageForm extends Component {
     constructor(props) {

@@ -12,7 +12,7 @@ const StartPage = () => {
         StartPageView = (
             <div>
                 <div className="container text-center ">
-                    <div className="jumbotron bg-light text-dark text-center mb-0 mt-5 mx-auto" style={{ 'box-shadow': '0 0 14px 1px rgba(0, 0, 0, 0.3)' }}>
+                    <div className="jumbotron bg-light text-dark text-center mb-0 mt-5 mx-auto" style={{ 'boxShadow': '0 0 14px 1px rgba(0, 0, 0, 0.3)' }}>
                         <h2 className="h1 h1-responsive">Welcome to SoftUni Social Network!</h2>
                         <hr className="my-2 mb-3 mt-3 col-md-8 mx-auto"></hr>
                         <p className="lead">Please <NavLink className="text-info" exact to="/login">Login</NavLink> or <NavLink className="text-info" exact to="/register">Register</NavLink> if you don't have an account.</p>
@@ -29,7 +29,7 @@ const StartPage = () => {
         StartPageView = (
             <div>
                 <div className="container text-center ">
-                    <div className="jumbotron bg-light text-dark text-center mb-0 mt-5" style={{ 'box-shadow': '0 0 14px 1px rgba(0, 0, 0, 0.3)' }}>
+                    <div className="jumbotron bg-light text-dark text-center mb-0 mt-5" style={{ 'boxShadow': '0 0 14px 1px rgba(0, 0, 0, 0.3)' }}>
                         <h3 className="md-display-5 h3 h3-responsive mb-3">Hello {userService.getUsername()}!</h3>
                         <hr className="my-2 mb-3 mt-3 col-md-8 mx-auto"></hr>
                         <h2 className="h1 h1-responsive">Welcome to SoftUni Social Network!</h2>

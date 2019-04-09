@@ -14,7 +14,7 @@ import FriendsGallery from './FriendsGallery';
 import placeholder_user_image from '../../assets/images/placeholder-profile-male.jpg'
 import default_background_image from '../../assets/images/default-background-image.jpg'
 
-const UserSearchResultsPage = lazy(() => import('../../components//user/UserSearchResultsPage'))
+const UserSearchResultsPage = lazy(() => import('../../components/user/UserSearchResultsPage'))
 const UserProfilePage = lazy(() => import('../../components/user/UserProfilePage'))
 const UserFriendsAllPage = lazy(() => import('../../components/user/UserFriendsAllPage'))
 const UserFindFriendsPage = lazy(() => import('../../components/user/UserFindFriendsPage'))
@@ -23,6 +23,7 @@ const UserEditPage = lazy(() => import('../../components/user/UserEditPage'))
 const UserDeletePage = lazy(() => import('../../components/user/UserDeletePage'))
 const UserGalleryPage = lazy(() => import('../../components/user/UserGalleryPage'))
 const UserLogsPage = lazy(() => import('../../components/user/UserLogsPage'))
+const MessageBox = lazy(() => import('./MessageBox'))
 
 const ErrorPage = lazy(() => import('../../components/common/ErrorPage'))
 
@@ -198,7 +199,11 @@ export default class HomePage extends Component {
                                 {loggedIn && <Route exact path="/home/findFriends/:id/:category" render={(props) => <UserFindFriendsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} findFriends={this.findFriends} />} />}
                                 {loggedIn && (isRoot || isAdmin || isTheCurrentLoggedInUser) && <Route exact path="/home/users/edit/:id" render={props => <UserEditPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
                                 {(loggedIn && isRoot) && <Route exact path="/home/users/delete/:id" render={props => <UserDeletePage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
+                               
                                 {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/users/all/:id" render={props => <UserAllPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
+                                {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/message/:id" render={props => <MessageBox {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
+                               
+                               
                                 {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/logs/:id" render={props => <UserLogsPage {...props} getUserToShowId={this.getUserToShowId} searchResults={this.searchResults} {...this.state} />} />}
                                 {loggedIn && <Route exact path="/home/gallery/:id" render={props => <UserGalleryPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} loadAllPictures={this.loadAllPictures} />} />}
                                 {loggedIn && <Route exact path="/home/users/search/" render={(props) => <UserSearchResultsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} searchResults={this.searchResults} />} />}
