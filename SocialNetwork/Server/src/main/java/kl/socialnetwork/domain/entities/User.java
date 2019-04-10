@@ -37,6 +37,9 @@ public class User extends BaseEntity implements UserDetails {
     private List<Comment> createdCommentsList;
     private List<Comment> userTimelineAllComments;
 
+    private List<Message> fromUserMessagesList;
+    private List<Message> toUserMessagesList;
+
     private boolean isAccountNonExpired;
     private boolean isAccountNonLocked;
     private boolean isCredentialsNonExpired;
@@ -219,6 +222,24 @@ public class User extends BaseEntity implements UserDetails {
 
     public void setUserTimelineAllComments(List<Comment> userTimelineAllComments) {
         this.userTimelineAllComments = userTimelineAllComments;
+    }
+
+    @OneToMany(mappedBy = "fromUser", cascade = CascadeType.ALL)
+    public List<Message> getFromUserMessagesList() {
+        return this.fromUserMessagesList;
+    }
+
+    public void setFromUserMessagesList(List<Message> fromUserMessagesList) {
+        this.fromUserMessagesList = fromUserMessagesList;
+    }
+
+    @OneToMany(mappedBy = "toUser", cascade = CascadeType.ALL)
+    public List<Message> getToUserMessagesList() {
+        return this.toUserMessagesList;
+    }
+
+    public void setToUserMessagesList(List<Message> toUserMessagesList) {
+        this.toUserMessagesList = toUserMessagesList;
     }
 
     @Override

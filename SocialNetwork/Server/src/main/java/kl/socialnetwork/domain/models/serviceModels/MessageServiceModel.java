@@ -1,11 +1,12 @@
-package kl.socialnetwork.domain.entities;
+package kl.socialnetwork.domain.models.serviceModels;
 
-import javax.persistence.*;
+import kl.socialnetwork.domain.entities.Relationship;
+import kl.socialnetwork.domain.entities.User;
+
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "messages")
-public class Message extends BaseEntity{
+public class MessageServiceModel {
+    private String id;
     private User fromUser;
     private User toUser;
     private Relationship relationship;
@@ -14,11 +15,17 @@ public class Message extends BaseEntity{
     private int status;
     private LocalDateTime time;
 
-    public Message() {
+    public MessageServiceModel() {
     }
 
-    @ManyToOne(optional = false, targetEntity = User.class)
-    @JoinColumn(name = "from_user_id", referencedColumnName = "id")
+    public String getId() {
+        return this.id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public User getFromUser() {
         return this.fromUser;
     }
@@ -27,8 +34,6 @@ public class Message extends BaseEntity{
         this.fromUser = fromUser;
     }
 
-    @ManyToOne(optional = false, targetEntity = User.class)
-    @JoinColumn(name = "to_user_id", referencedColumnName = "id")
     public User getToUser() {
         return this.toUser;
     }
@@ -37,8 +42,6 @@ public class Message extends BaseEntity{
         this.toUser = toUser;
     }
 
-    @ManyToOne(optional = false, targetEntity = Relationship.class)
-    @JoinColumn(name = "relationship_id", referencedColumnName = "id")
     public Relationship getRelationship() {
         return this.relationship;
     }
@@ -47,7 +50,6 @@ public class Message extends BaseEntity{
         this.relationship = relationship;
     }
 
-    @Column(name = "subject")
     public String getSubject() {
         return this.subject;
     }
@@ -56,7 +58,6 @@ public class Message extends BaseEntity{
         this.subject = subject;
     }
 
-    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     public String getContent() {
         return this.content;
     }
@@ -65,7 +66,6 @@ public class Message extends BaseEntity{
         this.content = content;
     }
 
-    @Column(name = "status", columnDefinition = "TINYINT DEFAULT 0")
     public int getStatus() {
         return this.status;
     }
@@ -74,7 +74,6 @@ public class Message extends BaseEntity{
         this.status = status;
     }
 
-    @Column(name = "time", nullable = false)
     public LocalDateTime getTime() {
         return this.time;
     }

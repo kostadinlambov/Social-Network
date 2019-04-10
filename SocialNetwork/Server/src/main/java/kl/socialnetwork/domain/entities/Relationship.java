@@ -2,6 +2,7 @@ package kl.socialnetwork.domain.entities;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 //@Table(name = "relationship", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_one_id", "user_two_id"})})
@@ -12,6 +13,7 @@ public class Relationship extends BaseEntity {
     private int status;
     private User actionUser;
     private LocalDateTime time;
+    private List<Message> messageList;
 
     public Relationship() {
     }
@@ -62,5 +64,15 @@ public class Relationship extends BaseEntity {
 
     public void setTime(LocalDateTime time) {
         this.time = time;
+    }
+
+
+    @OneToMany(mappedBy = "relationship", targetEntity = Message.class, cascade = CascadeType.ALL)
+    public List<Message> getMessageList() {
+        return this.messageList;
+    }
+
+    public void setMessageList(List<Message> messageList) {
+        this.messageList = messageList;
     }
 }

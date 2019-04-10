@@ -67,10 +67,12 @@ public final class ResponseMessageConstants {
     public static final String SUCCESSFUL_USER_LOGS_DELETING_MESSAGE = "User logs have been successfully deleted.";
 
     public static final String FAILURE_LOGS_SAVING_MESSAGE = "Failure log saving!";
-    public static final String FAILURE_LOGS_NOT_FOUND_MESSAGE = "No logs available for selected username!";
+    public static final String FAILURE_LOGS_NOT_FOUND_MESSAGE = "No logs available for selected username.";
     public static final String FAILURE_LOGS_CLEARING_ERROR_MESSAGE = "Logs clearing error.";
 
 
+    // Message Messages
+    public static final String SUCCESSFUL_CREATE_MESSAGE_MESSAGE = "Message created successfully.";
 
 
 }

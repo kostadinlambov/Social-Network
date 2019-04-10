@@ -4,9 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kl.socialnetwork.domain.models.bindingModels.post.PostCreateBindingModel;
 import kl.socialnetwork.domain.models.serviceModels.PostServiceModel;
 import kl.socialnetwork.domain.models.viewModels.post.PostAllViewModel;
-import kl.socialnetwork.services.CloudinaryService;
 import kl.socialnetwork.services.PostService;
-import kl.socialnetwork.utils.constants.ResponseMessageConstants;
 import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;
 import kl.socialnetwork.utils.responseHandler.successResponse.SuccessResponse;
 import org.modelmapper.ModelMapper;
@@ -30,14 +28,12 @@ import static kl.socialnetwork.utils.constants.ResponseMessageConstants.*;
 public class PostController {
 
     private final PostService postService;
-    private final CloudinaryService cloudinaryService;
     private final ModelMapper modelMapper;
     private final ObjectMapper objectMapper;
 
     @Autowired
-    public PostController(PostService postService, CloudinaryService cloudinaryService, ModelMapper modelMapper, ObjectMapper objectMapper) {
+    public PostController(PostService postService, ModelMapper modelMapper, ObjectMapper objectMapper) {
         this.postService = postService;
-        this.cloudinaryService = cloudinaryService;
         this.modelMapper = modelMapper;
         this.objectMapper = objectMapper;
     }
