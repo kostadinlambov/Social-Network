@@ -182,7 +182,7 @@ class MainSharedContent extends Component {
 
         const loggedInUserProfilePicUrl = this.props.profilePicUrl;
         return (
-           
+
             <Fragment >
                 <article className="main-article-shared-content">
 
@@ -208,9 +208,14 @@ class MainSharedContent extends Component {
                                     postId={post.postId}
                                 />
 
-                            </Fragment>
+
+                            </Fragment >
                         )}
+
                     </section>
+
+                   
+
                 </article>
             </Fragment>
         )

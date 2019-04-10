@@ -22,4 +22,4 @@ const Picture = (props) => {
     )
 }
 
-export default Picture
+export default Picture;

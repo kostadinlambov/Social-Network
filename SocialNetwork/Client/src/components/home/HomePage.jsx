@@ -11,21 +11,23 @@ import Intro from './Intro';
 import PhotoGallery from './PhotosGallery';
 import FriendsGallery from './FriendsGallery';
 
-import placeholder_user_image from '../../assets/images/placeholder-profile-male.jpg'
-import default_background_image from '../../assets/images/default-background-image.jpg'
+import placeholder_user_image from '../../assets/images/placeholder-profile-male.jpg';
+import default_background_image from '../../assets/images/default-background-image.jpg';
 
-const UserSearchResultsPage = lazy(() => import('../../components/user/UserSearchResultsPage'))
-const UserProfilePage = lazy(() => import('../../components/user/UserProfilePage'))
-const UserFriendsAllPage = lazy(() => import('../../components/user/UserFriendsAllPage'))
-const UserFindFriendsPage = lazy(() => import('../../components/user/UserFindFriendsPage'))
-const UserAllPage = lazy(() => import('../../components/user/UserAllPage'))
-const UserEditPage = lazy(() => import('../../components/user/UserEditPage'))
-const UserDeletePage = lazy(() => import('../../components/user/UserDeletePage'))
-const UserGalleryPage = lazy(() => import('../../components/user/UserGalleryPage'))
-const UserLogsPage = lazy(() => import('../../components/user/UserLogsPage'))
-const MessageBox = lazy(() => import('./MessageBox'))
 
-const ErrorPage = lazy(() => import('../../components/common/ErrorPage'))
+const UserSearchResultsPage = lazy(() => import('../../components/user/UserSearchResultsPage'));
+const UserProfilePage = lazy(() => import('../../components/user/UserProfilePage'));
+const UserFriendsAllPage = lazy(() => import('../../components/user/UserFriendsAllPage'));
+const UserFindFriendsPage = lazy(() => import('../../components/user/UserFindFriendsPage'));
+const UserAllPage = lazy(() => import('../../components/user/UserAllPage'));
+const UserEditPage = lazy(() => import('../../components/user/UserEditPage'));
+const UserDeletePage = lazy(() => import('../../components/user/UserDeletePage'));
+const UserGalleryPage = lazy(() => import('../../components/user/UserGalleryPage'));
+const UserLogsPage = lazy(() => import('../../components/user/UserLogsPage'));
+const MessageBox = lazy(() => import('./MessageBox'));
+
+const ErrorPage = lazy(() => import('../../components/common/ErrorPage'));
+
 
 export default class HomePage extends Component {
     constructor(props) {
@@ -194,6 +196,7 @@ export default class HomePage extends Component {
                         <Suspense fallback={<h1 className="text-center pt-5 mt-5">Loading...</h1>}>
                             <Switch>
                                 {loggedIn && <Route exact path="/home/comments/:id" render={props => <MainSharedContent  {...props}  {...this.state} getUserToShowId={this.getUserToShowId} />} />}
+                            
                                 {loggedIn && <Route exact path="/home/profile/:id" render={props => <UserProfilePage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
                                 {loggedIn && <Route exact path="/home/friends/:id" render={props => <UserFriendsAllPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} loadAllFriends={this.loadAllFriends} />} />}
                                 {loggedIn && <Route exact path="/home/findFriends/:id/:category" render={(props) => <UserFindFriendsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} findFriends={this.findFriends} />} />}
@@ -221,6 +224,7 @@ export default class HomePage extends Component {
                                 <Intro {...this.state} />
                                 <PhotoGallery {...this.state} />
                                 <FriendsGallery {...this.state} />
+                                <MessageBox />
                             </section>
                         </Fragment>
                     }

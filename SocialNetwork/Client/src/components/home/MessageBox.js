@@ -1,49 +1,83 @@
 import React, { Component, Fragment } from 'react';
-import UserRow from '../user/UserRow';
 import { requester, userService } from '../../infrastructure'
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common';
 import TextareaAutosize from 'react-autosize-textarea';
+import FriendChatBox from './FriendChatBox';
+import FriendMessage from './FriendMessage';
 import '../user/css/UserAllPage.css';
 import './css/MessageBox.css';
 
 import placeholder_user_image from '../../assets/images/placeholder-profile-male.jpg'
-import default_background_image from '../../assets/images/default-background-image.jpg'
-
 
 export default class MessageBox extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            loggedInUserId: userService.getUserId(),
-            timelineUserId: '',
-            content: '',
-            imageUrl: '',
-            loggedInUserProfilePicUrl: '',
-            userBoxHeight: '',
+            loggedInUserId: '',
+            chatUserId: '',
+            chatUserFirstName: '',
+            chatUserLastName: '',
+            chatUserProfilePicUrl: '',
+            userBoxHeight: 'toggle',
             chatBoxHeight: '',
-            chatBoxDisplay: '',
+            chatBoxDisplay: 'display-none',
+            content: '',
+            friendsArr: [],
+            allMessages: [],
             touched: {
                 content: false,
             }
+            // loggedInUserId: userService.getUserId(),
+            // timelineUserId: '',
+            // imageUrl: '',
+            // loggedInUserProfilePicUrl: '',
+
         };
 
         this.handleBlur = this.handleBlur.bind(this);
         this.onChangeHandler = this.onChangeHandler.bind(this);
         this.onSubmitHandler = this.onSubmitHandler.bind(this);
         this.showUserChatBox = this.showUserChatBox.bind(this);
+        this.changeChatBoxDisplay = this.changeChatBoxDisplay.bind(this);
+        this.loadAllFriends = this.loadAllFriends.bind(this);
+        this.getAllMessages = this.getAllMessages.bind(this);
     }
 
     componentDidMount() {
-        const userId = this.props.match.params.id;
+        const userId = userService.getUserId();
+        this.setState({
+            loggedInUserId: userId
+        }, this.loadAllFriends(userId))
+    }
 
-        requester.get('/users/all/' + userId, (response) => {
+    loadAllFriends = (userId) => {
+        requester.get(`/relationship/friends/${userId}`, (response) => {
+            this.setState({
+                friendsArr: response
+            })
+        }).catch(err => {
+            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+
+            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
+                localStorage.clear();
+                this.props.history.push('/login');
+            }
+        })
+    }
+
+    getAllMessages = () => {
+        debugger;
+        requester.get('/message/all/' + this.state.chatUserId, (response) => {
+            console.log('All messages: ', response)
+            debugger;
             if (response) {
                 this.setState({
-                    userArr: response,
-                    // userArr: response['payload'],
-                    id: userId
+                    allMessages: response,
+                    content: '',
                 })
             } else {
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
@@ -58,25 +92,32 @@ export default class MessageBox extends Component {
             if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
                 localStorage.clear();
                 this.props.history.push('/login');
-
             }
         })
     }
 
     onSubmitHandler(event) {
         event.preventDefault();
+        debugger;
 
         if (!this.canBeSubmitted()) {
             return;
         }
 
-        const timelineUserId = this.props.timelineUserId;
-        const { loggedInUserId, content, imageUrl } = this.state;
+        const { chatUserId: toUserId, content, loggedInUserId } = this.state;
 
-        requester.post('/post/create', { timelineUserId, loggedInUserId, content, imageUrl }, (response) => {
+        debugger;
+
+        requester.post('/message/create', { toUserId, content }, (response) => {
+            console.log('response', response)
+            debugger;
             if (response.success === true) {
-                this.props.getAllPosts(timelineUserId);
+                debugger;
+                this.getAllMessages();
                 this.setState({ content: '' })
+                toast.success(<ToastComponent.successToast text={response.message} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
             } else {
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
@@ -144,16 +185,25 @@ export default class MessageBox extends Component {
     }
 
 
-    showUserChatBox = (event) => {
-        debugger;
-        console.log(event);
+    showUserChatBox = (id, firstName, lastName, profilePicUrl, event) => {
+        this.setState({
+            chatUserId: id,
+            chatUserFirstName: firstName,
+            chatUserLastName: lastName,
+            chatUserProfilePicUrl: profilePicUrl
+        }, () => {
+            this.getAllMessages();
+            this.changeChatBoxDisplay()
+        })
         debugger;
     }
 
     render() {
-        if (this.props.match.params.id !== this.props.id) {
-            this.props.getUserToShowId(this.props.match.params.id);
-        }
+        console.log('MessageBox props', this.props)
+
+        // if (this.props.match.params.id !== this.props.id) {
+        //     this.props.getUserToShowId(this.props.match.params.id);
+        // }
 
         // const imageClass = userService.getImageSize(props.imageUrl);
         const imageClassUserPick = userService.getImageSize(placeholder_user_image);
@@ -175,6 +225,8 @@ export default class MessageBox extends Component {
         const chatBoxHeight = this.state.chatBoxHeight;
         const chatBoxDisplay = this.state.chatBoxDisplay;
 
+        const { chatUserFirstName, chatUserLastName, chatUserProfilePicUrl } = this.state
+
         return (
             <Fragment>
                 <section className={`messagebox-container ${userBoxHeight}`} >
@@ -186,98 +238,70 @@ export default class MessageBox extends Component {
                             Chat
                         </h3>
                     </div>
-                    <div className="messagebox-friend-container" onClick={this.changeChatBoxDisplay}>
-                        <div className="messagebox-friend-image">
-                            <img className={imageClassUserPick} src={placeholder_user_image} alt="bender" />
-                        </div>
-                        <div className="messagebox-username-container" >
-                            <p className="messagebox-username">Pesho Peshov </p>
-                            {/* <p className="post-description"> Time</p> */}
-                        </div>
 
-                    </div>
-                    <div className="messagebox-friend-container" >
-                        <div className="messagebox-friend-image">
-                            <img className={imageClassUserPick} src={placeholder_user_image} alt="bender" />
-                        </div>
-                        <div className="messagebox-username-container" >
-                            <p className="messagebox-username">Gosho Goshev </p>
-                            {/* <p className="post-description"> Time</p> */}
-                        </div>
-                    </div>
-                
+                    {this.state.friendsArr.map((friend) =>
+                        <FriendChatBox
+                            key={friend.id}
+                            changeChatBoxDisplay={this.changeChatBoxDisplay}
+                            showUserChatBox={this.showUserChatBox}
+                            {...friend}
+                        />
+                    )}
 
                 </section>
 
                 <section className={`chat-container ${chatBoxHeight} ${chatBoxDisplay}`}>
                     <div className="chat-friend-container" onClick={this.changeChatBoxHeight}>
                         <div className="chat-friend-image">
-                            <img className={imageClassUserPick} src={placeholder_user_image} alt="bender" />
+                            <img className={imageClassUserPick} src={chatUserProfilePicUrl} alt="bender" />
                         </div>
                         <div className="chat-username-container" >
-                            <p className="chat-username">Pesho Peshov </p>
-                            {/* <p className="post-description"> Time</p> */}
+                            <p className="chat-username">{chatUserFirstName} {chatUserLastName}</p>
                         </div>
                     </div>
-                    <div className="chat-content">
-                                Content
+                    <div className="content-wrapper">
 
-                    </div>
+                        <div className="chat-content">
+                            {this.state.allMessages.map((message, index) =>
+                                <FriendMessage
+                                    key={message.fromUserId + index}
+                                    {...message}
+                                />
+                            )}
+                        </div>
+                        <div className="chat-footer">
+                            <div className="chat-input-group">
 
-                    <div class="chat-footer">
-                        <div class="chat-input-group">
+                                {/* <textarea name="" class="form-control type_msg" placeholder="Type your message..."></textarea> */}
+                                <div className="chat-area-container">
+                                    <form onSubmit={this.onSubmitHandler}>
+                                        <div className="" id="chat-textarea-form-group">
+                                            <TextareaAutosize
+                                                name="content"
+                                                id="content"
+                                                className="chat-textarea"
+                                                value={this.state.content}
+                                                onChange={this.onChangeHandler}
+                                                onBlur={this.handleBlur('content')}
+                                                aria-describedby="contentHelp"
+                                                placeholder={`Type your message, ${loggedInUserFirstName}?`}
+                                                maxRows={6}
+                                            >
+                                            </TextareaAutosize>
+                                        </div>
 
-                            {/* <textarea name="" class="form-control type_msg" placeholder="Type your message..."></textarea> */}
-                            <div className="chat-area-container">
-                                <form onSubmit={this.onSubmitHandler}>
-                                    <div className="" id="chat-textarea-form-group">
-                                        <TextareaAutosize
-                                            name="content"
-                                            id="content"
-                                            className="chat-textarea"
-                                            value={this.state.content}
-                                            onChange={this.onChangeHandler}
-                                            onBlur={this.handleBlur('content')}
-                                            aria-describedby="contentHelp"
-                                            placeholder={`Type your message, ${loggedInUserFirstName}?`}
-                                            maxRows={6}
-                                        >
-                                        </TextareaAutosize>
-                                    </div>
+                                        <div className="text-center">
+                                            {/* <button disabled={!isEnabled} style={{ 'visibility': `${displayButon}` }} type="submit" className="btn uiButtonGroup post-button-fbPhotoCurationControl App-button-primary ">POST</button> */}
+                                            <button disabled={!isEnabled} style={{ 'visibility': `${displayButon}` }} type="submit" className="btn fas fa-location-arrow App-button-primary send-btn"></button>
+                                        </div>
+                                    </form>
 
-                                    <div className="text-center">
-                                        {/* <button disabled={!isEnabled} style={{ 'visibility': `${displayButon}` }} type="submit" className="btn uiButtonGroup post-button-fbPhotoCurationControl App-button-primary ">POST</button> */}
-                                        <button disabled={!isEnabled} style={{ 'visibility': `${displayButon}` }} type="submit" className="btn fas fa-location-arrow App-button-primary send-btn"></button>
-                                    </div>
-                                </form>
-
+                                </div>
                             </div>
                         </div>
                     </div>
+
                 </section>
-                {/* ############################################################### */}
-
-                <div className="" id="container">
-                    <div className="post-content-article-header " style={{ background: 'red' }}>
-                        <div className="post-content-article-image">
-                            <img className={imageClassUserPick} src={placeholder_user_image} alt="bender" />
-                        </div>
-                        <div className="post-content-article-description" >
-                            <p className="post-user-info">Pesho Peshov </p>
-                            {/* <p className="post-description"> Time</p> */}
-                        </div>
-                    </div>
-                    <div className="main-article-comments-container" style={{ 'background': 'white' }}>
-                        <div className="post-content-article-image">
-                            <img className={imageClassUserPick} src={placeholder_user_image} alt="creatorPic" />
-                        </div>
-                        <div className="main-article-shared-content-description">
-                            <p className="content"><span >Pesho Peshov</span> </p>
-                        </div>
-                    </div>
-                </div>
-
-
             </Fragment>
         )
     }
