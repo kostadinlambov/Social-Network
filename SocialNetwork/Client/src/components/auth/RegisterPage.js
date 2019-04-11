@@ -4,7 +4,8 @@ import { requester } from '../../infrastructure'
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common';
 
-import placeholder_user_image from '../../assets/images/placeholder-profile-male.jpg'
+// import placeholder_user_image from '../../assets/images/placeholder-profile-male.jpg'
+import placeholder_user_image from '../../assets/images/placeholder.png';
 import default_background_image from '../../assets/images/default-background-image.jpg'
 
 export default class RegisterPage extends Component {

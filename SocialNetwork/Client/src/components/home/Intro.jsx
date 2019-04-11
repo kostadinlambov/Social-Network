@@ -1,7 +1,9 @@
 import React, { Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
+import userService from '../../infrastructure/userService';
 
 const Intro = (props) => {
+    const formattedUsername = userService.formatUsername(props.firstName, props.lastName)
     return (
         <Fragment >
             <article className="aside-article-intro">
@@ -13,7 +15,7 @@ const Intro = (props) => {
                 </div>
                 <hr className="my-2 mb-3 mt-2 col-md-10 mx-auto" />
                 <div className="aside-intro-content">
-                    <h4 className="occupation">{props.firstName} {props.lastName}</h4>
+                    <h4 className="occupation">{formattedUsername}</h4>
                     <p>Lives at {props.address},  in {props.city}.</p>
                     <p>From {props.city}.</p>
                 </div>

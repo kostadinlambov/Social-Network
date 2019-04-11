@@ -1,7 +1,8 @@
 import React, { Fragment} from 'react';
 import { NavLink } from 'react-router-dom';
 import { userService } from '../../infrastructure';
-import placeholder_user_image from '../../assets/images/placeholder-profile-male.jpg'
+// import placeholder_user_image from '../../assets/images/placeholder-profile-male.jpg'
+import placeholder_user_image from '../../assets/images/placeholder.png';
 
 const FriendsGallery = (props) => {
     return (

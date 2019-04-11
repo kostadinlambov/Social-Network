@@ -15,6 +15,8 @@ const Post = (props) => {
     const hour = props.time.hour < 10 ? '0' + props.time.hour : props.time.hour;
     const minute = props.time.minute < 10 ? '0' + props.time.minute : props.time.minute;
 
+    const formattedName = userService.formatUsername(props.loggedInUserFirstName, props.loggedInUserLastName);
+
     return (
         <Fragment>
             <div className="post-wrapper" id="container">
@@ -23,7 +25,7 @@ const Post = (props) => {
                         <img className={imageClassUserPick} src={props.loggedInUserProfilePicUrl} alt="bender" />
                     </div>
                     <div className="post-content-article-description">
-                        <p className="post-user-info">{props.loggedInUserFirstName} {props.loggedInUserLastName} </p>
+                        <p className="post-user-info">{formattedName} </p>
                         <p className="post-description"> {props.time.dayOfMonth} {month} {hour}:{minute} {dayTime}</p>
                     </div>
                 </div>

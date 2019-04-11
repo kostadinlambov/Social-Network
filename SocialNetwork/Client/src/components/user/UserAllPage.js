@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import { ToastComponent } from '../common';
 import './css/UserAllPage.css';
 
-
 export default class UserAllPage extends Component {
     constructor(props) {
         super(props)

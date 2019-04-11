@@ -7,7 +7,6 @@ import './css/MainSharedContent.css'
 import WritePost from './WritePost';
 import WriteComment from './WriteComment';
 
-
 class MainSharedContent extends Component {
     constructor(props) {
         super(props)

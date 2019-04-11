@@ -20,6 +20,8 @@
     position: relative;
     overflow: hidden;
     border-radius: 50%;
+    order: 1;
+    margin-top: 0.3rem;
 }
 
 .message-image img {
@@ -49,6 +51,7 @@
 }
 
 .message-description {
+    order: 2;
     margin: 0 1rem;
     flex: 0 0 79%;
 }
@@ -62,14 +65,36 @@
 
 .message-info{
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
     padding-top: 0.3rem;
 }
 
 .message-time {
     color: rgb(192, 192, 192);
-    color: red;
+    /* color: red; */
 }
+
+.message-content.loggedInUser {
+    background: #3b5998;
+    color: white;
+    padding: 0.8rem;
+    border-radius: 30px;
+    word-break: break-all;
+}
+
+.message-info.loggedInUser{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 0.3rem;
+}
+
+.message-image.loggedInUser {
+    order: 3;
+}
+
+
+
 
 

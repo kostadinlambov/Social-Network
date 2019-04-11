@@ -144,6 +144,15 @@ export default {
         return false;
     },
 
+    formatUsername(firstName = '', lastName = '', nameLength = 21) {
+        let name = firstName + ' ' + lastName;
+        if (name.length > nameLength) {
+            return name.substring(0, 18) + '...';
+        }
+
+        return name;
+    },
+
     getImageSize(profilePicUrl, friendsGallery) {
         let img = new Image();
         img.src = profilePicUrl;

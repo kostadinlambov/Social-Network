@@ -1,5 +1,5 @@
 import React, { Fragment, Component } from 'react';
-import { userService, requester, observer } from '../../infrastructure';
+import { userService, requester} from '../../infrastructure';
 import TextareaAutosize from 'react-autosize-textarea';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common';
@@ -100,6 +100,7 @@ export default class WriteComment extends Component {
         const loggedInUserProfilePicUrl = userService.getProfilePicUrl();
         // const loggedInUserProfilePicUrl = this.props.loggedInUserProfilePicUrl;
         const loggedInUserFirstName = userService.getFirstName();
+        const formattedName = userService.formatUsername(loggedInUserFirstName);
 
         return (
             <Fragment>
@@ -120,7 +121,7 @@ export default class WriteComment extends Component {
                                             onChange={this.onChangeHandler}
                                             onBlur={this.handleBlur('content')}
                                             aria-describedby="contentHelp"
-                                            placeholder={`Write a comment, ${loggedInUserFirstName}!`}
+                                            placeholder={`Write a comment, ${formattedName}!`}
                                         >
                                         </TextareaAutosize>
                                     </div>

@@ -2,14 +2,19 @@
     background: #FFF;
     border-radius: 0.3rem;
     /* overflow: hidden; */
+
+    /* box-shadow: 0 0 2rem 0 rgba(64, 163, 244, 0.8); */
     box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
-    background: white;
+
+    background: greenyellow;
+    /* width: 50%; */
     width: 308px;
     height: 532px;
     position: fixed;
     bottom: 0;
     right: 40px;
     z-index: 10;
+
     transition: height 1.5s ease-in-out;
 }
 
@@ -17,17 +22,15 @@
     height: 65px;
 }
 
-/* ##################################### */
 /* MessageBox - Header */
 
 .messagebox-header {
     display: flex;
     justify-content: start;
     align-items: center;
-    padding: 0.85rem 1rem;
+    /* margin-bottom: 1rem; */
+    padding: 0.65rem 1rem;
     cursor: pointer;
-    box-shadow: inset 0px -25px 5px -23px rgba(0, 0, 0, 0.3);
-    z-index: 20;
 }
 
 .messagebox-chat-icon {
@@ -56,11 +59,11 @@
 }
 
 .chat-title {
-    margin-bottom: 0.2rem;
+    margin-bottom: 0.5rem;
+    ;
     padding: 0 1rem;
 }
 
-/* ##################################### */
 /* friends-container */
 
 .messagebox-friend-container {
@@ -71,18 +74,9 @@
     margin: auto;
     background: white;
     border-radius: 5px;
-    /* box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3); */
+    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
     padding: 0.5rem;
     cursor: pointer;
-    color: #40a3f4;
-    border: 1px solid #fff;
-}
-
-.messagebox-friend-container:hover {
-    background: #40a3f4;
-    color:#fff;
-    border: 1px solid #fff;
-    box-shadow: 0 0 14px 1px rgba(0,0,0,.3);
 }
 
 .messagebox-friend-image {
@@ -91,6 +85,8 @@
     position: relative;
     overflow: hidden;
     border-radius: 50%;
+    /* width: 32px;
+    height: 32px; */
 }
 
 .messagebox-friend-image:before {
@@ -128,24 +124,39 @@
 }
 
 .messagebox-username {
-    /* color: #40a3f4; */
+    color: #40a3f4;
+    /* font-weight: bold; */
+    /* font-size: 1.2rem; */
+    /* 
+    font-size: 12px;
+    line-height: 16px */
 }
 
-/* ##################################### */
 /* Chat Css */
 
 .chat-container {
     background: #FFF;
     border-radius: 0.3rem;
+
+
+    /* box-shadow: 0 0 2rem 0 rgba(64, 163, 244, 0.8); */
     box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
-    background: white;
+
+    background: orange;
+    /* width: 50%; */
     width: 425px;
     height: 532px;
+    /* max-height: 532px; */
     position: fixed;
+    /* bottom: 40px; */
     bottom: 0;
     right: 368px;
     z-index: 10;
+    /* position: relative; */
+
     transition: height 1.5s ease-in-out;
+
+    cursor: pointer;
 }
 
 .toggle-chat-container {
@@ -162,11 +173,9 @@
     align-items: center;
     width: 100%;
     margin: auto;
-    background: white;
-    border-radius: 5px 5px 0 0;
+    background: greenyellow;
+    border-radius: 5px;
     padding: 0.5rem 1rem;
-    cursor: pointer;
-    box-shadow: inset 0px -25px 5px -23px rgba(0, 0, 0, 0.3);
 }
 
 .chat-friend-image {
@@ -175,7 +184,8 @@
     position: relative;
     overflow: hidden;
     border-radius: 50%;
-    /* box-shadow: inset 0px -25px 5px -23px rgba(0, 0, 0, 0.3); */
+    /* width: 32px;
+    height: 32px; */
 }
 
 .chat-friend-image:before {
@@ -215,6 +225,10 @@
 .chat-username {
     color: #40a3f4;
     font-weight: bold;
+    /* font-size: 1.2rem; */
+    /* 
+    font-size: 12px;
+    line-height: 16px */
 }
 
 /* ##################################### */
@@ -226,32 +240,78 @@
     height: 468px;
 }
 
+
+/* .content-wrapper{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width:100%;
+    position:relative;
+    overflow-x: hidden;
+   z-index: 2; 
+}  */
+
+
+
+
 /* ##################################### */
 /* chat - content */
 
 .chat-content {
+    /* display: flex;
+    flex-direction: column; */
     height: 100%;
     width: 100%;
     position: relative;
     overflow-x: hidden;
+    /* z-index: 2; */
 }
+
+/* .chat-content{
+    display: flex;
+    flex-direction: column;
+    height: 420px;
+    min-height: 200px;
+    position: relative;
+    overflow: auto;
+     max-height: 340px; 
+  
+} */
+
 
 
 /* ##################################### */
 /* chat - textarea */
 
+
+
 .chat-footer {
     background: #fff;
+    /* min-height: 32px; */
     position: relative;
+    /* z-index: 3; */
 }
+
+/* .chat-footer {
+    background: blueviolet;
+    width: 100%;
+    position: relative; */
+/* position: absolute;
+    bottom: 15px; */
+/* } */
+
 
 .chat-area-container {
     width: 100%;
     position: relative;
-    background: white;
+    background: red;
 }
 
+
+
 .chat-textarea {
+    /* position: absolute; */
+    /* bottom: 0px; */
     overflow: hidden;
     border: none;
     outline: none;
@@ -265,62 +325,11 @@
 
 #chat-textarea-form-group {
     margin-bottom: 0rem;
+    /* margin-top: 3.1rem; */
 }
 
 .send-btn {
     position: absolute;
     bottom: 15px;
     right: 0;
-}
-
-/* ##################################### */
-/* Close button */
-
-#chat-container:hover .chat-uiButtonGroup{
-    opacity: 1;
-    transition: 1.5s ease-in;
-}
-
-#close-button-container {
-    position: relative;
-    /* overflow: hidden; */
-}
-
-#close-button-container:hover .chat-uiButtonGroup {
-    opacity: 1;
-    transition: 1.5s ease-in;
-}
-
-.chat-fbPhotoCurationControl {
-    display: inline-block;
-    margin-right: 8px;
-    margin-top: 15px;
-    position: absolute;
-    right: 0;
-    top: 0;
-    z-index: 7;
-    opacity: 0;
-}
-
-.chat-fbPhotoCurationControl .chat-uiButtonGroup {
-    border: none;
-}
-.chat-uiButtonGroup {
-    border-radius: 3px;
-    display: inline-block;
-    padding: 0;
-    white-space: nowrap;
-    border: 1px solid rgba(0, 0, 0, .35);
-    padding: 2px 9px 4px 8px;
-}
-
-.chat-delete-button{
-    background-clip: padding-box;
-    background-color: rgb(246, 84, 50);
-    color:white;
-}
-
-.chat-delete-button:hover{
-    background-color: rgb(167, 28, 19);
-    color:white;
 }

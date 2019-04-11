@@ -43,11 +43,12 @@ main .main-article-shared-content {
 }
 
 .post-image {
-    flex: 0 0 7%;
+    /* flex: 0 0 7%; */
     width: 3rem;
     position: relative;
     overflow: hidden;
     border-radius: 50%;
+    margin-top: 0.2rem;
 }
 
 .post-image:before {
@@ -94,7 +95,7 @@ main .main-article-shared-content {
 /* write-comment */
 
 .post {
-    font-size: 1.5rem;
+    font-size: 1.1rem;
     display: flex;
     justify-content: start;
     align-items: start;
@@ -163,7 +164,6 @@ main .main-article-shared-content {
     border-radius: 5px;
     /* box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3); */
     padding: 1rem;
-
 }
 
 .post-content-article-image {

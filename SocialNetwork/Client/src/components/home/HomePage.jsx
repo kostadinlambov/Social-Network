@@ -11,7 +11,8 @@ import Intro from './Intro';
 import PhotoGallery from './PhotosGallery';
 import FriendsGallery from './FriendsGallery';
 
-import placeholder_user_image from '../../assets/images/placeholder-profile-male.jpg';
+// import placeholder_user_image from '../../assets/images/placeholder-profile-male.jpg';
+import placeholder_user_image from '../../assets/images/placeholder.png';
 import default_background_image from '../../assets/images/default-background-image.jpg';
 
 
@@ -27,7 +28,6 @@ const UserLogsPage = lazy(() => import('../../components/user/UserLogsPage'));
 const MessageBox = lazy(() => import('./MessageBox'));
 
 const ErrorPage = lazy(() => import('../../components/common/ErrorPage'));
-
 
 export default class HomePage extends Component {
     constructor(props) {
@@ -52,6 +52,7 @@ export default class HomePage extends Component {
             friendsCandidatesArr: [],
             userWaitingForAcceptingRequest: [],
             usersReceivedRequestFromCurrentUser: [],
+            friendsChatArr: [],
         }
 
         this.getUserToShowId = this.getUserToShowId.bind(this);
@@ -59,6 +60,7 @@ export default class HomePage extends Component {
         this.loadAllFriends = this.loadAllFriends.bind(this);
         this.searchResults = this.searchResults.bind(this);
         this.findFriends = this.findFriends.bind(this);
+        this.loadAllChatFriends = this.loadAllChatFriends.bind(this);
     }
 
     getUserToShowId(getUserToShowId) {
@@ -68,6 +70,7 @@ export default class HomePage extends Component {
             }, () => {
                 (() => this.loadAllPictures(getUserToShowId))();
                 (() => this.loadAllFriends(getUserToShowId))();
+                (() => this.loadAllChatFriends())();
             })
 
             if (userData.error) {
@@ -114,6 +117,24 @@ export default class HomePage extends Component {
         requester.get(`/relationship/friends/${userId}`, (response) => {
             this.setState({
                 friendsArr: response
+            },  (() => this.loadAllChatFriends())())
+        }).catch(err => {
+            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+
+            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
+                localStorage.clear();
+                this.props.history.push('/login');
+            }
+        })
+    }
+
+    loadAllChatFriends = () => {
+        const userId = userService.getUserId();
+        requester.get(`/relationship/friends/${userId}`, (response) => {
+            this.setState({
+                friendsChatArr: response
             })
         }).catch(err => {
             toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
@@ -204,7 +225,7 @@ export default class HomePage extends Component {
                                 {(loggedIn && isRoot) && <Route exact path="/home/users/delete/:id" render={props => <UserDeletePage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
                                
                                 {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/users/all/:id" render={props => <UserAllPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
-                                {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/message/:id" render={props => <MessageBox {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
+                                {/* {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/message/:id" render={props => <MessageBox {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />} */}
                                
                                
                                 {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/logs/:id" render={props => <UserLogsPage {...props} getUserToShowId={this.getUserToShowId} searchResults={this.searchResults} {...this.state} />} />}
@@ -224,7 +245,7 @@ export default class HomePage extends Component {
                                 <Intro {...this.state} />
                                 <PhotoGallery {...this.state} />
                                 <FriendsGallery {...this.state} />
-                                <MessageBox />
+                                <MessageBox loadAllChatFriends={this.loadAllChatFriends} friendsChatArr={this.state.friendsChatArr}/>
                             </section>
                         </Fragment>
                     }

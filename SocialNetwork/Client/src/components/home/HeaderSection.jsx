@@ -1,8 +1,9 @@
 import React, { Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
 import userService from '../../infrastructure/userService'
-import placeholder_user_image from '../../assets/images/placeholder-profile-male.jpg'
-import default_background_image from '../../assets/images/default-background-image.jpg'
+// import placeholder_user_image from '../../assets/images/placeholder-profile-male.jpg'
+import placeholder_user_image from '../../assets/images/placeholder.png';
+import default_background_image from '../../assets/images/default-background-image.jpg';
 
 const HeaderSection = (props) => {
     const profilePicUrl = props.profilePicUrl || placeholder_user_image;
@@ -13,6 +14,11 @@ const HeaderSection = (props) => {
        imgClassName = userService.getImageSize(profilePicUrl);
     }
 
+    let formattedUsername = userService.formatUsername(props.firstName, props.lastName)
+    console.log(props.firstName)
+    console.log(props.lastName)
+    debugger;
+
     return (
         <Fragment >
             <header className="site-header">
@@ -22,7 +28,7 @@ const HeaderSection = (props) => {
                             <img className={imgClassName}  src={profilePicUrl} alt="Profile pic" />
                         </span>
                         <div className="header-content">
-                            <h2 className="text-shadow" >{`${props.firstName} ${props.lastName}`}</h2>
+                            <h2 className="text-shadow" >{`${formattedUsername}`}</h2>
                             <div className="header-button-container">
                                 <button className="button update-info">
                                     <NavLink to={`/home/profile/${props.id}`}>UPDATE INFO</NavLink>

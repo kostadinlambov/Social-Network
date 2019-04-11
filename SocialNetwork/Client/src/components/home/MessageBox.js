@@ -8,8 +8,6 @@ import FriendMessage from './FriendMessage';
 import '../user/css/UserAllPage.css';
 import './css/MessageBox.css';
 
-import placeholder_user_image from '../../assets/images/placeholder-profile-male.jpg'
-
 export default class MessageBox extends Component {
     constructor(props) {
         super(props)
@@ -19,21 +17,19 @@ export default class MessageBox extends Component {
             chatUserId: '',
             chatUserFirstName: '',
             chatUserLastName: '',
+            chatUserNameFormatted: '',
             chatUserProfilePicUrl: '',
             userBoxHeight: 'toggle',
             chatBoxHeight: '',
             chatBoxDisplay: 'display-none',
             content: '',
+            shouldScrollDown: false,
+            friendsArrLength: 0,
             friendsArr: [],
             allMessages: [],
             touched: {
                 content: false,
             }
-            // loggedInUserId: userService.getUserId(),
-            // timelineUserId: '',
-            // imageUrl: '',
-            // loggedInUserProfilePicUrl: '',
-
         };
 
         this.handleBlur = this.handleBlur.bind(this);
@@ -41,32 +37,21 @@ export default class MessageBox extends Component {
         this.onSubmitHandler = this.onSubmitHandler.bind(this);
         this.showUserChatBox = this.showUserChatBox.bind(this);
         this.changeChatBoxDisplay = this.changeChatBoxDisplay.bind(this);
-        this.loadAllFriends = this.loadAllFriends.bind(this);
         this.getAllMessages = this.getAllMessages.bind(this);
     }
 
     componentDidMount() {
+        this.props.loadAllChatFriends();
         const userId = userService.getUserId();
         this.setState({
-            loggedInUserId: userId
-        }, this.loadAllFriends(userId))
+            loggedInUserId: userId,
+        })
     }
 
-    loadAllFriends = (userId) => {
-        requester.get(`/relationship/friends/${userId}`, (response) => {
-            this.setState({
-                friendsArr: response
-            })
-        }).catch(err => {
-            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-                position: toast.POSITION.TOP_RIGHT
-            });
-
-            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-                localStorage.clear();
-                this.props.history.push('/login');
-            }
-        })
+    componentWillReceiveProps(nextProps) {
+        if (this.props.friendsChatArr.length !== nextProps.friendsChatArr.length) {
+            this.setState({ chatBoxDisplay: 'display-none' })
+        }
     }
 
     getAllMessages = () => {
@@ -78,6 +63,12 @@ export default class MessageBox extends Component {
                 this.setState({
                     allMessages: response,
                     content: '',
+                }, () => {
+                    if (this.state.shouldScrollDown) {
+                        this.scrollDown();
+                    } else {
+                        this.setState({ shouldScrollDown: true }, this.scrollTop())
+                    }
                 })
             } else {
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
@@ -98,21 +89,15 @@ export default class MessageBox extends Component {
 
     onSubmitHandler(event) {
         event.preventDefault();
-        debugger;
 
         if (!this.canBeSubmitted()) {
             return;
         }
 
-        const { chatUserId: toUserId, content, loggedInUserId } = this.state;
-
-        debugger;
+        const { chatUserId: toUserId, content } = this.state;
 
         requester.post('/message/create', { toUserId, content }, (response) => {
-            console.log('response', response)
-            debugger;
             if (response.success === true) {
-                debugger;
                 this.getAllMessages();
                 this.setState({ content: '' })
                 toast.success(<ToastComponent.successToast text={response.message} />, {
@@ -184,84 +169,95 @@ export default class MessageBox extends Component {
         }
     }
 
-
     showUserChatBox = (id, firstName, lastName, profilePicUrl, event) => {
+       let chatUserNameFormatted = userService.formatUsername(firstName, lastName, 21)
         this.setState({
             chatUserId: id,
             chatUserFirstName: firstName,
             chatUserLastName: lastName,
-            chatUserProfilePicUrl: profilePicUrl
+            chatUserNameFormatted,
+            chatUserProfilePicUrl: profilePicUrl,
+            shouldScrollDown: false,
+            chatBoxDisplay: '',
+            chatBoxHeight: '',
+
         }, () => {
             this.getAllMessages();
-            this.changeChatBoxDisplay()
         })
+    }
+
+    closeUserChatBox = () => {
         debugger;
+        this.setState({ chatBoxDisplay: 'display-none' })
+    }
+
+    scrollToBottom() {
+        const e = document.getElementById('chat-content');
+        e.scrollTop = e.scrollHeight - e.getBoundingClientRect().height;
+    }
+
+    scrollTop() {
+        const container = document.getElementById('chat-content');
+        container.scrollTop = 0;
+    }
+
+    scrollDown() {
+        const container = document.getElementById('chat-content');
+        container.scrollTop = container.scrollHeight
     }
 
     render() {
-        console.log('MessageBox props', this.props)
-
-        // if (this.props.match.params.id !== this.props.id) {
-        //     this.props.getUserToShowId(this.props.match.params.id);
-        // }
-
-        // const imageClass = userService.getImageSize(props.imageUrl);
-        const imageClassUserPick = userService.getImageSize(placeholder_user_image);
-
-        let isRoot = userService.isRoot();
-
         const { content } = this.state;
-
         const errors = this.validate(content);
         const isEnabled = !Object.keys(errors).some(x => errors[x]);
         const displayButon = isEnabled ? '' : 'hidden';
-
-        const imageClass = userService.getImageSize(this.props.imageUrl);
-        const loggedInUserProfilePicUrl = userService.getProfilePicUrl();
-        // const loggedInUserProfilePicUrl = this.props.loggedInUserProfilePicUrl;
         const loggedInUserFirstName = userService.getFirstName();
-
         const userBoxHeight = this.state.userBoxHeight;
         const chatBoxHeight = this.state.chatBoxHeight;
         const chatBoxDisplay = this.state.chatBoxDisplay;
 
-        const { chatUserFirstName, chatUserLastName, chatUserProfilePicUrl } = this.state
+        const { chatUserFirstName, chatUserLastName, chatUserProfilePicUrl, chatUserNameFormatted } = this.state;
+        const imageClassUserPick = userService.getImageSize(chatUserProfilePicUrl);
+        const firstNameFormatted = userService.formatUsername(loggedInUserFirstName)
 
         return (
             <Fragment>
                 <section className={`messagebox-container ${userBoxHeight}`} >
                     <div className="messagebox-header" onClick={this.changeHeight}>
                         <div className="messagebox-chat-icon">
-                            <i className="fas fa-user-friends"></i>
+                            <i className="fas fa-location-arrow"></i>
                         </div>
-                        <h3 className="chat-title" style={{ color: ' #333' }}>
+                        <h4 className="chat-title" style={{ color: ' #333' }}>
                             Chat
-                        </h3>
+                        </h4>
                     </div>
 
-                    {this.state.friendsArr.map((friend) =>
+                    {this.props.friendsChatArr.map((friend) =>
                         <FriendChatBox
                             key={friend.id}
-                            changeChatBoxDisplay={this.changeChatBoxDisplay}
                             showUserChatBox={this.showUserChatBox}
                             {...friend}
                         />
                     )}
-
                 </section>
-
-                <section className={`chat-container ${chatBoxHeight} ${chatBoxDisplay}`}>
+                <section className={`chat-container ${chatBoxHeight} ${chatBoxDisplay}`} id="chat-container">
                     <div className="chat-friend-container" onClick={this.changeChatBoxHeight}>
                         <div className="chat-friend-image">
                             <img className={imageClassUserPick} src={chatUserProfilePicUrl} alt="bender" />
                         </div>
                         <div className="chat-username-container" >
-                            <p className="chat-username">{chatUserFirstName} {chatUserLastName}</p>
+                            <p className="chat-username">{chatUserNameFormatted}</p>
+                            {/* <p className="chat-username">{chatUserFirstName} {chatUserLastName}</p> */}
                         </div>
                     </div>
+
+                    <div className="close-button-container" onClick={this.closeUserChatBox}>
+                        <div className="btn chat-uiButtonGroup chat-fbPhotoCurationControl  chat-delete-button" ><i className="fas fa-times"></i></div>
+                    </div>
+
                     <div className="content-wrapper">
 
-                        <div className="chat-content">
+                        <div className="chat-content" id="chat-content">
                             {this.state.allMessages.map((message, index) =>
                                 <FriendMessage
                                     key={message.fromUserId + index}
@@ -271,8 +267,6 @@ export default class MessageBox extends Component {
                         </div>
                         <div className="chat-footer">
                             <div className="chat-input-group">
-
-                                {/* <textarea name="" class="form-control type_msg" placeholder="Type your message..."></textarea> */}
                                 <div className="chat-area-container">
                                     <form onSubmit={this.onSubmitHandler}>
                                         <div className="" id="chat-textarea-form-group">
@@ -284,18 +278,16 @@ export default class MessageBox extends Component {
                                                 onChange={this.onChangeHandler}
                                                 onBlur={this.handleBlur('content')}
                                                 aria-describedby="contentHelp"
-                                                placeholder={`Type your message, ${loggedInUserFirstName}?`}
+                                                placeholder={`Type your message, ${firstNameFormatted}?`}
                                                 maxRows={6}
                                             >
                                             </TextareaAutosize>
                                         </div>
 
                                         <div className="text-center">
-                                            {/* <button disabled={!isEnabled} style={{ 'visibility': `${displayButon}` }} type="submit" className="btn uiButtonGroup post-button-fbPhotoCurationControl App-button-primary ">POST</button> */}
                                             <button disabled={!isEnabled} style={{ 'visibility': `${displayButon}` }} type="submit" className="btn fas fa-location-arrow App-button-primary send-btn"></button>
                                         </div>
                                     </form>
-
                                 </div>
                             </div>
                         </div>

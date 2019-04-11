@@ -92,6 +92,8 @@ export default class WritePost extends Component {
         // const loggedInUserProfilePicUrl = this.props.loggedInUserProfilePicUrl;
         const loggedInUserFirstName = userService.getFirstName();
 
+        let formattedUsername = userService.formatUsername(loggedInUserFirstName)
+
         return (
             <Fragment>
                 <section className="posts-section">
@@ -111,7 +113,7 @@ export default class WritePost extends Component {
                                             onChange={this.onChangeHandler}
                                             onBlur={this.handleBlur('content')}
                                             aria-describedby="contentHelp"
-                                            placeholder={`What's on your mind, ${loggedInUserFirstName}?`}
+                                            placeholder={`What's on your mind, ${formattedUsername}?`}
                                         >
                                         </TextareaAutosize>
                                     </div>
