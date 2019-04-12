@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kl.socialnetwork.domain.models.bindingModels.message.MessageCreateBindingModel;
 import kl.socialnetwork.domain.models.serviceModels.MessageServiceModel;
 import kl.socialnetwork.domain.models.viewModels.message.MessageAllViewModel;
-import kl.socialnetwork.domain.models.viewModels.message.MessageUnreadViewModel;
+import kl.socialnetwork.domain.models.viewModels.message.MessageFriendsViewModel;
 import kl.socialnetwork.services.MessageService;
 import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;
 import kl.socialnetwork.utils.responseHandler.successResponse.SuccessResponse;
@@ -54,16 +54,16 @@ public class MessageController {
 
         List<MessageServiceModel> messageServiceModels = this.messageService.getAllMessages(loggedInUsername, chatUserId);
 
+
         return messageServiceModels.stream()
                 .map(messageServiceModel -> modelMapper.map(messageServiceModel, MessageAllViewModel.class))
                 .collect(Collectors.toList());
     }
 
-
-    @GetMapping(value = "/unread")
-    public List<MessageUnreadViewModel> getAllUnreadMessages( Authentication principal) {
+    @GetMapping(value = "/friend")
+    public List<MessageFriendsViewModel> getAllFriendMessages(Authentication principal) {
         String loggedInUsername = principal.getName();
 
-        return this.messageService.getAllUnreadMessages(loggedInUsername);
+        return this.messageService.getAllFriendMessages(loggedInUsername);
     }
 }

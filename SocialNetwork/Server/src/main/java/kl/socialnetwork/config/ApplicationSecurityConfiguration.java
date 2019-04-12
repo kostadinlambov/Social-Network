@@ -82,7 +82,7 @@ public class ApplicationSecurityConfiguration
                         "/post/all/*",
                         "/message/create",
                         "/message/all/*",
-                        "/message/unread"
+                        "/message/friend"
                         ).hasAnyAuthority("ADMIN", "ROOT", "USER")
                 .antMatchers(
                         "/users/promote",

@@ -2,7 +2,7 @@ package kl.socialnetwork.domain.models.viewModels.message;
 
 import java.time.LocalDateTime;
 
-public class MessageUnreadViewModel {
+public class MessageFriendsViewModel {
     private String id;
     private String fromUserId;
     private String fromUserProfilePicUrl;
@@ -12,7 +12,7 @@ public class MessageUnreadViewModel {
     private LocalDateTime time;
     private int count;
 
-    public MessageUnreadViewModel() {
+    public MessageFriendsViewModel() {
     }
 
     public String getId() {
