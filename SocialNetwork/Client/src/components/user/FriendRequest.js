@@ -41,6 +41,7 @@ export default class FriendRequest extends Component {
             firstButtonOnClick, secondButtonOnClick, thirdButtonText, thirdButtonLink, thirdButtonOnClick } = this.state;
         const backgroundImageUrl = this.state.backgroundImageUrl || default_background_image
         const profilePicUrl = this.state.profilePicUrl || placeholder_user_image
+        const formattedName = userService.formatUsername(firstName, lastName, 18)
 
         let imgClassName = '';
         if (profilePicUrl) {
@@ -53,7 +54,7 @@ export default class FriendRequest extends Component {
                     <img className={imgClassName} src={profilePicUrl} alt="Profile pic" />
                 </span>
                 <div className="friend-content">
-                    <h2 className="friend-text-shadow" >{`${firstName} ${lastName}`}</h2>
+                    <h2 className="friend-text-shadow" >{`${formattedName}`}</h2>
                     <div className="friend-button-container">
                         {!firstButtonOnClick
                             ? <button className="button update-info" >

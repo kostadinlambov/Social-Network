@@ -4,7 +4,7 @@ import placeholder_user_image from '../../assets/images/placeholder.png';
 import { connect } from 'tls';
 
 const MessageNavBarRow = (props) => {
-    const { id, fromUserFirstName: firstName, fromUserLastName: lastName, content, time, count } = props;
+    const {fromUserId: id, fromUserFirstName: firstName, fromUserLastName: lastName, content, time, count } = props;
 
     const profilePicUrl = props.fromUserProfilePicUrl || placeholder_user_image
 
@@ -23,7 +23,7 @@ const MessageNavBarRow = (props) => {
 
     return (
 
-        <div className="messagebox-navbar-friend-container" onClick={(e) => props.showUserChatBox(id, firstName, lastName, profilePicUrl, e)}>
+        <div className="messagebox-navbar-friend-container" onMouseDown={(e) => props.triggerMessageLoad(id, firstName, lastName, profilePicUrl, e)}>
             <div className="messagebox-navbar-friend-image">
                 <img className={imgClassName} src={profilePicUrl} alt="profilePic" />
             </div>

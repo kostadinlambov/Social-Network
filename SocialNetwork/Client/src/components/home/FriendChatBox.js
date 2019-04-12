@@ -15,7 +15,7 @@ const FriendChatBox = (props) => {
     let userNameFormatted = userService.formatUsername(firstName, lastName, 21);
 
     return (
-        <div className="messagebox-friend-container" onClick={(e) => props.showUserChatBox(id, firstName, lastName, profilePicUrl, e)}>
+        <div className="messagebox-friend-container" onClick={(e) => props.showUserChatBox({id, firstName, lastName, profilePicUrl}, e)}>
             <div className="messagebox-friend-image">
                 <img className={imgClassName} src={profilePicUrl} alt="profilePic" />
             </div>

@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { requester, userService } from '../../infrastructure'
+import { requester, userService, observer } from '../../infrastructure'
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common';
 import TextareaAutosize from 'react-autosize-textarea';
@@ -38,6 +38,8 @@ export default class MessageBox extends Component {
         this.showUserChatBox = this.showUserChatBox.bind(this);
         this.changeChatBoxDisplay = this.changeChatBoxDisplay.bind(this);
         this.getAllMessages = this.getAllMessages.bind(this);
+        
+        observer.subscribe(observer.events.loadMessages, this.showUserChatBox)
     }
 
     componentDidMount() {
@@ -174,12 +176,18 @@ export default class MessageBox extends Component {
         }
     }
 
-    showUserChatBox = (id, firstName, lastName, profilePicUrl, event) => {
+    showUserChatBox = (data, event) => {
+        const {id, firstName, lastName, profilePicUrl} = data
+        console.log('id: ', id);
+        console.log('firstName: ', firstName);
+        console.log('lastName: ', lastName);
+        console.log('profilePicUrl: ', profilePicUrl);
+        debugger;
         let chatUserNameFormatted = userService.formatUsername(firstName, lastName, 18)
         this.setState({
             chatUserId: id,
-            // chatUserFirstName: firstName,
-            // chatUserLastName: lastName,
+            chatUserFirstName: firstName,
+            chatUserLastName: lastName,
             chatUserNameFormatted,
             chatUserProfilePicUrl: profilePicUrl,
             shouldScrollDown: false,
@@ -224,9 +232,6 @@ export default class MessageBox extends Component {
         const { chatUserFirstName, chatUserLastName, chatUserProfilePicUrl, chatUserNameFormatted } = this.state;
         const imageClassUserPick = userService.getImageSize(chatUserProfilePicUrl);
         const firstNameFormatted = userService.formatUsername(loggedInUserFirstName)
-
-      
-
         return (
             <Fragment>
                 <section className={`messagebox-container ${userBoxHeight}`} >

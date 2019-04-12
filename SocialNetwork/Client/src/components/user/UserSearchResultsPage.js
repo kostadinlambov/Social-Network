@@ -150,6 +150,7 @@ export default class UserSearchResultsPage extends Component {
         const userId = userService.getUserId();
         const search = this.props.location.state.search;
 
+
         if (this.state.search !== search) {
             this.setState({ search: search },
                 () => this.props.searchResults(userId, search)

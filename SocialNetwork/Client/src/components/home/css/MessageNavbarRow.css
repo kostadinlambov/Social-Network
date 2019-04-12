@@ -1,22 +1,15 @@
 .messagebox-navbar-container {
-    /* background: #FFF; */
     border-radius: 0.3rem;
-    /* overflow: hidden; */
     box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
     background: white;
-    width: 500px;
-    /* height: 532px; */
-    /* position: fixed; */
-    /* bottom: 0; */
-    /* right: 40px; */
-    /* z-index: 10; */
-    /* transition: height 1.5s ease-in-out; */
+    width: 100%;
+    /* width: 500px; */
+    /* overflow: hidden; */
 }
 
 .toggle {
     height: 65px;
 }
-
 
 /* ##################################### */
 /* friends-container */
@@ -88,6 +81,10 @@
     width: 100%
 }
 
+.messagebox-navbar-username-container:hove{
+    color: white;
+}
+
 .messagebox-navbar-username {
     font-weight: bold;
 }
@@ -103,13 +100,64 @@
     color: rgb(192, 192, 192);
 }
 
+.message-navbar-time:hover {
+    color: inherit;
+}
+
 .message-navbar-content {
-    color: black;
+    /* color: black; */
     word-break: break-all;
 }
 
-.dropdown-menu {
-    padding: 0;
-    margin: 0;
-    margin-top: 0.3em;
+.message-navbar-content:hover {
+    color: white;
+}
+
+/* ##################################### */
+/* Dropdown- Header */
+
+.dropdown-messagebox-header {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    background: white;
+    padding: 0.85rem 1rem;
+    cursor: pointer;
+    box-shadow: inset 0px -25px 5px -23px rgba(0, 0, 0, 0.3);
+    z-index: 20;
+    border-radius: 5px;
+} 
+
+.dropdown-messagebox-chat-icon {
+    position: relative;
+    overflow: hidden;
+}
+
+.dropdown-messagebox-chat-icon:before {
+    display: block;
+    content: '';
+    width: 35px;
+    height: 35px;
+    background: rgb(224, 224, 224);
+    border-radius: 50%;
+}
+
+.dropdown-messagebox-chat-icon i {
+    background: rgb(224, 224, 224);
+    color: white;
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.dropdown-chat-title {
+    margin-bottom: 0.2rem;
+    padding: 0 1rem;
+}
+
+.messagebox-navbar-friend-container:hover {
+    color: #fff;
 }

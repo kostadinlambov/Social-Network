@@ -3,10 +3,9 @@ import { NavLink } from 'react-router-dom';
 import { userService, requester, observer } from '../../infrastructure';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common';
-import './css/MessageNavbarRow.css';
-
-import './css/Navbar.css';
 import MessageNavBarRow from './MessageNavbarRow';
+import './css/MessageNavbarRow.css';
+import './css/Navbar.css';
 
 export default class Navbar extends Component {
     constructor(props) {
@@ -15,13 +14,17 @@ export default class Navbar extends Component {
         this.state = {
             username: '',
             search: '',
+            showDropdown: '',
             allUnreadMessages: [],
         }
 
         this.searchFriend = this.searchFriend.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.onChangeHandler = this.onChangeHandler.bind(this);
-        this.getAllUnreadMessages = this.getAllUnreadMessages.bind(this);
+        this.getAllFriendMessages = this.getAllFriendMessages.bind(this);
+        this.triggerMessageLoad = this.triggerMessageLoad.bind(this);
+        this.handleBlur = this.handleBlur.bind(this);
+        this.changeMessaboxVisibility = this.changeMessaboxVisibility.bind(this);
 
         observer.subscribe(observer.events.loginUser, this.userLoggedIn)
     }
@@ -54,27 +57,19 @@ export default class Navbar extends Component {
         this.setState({
             [event.target.name]: event.target.value
         });
-
-        console.log('this.state.search: ', this.state.search)
     }
 
+    getAllFriendMessages = () => {
+        if (this.state.showDropdown === 'show-dropdown') {
+            this.changeMessaboxVisibility();
+            return;
+        }
 
-
-    getAllUnreadMessages = () => {
-        debugger;
-        requester.get('/message/unread/', (response) => {
-            console.log('All unread messages: ', response)
-            debugger;
+        requester.get('/message/friend', (response) => {
             if (response) {
                 this.setState({
                     allUnreadMessages: response,
-                }, () => {
-                    // if (this.state.shouldScrollDown) {
-                    //     this.scrollDown();
-                    // } else {
-                    //     this.setState({ shouldScrollDown: true }, this.scrollTop())
-                    // }
-                })
+                }, (() => this.changeMessaboxVisibility())())
             } else {
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
@@ -92,27 +87,71 @@ export default class Navbar extends Component {
         })
     }
 
+    triggerMessageLoad = (id, firstName, lastName, profilePicUrl, event) => {
+        this.changeMessaboxVisibility();
+        observer.trigger(observer.events.loadMessages, { id, firstName, lastName, profilePicUrl })
+    }
+
+    handleBlur = () => (event) => {
+        this.setState({
+            showDropdown: '',
+        });
+    }
+
+    changeMessaboxVisibility = () => {
+        if (this.state.showDropdown === '') {
+            this.setState({ showDropdown: 'show-dropdown' })
+        } else {
+            this.setState({ showDropdown: '' })
+        }
+    }
+
     render() {
-        const role = userService.getRole();
         const isAdmin = userService.isAdmin();
         const isRoot = userService.isRoot();
         const userId = userService.getUserId();
 
         const { loggedIn, onLogout } = this.props;
+        const showDropdown = this.state.showDropdown;
+        let pathname = this.props.location.pathname !== "/" && this.props.location.pathname !== "/home/users/search";
+
+        let messages = (
+            <Fragment>
+                <div className="dropdown-messagebox-header" onClick={this.changeHeight}>
+                    <h5 className="dropdown-chat-title" style={{ color: ' #333' }}>
+                        There are no messages for you!
+                    </h5>
+                </div>
+            </Fragment>
+        )
+
+        if (this.state.allUnreadMessages.length > 0) {
+            messages = (
+                <Fragment>
+                    <div className="messagebox-navbar-container">
+                        {this.state.allUnreadMessages.map(message =>
+                            <MessageNavBarRow
+                                key={message.id}
+                                {...message}
+                                triggerMessageLoad={this.triggerMessageLoad}
+                                className="dropdown-item"
+                            />
+                        )}
+                    </div>
+                </Fragment>
+            )
+        }
+
         return (
             <Fragment >
                 <input type="checkbox" name="main-nav-toggle" id="main-nav-toggle" />
                 <header className="site-header">
-
                     <section className="navbar-section">
-
                         <div className="navbar-wrapper">
-
                             <div className="nav-searchbar-container">
                                 <div className="site-logo">
                                     <NavLink to="/" className="nav-link " >Social Network</NavLink>
                                 </div>
-
                                 {loggedIn && <form className="form-inline my-2 my-lg-0" onSubmit={this.searchFriend}>
                                     <input
                                         className="form-control mr-sm-2"
@@ -138,49 +177,28 @@ export default class Navbar extends Component {
                                     {loggedIn && <li className="nav-item"><NavLink exact to={`/home/comments/${userId}`} className="nav-link ">Home</NavLink></li>}
                                     {loggedIn && <li className="nav-item"><NavLink exact to={`/home/findFriends/${userId}/findFriends`} className="nav-link " >Find friends!</NavLink></li>}
                                     {loggedIn && <li className="nav-item"><NavLink exact to={`/home/findFriends/${userId}/requests`} className="nav-link fas fa-user-friends tooltipCustom"> <span className="tooltiptextCustom">Friend Requests</span></NavLink></li>}
-
-                                    {/* {loggedIn && <li className="nav-item">
-                                        <NavLink exact to={`/home/message/${userId}`} className="nav-link fas fa-envelope tooltipCustom">
-                                            <span className="tooltiptextCustom">Messages</span>
-                                        </NavLink>
-
-
-                                    </li>} */}
-                                    {loggedIn &&
-
-                                        <li className="nav-item dropdown " onClick={this.getAllUnreadMessages} >
-                                            <NavLink
-                                                className="nav-link  fas fa-envelope tooltipCustom"
-                                                to="#"
-                                                id="navbarDropdown"
-                                                role="button"
-                                                data-toggle="dropdown"
-                                                aria-haspopup="true"
-                                                aria-expanded="false"
-                                            >
-                                            <span className="tooltiptextCustom">Messages</span>
-                                        </NavLink>
-                                            <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                                <div className="messagebox-navbar-container">
-                                                    {this.state.allUnreadMessages.map(message =>
-                                                        <MessageNavBarRow
-                                                            key={message.id}
-                                                            {...message}
-                                                            className="dropdown-item"
-                                                        />
-
-                                                    )}
+                                    {loggedIn && pathname &&
+                                        <li className="nav-item"
+                                            id="onclick-wrapper"
+                                            onClick={this.getAllFriendMessages}
+                                            onBlur={this.handleBlur('onclick-wrapper')}
+                                        >
+                                            <NavLink className="fas fa-envelope tooltipCustom nav-link" to="#">
+                                                <span className="tooltiptextCustom">Messages</span>
+                                            </NavLink>
+                                            <div className={`dropdown-container ${showDropdown}`}>
+                                                <div className="dropdown-messagebox-header" onClick={this.changeHeight}>
+                                                    <div className="dropdown-messagebox-chat-icon">
+                                                        <i className="fas fa-envelope"></i>
+                                                    </div>
+                                                    <h4 className="dropdown-chat-title" style={{ color: ' #333' }}>
+                                                        Messages
+                                                    </h4>
                                                 </div>
+                                                {messages}
                                             </div>
-
-                                            {/* <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                            <a className="dropdown-item" href="#">Action</a>
-                                            <a className="dropdown-item" href="#">Another action</a>
-                                            <div className="dropdown-divider"></div>
-                                            <a className="dropdown-item" href="#">Something else here</a>
-                                        </div> */}
-                                        </li>}
-
+                                        </li>
+                                    }
                                     {(loggedIn && (isRoot || isAdmin)) && <li className="nav-item"><NavLink exact to={`/home/logs/${userId}`} className="nav-link"> Logs</NavLink></li>}
                                     {loggedIn && <li className="nav-item"><NavLink exact to="#" className="nav-link " onClick={onLogout} >Logout</NavLink></li>}
                                     {!loggedIn && <li className="nav-item"><NavLink exact to="/login" className="nav-link" >Login</NavLink></li>}
