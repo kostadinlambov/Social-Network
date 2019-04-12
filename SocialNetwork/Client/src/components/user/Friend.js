@@ -38,7 +38,7 @@ export default class Friend extends Component {
         }
 
         const { id, firstName, lastName, firstButtonText, secondButtonText, firstButtonLink, secondButtonLink,
-             firstButtonOnClick, secondButtonOnClick} = this.state;
+            firstButtonOnClick, secondButtonOnClick } = this.state;
         const backgroundImageUrl = this.state.backgroundImageUrl || default_background_image
         const profilePicUrl = this.state.profilePicUrl || placeholder_user_image
 
@@ -46,14 +46,17 @@ export default class Friend extends Component {
         if (profilePicUrl) {
             imgClassName = userService.getImageSize(profilePicUrl);
         }
-        
+
+        const userNames = userService.formatUsername(firstName, lastName);
+
+
         return (
             <div className="friend-container" style={{ 'backgroundImage': `url(${backgroundImageUrl})` }}>
                 <span className="friend-img-container">
                     <img className={imgClassName} src={profilePicUrl} alt="Profile pic" />
                 </span>
                 <div className="friend-content">
-                    <h2 className="friend-text-shadow" >{`${firstName} ${lastName}`}</h2>
+                    <h2 className="friend-text-shadow" >{`${userNames}`}</h2>
                     <div className="friend-button-container">
                         {!firstButtonOnClick
                             ? <button className="button update-info" >

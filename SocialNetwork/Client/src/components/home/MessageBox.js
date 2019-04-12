@@ -52,6 +52,10 @@ export default class MessageBox extends Component {
         if (this.props.friendsChatArr.length !== nextProps.friendsChatArr.length) {
             this.setState({ chatBoxDisplay: 'display-none' })
         }
+
+        if (this.props.openMessageBox !== nextProps.openMessageBox) {
+            this.setState({ chatBoxDisplay: 'display-none' })
+        }
     }
 
     getAllMessages = () => {
@@ -86,6 +90,7 @@ export default class MessageBox extends Component {
             }
         })
     }
+
 
     onSubmitHandler(event) {
         event.preventDefault();
@@ -170,11 +175,11 @@ export default class MessageBox extends Component {
     }
 
     showUserChatBox = (id, firstName, lastName, profilePicUrl, event) => {
-       let chatUserNameFormatted = userService.formatUsername(firstName, lastName, 21)
+        let chatUserNameFormatted = userService.formatUsername(firstName, lastName, 18)
         this.setState({
             chatUserId: id,
-            chatUserFirstName: firstName,
-            chatUserLastName: lastName,
+            // chatUserFirstName: firstName,
+            // chatUserLastName: lastName,
             chatUserNameFormatted,
             chatUserProfilePicUrl: profilePicUrl,
             shouldScrollDown: false,
@@ -219,6 +224,8 @@ export default class MessageBox extends Component {
         const { chatUserFirstName, chatUserLastName, chatUserProfilePicUrl, chatUserNameFormatted } = this.state;
         const imageClassUserPick = userService.getImageSize(chatUserProfilePicUrl);
         const firstNameFormatted = userService.formatUsername(loggedInUserFirstName)
+
+      
 
         return (
             <Fragment>

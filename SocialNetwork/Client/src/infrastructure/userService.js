@@ -144,12 +144,12 @@ export default {
         return false;
     },
 
-    formatUsername(firstName = '', lastName = '', nameLength = 21) {
+    formatUsername(firstName = '', lastName = '', nameLength = 18) {
         let name = firstName + ' ' + lastName;
-        if (name.length > nameLength) {
-            return name.substring(0, 18) + '...';
-        }
 
+        if (name.length >= nameLength) {
+            return name.substring(0, nameLength) + '...';
+        }
         return name;
     },
 

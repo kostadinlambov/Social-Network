@@ -5,6 +5,7 @@ import kl.socialnetwork.domain.entities.Relationship;
 import kl.socialnetwork.domain.entities.User;
 import kl.socialnetwork.domain.models.bindingModels.message.MessageCreateBindingModel;
 import kl.socialnetwork.domain.models.serviceModels.MessageServiceModel;
+import kl.socialnetwork.domain.models.viewModels.message.MessageUnreadViewModel;
 import kl.socialnetwork.repositories.MessageRepository;
 import kl.socialnetwork.repositories.RelationshipRepository;
 import kl.socialnetwork.repositories.UserRepository;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static kl.socialnetwork.utils.constants.ResponseMessageConstants.SERVER_ERROR_MESSAGE;
@@ -98,8 +100,40 @@ public class MessageServiceImpl implements MessageService {
         List<Message> allMessagesBetweenTwoUsers = this.messageRepository
                 .findAllMessagesBetweenTwoUsers(loggedInUser.getId(), chatUser.getId());
 
-       return allMessagesBetweenTwoUsers
-               .stream().map(message -> modelMapper.map(message, MessageServiceModel.class))
-               .collect(Collectors.toList());
+        return allMessagesBetweenTwoUsers
+                .stream().map(message -> modelMapper.map(message, MessageServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MessageUnreadViewModel> getAllUnreadMessages(String loggedInUsername) {
+        User loggedInUser = userRepository
+                .findByUsername(loggedInUsername)
+                .filter(userValidation::isValid)
+                .orElseThrow(() -> new CustomException(SERVER_ERROR_MESSAGE));
+
+        List<Message> allUnreadMessages = this.messageRepository.getAllUnreadMessages(loggedInUser.getId());
+
+        List<MessageServiceModel> messageServiceModels = allUnreadMessages.stream()
+                .map(message -> modelMapper.map(message, MessageServiceModel.class))
+                .collect(Collectors.toList());
+
+        return mapToMessagesUnreadViewModel(loggedInUser.getId(), messageServiceModels);
+    }
+
+    private List<MessageUnreadViewModel> mapToMessagesUnreadViewModel(String loggedInUserId, List<MessageServiceModel> allUnreadMessages) {
+        List<Object[]> countOfUnreadMessagesByFromUser = this.messageRepository.getCountOfUnreadMessagesByFromUser(loggedInUserId);
+
+        return allUnreadMessages.stream()
+                .map(messageServiceModel -> {
+                    MessageUnreadViewModel unreadViewModel = modelMapper.map(messageServiceModel, MessageUnreadViewModel.class);
+                    Object[] objects = countOfUnreadMessagesByFromUser.stream()
+                            .filter(element -> element[0].equals(unreadViewModel.getFromUserId()))
+                            .findFirst().orElseThrow(()-> new CustomException(SERVER_ERROR_MESSAGE));
+
+                    unreadViewModel.setCount(Integer.valueOf(objects[1].toString()));
+                    return unreadViewModel;
+                })
+                .collect(Collectors.toList());
     }
 }

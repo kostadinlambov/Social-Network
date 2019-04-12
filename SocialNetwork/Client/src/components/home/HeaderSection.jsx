@@ -15,9 +15,6 @@ const HeaderSection = (props) => {
     }
 
     let formattedUsername = userService.formatUsername(props.firstName, props.lastName)
-    console.log(props.firstName)
-    console.log(props.lastName)
-    debugger;
 
     return (
         <Fragment >

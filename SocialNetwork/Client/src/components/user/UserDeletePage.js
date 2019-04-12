@@ -115,7 +115,7 @@ export default class UserDeletePage extends Component {
                                                 <h5 className=" font-weight-bold">First Name</h5>
                                             </td>
                                             <td className="col-md-6" >
-                                                <h5>{this.state.firstName}</h5>
+                                                <h5>{userService.formatUsername(this.props.firstName)}</h5>
                                             </td>
                                         </tr>
                                         <tr className="row">
@@ -123,7 +123,7 @@ export default class UserDeletePage extends Component {
                                                 <h5 className=" font-weight-bold">Last Name</h5>
                                             </td>
                                             <td className="col-md-6" >
-                                                <h5>{this.state.lastName}</h5>
+                                                <h5>{userService.formatUsername(this.props.lastName)}</h5>
                                             </td>
                                         </tr>
                                         <tr className="row">

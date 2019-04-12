@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kl.socialnetwork.domain.models.bindingModels.message.MessageCreateBindingModel;
 import kl.socialnetwork.domain.models.serviceModels.MessageServiceModel;
 import kl.socialnetwork.domain.models.viewModels.message.MessageAllViewModel;
+import kl.socialnetwork.domain.models.viewModels.message.MessageUnreadViewModel;
 import kl.socialnetwork.services.MessageService;
 import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;
 import kl.socialnetwork.utils.responseHandler.successResponse.SuccessResponse;
@@ -48,7 +49,7 @@ public class MessageController {
     }
 
     @GetMapping(value = "/all/{id}")
-    public List<MessageAllViewModel> getAllPosts(@PathVariable(value = "id") String chatUserId , Authentication principal) {
+    public List<MessageAllViewModel> getAllMessages(@PathVariable(value = "id") String chatUserId , Authentication principal) {
         String loggedInUsername = principal.getName();
 
         List<MessageServiceModel> messageServiceModels = this.messageService.getAllMessages(loggedInUsername, chatUserId);
@@ -56,5 +57,13 @@ public class MessageController {
         return messageServiceModels.stream()
                 .map(messageServiceModel -> modelMapper.map(messageServiceModel, MessageAllViewModel.class))
                 .collect(Collectors.toList());
+    }
+
+
+    @GetMapping(value = "/unread")
+    public List<MessageUnreadViewModel> getAllUnreadMessages( Authentication principal) {
+        String loggedInUsername = principal.getName();
+
+        return this.messageService.getAllUnreadMessages(loggedInUsername);
     }
 }

@@ -81,7 +81,8 @@ public class ApplicationSecurityConfiguration
                         "/comment/remove",
                         "/post/all/*",
                         "/message/create",
-                        "/message/all/*"
+                        "/message/all/*",
+                        "/message/unread"
                         ).hasAnyAuthority("ADMIN", "ROOT", "USER")
                 .antMatchers(
                         "/users/promote",

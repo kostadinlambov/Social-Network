@@ -1,7 +1,6 @@
-import React, { Fragment} from 'react';
+import React, { Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
 import { userService } from '../../infrastructure';
-// import placeholder_user_image from '../../assets/images/placeholder-profile-male.jpg'
 import placeholder_user_image from '../../assets/images/placeholder.png';
 
 const FriendsGallery = (props) => {
@@ -23,10 +22,17 @@ const FriendsGallery = (props) => {
                     {props.friendsArr.map(friend => {
                         const profilePicUrl = friend.profilePicUrl || placeholder_user_image
                         const imageClassName = userService.getImageSize(profilePicUrl, true);
+                        // const userNames = userService.formatUsername(friend.firstName, friend.lastName, 2);
+                        let formattedUsername = '';
+                        if(friend.firstName.length > 10){
+                            formattedUsername = userService.formatUsername(friend.firstName,'', 10)
+                        }else{
+                             formattedUsername = userService.formatUsername(friend.firstName, friend.lastName, 15)
+                        }
                         return (
                             <li key={friend.id}>
                                 <NavLink to="#"><img className={imageClassName} src={profilePicUrl} alt="Pic" /></NavLink>
-                                <div className="img-details"><p className="user-name">{`${friend.firstName} ${friend.lastName}`}</p> </div>
+                                <div className="img-details"><p className="user-name">{formattedUsername}</p> </div>
                             </li>)
                     })}
                 </ul>

@@ -44,7 +44,8 @@ class App extends Component {
             <Route exact path="/" component={StartPage} />
             {!loggedIn && <Route exact path="/register" component={RegisterPage} />}
             {!loggedIn && <Route exact path="/login" component={LoginPage} />}
-            {loggedIn && <Route path="/home" component={HomePage} />}
+            {loggedIn && <Route path="/home" render={(props) => <HomePage {...props} />} component={HomePage} />}
+            {/* {loggedIn && <Route exact path="/home/users/search/" render={(props) => <UserSearchResultsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} searchResults={this.searchResults} />} />} */}
             <Route exact path="/error" component={ErrorPage} />
             <Route component={ErrorPage} />
           </Switch>
