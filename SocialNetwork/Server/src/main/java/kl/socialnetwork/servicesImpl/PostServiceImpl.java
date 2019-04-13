@@ -16,12 +16,14 @@ import kl.socialnetwork.validations.serviceValidation.services.PostValidationSer
 import kl.socialnetwork.validations.serviceValidation.services.UserValidationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import static kl.socialnetwork.utils.constants.ResponseMessageConstants.SERVER_ERROR_MESSAGE;
@@ -106,8 +108,9 @@ public class PostServiceImpl implements PostService {
                 .collect(Collectors.toList());
     }
 
+    @Async
     @Override
-    public boolean deletePost(String loggedInUserId, String postToRemoveId) throws Exception {
+    public CompletableFuture<Boolean> deletePost(String loggedInUserId, String postToRemoveId) throws Exception {
         User loggedInUser = this.userRepository.findById(loggedInUserId).orElse(null);
         Post postToRemove = this.postRepository.findById(postToRemoveId).orElse(null);
 
@@ -123,12 +126,12 @@ public class PostServiceImpl implements PostService {
         if (hasRootAuthority || isPostCreator || isTimeLineUser) {
             try {
                 this.postRepository.delete(postToRemove);
-                return true;
+                return CompletableFuture.completedFuture(true);
             } catch (Exception e) {
                 throw new Exception(SERVER_ERROR_MESSAGE);
             }
         } else {
-            throw new CustomException("Unauthorized!");
+            throw new Exception(SERVER_ERROR_MESSAGE);
         }
     }
 }

@@ -26,6 +26,7 @@ import org.springframework.web.context.WebApplicationContext;
 import javax.servlet.ServletContext;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import static kl.socialnetwork.utils.constants.ResponseMessageConstants.*;
 import static org.hamcrest.Matchers.hasSize;
@@ -135,7 +136,7 @@ public class CommentControllerTests {
     @WithMockUser(authorities = "USER")
     public void removeComment_whenDeleteCommentReturnsTrue_deleteComment() throws Exception {
         when(commentServiceMock.deleteComment(anyString(), anyString()))
-                .thenReturn(true);
+                .thenReturn(CompletableFuture.completedFuture(true));
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.putIfAbsent("loggedInUserId", "1");
@@ -161,7 +162,7 @@ public class CommentControllerTests {
     @WithMockUser(authorities = "USER")
     public void removeComment_whenDeleteCommentReturnsFalse_throwCustomException() throws Exception {
         when(commentServiceMock.deleteComment(anyString(), anyString()))
-                .thenReturn(false);
+                .thenReturn(CompletableFuture.completedFuture(false));
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.putIfAbsent("loggedInUserId", "1");

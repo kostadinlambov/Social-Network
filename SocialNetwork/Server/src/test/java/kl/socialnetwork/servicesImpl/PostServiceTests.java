@@ -1,23 +1,22 @@
 package kl.socialnetwork.servicesImpl;
 
-
 import kl.socialnetwork.domain.entities.Comment;
 import kl.socialnetwork.domain.entities.Post;
 import kl.socialnetwork.domain.entities.User;
 import kl.socialnetwork.domain.models.bindingModels.post.PostCreateBindingModel;
 import kl.socialnetwork.domain.models.serviceModels.PostServiceModel;
-import kl.socialnetwork.domain.models.viewModels.post.PostAllViewModel;
 import kl.socialnetwork.repositories.PostRepository;
 import kl.socialnetwork.repositories.UserRepository;
 import kl.socialnetwork.services.PostService;
 import kl.socialnetwork.testUtils.CommentsUtils;
 import kl.socialnetwork.testUtils.PostsUtils;
 import kl.socialnetwork.testUtils.UsersUtils;
-import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;
 import kl.socialnetwork.validations.serviceValidation.services.PostValidationService;
 import kl.socialnetwork.validations.serviceValidation.services.UserValidationService;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,9 +25,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static kl.socialnetwork.utils.constants.ResponseMessageConstants.SERVER_ERROR_MESSAGE;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -51,6 +51,9 @@ public class PostServiceTests {
 
     @MockBean
     private UserValidationService mockUserValidationService;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     private List<Post> postList;
 
@@ -190,13 +193,13 @@ public class PostServiceTests {
         when(mockUserValidationService.isValid(any(User.class))).thenReturn(true);
 
         // Act
-        postService.deletePost("1", "1");
+        CompletableFuture<Boolean> result = postService.deletePost("1", "1");
 
         // Assert
-        verify(mockPostRepository).delete(any());
+        assertTrue(result.get());
     }
 
-    @Test(expected = Exception.class)
+    @Test()
     public void deletePost_whenUserIsNotValid_throwException() throws Exception {
         // Arrange
         when(mockPostValidationService.isValid(any(Post.class)))
@@ -204,14 +207,17 @@ public class PostServiceTests {
 
         when(mockUserValidationService.isValid(any(User.class))).thenReturn(false);
 
+        thrown.expect(Exception.class);
+        thrown.expectMessage(SERVER_ERROR_MESSAGE);
+
         // Act
-        postService.deletePost("1", "1");
+        CompletableFuture<Boolean> result = postService.deletePost("1", "1");
 
         // Assert
-        verify(mockPostRepository).delete(any());
+        assertNull(result.get());
     }
 
-    @Test(expected = Exception.class)
+    @Test()
     public void deletePost_whenPostIsNotValid_throwException() throws Exception {
         // Arrange
         when(mockPostValidationService.isValid(any(Post.class)))
@@ -219,14 +225,17 @@ public class PostServiceTests {
 
         when(mockUserValidationService.isValid(any(User.class))).thenReturn(true);
 
+        thrown.expect(Exception.class);
+        thrown.expectMessage(SERVER_ERROR_MESSAGE);
+
         // Act
-        postService.deletePost("1", "1");
+        CompletableFuture<Boolean> result = postService.deletePost("1", "1");
 
         // Assert
-        verify(mockPostRepository).delete(any());
+        assertNull(result.get());
     }
 
-    @Test(expected = Exception.class)
+    @Test()
     public void deletePost_whenUserAndPostAreNotValid_throwException() throws Exception {
         // Arrange
         when(mockPostValidationService.isValid(any(Post.class)))
@@ -234,14 +243,17 @@ public class PostServiceTests {
 
         when(mockUserValidationService.isValid(any(User.class))).thenReturn(false);
 
+        thrown.expect(Exception.class);
+        thrown.expectMessage(SERVER_ERROR_MESSAGE);
+
         // Act
-        postService.deletePost("1", "1");
+        CompletableFuture<Boolean> result = postService.deletePost("1", "1");
 
         // Assert
-        verify(mockPostRepository).delete(any());
+        assertNull(result.get());
     }
 
-    @Test(expected = CustomException.class)
+    @Test()
     public void deletePost_whenUserIsNotAuthorized_throwException() throws Exception {
         // Arrange
         List<User> users = UsersUtils.getUsers(2);
@@ -258,10 +270,13 @@ public class PostServiceTests {
 
         when(mockUserValidationService.isValid(any(User.class))).thenReturn(true);
 
+        thrown.expect(Exception.class);
+        thrown.expectMessage(SERVER_ERROR_MESSAGE);
+
         // Act
-        postService.deletePost("5", "1");
+        CompletableFuture<Boolean> result = postService.deletePost("5", "1");
 
         // Assert
-        verify(mockPostRepository).delete(any());
+        assertNull(result.get());
     }
 }

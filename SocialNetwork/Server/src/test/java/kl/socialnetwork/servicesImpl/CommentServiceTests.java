@@ -11,12 +11,13 @@ import kl.socialnetwork.services.CommentService;
 import kl.socialnetwork.testUtils.CommentsUtils;
 import kl.socialnetwork.testUtils.PostsUtils;
 import kl.socialnetwork.testUtils.UsersUtils;
-import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;
 import kl.socialnetwork.validations.serviceValidation.services.CommentValidationService;
 import kl.socialnetwork.validations.serviceValidation.services.PostValidationService;
 import kl.socialnetwork.validations.serviceValidation.services.UserValidationService;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +25,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
+import static kl.socialnetwork.utils.constants.ResponseMessageConstants.SERVER_ERROR_MESSAGE;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -52,6 +56,9 @@ public class CommentServiceTests {
 
     @MockBean
     private CommentValidationService mockCommentValidationService;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUpTest() {
@@ -211,14 +218,14 @@ public class CommentServiceTests {
         when(mockUserValidationService.isValid(any(User.class)))
                 .thenReturn(true);
 
-//         Act
-        commentService.deleteComment("1", "1");
+        // Act
+        CompletableFuture<Boolean> result = commentService.deleteComment("1", "1");
 
         // Assert
-        verify(mockCommentRepository).delete(any());
+        assertTrue(result.get());
     }
 
-    @Test(expected = Exception.class)
+    @Test()
     public void deleteComment_whenUserIsNotValid_throwException() throws Exception {
         // Arrange
         User user = UsersUtils.createUser();
@@ -237,14 +244,17 @@ public class CommentServiceTests {
         when(mockCommentRepository.findById(any()))
                 .thenReturn(java.util.Optional.of(comment));
 
-//         Act
-        commentService.deleteComment("1", "1");
+        thrown.expect(Exception.class);
+        thrown.expectMessage(SERVER_ERROR_MESSAGE);
+
+        // Act
+        CompletableFuture<Boolean> result = commentService.deleteComment("1", "1");
 
         // Assert
-        verify(mockCommentRepository).delete(any());
+        assertTrue(result.get());
     }
 
-    @Test(expected = Exception.class)
+    @Test()
     public void deleteComment_whenCommentIsNotValid_throwException() throws Exception {
         // Arrange
         User user = UsersUtils.createUser();
@@ -263,15 +273,17 @@ public class CommentServiceTests {
         when(mockCommentValidationService.isValid(any(Comment.class)))
                 .thenReturn(false);
 
-//         Act
-        commentService.deleteComment("1", "1");
+        thrown.expect(Exception.class);
+        thrown.expectMessage(SERVER_ERROR_MESSAGE);
+
+        //  Act
+        CompletableFuture<Boolean> result = commentService.deleteComment("1", "1");
 
         // Assert
-        verify(mockCommentRepository).delete(any());
+        assertNull(result.get());
     }
 
-
-    @Test(expected = Exception.class)
+    @Test()
     public void deleteComment_whenUserAndCommentAreNotValid_throwException() throws Exception {
         // Arrange
         User user = UsersUtils.createUser();
@@ -290,20 +302,22 @@ public class CommentServiceTests {
         when(mockCommentValidationService.isValid(any(Comment.class)))
                 .thenReturn(false);
 
-//         Act
-        commentService.deleteComment("1", "1");
+        thrown.expect(Exception.class);
+        thrown.expectMessage(SERVER_ERROR_MESSAGE);
+
+        //  Act
+        CompletableFuture<Boolean> result = commentService.deleteComment("1", "1");
 
         // Assert
-        verify(mockCommentRepository).delete(any());
+        assertNull(result.get());
     }
 
-    @Test(expected = CustomException.class)
+    @Test()
     public void deleteComment_whenUserIsNotAuthorized_throwException() throws Exception {
         // Arrange
         List<User> users = UsersUtils.getUsers(2);
         Post post = PostsUtils.createPost(users.get(1), users.get(1));
         Comment comment = CommentsUtils.createComment(users.get(1), users.get(1), post);
-
 
         when(mockUserRepository.findById(any()))
                 .thenReturn(java.util.Optional.of(users.get(0)));
@@ -317,10 +331,13 @@ public class CommentServiceTests {
         when(mockCommentValidationService.isValid(any(Comment.class)))
                 .thenReturn(true);
 
+        thrown.expect(Exception.class);
+        thrown.expectMessage(SERVER_ERROR_MESSAGE);
+
         // Act
-        commentService.deleteComment("5", "1");
+        CompletableFuture<Boolean> result = commentService.deleteComment("5", "1");
 
         // Assert
-        verify(mockPostRepository).delete(any());
+        assertNull(result.get());
     }
 }

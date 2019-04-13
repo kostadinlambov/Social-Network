@@ -3,13 +3,12 @@ package kl.socialnetwork.servicesImpl;
 import kl.socialnetwork.domain.entities.Logger;
 import kl.socialnetwork.domain.models.serviceModels.LoggerServiceModel;
 import kl.socialnetwork.repositories.LoggerRepository;
-import kl.socialnetwork.repositories.UserRepository;
 import kl.socialnetwork.services.LoggerService;
 import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;
 import kl.socialnetwork.validations.serviceValidation.services.LoggerValidationService;
-import kl.socialnetwork.validations.serviceValidation.services.UserValidationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -113,6 +112,7 @@ public class LoggerServiceImpl implements LoggerService {
         return true;
     }
 
+//    @Scheduled(cron = "* */30 * * * *")
     @Scheduled(cron = "0 0 2 * * * ")
     public void testSchedule(){
         this.deleteAll();

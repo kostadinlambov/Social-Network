@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import static kl.socialnetwork.utils.constants.ResponseMessageConstants.*;
 
@@ -56,8 +57,8 @@ public class CommentController {
         String loggedInUserId = (String) body.get("loggedInUserId");
         String commentToRemoveId = (String) body.get("commentToRemoveId");
 
-        boolean result = this.commentService.deleteComment(loggedInUserId, commentToRemoveId);
-        if (result) {
+        CompletableFuture<Boolean> result = this.commentService.deleteComment(loggedInUserId, commentToRemoveId);
+        if (result.get()) {
             SuccessResponse successResponse = new SuccessResponse(
                     LocalDateTime.now(),
                     "Comment successfully deleted!",

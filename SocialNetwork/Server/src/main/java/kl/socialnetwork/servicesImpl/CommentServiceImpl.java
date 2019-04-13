@@ -17,12 +17,15 @@ import kl.socialnetwork.validations.serviceValidation.services.PostValidationSer
 import kl.socialnetwork.validations.serviceValidation.services.UserValidationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.CompletableFuture;
 
 import static kl.socialnetwork.utils.constants.ResponseMessageConstants.SERVER_ERROR_MESSAGE;
+import static kl.socialnetwork.utils.constants.ResponseMessageConstants.UNAUTHORIZED_SERVER_ERROR_MESSAGE;
 
 
 @Service
@@ -85,7 +88,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public boolean deleteComment(String loggedInUserId, String commentToRemoveId) throws Exception {
+    @Async
+    public CompletableFuture<Boolean> deleteComment(String loggedInUserId, String commentToRemoveId) throws Exception {
         User loggedInUser = this.userRepository.findById(loggedInUserId).orElse(null);
         Comment commentToRemove = this.commentRepository.findById(commentToRemoveId).orElse(null);
 
@@ -101,13 +105,12 @@ public class CommentServiceImpl implements CommentService {
         if (hasRootAuthority || isCommentCreator || isTimeLineUser) {
             try {
                 this.commentRepository.delete(commentToRemove);
-                return true;
+                return CompletableFuture.completedFuture(true);
             } catch (Exception e) {
                 throw new CustomException(SERVER_ERROR_MESSAGE);
             }
         } else {
-            throw new CustomException("Unauthorized!");
+            throw new Exception(SERVER_ERROR_MESSAGE);
         }
     }
-
 }

@@ -34,6 +34,7 @@ import javax.servlet.ServletContext;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import static kl.socialnetwork.utils.constants.ResponseMessageConstants.SERVER_ERROR_MESSAGE;
 import static kl.socialnetwork.utils.constants.ResponseMessageConstants.SUCCESSFUL_CREATE_POST_MESSAGE;
@@ -199,7 +200,7 @@ public class PostControllerTests {
     @WithMockUser(authorities = "USER")
     public void removePost_whenDeletePostReturnsTrue_deletePost() throws Exception {
         when(postServiceMock.deletePost(anyString(), anyString()))
-                .thenReturn(true);
+                .thenReturn(CompletableFuture.completedFuture(true));
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.putIfAbsent("loggedInUserId", "1");
@@ -224,7 +225,7 @@ public class PostControllerTests {
     @WithMockUser(authorities = "USER")
     public void removePost_whenDeletePostReturnsFalse_throwCustomException() throws Exception {
         when(postServiceMock.deletePost(anyString(), anyString()))
-                .thenReturn(false);
+                .thenReturn(CompletableFuture.completedFuture(false));
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.putIfAbsent("loggedInUserId", "1");

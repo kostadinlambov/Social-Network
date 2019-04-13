@@ -19,6 +19,7 @@ import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import static kl.socialnetwork.utils.constants.ResponseMessageConstants.*;
@@ -77,9 +78,9 @@ public class PostController {
         String loggedInUserId = (String) body.get("loggedInUserId");
         String postToRemoveId = (String) body.get("postToRemoveId");
 
-        boolean result = this.postService.deletePost(loggedInUserId, postToRemoveId);
+        CompletableFuture<Boolean> result = this.postService.deletePost(loggedInUserId, postToRemoveId);
 
-        if (result) {
+        if (result.get()) {
             SuccessResponse successResponse = new SuccessResponse(LocalDateTime.now(), "Post successfully deleted!", "", true);
 
             return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
