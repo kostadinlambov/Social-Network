@@ -1,9 +1,6 @@
 package kl.socialnetwork.servicesImpl;
 
-
 import kl.socialnetwork.domain.entities.Logger;
-import kl.socialnetwork.domain.entities.User;
-import kl.socialnetwork.domain.entities.UserRole;
 import kl.socialnetwork.domain.models.serviceModels.LoggerServiceModel;
 import kl.socialnetwork.repositories.LoggerRepository;
 import kl.socialnetwork.repositories.UserRepository;
@@ -13,35 +10,26 @@ import kl.socialnetwork.validations.serviceValidation.services.LoggerValidationS
 import kl.socialnetwork.validations.serviceValidation.services.UserValidationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static kl.socialnetwork.utils.constants.ResponseMessageConstants.*;
 
 @Service
-//@Transactional
 public class LoggerServiceImpl implements LoggerService {
     private final ModelMapper modelMapper;
     private final LoggerRepository loggerRepository;
-    private final UserRepository userRepository;
     private final LoggerValidationService loggerValidation;
-    private final UserValidationService userValidation;
 
     @Autowired
-    public LoggerServiceImpl(ModelMapper modelMapper, LoggerRepository loggerRepository, UserRepository userRepository, LoggerValidationService loggerValidation, UserValidationService userValidation) {
+    public LoggerServiceImpl(ModelMapper modelMapper, LoggerRepository loggerRepository, LoggerValidationService loggerValidation) {
         this.loggerRepository = loggerRepository;
         this.modelMapper = modelMapper;
-        this.userRepository = userRepository;
         this.loggerValidation = loggerValidation;
-        this.userValidation = userValidation;
     }
 
     @Override
@@ -125,13 +113,11 @@ public class LoggerServiceImpl implements LoggerService {
         return true;
     }
 
-
-//    @Scheduled(cron = "* */30 * * * *")
-//    public void testSchedule(){
-//        System.out.println("Logs deleted successfully");
-//        this.deleteAll();
-//    }
-
+    @Scheduled(cron = "0 0 2 * * * ")
+    public void testSchedule(){
+        this.deleteAll();
+        System.out.println("Logs deleted successfully!");
+    }
 }
 
 
