@@ -3,12 +3,21 @@ package kl.socialnetwork.domain.models.viewModels.message;
 import java.time.LocalDateTime;
 
 public class MessageAllViewModel {
+    private String id;
     private String fromUserId;
     private String fromUserProfilePicUrl;
     private String content;
     private LocalDateTime time;
 
     public MessageAllViewModel() {
+    }
+
+    public String getId() {
+        return this.id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getFromUserId() {

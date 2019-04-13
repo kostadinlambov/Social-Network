@@ -51,7 +51,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public boolean createMessage(MessageCreateBindingModel messageCreateBindingModel, String loggedInUsername) throws Exception {
         if (!messageValidation.isValid(messageCreateBindingModel)) {
-            throw new Exception(SERVER_ERROR_MESSAGE);
+            throw new CustomException(SERVER_ERROR_MESSAGE);
         }
 
         User fromUser = userRepository

@@ -54,7 +54,6 @@ public class MessageController {
 
         List<MessageServiceModel> messageServiceModels = this.messageService.getAllMessages(loggedInUsername, chatUserId);
 
-
         return messageServiceModels.stream()
                 .map(messageServiceModel -> modelMapper.map(messageServiceModel, MessageAllViewModel.class))
                 .collect(Collectors.toList());
