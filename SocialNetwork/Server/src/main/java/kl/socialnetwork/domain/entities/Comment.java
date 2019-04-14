@@ -26,7 +26,6 @@ public class Comment extends BaseEntity {
         this.post = post;
     }
 
-
     @ManyToOne(optional = false, targetEntity = User.class)
     @JoinColumn(name = "creator_id", referencedColumnName = "id")
     public User getCreator() {
@@ -36,7 +35,6 @@ public class Comment extends BaseEntity {
     public void setCreator(User creator) {
         this.creator = creator;
     }
-
 
     @ManyToOne(optional = false, targetEntity = User.class)
     @JoinColumn(name = "timeline_user_id", referencedColumnName = "id")

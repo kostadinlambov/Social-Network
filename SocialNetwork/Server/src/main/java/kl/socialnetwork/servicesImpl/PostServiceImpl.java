@@ -11,7 +11,6 @@ import kl.socialnetwork.repositories.PostRepository;
 import kl.socialnetwork.repositories.RoleRepository;
 import kl.socialnetwork.repositories.UserRepository;
 import kl.socialnetwork.services.PostService;
-import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;
 import kl.socialnetwork.validations.serviceValidation.services.PostValidationService;
 import kl.socialnetwork.validations.serviceValidation.services.UserValidationService;
 import org.modelmapper.ModelMapper;

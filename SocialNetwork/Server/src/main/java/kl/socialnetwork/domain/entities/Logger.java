@@ -55,5 +55,4 @@ public class Logger extends BaseEntity{
     public void setAction(String action) {
         this.action = action;
     }
-
 }

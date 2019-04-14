@@ -10,16 +10,11 @@ import java.util.List;
 
 @Repository
 public interface LoggerRepository extends JpaRepository<Logger, String> {
-        List<Logger> findAllByOrderByTimeDesc();
+    List<Logger> findAllByOrderByTimeDesc();
 
-        List<Logger> findAllByUsernameOrderByTimeDesc(String username);
+    List<Logger> findAllByUsernameOrderByTimeDesc(String username);
 
-//        @Transactional
-//        @Modifying
-//        @Query(value = "DELETE FROM Logger as log WHERE log.username = :userName" )
-//        List<Logger> deleteAllLogsByUsername(@Param("userName") String userName);
-
-        @Transactional
-        @Modifying
-        List<Logger> deleteAllByUsername(String username);
+    @Transactional
+    @Modifying
+    List<Logger> deleteAllByUsername(String username);
 }

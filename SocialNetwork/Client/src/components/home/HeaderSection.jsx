@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
 import userService from '../../infrastructure/userService'
-// import placeholder_user_image from '../../assets/images/placeholder-profile-male.jpg'
 import placeholder_user_image from '../../assets/images/placeholder.png';
 import default_background_image from '../../assets/images/default-background-image.jpg';
 

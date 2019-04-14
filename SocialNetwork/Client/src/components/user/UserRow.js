@@ -80,15 +80,12 @@ export default class UserRow extends Component {
             <tr className="row" >
                 <td className="col-md-1 font-weight-bold" >
                     {this.state.index}
-                    {/* <h5>{this.state.index}</h5> */}
                 </td>
                 <td className="col-md-2 username-color" >
                     {this.state.username}
-                    {/* <h5>{this.state.username}</h5> */}
                 </td>
                 <td className="col-md-2" >
                     {this.state.role}
-                    {/* <h5>{this.state.role}</h5> */}
                 </td>
                 <td className="col-md-7 d-flex justify-content-center" >
                     {(!userService.checkIfIsRoot(this.state.role) && !userService.isLoggedInUser(this.state.username)) &&

@@ -4,6 +4,4 @@ import kl.socialnetwork.domain.models.bindingModels.message.MessageCreateBinding
 
 public interface MessageValidationService {
     boolean isValid(MessageCreateBindingModel messageCreateBindingModel);
-
-
 }

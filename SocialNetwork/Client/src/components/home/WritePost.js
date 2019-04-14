@@ -1,5 +1,5 @@
 import React, { Fragment, Component } from 'react';
-import { userService, requester, observer } from '../../infrastructure';
+import { userService, requester } from '../../infrastructure';
 import TextareaAutosize from 'react-autosize-textarea';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common';
@@ -82,14 +82,11 @@ export default class WritePost extends Component {
 
     render() {
         const { content } = this.state;
-
         const errors = this.validate(content);
         const isEnabled = !Object.keys(errors).some(x => errors[x]);
         const displayButon = isEnabled ? '' : 'hidden';
-
         const imageClass = userService.getImageSize(this.props.imageUrl);
         const loggedInUserProfilePicUrl = userService.getProfilePicUrl();
-        // const loggedInUserProfilePicUrl = this.props.loggedInUserProfilePicUrl;
         const loggedInUserFirstName = userService.getFirstName();
 
         let formattedUsername = userService.formatUsername(loggedInUserFirstName)

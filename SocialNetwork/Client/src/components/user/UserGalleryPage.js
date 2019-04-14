@@ -84,7 +84,6 @@ export default class UserGalleryPage extends Component {
                     this.props.history.push('/login');
                 }
             });
-
     }
 
     getAuthHeader = () => {
@@ -123,7 +122,6 @@ export default class UserGalleryPage extends Component {
     }
 
     onFileChange = (event) => {
-        debugger;
         this.setState({
             file: event.target.files[0],
             ready: false
@@ -136,7 +134,7 @@ export default class UserGalleryPage extends Component {
         }
 
         if (!this.state.ready) {
-            return <h1 className="text-center pt-5 mt-5">Uploading Photo...</h1>
+            return <h1 className="text-center pt-5 mt-5">Uploading Image...</h1>
         }
 
         const isRoot = userService.isRoot();

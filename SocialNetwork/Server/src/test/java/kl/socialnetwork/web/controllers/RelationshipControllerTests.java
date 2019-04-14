@@ -544,7 +544,6 @@ public class RelationshipControllerTests {
                 .andExpect(content().contentTypeCompatibleWith("application/json"))
                 .andExpect(jsonPath("$", hasSize(0)));
 
-
         verify(mockRelationshipService, times(1)).searchUsers(anyString(), anyString());
         verifyNoMoreInteractions(mockRelationshipService);
     }

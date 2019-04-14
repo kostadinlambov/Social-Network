@@ -22,7 +22,6 @@ export default class UserAllPage extends Component {
             if (response) {
                 this.setState({
                     userArr: response,
-                    // userArr: response['payload'],
                     id: userId
                 })
             } else {
@@ -38,7 +37,6 @@ export default class UserAllPage extends Component {
             if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
                 localStorage.clear();
                 this.props.history.push('/login');
-
             }
         })
     }

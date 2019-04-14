@@ -45,9 +45,6 @@ public class ApplicationSecurityConfiguration
                 .and()
                 .csrf()
                 .disable()
-//                .cors().disable()
-//                .csrf().csrfTokenRepository(csrfTokenRepository())
-//                .and()
                 .authorizeRequests()
                 .antMatchers("/users/register",
 //                        "/**",
@@ -63,7 +60,6 @@ public class ApplicationSecurityConfiguration
                 .antMatchers(
                         "/users/details/*",
                         "/users/update/*",
-//                        "/users/editDetails/*",
                         "/relationship/friends/*",
                         "/relationship/findFriends/*",
                         "/relationship/addFriend",
@@ -103,13 +99,6 @@ public class ApplicationSecurityConfiguration
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), this.userService))
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//                .and()
-//                .logout()
-////                .logoutSuccessUrl("/login")
-//                .logoutSuccessUrl("/users/logout")
-//                .invalidateHttpSession(true)
-//                .deleteCookies("JSESSIONID")
-//                .permitAll();
     }
 
     @Bean
@@ -137,10 +126,4 @@ public class ApplicationSecurityConfiguration
                 .userDetailsService(this.userService)
                 .passwordEncoder(this.bCryptPasswordEncoder);
     }
-
-//    private CsrfTokenRepository csrfTokenRepository(){
-//        HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
-//        repository.setSessionAttributeName("_csrf");
-//        return repository;
-//    }
-}
+ }

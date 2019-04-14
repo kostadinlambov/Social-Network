@@ -24,9 +24,7 @@ const Comment = (props) => {
                     </div>
                     <div className="main-article-shared-content-description">
                         <p className="content"><span >{props.creatorFirstName} {props.creatorLastName}</span> {props.content} </p>
-                        {/* <hr className="my-2 mb-2 mt-2 col-md-11 mx-auto" /> */}
                         <div className="comment-info">
-                            {/* <p class="user-info"> {props.creatorFirstName} {props.creatorLastName}</p> */}
                             <p className="description"> {props.time.dayOfMonth} {month} {hour}:{minute} {dayTime}</p>
                         </div>
                     </div>

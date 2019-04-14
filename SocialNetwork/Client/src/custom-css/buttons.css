@@ -28,8 +28,6 @@ $btnColors: ("purple": #9C27B0,
 	box-shadow: 0 0 1.5rem 0.1rem rgba(black, 0.2);
 }
 
-
-
 /* @each $name,
 $color in $btnColors {
 	.button.#{$name} {
@@ -71,7 +69,6 @@ $color in $btnColors {
 	box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.3);
 	text-decoration: none;
 }
-
 
 /* .update-info a:hover, .view-activity a:hover{
 	text-decoration: none;

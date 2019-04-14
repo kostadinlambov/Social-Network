@@ -25,8 +25,6 @@ import java.time.LocalDateTime;
 import java.util.concurrent.CompletableFuture;
 
 import static kl.socialnetwork.utils.constants.ResponseMessageConstants.SERVER_ERROR_MESSAGE;
-import static kl.socialnetwork.utils.constants.ResponseMessageConstants.UNAUTHORIZED_SERVER_ERROR_MESSAGE;
-
 
 @Service
 @Transactional

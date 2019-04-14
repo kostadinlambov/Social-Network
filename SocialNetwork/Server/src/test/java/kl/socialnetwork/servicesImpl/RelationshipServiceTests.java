@@ -95,7 +95,6 @@ public class RelationshipServiceTests {
         verify(mockRelationshipRepository).findRelationshipByUserIdAndStatus(anyString(), anyInt());
         verify(mockRelationshipRepository, times(1)).findRelationshipByUserIdAndStatus(anyString(), anyInt());
         verifyNoMoreInteractions(mockRelationshipRepository);
-
     }
 
     @Test

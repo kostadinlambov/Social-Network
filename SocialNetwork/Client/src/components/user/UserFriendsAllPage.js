@@ -103,7 +103,6 @@ export default class UserFriendsAllPage extends Component {
                                 }
                             </section>
                         </div>
-
                     </section>
                 </article>
             </Fragment>

@@ -703,7 +703,7 @@ public class UserServiceTests {
                 .thenReturn(false);
 
         thrown.expect(UsernameNotFoundException.class);
-        thrown.expectMessage("No such user.");
+        thrown.expectMessage(USER_NOT_FOUND_ERROR_MESSAGE);
 
         // Act
         userService.loadUserByUsername("invalid_username");
@@ -757,7 +757,7 @@ public class UserServiceTests {
                 .thenReturn(adminRole);
 
         thrown.expect(CustomException.class);
-        thrown.expectMessage("There is no role, higher than Admin!");
+        thrown.expectMessage(USER_FAILURE_PROMOTING_ADMIN_MESSAGE);
 
         // Act
         userService.promoteUser("userId");
@@ -778,7 +778,7 @@ public class UserServiceTests {
                 .thenReturn(true);
 
         thrown.expect(CustomException.class);
-        thrown.expectMessage("You can't change ROOT authority!");
+        thrown.expectMessage(USER_FAILURE_CHANGING_ROOT_AUTHORITY_MESSAGE);
 
         // Act
         userService.promoteUser("userId");
@@ -848,7 +848,7 @@ public class UserServiceTests {
                 .thenReturn(userRole);
 
         thrown.expect(CustomException.class);
-        thrown.expectMessage("There is no role, lower than USER!");
+        thrown.expectMessage(USER_FAILURE_DEMOTING_USER_MESSAGE);
 
         // Act
         userService.demoteUser("userId");
@@ -869,7 +869,7 @@ public class UserServiceTests {
                 .thenReturn(true);
 
         thrown.expect(CustomException.class);
-        thrown.expectMessage("You can't change ROOT authority!");
+        thrown.expectMessage(USER_FAILURE_CHANGING_ROOT_AUTHORITY_MESSAGE);
 
         // Act
         userService.demoteUser("userId");

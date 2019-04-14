@@ -1,20 +1,14 @@
 package kl.socialnetwork.testUtils;
 
 import kl.socialnetwork.domain.entities.Message;
-import kl.socialnetwork.domain.entities.Post;
 import kl.socialnetwork.domain.entities.Relationship;
 import kl.socialnetwork.domain.entities.User;
 import kl.socialnetwork.domain.models.bindingModels.message.MessageCreateBindingModel;
-import kl.socialnetwork.domain.models.bindingModels.post.PostCreateBindingModel;
 import kl.socialnetwork.domain.models.serviceModels.MessageServiceModel;
-import kl.socialnetwork.domain.models.serviceModels.PostServiceModel;
 import kl.socialnetwork.domain.models.viewModels.message.MessageAllViewModel;
 import kl.socialnetwork.domain.models.viewModels.message.MessageFriendsViewModel;
-import kl.socialnetwork.domain.models.viewModels.post.PostAllViewModel;
-import kl.socialnetwork.services.MessageService;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;

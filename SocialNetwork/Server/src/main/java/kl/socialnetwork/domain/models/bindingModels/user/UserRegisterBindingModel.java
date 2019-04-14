@@ -25,16 +25,6 @@ public class UserRegisterBindingModel implements Serializable {
     private String profilePicUrl;
     private String backgroundImageUrl;
 
-//    @JsonIgnore
-//    private String profilePicUrl;
-
-//    private Set<UserRole> roles;
-//    private Boolean isDeleted = false;
-//
-//    private Set<Order> orders;
-//    private Set<Payment> payments;
-//    private Set<Feedback> feedbackSet;
-
     public UserRegisterBindingModel() {
     }
 
@@ -129,12 +119,4 @@ public class UserRegisterBindingModel implements Serializable {
     public void setBackgroundImageUrl(String backgroundImageUrl) {
         this.backgroundImageUrl = backgroundImageUrl;
     }
-
-    //    public String getProfilePic() {
-//        return this.profilePic;
-//    }
-//
-//    public void setProfilePic(String profilePic) {
-//        this.profilePic = profilePic;
-//    }
 }

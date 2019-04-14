@@ -21,8 +21,7 @@ const FriendsGallery = (props) => {
                 <ul className="aside-article-gallery ">
                     {props.friendsArr.map(friend => {
                         const profilePicUrl = friend.profilePicUrl || placeholder_user_image
-                        const imageClassName = userService.getImageSize(profilePicUrl, true);
-                        // const userNames = userService.formatUsername(friend.firstName, friend.lastName, 2);
+                        const imageClassName = userService.getImageSize(profilePicUrl);
                         let formattedUsername = '';
                         if(friend.firstName.length > 10){
                             formattedUsername = userService.formatUsername(friend.firstName,'', 10)

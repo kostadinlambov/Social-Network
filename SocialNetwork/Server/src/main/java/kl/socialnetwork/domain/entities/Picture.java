@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 @Table(name = "pictures")
 public class Picture extends BaseEntity {
     private String description;
-//    private Album album;
     private User user;
     private String imageUrl;
     private LocalDateTime time;
@@ -61,15 +60,4 @@ public class Picture extends BaseEntity {
     public void setCloudinaryPublicId(String cloudinaryPublicId) {
         this.cloudinaryPublicId = cloudinaryPublicId;
     }
-
-    //    @ManyToOne(optional = false, targetEntity = Album.class)
-//    @JoinColumn(name = "album_id", referencedColumnName = "id")
-//    public Album getAlbum() {
-//        return this.album;
-//    }
-//
-//    public void setAlbum(Album album) {
-//        this.album = album;
-//    }
-
 }

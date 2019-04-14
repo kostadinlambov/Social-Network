@@ -19,13 +19,6 @@ public class UserUpdateBindingModel implements Serializable {
     private String profilePicUrl;
     private String backgroundImageUrl;
 
-//    private Set<UserRole> roles;
-//    private Boolean isDeleted = false;
-//
-//    private Set<Order> orders;
-//    private Set<Payment> payments;
-//    private Set<Feedback> feedbackSet;
-
     public UserUpdateBindingModel() {
     }
 

@@ -16,8 +16,6 @@ export default {
     },
 
     trigger: (eventName, data) => {
-        console.log('data', data)
-        debugger;
         subscriptions[eventName].forEach(fn => fn(data));
     }
 };

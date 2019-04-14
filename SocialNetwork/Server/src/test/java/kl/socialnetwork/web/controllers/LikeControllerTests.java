@@ -1,8 +1,6 @@
 package kl.socialnetwork.web.controllers;
 
-
 import kl.socialnetwork.services.LikeService;
-import kl.socialnetwork.services.PostService;
 import kl.socialnetwork.testUtils.TestUtil;
 import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;
 import org.junit.Assert;
@@ -27,11 +25,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static kl.socialnetwork.utils.constants.ResponseMessageConstants.SERVER_ERROR_MESSAGE;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -49,7 +44,6 @@ public class LikeControllerTests {
 
     @MockBean
     private LikeService likeServiceMock;
-
 
     @Before
     public void setup() {

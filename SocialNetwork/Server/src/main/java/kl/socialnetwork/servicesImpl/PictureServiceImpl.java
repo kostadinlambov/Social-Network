@@ -16,9 +16,9 @@ import kl.socialnetwork.validations.serviceValidation.services.UserValidationSer
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +26,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static kl.socialnetwork.utils.constants.ResponseMessageConstants.SERVER_ERROR_MESSAGE;
+import static kl.socialnetwork.utils.constants.ResponseMessageConstants.UNAUTHORIZED_SERVER_ERROR_MESSAGE;
 
 @Service
 @Transactional
@@ -108,7 +109,7 @@ public class PictureServiceImpl implements PictureService {
 
             return this.cloudinaryService.deleteImage(cloudinaryPublicId);
         } else {
-            throw new CustomException("Unauthorized!");
+            throw new CustomException(UNAUTHORIZED_SERVER_ERROR_MESSAGE);
         }
     }
 }

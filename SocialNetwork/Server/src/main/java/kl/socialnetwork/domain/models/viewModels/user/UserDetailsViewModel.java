@@ -1,6 +1,5 @@
 package kl.socialnetwork.domain.models.viewModels.user;
 
-
 import kl.socialnetwork.domain.entities.UserRole;
 
 import java.util.Set;

@@ -13,7 +13,6 @@
     display: flex;
     justify-content: start;
     align-items: center;
-    /* margin-bottom: 1rem; */
 }
 
 .gallery-aside-article-header > h3{
@@ -38,7 +37,6 @@ label#upload{
 .username-gallery{
     color:#40a3f4;
 }
-
 
 #container {
     overflow: hidden

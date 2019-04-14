@@ -1,8 +1,6 @@
 package kl.socialnetwork.utils.responseHandler.exceptions;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import kl.socialnetwork.utils.constants.ResponseMessageConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,17 +15,13 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.net.URISyntaxException;
 import java.util.Date;
 
-
 @ControllerAdvice
 @RestController
 public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(Exception.class)
   public final ResponseEntity<ExceptionResponse> handleAllExceptions(Exception ex, WebRequest request) {
-
      String message = ex.getMessage();
-    //TODO: For production change "message" to INTERNAL_SERVER_ERROR_MESSAGE
-    //String message = INTERNAL_SERVER_ERROR_MESSAGE;
     ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), message,
         request.getDescription(false), false);
     return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -49,17 +43,9 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
     return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
   }
 
-
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                 HttpHeaders headers, HttpStatus status, WebRequest request) {
-//    List<String> list = new ArrayList<>();
-//    for (ObjectError fieldError : ex.getBindingResult().getAllErrors()) {
-//      String defaultMessage = fieldError.getDefaultMessage();
-//      list.add(defaultMessage);
-//      System.out.println(fieldError.getDefaultMessage());
-//    }
-
     String errorMessage = ex.getBindingResult().getAllErrors().stream()
             .map(DefaultMessageSourceResolvable::getDefaultMessage)
             .findFirst()
@@ -70,22 +56,4 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
     System.out.println();
     return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
   }
-//
-//  @Override
-//  protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-//                                                                HttpHeaders headers, HttpStatus status,
-//                                                                WebRequest request) {
-//    String errorMessage = ex.getBindingResult().getFieldErrors().stream()
-//            .map(DefaultMessageSourceResolvable::getDefaultMessage)
-//            .findFirst()
-//            .orElse(ex.getMessage());
-//    return response(ex, request, HttpStatus.BAD_REQUEST, errorMessage);
-//  }
-//
-//  private ResponseEntity<Object> response(Exception ex, WebRequest request, HttpStatus status,
-//                                          String message) {
-//    return handleExceptionInternal(ex, message,null, status, request);
-//  }
-
-
 }

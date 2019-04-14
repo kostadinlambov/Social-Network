@@ -1,7 +1,6 @@
 package kl.socialnetwork.services;
 
 import kl.socialnetwork.domain.entities.User;
-import kl.socialnetwork.domain.entities.UserRole;
 import kl.socialnetwork.domain.models.serviceModels.UserServiceModel;
 import kl.socialnetwork.domain.models.viewModels.user.UserCreateViewModel;
 import kl.socialnetwork.domain.models.viewModels.user.UserDetailsViewModel;

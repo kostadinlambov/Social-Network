@@ -1,11 +1,9 @@
 import React from 'react';
 import { userService } from '../../infrastructure';
 import placeholder_user_image from '../../assets/images/placeholder.png';
-import { connect } from 'tls';
 
 const MessageNavBarRow = (props) => {
     const {fromUserId: id, fromUserFirstName: firstName, fromUserLastName: lastName, content, time, count } = props;
-
     const profilePicUrl = props.fromUserProfilePicUrl || placeholder_user_image
 
     let imgClassName = '';
@@ -22,7 +20,6 @@ const MessageNavBarRow = (props) => {
     const minute = time.minute < 10 ? '0' + time.minute : time.minute;
 
     return (
-
         <div className="messagebox-navbar-friend-container" onMouseDown={(e) => props.triggerMessageLoad(id, firstName, lastName, profilePicUrl, e)}>
             <div className="messagebox-navbar-friend-image">
                 <img className={imgClassName} src={profilePicUrl} alt="profilePic" />

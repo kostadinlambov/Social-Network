@@ -150,7 +150,6 @@ export default class UserSearchResultsPage extends Component {
         const userId = userService.getUserId();
         const search = this.props.location.state.search;
 
-
         if (this.state.search !== search) {
             this.setState({ search: search },
                 () => this.props.searchResults(userId, search)
@@ -182,7 +181,6 @@ export default class UserSearchResultsPage extends Component {
 
         const requestLength = this.props.userWaitingForAcceptingRequest.length;
         let requests = '';
-        debugger;
         if (requestLength > 0) {
             requests = (
                 <Fragment>
@@ -249,7 +247,6 @@ export default class UserSearchResultsPage extends Component {
                                 secondButtonText={'ADD FRIEND'}
                                 secondButtonOnClick={this.addFriend}
                             />)
-
                     }
                 </Fragment>
             )

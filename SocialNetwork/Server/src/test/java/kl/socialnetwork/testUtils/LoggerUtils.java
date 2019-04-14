@@ -1,9 +1,6 @@
 package kl.socialnetwork.testUtils;
 
 import kl.socialnetwork.domain.entities.Logger;
-import kl.socialnetwork.domain.entities.Post;
-import kl.socialnetwork.domain.entities.User;
-import kl.socialnetwork.domain.models.bindingModels.comment.CommentCreateBindingModel;
 import kl.socialnetwork.domain.models.serviceModels.LoggerServiceModel;
 import kl.socialnetwork.domain.models.viewModels.logger.LoggerViewModel;
 

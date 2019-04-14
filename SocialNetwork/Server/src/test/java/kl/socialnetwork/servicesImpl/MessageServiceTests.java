@@ -1,9 +1,7 @@
 package kl.socialnetwork.servicesImpl;
 
-
 import kl.socialnetwork.domain.entities.*;
 import kl.socialnetwork.domain.models.bindingModels.message.MessageCreateBindingModel;
-import kl.socialnetwork.domain.models.bindingModels.post.PostCreateBindingModel;
 import kl.socialnetwork.domain.models.serviceModels.MessageServiceModel;
 import kl.socialnetwork.domain.models.viewModels.message.MessageFriendsViewModel;
 import kl.socialnetwork.repositories.MessageRepository;

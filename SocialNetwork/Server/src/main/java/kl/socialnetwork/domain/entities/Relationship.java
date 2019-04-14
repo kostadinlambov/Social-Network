@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-//@Table(name = "relationship", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_one_id", "user_two_id"})})
 @Table(name = "relationship")
 public class Relationship extends BaseEntity {
     private User userOne;
@@ -65,7 +64,6 @@ public class Relationship extends BaseEntity {
     public void setTime(LocalDateTime time) {
         this.time = time;
     }
-
 
     @OneToMany(mappedBy = "relationship", targetEntity = Message.class, cascade = CascadeType.ALL)
     public List<Message> getMessageList() {

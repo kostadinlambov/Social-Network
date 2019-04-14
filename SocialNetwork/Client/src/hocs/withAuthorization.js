@@ -25,7 +25,6 @@ function withAuthorization(WrapperComponent, roles) {
         }
 
         render = () => {
-
             if(!this.state.ready){
                 // return <h1 className="text-center pt-5 mt-5">withRootAuthorization Loading...</h1>
                 return null;
@@ -39,13 +38,8 @@ function withAuthorization(WrapperComponent, roles) {
             if(userHasAccess){
                 return <WrapperComponent {...this.props} /> 
             }else{
-                // this.props.history.push('/error');
-                // return null;
-
-                // return <ErrorPage {...this.props}/>
                 return <Redirect to="/error" {...this.props} />
             }
-
         }
     }
 }

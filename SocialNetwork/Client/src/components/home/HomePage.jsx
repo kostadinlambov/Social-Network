@@ -11,10 +11,8 @@ import Intro from './Intro';
 import PhotoGallery from './PhotosGallery';
 import FriendsGallery from './FriendsGallery';
 
-// import placeholder_user_image from '../../assets/images/placeholder-profile-male.jpg';
 import placeholder_user_image from '../../assets/images/placeholder.png';
 import default_background_image from '../../assets/images/default-background-image.jpg';
-
 
 const UserSearchResultsPage = lazy(() => import('../../components/user/UserSearchResultsPage'));
 const UserProfilePage = lazy(() => import('../../components/user/UserProfilePage'));
@@ -77,7 +75,6 @@ export default class HomePage extends Component {
                 this.props.history.push("/");
             }
         }).catch(err => {
-            console.error('deatils err:', err)
             toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
@@ -157,7 +154,6 @@ export default class HomePage extends Component {
                 category: category,
             }, () => this.loadAllFriends(userId))
         }).catch(err => {
-            console.error('deatils err:', err)
             toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
@@ -185,7 +181,6 @@ export default class HomePage extends Component {
                 ready: true
             })
         }).catch(err => {
-            console.error('deatils err:', err)
             toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
@@ -223,15 +218,10 @@ export default class HomePage extends Component {
                                 {loggedIn && <Route exact path="/home/findFriends/:id/:category" render={(props) => <UserFindFriendsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} findFriends={this.findFriends} />} />}
                                 {loggedIn && (isRoot || isAdmin || isTheCurrentLoggedInUser) && <Route exact path="/home/users/edit/:id" render={props => <UserEditPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
                                 {(loggedIn && isRoot) && <Route exact path="/home/users/delete/:id" render={props => <UserDeletePage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
-                               
                                 {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/users/all/:id" render={props => <UserAllPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
-                                {/* {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/message/:id" render={props => <MessageBox {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />} */}
-                               
-                               
                                 {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/logs/:id" render={props => <UserLogsPage {...props} getUserToShowId={this.getUserToShowId} searchResults={this.searchResults} {...this.state} />} />}
                                 {loggedIn && <Route exact path="/home/gallery/:id" render={props => <UserGalleryPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} loadAllPictures={this.loadAllPictures} />} />}
                                 {loggedIn && <Route exact path="/home/users/search/" render={(props) => <UserSearchResultsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} searchResults={this.searchResults} />} />}
-
                                 <Route exact path="/error" component={ErrorPage} />
                                 <Route render={(props) => <Redirect to="/" {...props} />} />
                                 {/* <Route component={ErrorPage} /> */}

@@ -3,11 +3,10 @@ import '../../styles/FormPages.css'
 import UserEditPageForm from './UserEditPageForm';
 
 const UserEditPage = (props) => {
-    debugger;
     if (props.match.params.id !== props.id) {
         props.getUserToShowId(props.match.params.id);
     }
-    debugger;
+    
     return (
         <Fragment>
             {props.id ? (<UserEditPageForm {...props} />) : null}

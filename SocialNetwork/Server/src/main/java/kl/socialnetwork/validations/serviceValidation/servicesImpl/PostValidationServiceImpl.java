@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PostValidationServiceImpl implements PostValidationService {
-
     @Override
     public boolean isValid(Post post) {
         return post != null;

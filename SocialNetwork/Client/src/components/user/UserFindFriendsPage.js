@@ -27,7 +27,6 @@ export default class UserFindFriendsPage extends Component {
         const category = this.props.match.params.category;
 
         this.setState({ category, userId })
-        debugger;
         this.props.getUserToShowId(userId);
         this.props.findFriends(userId, category);
     }
@@ -99,13 +98,11 @@ export default class UserFindFriendsPage extends Component {
 
                 this.props.findFriends(this.state.userId, this.state.category);
             } else {
-                console.log('error message: ', response.message);
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
             }
         }).catch(err => {
-            console.error('Remove Friend err:', err)
             toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
@@ -148,7 +145,6 @@ export default class UserFindFriendsPage extends Component {
                             secondButtonOnClick={this.rejectRequest}
                             thirdButtonLink={`/home/profile/${friend.id}`}
                         />)}
-                    {/* <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" /> */}
                 </Fragment>
             )
         }
@@ -174,7 +170,6 @@ export default class UserFindFriendsPage extends Component {
                                 secondButtonOnClick={this.rejectRequest}
                             />)
                     }
-                    {/* <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" /> */}
                 </Fragment>
             )
         }
@@ -199,9 +194,7 @@ export default class UserFindFriendsPage extends Component {
                                 secondButtonText={'ADD FRIEND'}
                                 secondButtonOnClick={this.addFriend}
                             />)
-
                     }
-                    {/* <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" /> */}
                 </Fragment>
             )
         }

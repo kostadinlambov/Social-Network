@@ -11,8 +11,6 @@ import javax.annotation.PostConstruct;
 public class EntitiesSeedExecutor {
     private final RoleRepository roleRepository;
 
-
-
     @Autowired
     public EntitiesSeedExecutor(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;

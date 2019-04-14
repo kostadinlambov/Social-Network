@@ -4,7 +4,6 @@ import kl.socialnetwork.domain.entities.Post;
 import kl.socialnetwork.domain.entities.User;
 import kl.socialnetwork.domain.models.bindingModels.post.PostCreateBindingModel;
 import kl.socialnetwork.domain.models.serviceModels.PostServiceModel;
-import kl.socialnetwork.domain.models.viewModels.comment.CommentAllViewModel;
 import kl.socialnetwork.domain.models.viewModels.post.PostAllViewModel;
 
 import java.time.LocalDateTime;

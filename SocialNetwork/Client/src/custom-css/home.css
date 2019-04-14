@@ -30,8 +30,6 @@ body {
     /* width: 100%; */
 }
 
-
-
 /* main */
 
 main {
@@ -157,8 +155,6 @@ main ul.aside-article-gallery {
     padding-bottom: 0;
 }
 
-
-
 main ul.aside-article-gallery li {
     flex: 0 1 32%;
     /* height: 50px; */
@@ -183,7 +179,6 @@ main ul.aside-article-gallery li div {
     position: relative;
     /* margin: 0; */
     /* background: red; */
-
 }
 
 main ul.aside-article-gallery li div:after {
@@ -202,15 +197,14 @@ main ul.aside-article-gallery li a:after {
     display: block;
     content: '';
     padding-top: 100%;
-
 }
 
 main ul.aside-article-gallery li img {
-   
-    width: auto;
-    height: 100%;
+    width: 100%;
+    height: auto;
+    /* width: auto;
+    height: 100%; */
     background: white;
-
     position: absolute;
     top: 50%;
     left: 50%;
@@ -218,41 +212,42 @@ main ul.aside-article-gallery li img {
 }
 
 main ul.aside-article-gallery li img.l {
-    width: 100%;
-    height: auto;
-  
-    background: white;
+    width: auto;
+    height: 100%;
+    /* width: 100%;
+    height: auto; */
 
+    background: white;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 
-.zoom:hover{
+.zoom:hover {
     transform: scale(1.1);
 }
 
-main ul.aside-article-gallery li div.img-details{
+main ul.aside-article-gallery li div.img-details {
     width: 100%;
     height: 100%;
     position: absolute;
     content: "";
-    background:  rgba(64, 163, 244, 0.9);
+    background: rgba(64, 163, 244, 0.9);
     opacity: 0;
     transition: all .4s ease-in;
-    display:flex;
+    display: flex;
     justify-content: center;
     align-items: center;
-    
+
 }
 
-main ul.aside-article-gallery li div.img-details:hover{
+main ul.aside-article-gallery li div.img-details:hover {
     opacity: 1;
 }
 
-main ul.aside-article-gallery li div.img-details .user-name{
-    color:white;
+main ul.aside-article-gallery li div.img-details .user-name {
+    color: white;
     font-weight: bold;
     text-align: center;
     text-shadow: 2px 2px 2px #1C6EA4;
@@ -405,4 +400,3 @@ main .main-article-left-side-icons-container ul li {
     font-weight: bold;
     color: rgb(192, 192, 192);
 }
-

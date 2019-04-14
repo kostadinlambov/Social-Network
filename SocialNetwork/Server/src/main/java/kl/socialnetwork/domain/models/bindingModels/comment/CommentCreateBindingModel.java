@@ -10,7 +10,6 @@ public class CommentCreateBindingModel {
     private String content;
     private String imageUrl;
 
-
     @NotNull
     @NotEmpty
     public String getPostId() {

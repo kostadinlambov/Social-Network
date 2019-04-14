@@ -74,16 +74,6 @@ public class Post extends BaseEntity {
         this.commentList = commentList;
     }
 
-    //    @OneToOne(optional = false)
-//    @JoinColumn(name = "like_id")
-//    public Like getLike() {
-//        return this.like;
-//    }
-//
-//    public void setLike(Like like) {
-//        this.like = like;
-//    }
-
     @Column(name = "time", nullable = false)
     public LocalDateTime getTime() {
         return this.time;

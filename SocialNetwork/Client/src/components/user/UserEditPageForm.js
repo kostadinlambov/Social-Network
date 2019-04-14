@@ -57,16 +57,6 @@ export default class UserEditPageForm extends Component {
                     position: toast.POSITION.TOP_RIGHT
                 });
 
-
-                // if(this.state.id == userService.getUserId()){
-                //     observer.trigger(observer.events.loginUser, {
-                //         loggedInUserId: userService.getUserId(),
-                //         loggedInUserName: userService.getUsername(),
-                //         profilePicUrl: this.state.profilePicUrl,
-                //     })
-                // }
-
-
                 this.props.getUserToShowId(this.state.id);
                 this.props.history.push(`/home/profile/${this.state.id}`);
 
@@ -86,7 +76,6 @@ export default class UserEditPageForm extends Component {
                     profilePicUrl: this.props.profilePicUrl,
                     backgroundImageUrl: this.props.backgroundImageUrl
                 })
-
             }
         })
     }
@@ -110,7 +99,6 @@ export default class UserEditPageForm extends Component {
         let testEmail = emailRegex.test(email)
         let testFirstName = firstLastNameRegex.test(firstName)
         let testLastName = firstLastNameRegex.test(lastName)
-        console.log('testEmail : ', testEmail)
 
         return {
             username: username.length < 4 || username.length > 16,
@@ -121,7 +109,6 @@ export default class UserEditPageForm extends Component {
             city: city.length === 0,
             profilePicUrl: profilePicUrl.length === 0,
             backgroundImageUrl: backgroundImageUrl.length === 0,
-
         }
     }
 
@@ -299,8 +286,6 @@ export default class UserEditPageForm extends Component {
                                 </div>
                             </form>
                         </div>
-
-
                     </section>
                 </article>
             </Fragment>

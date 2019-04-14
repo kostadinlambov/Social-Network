@@ -1,6 +1,5 @@
 package kl.socialnetwork.web.controllers;
 
-
 import kl.socialnetwork.domain.entities.User;
 import kl.socialnetwork.domain.entities.UserRole;
 import kl.socialnetwork.domain.models.bindingModels.user.UserRegisterBindingModel;

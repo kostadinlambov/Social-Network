@@ -26,12 +26,8 @@ export default class UserDeletePage extends Component {
 
     componentDidMount = () => {
         const userId = this.props.match.params.id;
-        console.log("current User id: ", userId);
-        debugger;
 
         requester.get(`/users/details/${userId}`, (userData) => {
-            console.log("userData: ", userData);
-
             this.setState({
                 ...userData
             })
@@ -40,7 +36,6 @@ export default class UserDeletePage extends Component {
 
     onSubmitHandlerDelete = (e) => {
         e.preventDefault();
-        console.log(this.state.id);
 
         requester.delete('/users/delete/' + this.state.id, {}, (response) => {
             if (response.success === true) {
@@ -54,7 +49,6 @@ export default class UserDeletePage extends Component {
                 });
             }
         }).catch(err => {
-            console.error('deatils err:', err)
             toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
                 position: toast.POSITION.TOP_RIGHT
             });

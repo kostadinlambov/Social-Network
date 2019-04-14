@@ -153,12 +153,14 @@ export default {
         return name;
     },
 
-    getImageSize(profilePicUrl, friendsGallery) {
+    getImageSize(profilePicUrl ) {
         let img = new Image();
         img.src = profilePicUrl;
-        if (img.width >= img.height && !friendsGallery) {
+       
+        if (img.width >= img.height ) {
             return 'l'
         }
+
         return '';
     }
 } 

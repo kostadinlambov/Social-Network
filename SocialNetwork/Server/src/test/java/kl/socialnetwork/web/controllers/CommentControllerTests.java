@@ -1,6 +1,5 @@
 package kl.socialnetwork.web.controllers;
 
-
 import kl.socialnetwork.domain.models.bindingModels.comment.CommentCreateBindingModel;
 import kl.socialnetwork.services.CommentService;
 import kl.socialnetwork.testUtils.CommentsUtils;
@@ -29,11 +28,8 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import static kl.socialnetwork.utils.constants.ResponseMessageConstants.*;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -151,7 +147,7 @@ public class CommentControllerTests {
                 .andExpect(content().contentType(TestUtil.TEXT_PLAIN_UTF8))
                 .andExpect(jsonPath("$.success").value("true"))
                 .andExpect(jsonPath("$.payload").value(""))
-                .andExpect(jsonPath("$.message").value("Comment successfully deleted!"));
+                .andExpect(jsonPath("$.message").value(SUCCESSFUL_DELETE_COMMENT_MESSAGE));
 
         verify(this.commentServiceMock, times(1)).deleteComment(anyString(), anyString());
         verifyNoMoreInteractions(this.commentServiceMock);

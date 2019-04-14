@@ -1,6 +1,5 @@
 package kl.socialnetwork.web.filters;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

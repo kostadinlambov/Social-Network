@@ -1,7 +1,6 @@
 package kl.socialnetwork.services;
 
 import kl.socialnetwork.domain.models.serviceModels.LoggerServiceModel;
-import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.List;
 

@@ -28,7 +28,6 @@ export default class WriteComment extends Component {
         this.setState({ loggedInUserProfilePicUrl: userdata.profilePicUrl })
     }
 
-
     onSubmitHandler(event) {
         event.preventDefault();
 
@@ -39,12 +38,7 @@ export default class WriteComment extends Component {
         const timelineUserId = this.props.timelineUserId;
         const { loggedInUserId, content, imageUrl } = this.state;
 
-        debugger;
-        console.log('this.state: ', this.state);
-        debugger;
         requester.post('/comment/create', { postId, loggedInUserId, timelineUserId, content, imageUrl }, (response) => {
-            console.log('comment create response: ', response);
-            debugger;
             if (response.success === true) {
                 this.props.getAllPosts(timelineUserId);
                 this.setState({ content: '' })
@@ -63,8 +57,6 @@ export default class WriteComment extends Component {
     }
 
     onChangeHandler(event) {
-        debugger;
-        console.log(event.target.name + ' => ' + event.target.value);
         this.setState({
             [event.target.name]: event.target.value
         });
@@ -91,14 +83,12 @@ export default class WriteComment extends Component {
 
     render() {
         const { content } = this.state;
-
         const errors = this.validate(content);
         const isEnabled = !Object.keys(errors).some(x => errors[x]);
         const displayButon = isEnabled ? '' : 'hidden';
 
         const imageClass = userService.getImageSize(this.props.imageUrl);
         const loggedInUserProfilePicUrl = userService.getProfilePicUrl();
-        // const loggedInUserProfilePicUrl = this.props.loggedInUserProfilePicUrl;
         const loggedInUserFirstName = userService.getFirstName();
         const formattedName = userService.formatUsername(loggedInUserFirstName);
 
@@ -137,6 +127,4 @@ export default class WriteComment extends Component {
             </Fragment>
         )
     }
-
-
 }

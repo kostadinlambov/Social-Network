@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import static kl.socialnetwork.utils.constants.ResponseMessageConstants.SERVER_ERROR_MESSAGE;
+import static kl.socialnetwork.utils.constants.ResponseMessageConstants.SUCCESSFUL_PICTURE_DELETE_MESSAGE;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
@@ -194,7 +195,6 @@ public class PictureControllerTests {
                 .andExpect(status().isForbidden());
     }
 
-
     @Test
     @WithMockUser(authorities = "USER")
     public void removePicture_whenDeletePictureReturnsTrue_deletePost() throws Exception {
@@ -213,12 +213,11 @@ public class PictureControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.TEXT_PLAIN_UTF8))
                 .andExpect(jsonPath("$.success").value("true"))
-                .andExpect(jsonPath("$.message").value("Photo successfully deleted!"));
+                .andExpect(jsonPath("$.message").value(SUCCESSFUL_PICTURE_DELETE_MESSAGE));
 
         verify(this.pictureServiceMock, times(1)).deletePicture(anyString(), anyString());
         verifyNoMoreInteractions(this.pictureServiceMock);
     }
-
 
     @Test
     @WithMockUser(authorities = "USER")

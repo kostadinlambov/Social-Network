@@ -8,7 +8,6 @@ import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;
 import kl.socialnetwork.validations.serviceValidation.services.LoggerValidationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -66,7 +65,6 @@ public class LoggerServiceImpl implements LoggerService {
                 .stream()
                 .map(x -> this.modelMapper.map(x, LoggerServiceModel.class))
                 .collect(Collectors.toUnmodifiableList());
-
     }
 
     @Override

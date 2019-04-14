@@ -7,17 +7,15 @@ import kl.socialnetwork.repositories.LikeRepository;
 import kl.socialnetwork.repositories.PostRepository;
 import kl.socialnetwork.repositories.UserRepository;
 import kl.socialnetwork.services.LikeService;
-import kl.socialnetwork.utils.constants.ResponseMessageConstants;
 import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;
-import kl.socialnetwork.validations.serviceValidation.services.LikeValidationService;
 import kl.socialnetwork.validations.serviceValidation.services.PostValidationService;
 import kl.socialnetwork.validations.serviceValidation.services.UserValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static kl.socialnetwork.utils.constants.ResponseMessageConstants.FAILURE_POST_LIKE_MESSAGE;
 import static kl.socialnetwork.utils.constants.ResponseMessageConstants.SERVER_ERROR_MESSAGE;
-
 
 @Service
 @Transactional
@@ -27,7 +25,6 @@ public class LikeServiceImpl implements LikeService {
     private final UserRepository userRepository;
     private final UserValidationService userValidation;
     private final PostValidationService postValidation;
-
 
     @Autowired
     public LikeServiceImpl(LikeRepository likeRepository, PostRepository postRepository, UserRepository userRepository, UserValidationService userValidation, PostValidationService postValidation) {
@@ -57,7 +54,7 @@ public class LikeServiceImpl implements LikeService {
 
             return this.likeRepository.save(like) != null;
         } else {
-            throw new CustomException("Post was already liked from you!");
+            throw new CustomException(FAILURE_POST_LIKE_MESSAGE);
         }
     }
 

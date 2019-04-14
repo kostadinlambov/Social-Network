@@ -17,14 +17,13 @@ import kl.socialnetwork.validations.serviceValidation.services.UserValidationSer
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static kl.socialnetwork.utils.constants.ResponseMessageConstants.SERVER_ERROR_MESSAGE;
-
 
 @Service
 @Transactional
@@ -101,12 +100,10 @@ public class MessageServiceImpl implements MessageService {
 
         this.updateMessageStatus(loggedInUser.getId(), chatUserId);
 
-
         return allMessagesBetweenTwoUsers
                 .stream().map(message -> modelMapper.map(message, MessageServiceModel.class))
                 .collect(Collectors.toList());
     }
-
 
     @Override
     public List<MessageFriendsViewModel> getAllFriendMessages(String loggedInUsername) {

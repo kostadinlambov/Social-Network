@@ -3,7 +3,6 @@ import { NavLink } from 'react-router-dom';
 import { userService } from '../../infrastructure'
 import default_background_image from '../../assets/images/default-background-image.jpg';
 import placeholder_user_image from '../../assets/images/placeholder.png';
-// import placeholder_user_image from '../../assets/images/placeholder-profile-male.jpg';
 
 export default class Friend extends Component {
     constructor(props) {
@@ -48,7 +47,6 @@ export default class Friend extends Component {
         }
 
         const userNames = userService.formatUsername(firstName, lastName);
-
 
         return (
             <div className="friend-container" style={{ 'backgroundImage': `url(${backgroundImageUrl})` }}>

@@ -4,7 +4,6 @@
     align-items: start;
     width: 100%;
     margin: auto;
-    /* border-radius: 5px; */
     /* box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.3); */
     padding: 1rem;
 }
@@ -72,7 +71,6 @@
 
 .message-time {
     color: rgb(192, 192, 192);
-    /* color: red; */
 }
 
 .message-content.loggedInUser {

@@ -174,7 +174,7 @@ public class UserServiceImpl implements UserService {
         return this.userRepository
                 .findByUsername(username)
                 .filter(userValidation::isValid)
-                .orElseThrow(() -> new UsernameNotFoundException("No such user."));
+                .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERROR_MESSAGE));
     }
 
     @Override
@@ -190,9 +190,9 @@ public class UserServiceImpl implements UserService {
                 user.setAuthorities(this.getAuthorities("ADMIN"));
                 break;
             case "ROOT":
-                throw new CustomException("You can't change ROOT authority!");
+                throw new CustomException(USER_FAILURE_CHANGING_ROOT_AUTHORITY_MESSAGE);
             default:
-                throw new CustomException("There is no role, higher than Admin!");
+                throw new CustomException(USER_FAILURE_PROMOTING_ADMIN_MESSAGE);
         }
 
         return this.userRepository.save(user) != null;
@@ -211,9 +211,9 @@ public class UserServiceImpl implements UserService {
                 user.setAuthorities(this.getAuthorities("USER"));
                 break;
             case "ROOT":
-                throw new CustomException("You can't change ROOT authority!");
-            default:
-                throw new CustomException("There is no role, lower than USER!");
+                throw new CustomException(USER_FAILURE_CHANGING_ROOT_AUTHORITY_MESSAGE);
+            case "USER":
+                throw new CustomException(USER_FAILURE_DEMOTING_USER_MESSAGE);
         }
 
         return this.userRepository.save(user) != null;

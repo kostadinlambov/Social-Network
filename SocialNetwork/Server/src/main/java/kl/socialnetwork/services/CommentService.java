@@ -5,10 +5,7 @@ import kl.socialnetwork.domain.models.bindingModels.comment.CommentCreateBinding
 import java.util.concurrent.CompletableFuture;
 
 public interface CommentService {
-
     boolean createComment(CommentCreateBindingModel commentCreateBindingModel) throws Exception;
 
-
     CompletableFuture<Boolean> deleteComment(String loggedInUserId, String commentToRemoveId) throws Exception;
-//    boolean deleteComment(String loggedInUserId, String commentToRemoveId) throws Exception;
 }

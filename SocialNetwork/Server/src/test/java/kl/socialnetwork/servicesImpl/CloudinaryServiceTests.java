@@ -1,7 +1,6 @@
 package kl.socialnetwork.servicesImpl;
 
 import kl.socialnetwork.services.CloudinaryService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

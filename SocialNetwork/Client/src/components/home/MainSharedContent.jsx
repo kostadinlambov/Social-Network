@@ -42,7 +42,6 @@ class MainSharedContent extends Component {
             if (response) {
                 this.setState({
                     allPostsArr: response,
-                    // allPostsArr: response['payload'],
                     content: '',
                 })
             } else {
@@ -90,15 +89,14 @@ class MainSharedContent extends Component {
         })
     }
 
-
     addLike = (postId, event) => {
         event.preventDefault();
         const requestBody = { postId, loggedInUserId: userService.getUserId() }
         requester.post('/like/add', requestBody, (response) => {
             if (response.success) {
-                toast.success(<ToastComponent.successToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
+                // toast.success(<ToastComponent.successToast text={response.message} />, {
+                //     position: toast.POSITION.TOP_RIGHT
+                // });
 
                 this.getAllPosts(this.state.timelineUserId);
             } else {
@@ -129,7 +127,6 @@ class MainSharedContent extends Component {
 
                 this.getAllPosts(this.state.timelineUserId);
             } else {
-                console.log('error message: ', response.message);
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
@@ -181,12 +178,9 @@ class MainSharedContent extends Component {
 
         const loggedInUserProfilePicUrl = this.props.profilePicUrl;
         return (
-
             <Fragment >
                 <article className="main-article-shared-content">
-
                     <WritePost {...this.props} timelineUserId={this.state.timelineUserId} getAllPosts={this.getAllPosts} loggedInUserProfilePicUrl={loggedInUserProfilePicUrl} />
-
                     <section className="post-content-section">
                         {this.state.allPostsArr.map((post, index) =>
                             <Fragment key={post.postId}>
@@ -206,15 +200,9 @@ class MainSharedContent extends Component {
                                     loggedInUserProfilePicUrl={loggedInUserProfilePicUrl}
                                     postId={post.postId}
                                 />
-
-
                             </Fragment >
                         )}
-
                     </section>
-
-                   
-
                 </article>
             </Fragment>
         )

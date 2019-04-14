@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
-import { userService, requester } from '../../infrastructure'
+import { requester } from '../../infrastructure'
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
 
@@ -83,7 +82,6 @@ export default class UserRow extends Component {
         return (
             <tr className="row" >
                 <td className="col-md-1 font-weight-bold" >
-                    {/* <h5>{this.state.index}</h5> */}
                    {this.state.index}
                 </td>
                 <td className="col-md-2" style={{'color':'#40a3f4'}}>
@@ -105,20 +103,6 @@ export default class UserRow extends Component {
                 <td className="col-md-3" >
                     {this.state.time}
                 </td>
-
-                {/* <td className="col-md-5 d-flex justify-content-center" >
-                    {(!userService.checkIfIsRoot(this.state.role) && !userService.isLoggedInUser(this.state.username)) &&
-                        <h5>
-                            <button className="btn App-button-primary btn-lg m-1" onClick={this.promote} >Promote</button>
-                        </h5>}
-                    {(!userService.checkIfIsRoot(this.state.role) && !userService.isLoggedInUser(this.state.username)) &&
-                        <h5>
-                            <button className="btn App-button-primary btn-lg m-1" onClick={this.demote} >Demote</button>
-                        </h5>}
-                    <h5>
-                        <NavLink className="btn App-button-primary btn-lg m-1" to={`/home/profile/${this.state.id}`} role="button">Profile</NavLink>
-                    </h5>
-                </td> */}
             </tr>
         )
     }

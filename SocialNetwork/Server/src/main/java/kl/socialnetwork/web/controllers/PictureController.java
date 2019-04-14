@@ -2,7 +2,6 @@ package kl.socialnetwork.web.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kl.socialnetwork.domain.models.viewModels.picture.PictureAllViewModel;
-import kl.socialnetwork.services.CloudinaryService;
 import kl.socialnetwork.services.PictureService;
 import kl.socialnetwork.utils.constants.ResponseMessageConstants;
 import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;
@@ -19,27 +18,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static kl.socialnetwork.utils.constants.ResponseMessageConstants.SERVER_ERROR_MESSAGE;
+import static kl.socialnetwork.utils.constants.ResponseMessageConstants.*;
 
 @RestController()
 @RequestMapping(value = "/pictures")
 public class PictureController {
 
     private final PictureService pictureService;
-    private final CloudinaryService cloudinaryService;
     private final ModelMapper modelMapper;
     private final ObjectMapper objectMapper;
 
     @Autowired
-    public PictureController(PictureService pictureService, CloudinaryService cloudinaryService, ModelMapper modelMapper, ObjectMapper objectMapper) {
+    public PictureController(PictureService pictureService, ModelMapper modelMapper, ObjectMapper objectMapper) {
         this.pictureService = pictureService;
-        this.cloudinaryService = cloudinaryService;
         this.modelMapper = modelMapper;
         this.objectMapper = objectMapper;
     }
 
     @GetMapping(value = "/all/{id}")
-    @ResponseBody
     public List<PictureAllViewModel> getAllPictures(@PathVariable(value = "id") String userId) {
         try {
             return this.pictureService
@@ -52,7 +48,6 @@ public class PictureController {
         }
     }
 
-
     @PostMapping(value = "/add")
     public ResponseEntity<Object> addPicture(
             @RequestParam(name = "loggedInUserId") String loggedInUserId,
@@ -62,13 +57,7 @@ public class PictureController {
         boolean result = this.pictureService.addPicture(loggedInUserId, file);
 
         if (result) {
-            SuccessResponse successResponse = new SuccessResponse(
-                    LocalDateTime.now(),
-                    "Successfully uploaded picture!",
-                    "",
-                    true
-            );
-
+            SuccessResponse successResponse = new SuccessResponse(LocalDateTime.now(), SUCCESSFUL_PICTURE_UPLOAD_MESSAGE, "", true);
             return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
         }
 
@@ -83,13 +72,7 @@ public class PictureController {
         boolean result = this.pictureService.deletePicture(loggedInUserId, photoToRemoveId);
 
         if (result) {
-            SuccessResponse successResponse = new SuccessResponse(
-                    LocalDateTime.now(),
-                    "Photo successfully deleted!",
-                    "",
-                    true
-            );
-
+            SuccessResponse successResponse = new SuccessResponse(LocalDateTime.now(), SUCCESSFUL_PICTURE_DELETE_MESSAGE, "", true);
             return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
         }
 

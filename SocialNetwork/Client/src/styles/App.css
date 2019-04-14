@@ -32,8 +32,6 @@
 
 .App-footer{
   text-align: center;
-  margin-top: 5rem;
-  padding-bottom: 5rem;
 }
 
 .App-primary-color{
@@ -82,11 +80,8 @@ ul{
 
 .text-shadow {
   color: #FFFFFF;
-  /* background: #b8b8b8; */
   text-shadow: 4px 3px 0 #7A7A7A;
 }
-
-
 
 @keyframes App-logo-spin {
   from {

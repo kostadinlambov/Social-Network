@@ -74,10 +74,8 @@ main .comment {
     width: 100%;
     margin: auto;
     background: white;
-    /* border-radius: 5px;  */
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
-    /* box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.3); */
     padding: 1rem;
 }
 
@@ -87,12 +85,9 @@ main .comment-input {
 
 main .comment-input input {
     border: none;
-
     outline: none;
     margin: 0 1rem;
-    /* padding-top: 1rem; */
     font-size: 1.2rem;
-
 }
 
 main .comment-input:after {

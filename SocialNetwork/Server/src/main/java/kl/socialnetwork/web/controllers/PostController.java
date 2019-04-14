@@ -40,16 +40,10 @@ public class PostController {
     }
 
     @PostMapping (value = "/create")
-    @ResponseBody
     public ResponseEntity<Object> createPost(@RequestBody @Valid PostCreateBindingModel postCreateBindingModel, Authentication principal) throws Exception {
         boolean post = this.postService.createPost(postCreateBindingModel);
         if (post) {
-            SuccessResponse successResponse = new SuccessResponse(
-                    LocalDateTime.now(),
-                    SUCCESSFUL_CREATE_POST_MESSAGE,
-                    " ",
-                    true);
-
+            SuccessResponse successResponse = new SuccessResponse(LocalDateTime.now(), SUCCESSFUL_CREATE_POST_MESSAGE, " ", true);
             return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
         }
 
@@ -57,7 +51,6 @@ public class PostController {
     }
 
     @GetMapping(value = "/all/{id}")
-    @ResponseBody
     public List<PostAllViewModel> getAllPosts(@PathVariable(value = "id") String timelineUserId) {
         try {
             List<PostServiceModel> postServiceAllPosts = this.postService.getAllPosts(timelineUserId);
@@ -81,8 +74,7 @@ public class PostController {
         CompletableFuture<Boolean> result = this.postService.deletePost(loggedInUserId, postToRemoveId);
 
         if (result.get()) {
-            SuccessResponse successResponse = new SuccessResponse(LocalDateTime.now(), "Post successfully deleted!", "", true);
-
+            SuccessResponse successResponse = new SuccessResponse(LocalDateTime.now(), SUCCESSFUL_POST_DELETE_MESSAGE, "", true);
             return new ResponseEntity<>(this.objectMapper.writeValueAsString(successResponse), HttpStatus.OK);
         }
 

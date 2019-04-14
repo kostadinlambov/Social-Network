@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import '../../styles/FormPages.css';
-import { requester, observer, userService } from '../../infrastructure';
+import { requester } from '../../infrastructure';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
 
@@ -46,12 +46,6 @@ export default class LoginPage extends Component {
                 const token = response.split(' ')[1];
                 localStorage.setItem('token', token);
 
-                // observer.trigger(observer.events.loginUser, {
-                //     loggedInUserId: userService.getUserId(),
-                //     loggedInUserName: userService.getUsername(),
-                //     profilePicUrl: userService.getProfilePicUrl(),
-                // })
-
                 toast.success(<ToastComponent.successToast text={' You have successfully logged in!'} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
@@ -60,22 +54,11 @@ export default class LoginPage extends Component {
             }
 
         }).catch(err => {
-            // toast.error(<ToastComponent.errorToast text={`${err.message}`} />, {
             localStorage.clear();
-
-            // if (err.status === 403 && err.response.url === 'http://localhost:8000/login') {
-            //     // this.props.history.push('/login');
-            //     toast.error(<ToastComponent.errorToast text={'Incorrect credentials!'} />, {
-            //         position: toast.POSITION.TOP_RIGHT
-            //     });
-
-            // } else {
 
             toast.error(<ToastComponent.errorToast text={`${err.message}`} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
-            // }
-
         })
     }
 
@@ -90,7 +73,6 @@ export default class LoginPage extends Component {
         this.setState({
             touched: { ...this.state.touched, [field]: true }
         });
-
     }
 
     validate = (username, password) => {
@@ -115,9 +97,6 @@ export default class LoginPage extends Component {
         return (
             <section className="pt-3">
                 <div className="container login-form-content-section pb-4 " >
-
-                    {/* <h1 className="mt-5 mb-5 text-center font-weight-bold ">Login</h1> */}
-
                     <h1 className="text-center font-weight-bold mt-4" style={{ 'margin': '1rem auto', 'paddingTop': '2rem' }}>Login</h1>
                     <hr className="my-2 mb-4 mt-3 col-md-8 mx-auto"></hr>
 

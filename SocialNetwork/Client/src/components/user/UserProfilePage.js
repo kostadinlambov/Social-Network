@@ -49,7 +49,6 @@ export default class UserProfilePage extends Component {
         });
     }
 
-
     componetnDidUpdate(prevProps, prevState) {
         const newId = this.props.match.params.id;
         const lastId = prevProps.id;
@@ -90,10 +89,8 @@ export default class UserProfilePage extends Component {
                 <article className="main-article-shared-content">
                     <section className="profile-content-section">
                         <div className="container mx-auto text-center mb-4 " >
-                            {/* <h1 className="text-center font-weight-bold" style={{ 'margin': '1rem auto' }}>Account Details</h1> */}
                             <h1 className="text-center font-weight-bold mt-4" style={{ 'margin': '1rem auto' }}>Account Details </h1>
 
-                            {/* <hr className="my-2 mb-3 mt-3 col-md-8 mx-auto" /> */}
                             <div className="col-md-6 mx-auto text-center">
                                 <table className="table table-hover mt-3 mx-auto text-center">
                                     <thead>
@@ -170,7 +167,6 @@ export default class UserProfilePage extends Component {
 
                                 </div >
                             </div >
-                            {/* <hr className="my-2 mb-3 mt-3 col-md-8 mx-auto" /> */}
                         </div >
                     </section>
                 </article>

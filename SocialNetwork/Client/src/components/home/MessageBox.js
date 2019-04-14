@@ -61,10 +61,7 @@ export default class MessageBox extends Component {
     }
 
     getAllMessages = () => {
-        debugger;
         requester.get('/message/all/' + this.state.chatUserId, (response) => {
-            console.log('All messages: ', response)
-            debugger;
             if (response) {
                 this.setState({
                     allMessages: response,
@@ -93,7 +90,6 @@ export default class MessageBox extends Component {
         })
     }
 
-
     onSubmitHandler(event) {
         event.preventDefault();
 
@@ -107,9 +103,9 @@ export default class MessageBox extends Component {
             if (response.success === true) {
                 this.getAllMessages();
                 this.setState({ content: '' })
-                toast.success(<ToastComponent.successToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
+                // toast.success(<ToastComponent.successToast text={response.message} />, {
+                //     position: toast.POSITION.TOP_RIGHT
+                // });
             } else {
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
@@ -167,7 +163,6 @@ export default class MessageBox extends Component {
     }
 
     changeChatBoxDisplay = () => {
-        debugger;
         const chatBoxDisplay = this.state.chatBoxDisplay;
         if (chatBoxDisplay === '') {
             this.setState({ chatBoxDisplay: 'display-none' })
@@ -178,11 +173,6 @@ export default class MessageBox extends Component {
 
     showUserChatBox = (data, event) => {
         const {id, firstName, lastName, profilePicUrl} = data
-        console.log('id: ', id);
-        console.log('firstName: ', firstName);
-        console.log('lastName: ', lastName);
-        console.log('profilePicUrl: ', profilePicUrl);
-        debugger;
         let chatUserNameFormatted = userService.formatUsername(firstName, lastName, 18)
         this.setState({
             chatUserId: id,
@@ -200,7 +190,6 @@ export default class MessageBox extends Component {
     }
 
     closeUserChatBox = () => {
-        debugger;
         this.setState({ chatBoxDisplay: 'display-none' })
     }
 
@@ -259,7 +248,6 @@ export default class MessageBox extends Component {
                         </div>
                         <div className="chat-username-container" >
                             <p className="chat-username">{chatUserNameFormatted}</p>
-                            {/* <p className="chat-username">{chatUserFirstName} {chatUserLastName}</p> */}
                         </div>
                     </div>
 
@@ -270,9 +258,9 @@ export default class MessageBox extends Component {
                     <div className="content-wrapper">
 
                         <div className="chat-content" id="chat-content">
-                            {this.state.allMessages.map((message, index) =>
+                            {this.state.allMessages.map((message) =>
                                 <FriendMessage
-                                    key={message.fromUserId + index}
+                                    key={message.id}
                                     {...message}
                                 />
                             )}

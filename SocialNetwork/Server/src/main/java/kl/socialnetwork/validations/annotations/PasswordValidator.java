@@ -12,7 +12,6 @@ public class PasswordValidator implements ConstraintValidator<Password, String> 
     private int maxLength;
     private boolean containsOnlyLettersAndDigits;
 
-
     @Override
     public void initialize(Password password) {
         this.minLength = password.minLength();

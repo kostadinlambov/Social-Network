@@ -1,6 +1,5 @@
 package kl.socialnetwork.web.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kl.socialnetwork.domain.models.bindingModels.user.UserRegisterBindingModel;
 import kl.socialnetwork.domain.models.bindingModels.user.UserUpdateBindingModel;
@@ -140,17 +139,7 @@ public class UserController {
         throw new CustomException(USER_FAILURE_DEMOTING_MESSAGE);
     }
 
-
     private SuccessResponse successResponseBuilder(LocalDateTime timestamp, String message, Object payload, boolean success) {
         return new SuccessResponse(timestamp, message, payload, success);
     }
-
-
-//    @GetMapping(value = "/editDetails/{id}")
-//    public ResponseEntity getEditDetails(@PathVariable String id) throws Exception {
-//        UserEditViewModel user = this.userService.editById(id);
-//
-//        return new ResponseEntity<>(this.objectMapper.writeValueAsString(user), HttpStatus.OK);
-//    }
-
 }

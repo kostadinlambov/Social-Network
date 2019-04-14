@@ -3,8 +3,6 @@ import '../../styles/FormPages.css'
 import { requester } from '../../infrastructure'
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common';
-
-// import placeholder_user_image from '../../assets/images/placeholder-profile-male.jpg'
 import placeholder_user_image from '../../assets/images/placeholder.png';
 import default_background_image from '../../assets/images/default-background-image.jpg'
 
@@ -40,8 +38,6 @@ export default class RegisterPage extends Component {
     }
 
     onChangeHandler(event) {
-        console.log('name: ', event.target.name)
-        console.log('value: ', event.target.value)
         this.setState({
             [event.target.name]: event.target.value
         });
@@ -57,8 +53,6 @@ export default class RegisterPage extends Component {
         const { touched, ...otherProps } = this.state;
 
         requester.post('/users/register', { ...otherProps }, (response) => {
-            console.log(response);
-            debugger;
             if (response.success === true) {
                 toast.success(<ToastComponent.successToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
@@ -118,18 +112,14 @@ export default class RegisterPage extends Component {
         const shouldMarkError = (field) => {
             const hasError = errors[field];
             const shouldShow = this.state.touched[field];
-
             return hasError ? shouldShow : false;
         }
-
 
         return (
             <Fragment>
                     <section className="pt-3">
                         <div className="container register-form-content-section pb-4 ">
-                            {/* <h1 className="mt-5 mb-5 text-center font-weight-bold ">Register</h1> */}
-
-                            <h1 className="text-center font-weight-bold mt-4" style={{ 'margin': '1rem auto',  'padding-top': '2rem' }}>Register</h1>
+                            <h1 className="text-center font-weight-bold mt-4" style={{ 'margin': '1rem auto',  'paddingTop': '2rem' }}>Register</h1>
                             <hr className="my-2 mb-4 mt-3 col-md-8 mx-auto"></hr>
 
                             <form className="Register-form-container" onSubmit={this.onSubmitHandler}>

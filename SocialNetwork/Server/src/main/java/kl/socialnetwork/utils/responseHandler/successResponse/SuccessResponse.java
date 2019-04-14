@@ -17,7 +17,6 @@ public class SuccessResponse implements Serializable {
     this.success = success;
   }
 
-
   public LocalDateTime getTimestamp() {
     return this.timestamp;
   }
