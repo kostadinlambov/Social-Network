@@ -128,7 +128,7 @@ public class RelationshipServiceTests {
 
         relationshipList.addAll(Arrays.asList(relationship1, relationship2));
 
-        when(mockUserRepository.findAllAllUsersLike(anyString(), anyString())).thenReturn(allUsersWithoutLoggedInUser);
+        when(mockUserRepository.findAllUsersLike(anyString(), anyString())).thenReturn(allUsersWithoutLoggedInUser);
 
         when(mockRelationshipRepository.findAllByUserOneIdOrUserTwoId(anyString(), anyString()))
                 .thenReturn(relationshipList);
@@ -163,7 +163,7 @@ public class RelationshipServiceTests {
         relationshipList.clear();
 
         // Arrange
-        when(mockUserRepository.findAllAllUsersLike(anyString(), anyString())).thenReturn(new ArrayList<>());
+        when(mockUserRepository.findAllUsersLike(anyString(), anyString())).thenReturn(new ArrayList<>());
 
         when(mockRelationshipRepository.findAllByUserOneIdOrUserTwoId(anyString(), anyString()))
                 .thenReturn(relationshipList);

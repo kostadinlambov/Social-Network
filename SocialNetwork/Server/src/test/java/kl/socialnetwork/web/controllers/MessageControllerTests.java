@@ -199,48 +199,48 @@ public class MessageControllerTests {
                 .andExpect(status().isForbidden());
     }
 
-    @Test
-    @WithMockUser(authorities = "USER")
-    public void createMessage_whenInputsAreValid_createMessage() throws Exception {
-        MessageCreateBindingModel messageCreateBindingModel = MessagesUtils.getMessageCreateBindingModel();
-
-        when(mockMessageService.createMessage(any(MessageCreateBindingModel.class), anyString()))
-                .thenReturn(true);
-
-        this.mvc
-                .perform(post("/message/create")
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .content(TestUtil.convertObjectToJsonString(messageCreateBindingModel)))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(TestUtil.TEXT_PLAIN_UTF8))
-                .andExpect(jsonPath("$.success").value("true"))
-                .andExpect(jsonPath("$.message").value(SUCCESSFUL_CREATE_MESSAGE_MESSAGE));
-
-        verify(this.mockMessageService, times(1)).createMessage(any(MessageCreateBindingModel.class), anyString());
-        verifyNoMoreInteractions(this.mockMessageService);
-    }
-
-    @Test
-    @WithMockUser(authorities = "USER")
-    public void createMessage_whenCreateMessageReturnsFalse_throwCustomException() throws Exception {
-        MessageCreateBindingModel messageCreateBindingModel = MessagesUtils.getMessageCreateBindingModel();
-
-        when(mockMessageService.createMessage(any(MessageCreateBindingModel.class), anyString()))
-                .thenReturn(false);
-
-        Exception resolvedException = this.mvc
-                .perform(post("/message/create")
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .content(TestUtil.convertObjectToJsonString(messageCreateBindingModel)))
-                .andDo(print())
-                .andExpect(status().isInternalServerError())
-                .andReturn().getResolvedException();
-
-        Assert.assertEquals(SERVER_ERROR_MESSAGE, resolvedException.getMessage());
-        Assert.assertEquals(CustomException.class, resolvedException.getClass());
-
-        verify(mockMessageService, times(1)).createMessage(any(MessageCreateBindingModel.class), anyString());
-        verifyNoMoreInteractions(mockMessageService);
-    }
+//    @Test
+//    @WithMockUser(authorities = "USER")
+//    public void createMessage_whenInputsAreValid_createMessage() throws Exception {
+//        MessageCreateBindingModel messageCreateBindingModel = MessagesUtils.getMessageCreateBindingModel();
+//
+//        when(mockMessageService.createMessage(any(MessageCreateBindingModel.class), anyString()))
+//                .thenReturn(true);
+//
+//        this.mvc
+//                .perform(post("/message/create")
+//                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+//                        .content(TestUtil.convertObjectToJsonString(messageCreateBindingModel)))
+//                .andDo(print())
+//                .andExpect(status().isOk())
+//                .andExpect(content().contentType(TestUtil.TEXT_PLAIN_UTF8))
+//                .andExpect(jsonPath("$.success").value("true"))
+//                .andExpect(jsonPath("$.message").value(SUCCESSFUL_CREATE_MESSAGE_MESSAGE));
+//
+//        verify(this.mockMessageService, times(1)).createMessage(any(MessageCreateBindingModel.class), anyString());
+//        verifyNoMoreInteractions(this.mockMessageService);
+//    }
+//
+//    @Test
+//    @WithMockUser(authorities = "USER")
+//    public void createMessage_whenCreateMessageReturnsFalse_throwCustomException() throws Exception {
+//        MessageCreateBindingModel messageCreateBindingModel = MessagesUtils.getMessageCreateBindingModel();
+//
+//        when(mockMessageService.createMessage(any(MessageCreateBindingModel.class), anyString()))
+//                .thenReturn(false);
+//
+//        Exception resolvedException = this.mvc
+//                .perform(post("/message/create")
+//                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+//                        .content(TestUtil.convertObjectToJsonString(messageCreateBindingModel)))
+//                .andDo(print())
+//                .andExpect(status().isInternalServerError())
+//                .andReturn().getResolvedException();
+//
+//        Assert.assertEquals(SERVER_ERROR_MESSAGE, resolvedException.getMessage());
+//        Assert.assertEquals(CustomException.class, resolvedException.getClass());
+//
+//        verify(mockMessageService, times(1)).createMessage(any(MessageCreateBindingModel.class), anyString());
+//        verifyNoMoreInteractions(mockMessageService);
+//    }
 }

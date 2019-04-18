@@ -5,6 +5,7 @@ import kl.socialnetwork.domain.models.bindingModels.user.UserRegisterBindingMode
 import kl.socialnetwork.domain.models.bindingModels.user.UserUpdateBindingModel;
 import kl.socialnetwork.domain.models.serviceModels.UserServiceModel;
 import kl.socialnetwork.validations.serviceValidation.services.UserValidationService;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -33,6 +34,11 @@ public class UserValidationServiceImpl implements UserValidationService {
     @Override
     public boolean isValid(UserUpdateBindingModel userUpdateBindingModel) {
         return userUpdateBindingModel != null;
+    }
+
+    @Override
+    public boolean isValid(UserDetails userData) {
+        return userData != null;
     }
 
 }

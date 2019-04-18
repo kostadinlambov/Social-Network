@@ -35,7 +35,7 @@ public class RelationshipController {
         this.objectMapper = objectMapper;
     }
 
-    @GetMapping(value = "/friends/{id}", produces = "application/json")
+    @GetMapping(value = "/friends/{id}")
     public List<FriendsAllViewModel> findAllFriends(@PathVariable String id) throws Exception {
         List<RelationshipServiceModel> allFriends = this.relationshipService.findAllUserRelationshipsWithStatus(id);
 

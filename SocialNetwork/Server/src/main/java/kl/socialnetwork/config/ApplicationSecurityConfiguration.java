@@ -6,11 +6,13 @@ import kl.socialnetwork.services.UserService;
 import kl.socialnetwork.web.filters.JwtAuthenticationFilter;
 import kl.socialnetwork.web.filters.JwtAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -56,7 +58,7 @@ public class ApplicationSecurityConfiguration
                         "/**/*.html",
                         "/**/*.css",
                         "/**/*.js"
-                        ).permitAll()
+                ).permitAll()
                 .antMatchers(
                         "/users/details/*",
                         "/users/update/*",
@@ -78,8 +80,9 @@ public class ApplicationSecurityConfiguration
                         "/post/all/*",
                         "/message/create",
                         "/message/all/*",
-                        "/message/friend"
-                        ).hasAnyAuthority("ADMIN", "ROOT", "USER")
+                        "/message/friend",
+                        "/socket/**"
+                ).hasAnyAuthority("ADMIN", "ROOT", "USER")
                 .antMatchers(
                         "/users/promote",
                         "/users/demote",
@@ -93,12 +96,19 @@ public class ApplicationSecurityConfiguration
                         "/logs/clear",
                         "/logs/clearByName/*"
                 ).hasAuthority("ROOT")
+                .requestMatchers(EndpointRequest.toAnyEndpoint()).hasAnyAuthority("ADMIN", "ROOT", "USER")
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), this.mapper, this.loggerService))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), this.userService))
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring()
+                .antMatchers("/socket/**");
     }
 
     @Bean
@@ -126,4 +136,4 @@ public class ApplicationSecurityConfiguration
                 .userDetailsService(this.userService)
                 .passwordEncoder(this.bCryptPasswordEncoder);
     }
- }
+}

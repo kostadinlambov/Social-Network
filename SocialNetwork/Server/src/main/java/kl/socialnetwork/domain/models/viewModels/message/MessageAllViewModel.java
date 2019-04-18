@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 public class MessageAllViewModel {
     private String id;
     private String fromUserId;
+    private String fromUserFirstName;
+    private String fromUserLastName;
     private String fromUserProfilePicUrl;
     private String content;
     private LocalDateTime time;
@@ -26,6 +28,22 @@ public class MessageAllViewModel {
 
     public void setFromUserId(String fromUserId) {
         this.fromUserId = fromUserId;
+    }
+
+    public String getFromUserFirstName() {
+        return this.fromUserFirstName;
+    }
+
+    public void setFromUserFirstName(String fromUserFirstName) {
+        this.fromUserFirstName = fromUserFirstName;
+    }
+
+    public String getFromUserLastName() {
+        return this.fromUserLastName;
+    }
+
+    public void setFromUserLastName(String fromUserLastName) {
+        this.fromUserLastName = fromUserLastName;
     }
 
     public String getFromUserProfilePicUrl() {

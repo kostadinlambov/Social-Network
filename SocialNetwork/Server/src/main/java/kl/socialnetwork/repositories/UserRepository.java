@@ -26,8 +26,7 @@ public interface UserRepository extends JpaRepository<User, String> {
             "WHERE u.id <> :id AND " +
             "(LOWER(u.firstName) LIKE CONCAT('%', :searchSymbols, '%') OR " +
             "LOWER(u.lastName) LIKE CONCAT('%', :searchSymbols, '%'))  ")
-    List<User> findAllAllUsersLike(@Param(value = "id") String id,
+    List<User> findAllUsersLike(@Param(value = "id") String id,
                                    @Param(value = "searchSymbols") String searchSymbols);
-
 
 }

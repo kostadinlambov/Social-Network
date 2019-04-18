@@ -51,7 +51,7 @@ public class RelationshipServiceImpl implements RelationshipService {
 
     @Override
     public List<FriendsCandidatesViewModel> searchUsers(String loggedInUserId, String search) {
-        List<User> userList = this.userRepository.findAllAllUsersLike(loggedInUserId, search.toLowerCase());
+        List<User> userList = this.userRepository.findAllUsersLike(loggedInUserId, search.toLowerCase());
 
         List<Relationship> currentUserRelationshipList = this.relationshipRepository
                 .findAllByUserOneIdOrUserTwoId(loggedInUserId, loggedInUserId);

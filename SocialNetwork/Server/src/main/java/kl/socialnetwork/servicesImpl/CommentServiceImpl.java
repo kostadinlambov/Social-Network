@@ -85,8 +85,8 @@ public class CommentServiceImpl implements CommentService {
         return this.commentRepository.save(comment) != null;
     }
 
-    @Override
     @Async
+    @Override
     public CompletableFuture<Boolean> deleteComment(String loggedInUserId, String commentToRemoveId) throws Exception {
         User loggedInUser = this.userRepository.findById(loggedInUserId).orElse(null);
         Comment commentToRemove = this.commentRepository.findById(commentToRemoveId).orElse(null);

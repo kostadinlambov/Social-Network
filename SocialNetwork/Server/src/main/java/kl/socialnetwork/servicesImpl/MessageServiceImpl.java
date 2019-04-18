@@ -48,7 +48,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public boolean createMessage(MessageCreateBindingModel messageCreateBindingModel, String loggedInUsername) throws Exception {
+    public MessageServiceModel createMessage(MessageCreateBindingModel messageCreateBindingModel, String loggedInUsername) throws Exception {
         if (!messageValidation.isValid(messageCreateBindingModel)) {
             throw new CustomException(SERVER_ERROR_MESSAGE);
         }
@@ -80,7 +80,13 @@ public class MessageServiceImpl implements MessageService {
 
         Message message = this.modelMapper.map(messageServiceModel, Message.class);
 
-        return messageRepository.save(message) != null;
+        Message savedMessage = messageRepository.save(message);
+
+        if(savedMessage != null){
+            return  this.modelMapper.map(savedMessage, MessageServiceModel.class);
+        }
+
+        throw new CustomException(SERVER_ERROR_MESSAGE);
     }
 
     @Override
