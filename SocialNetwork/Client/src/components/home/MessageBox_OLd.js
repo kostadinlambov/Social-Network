@@ -8,9 +8,6 @@ import FriendMessage from './FriendMessage';
 import '../user/css/UserAllPage.css';
 import './css/MessageBox.css';
 
-import Stomp from "stompjs";
-import SockJS from "sockjs-client";
-
 export default class MessageBox extends Component {
     constructor(props) {
         super(props)
@@ -30,15 +27,10 @@ export default class MessageBox extends Component {
             friendsArrLength: 0,
             friendsArr: [],
             allMessages: [],
-            webSocketMessages: [],
-            clientConnected: false,
             touched: {
                 content: false,
             }
         };
-
-        this.serverUrl = 'http://localhost:8000/socket'
-        this.stompClient = null;
 
         this.handleBlur = this.handleBlur.bind(this);
         this.onChangeHandler = this.onChangeHandler.bind(this);
@@ -46,7 +38,7 @@ export default class MessageBox extends Component {
         this.showUserChatBox = this.showUserChatBox.bind(this);
         this.changeChatBoxDisplay = this.changeChatBoxDisplay.bind(this);
         this.getAllMessages = this.getAllMessages.bind(this);
-
+        
         observer.subscribe(observer.events.loadMessages, this.showUserChatBox)
     }
 
@@ -56,8 +48,6 @@ export default class MessageBox extends Component {
         this.setState({
             loggedInUserId: userId,
         })
-
-        this.initializeWebSocketConnection();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -68,52 +58,6 @@ export default class MessageBox extends Component {
         if (this.props.openMessageBox !== nextProps.openMessageBox) {
             this.setState({ chatBoxDisplay: 'display-none' })
         }
-    }
-
-    initializeWebSocketConnection = () => {
-        const ws = new SockJS(this.serverUrl);
-
-        this.stompClient = Stomp.over(ws);
-        const headers = this.getAuthHeader();
-
-        this.stompClient.connect(headers, (frame) => {
-            this.setState({ clientConnected: true });
-            this.stompClient.subscribe("/user/queue/position-update", (message) => {
-                if (message.body) {
-                    const parsedBody = JSON.parse(message.body)
-                    this.setState(prevState => ({
-                        allMessages: [...prevState.allMessages, parsedBody],
-                    }), () => this.scrollDown());
-
-                    if (parsedBody.fromUserId !== userService.getUserId()) {
-                        const formattedUserNames = userService.formatUsername(parsedBody.fromUserFirstName, parsedBody.fromUserLastName)
-
-                        toast.success(<ToastComponent.successToast text={`You have a new message from ${formattedUserNames}!`} />, {
-                            position: toast.POSITION.TOP_RIGHT
-                        });
-                    }
-                }
-            });
-        }, () => {
-            setTimeout(() => {
-                toast.error(<ToastComponent.errorToast text={`Lost connection to ${this.serverUrl}. Trying to reconnect.`} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-                this.initializeWebSocketConnection();
-            }, 10000);
-        });
-    }
-
-    sendMessage(payload) {
-        this.stompClient.send("/app/message", {}, JSON.stringify(payload));
-        this.setState({ content: '' })
-    }
-
-    getAuthHeader = () => {
-        const token = localStorage.getItem("token");
-        return (token && token.length)
-            ? { 'Authorization': `Bearer ${token}` }
-            : {}
     }
 
     getAllMessages = () => {
@@ -155,13 +99,24 @@ export default class MessageBox extends Component {
 
         const { chatUserId: toUserId, content } = this.state;
 
-        if (this.state.clientConnected) {
-            this.sendMessage({ toUserId, content });
-        } else {
-            toast.error(<ToastComponent.errorToast text={`StompClient is disconnected`} />, {
+        requester.post('/message/create', { toUserId, content }, (response) => {
+            if (response.success === true) {
+                this.getAllMessages();
+                this.setState({ content: '' })
+                // toast.success(<ToastComponent.successToast text={response.message} />, {
+                //     position: toast.POSITION.TOP_RIGHT
+                // });
+            } else {
+                toast.error(<ToastComponent.errorToast text={response.message} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+            }
+        }).catch(err => {
+            localStorage.clear();
+            toast.error(<ToastComponent.errorToast text={`${err.message}`} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
-        }
+        })
     }
 
     onChangeHandler(event) {
@@ -217,7 +172,7 @@ export default class MessageBox extends Component {
     }
 
     showUserChatBox = (data, event) => {
-        const { id, firstName, lastName, profilePicUrl } = data
+        const {id, firstName, lastName, profilePicUrl} = data
         let chatUserNameFormatted = userService.formatUsername(firstName, lastName, 18)
         this.setState({
             chatUserId: id,
@@ -253,20 +208,6 @@ export default class MessageBox extends Component {
         container.scrollTop = container.scrollHeight
     }
 
-    onMessageReceive = (msg, topic) => {
-        debugger;
-        console.log(msg)
-        this.setState(prevState => ({
-            webSocketMessages: [...prevState.webSocketMessages, msg]
-        }));
-
-        console.log('webSocketMessages: ', this.state.webSocketMessages)
-    }
-
-    componentWillUnmount() {
-        this.stompClient.disconnect();
-    }
-
     render() {
         const { content } = this.state;
         const errors = this.validate(content);
@@ -280,7 +221,6 @@ export default class MessageBox extends Component {
         const { chatUserFirstName, chatUserLastName, chatUserProfilePicUrl, chatUserNameFormatted } = this.state;
         const imageClassUserPick = userService.getImageSize(chatUserProfilePicUrl);
         const firstNameFormatted = userService.formatUsername(loggedInUserFirstName)
-
         return (
             <Fragment>
                 <section className={`messagebox-container ${userBoxHeight}`} >

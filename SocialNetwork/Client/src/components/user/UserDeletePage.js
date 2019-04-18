@@ -93,7 +93,7 @@ export default class UserDeletePage extends Component {
                                                 <h5 className=" font-weight-bold">Username</h5>
                                             </td>
                                             <td className="col-md-6 username-color" >
-                                                <h5>{this.state.username}</h5>
+                                                <h5>{userService.formatUsername(this.state.username)}</h5>
                                             </td>
                                         </tr>
                                         <tr className="row">
@@ -101,7 +101,7 @@ export default class UserDeletePage extends Component {
                                                 <h5 className=" font-weight-bold">Email</h5>
                                             </td>
                                             <td className="col-md-6">
-                                                <h5>{this.state.email}</h5>
+                                                <h5>{userService.formatUsername(this.state.email)}</h5>
                                             </td>
                                         </tr>
                                         <tr className="row">
@@ -125,7 +125,7 @@ export default class UserDeletePage extends Component {
                                                 <h5 className=" font-weight-bold">Address</h5>
                                             </td>
                                             <td className="col-md-6">
-                                                <h5>{this.state.address}</h5>
+                                                <h5>{userService.formatUsername(this.state.address)}</h5>
                                             </td>
                                         </tr>
                                         <tr className="row">
@@ -133,7 +133,7 @@ export default class UserDeletePage extends Component {
                                                 <h5 className=" font-weight-bold">City</h5>
                                             </td>
                                             <td className="col-md-6" >
-                                                <h5>{this.state.city}</h5>
+                                                <h5>{userService.formatUsername(this.state.city)}</h5>
                                             </td>
                                         </tr>
                                         {(isAdmin || isRoot) && <tr className="row">

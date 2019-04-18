@@ -113,7 +113,7 @@ export default class UserProfilePage extends Component {
                                                 <h5 className=" font-weight-bold">Email</h5>
                                             </td>
                                             <td className="col-md-6">
-                                                <h5>{this.props.email}</h5>
+                                                <h5>{userService.formatUsername(this.props.email)}</h5>
                                             </td>
                                         </tr>
                                         <tr className="row">
@@ -137,7 +137,7 @@ export default class UserProfilePage extends Component {
                                                 <h5 className=" font-weight-bold">Address</h5>
                                             </td>
                                             <td className="col-md-6">
-                                                <h5>{this.props.address}</h5>
+                                                <h5>{userService.formatUsername(this.props.address)}</h5>
                                             </td>
                                         </tr>
                                         <tr className="row">
@@ -145,7 +145,7 @@ export default class UserProfilePage extends Component {
                                                 <h5 className=" font-weight-bold">City</h5>
                                             </td>
                                             <td className="col-md-6" >
-                                                <h5>{this.props.city}</h5>
+                                                <h5>{userService.formatUsername(this.props.city)}</h5>
                                             </td>
                                         </tr>
                                         {(isAdmin || isRoot) && <tr className="row">

@@ -12,7 +12,11 @@
     "react-dropdown": "^1.6.4",
     "react-router-dom": "4.4.0-beta.6",
     "react-scripts": "2.1.3",
-    "react-toastify": "4.5.2"
+    "react-stomp": "^4.1.0",
+    "react-talk": "^1.0.0",
+    "react-toastify": "4.5.2",
+    "sockjs-client": "^1.3.0",
+    "stompjs": "2.3.3"
   },
   "scripts": {
     "start": "react-scripts start",
