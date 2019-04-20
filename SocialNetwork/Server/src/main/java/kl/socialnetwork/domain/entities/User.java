@@ -23,6 +23,7 @@ public class User extends BaseEntity implements UserDetails {
     private Set<UserRole> authorities;
     private String profilePicUrl;
     private String backgroundImageUrl;
+    private boolean isOnline;
 
     private List<Relationship> relationshipsUserOne;
     private List<Relationship> relationshipsUserTwo;
@@ -92,6 +93,10 @@ public class User extends BaseEntity implements UserDetails {
         return this.lastName;
     }
 
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     @Column(name = "address", nullable = false)
     public String getAddress() {
         return this.address;
@@ -110,24 +115,40 @@ public class User extends BaseEntity implements UserDetails {
         this.city = city;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    @Column(name = "is_deleted", nullable = false , columnDefinition = "BOOLEAN DEFAULT FALSE")
+    public boolean isDeleted() {
+        return this.isDeleted;
     }
 
-    public void setAccountNonExpired(boolean accountNonExpired) {
-        isAccountNonExpired = accountNonExpired;
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 
-    public void setAccountNonLocked(boolean accountNonLocked) {
-        isAccountNonLocked = accountNonLocked;
+    @Column(name = "is_online", nullable = false , columnDefinition = "BOOLEAN DEFAULT FALSE")
+    public boolean isOnline() {
+        return this.isOnline;
     }
 
-    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
-        isCredentialsNonExpired = credentialsNonExpired;
+    public void setOnline(boolean online) {
+        isOnline = online;
     }
 
-    public void setEnabled(boolean enabled) {
-        isEnabled = enabled;
+    @Column(name="profile_pic_url", columnDefinition = "TEXT")
+    public String getProfilePicUrl() {
+        return this.profilePicUrl;
+    }
+
+    public void setProfilePicUrl(String profilePicUrl) {
+        this.profilePicUrl = profilePicUrl;
+    }
+
+    @Column(name="background_image_url", columnDefinition = "TEXT")
+    public String getBackgroundImageUrl() {
+        return this.backgroundImageUrl;
+    }
+
+    public void setBackgroundImageUrl(String backgroundImageUrl) {
+        this.backgroundImageUrl = backgroundImageUrl;
     }
 
     @Override
@@ -243,50 +264,42 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     @Override
+    @Column(name = "is_account_non_expired", nullable = false , columnDefinition = "BOOLEAN DEFAULT TRUE")
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    public void setAccountNonExpired(boolean accountNonExpired) {
+        isAccountNonExpired = accountNonExpired;
+    }
+
     @Override
+    @Column(name = "is_account_non_locked", nullable = false , columnDefinition = "BOOLEAN DEFAULT TRUE")
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        isAccountNonLocked = accountNonLocked;
+    }
+
     @Override
+    @Column(name = "is_credentials_non_expired", nullable = false , columnDefinition = "BOOLEAN DEFAULT TRUE")
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+        isCredentialsNonExpired = credentialsNonExpired;
+    }
+
     @Override
+    @Column(name = "is_enabled", nullable = false , columnDefinition = "BOOLEAN DEFAULT TRUE")
     public boolean isEnabled() {
         return true;
     }
 
-    @Column(name = "deleted", nullable = false , columnDefinition = "BOOLEAN DEFAULT FALSE")
-    public boolean isDeleted() {
-        return this.isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
-    }
-
-
-    @Column(name="profile_pic_url", columnDefinition = "TEXT")
-    public String getProfilePicUrl() {
-        return this.profilePicUrl;
-    }
-
-    public void setProfilePicUrl(String profilePicUrl) {
-        this.profilePicUrl = profilePicUrl;
-    }
-
-    @Column(name="background_image_url", columnDefinition = "TEXT")
-    public String getBackgroundImageUrl() {
-        return this.backgroundImageUrl;
-    }
-
-    public void setBackgroundImageUrl(String backgroundImageUrl) {
-        this.backgroundImageUrl = backgroundImageUrl;
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
     }
 }

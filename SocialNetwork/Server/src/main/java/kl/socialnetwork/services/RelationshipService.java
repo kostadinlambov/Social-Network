@@ -11,7 +11,6 @@ public interface RelationshipService {
 
     List<FriendsCandidatesViewModel> findAllFriendCandidates(String loggedInUserId);
 
-
     boolean createRequestForAddingFriend(String loggedInUserId, String friendCandidateId) throws Exception;
 
     boolean removeFriend(String loggedInUserId, String friendToRemoveId) throws Exception;

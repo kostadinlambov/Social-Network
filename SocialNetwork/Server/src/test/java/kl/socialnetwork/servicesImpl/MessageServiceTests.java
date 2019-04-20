@@ -359,6 +359,7 @@ public class MessageServiceTests {
         List<User> users = UsersUtils.getUsers(2);
         Relationship relationship = RelationshipsUtils.createRelationship(users.get(0), users.get(1), 1, users.get(0));
         MessageCreateBindingModel messageCreateBindingModel = MessagesUtils.getMessageCreateBindingModel();
+        Message message = MessagesUtils.createMessage(users.get(0), users.get(1), relationship);
 
         when(mockMessageValidation.isValid(any(MessageCreateBindingModel.class)))
                 .thenReturn(true);
@@ -381,6 +382,8 @@ public class MessageServiceTests {
 
         when(mockRelationshipValidation.isValid(any(Relationship.class)))
                 .thenReturn(true);
+
+        when(mockMessageRepository.save(any())).thenReturn(message);
         // Act
         messageService.createMessage(messageCreateBindingModel, "username");
 
@@ -487,6 +490,45 @@ public class MessageServiceTests {
 
         thrown.expect(CustomException.class);
         thrown.expectMessage(SERVER_ERROR_MESSAGE);
+        // Act
+        messageService.createMessage(messageCreateBindingModel, "username");
+    }
+
+    @Test
+    public void createMessage_whenSaveMessageReturnsNull_throeException() throws Exception {
+        // Arrange
+        List<User> users = UsersUtils.getUsers(2);
+        Relationship relationship = RelationshipsUtils.createRelationship(users.get(0), users.get(1), 1, users.get(0));
+        MessageCreateBindingModel messageCreateBindingModel = MessagesUtils.getMessageCreateBindingModel();
+        Message message = MessagesUtils.createMessage(users.get(0), users.get(1), relationship);
+
+        when(mockMessageValidation.isValid(any(MessageCreateBindingModel.class)))
+                .thenReturn(true);
+
+        when(mockUserRepository.findByUsername(any()))
+                .thenReturn(java.util.Optional.ofNullable(users.get(0)));
+
+        when(mockUserRepository.findById(any()))
+                .thenReturn(java.util.Optional.of(users.get(1)));
+
+
+        when(mockUserValidationService.isValid(users.get(0)))
+                .thenReturn(true);
+
+        when(mockUserValidationService.isValid(users.get(1)))
+                .thenReturn(true);
+
+        when(mockRelationshipRepository.findRelationshipWithFriendWithStatus(anyString(), anyString(), anyInt()))
+                .thenReturn(relationship);
+
+        when(mockRelationshipValidation.isValid(any(Relationship.class)))
+                .thenReturn(true);
+
+        when(mockMessageRepository.save(any())).thenReturn(null);
+
+        thrown.expect(CustomException.class);
+        thrown.expectMessage(SERVER_ERROR_MESSAGE);
+
         // Act
         messageService.createMessage(messageCreateBindingModel, "username");
     }

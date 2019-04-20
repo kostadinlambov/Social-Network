@@ -4,7 +4,7 @@ import io.jsonwebtoken.Jwts;
 import kl.socialnetwork.domain.entities.User;
 import kl.socialnetwork.services.UserService;
 import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;
-import kl.socialnetwork.utils.websocket.JWTAuthenticationToken;
+import kl.socialnetwork.web.websocket.JWTAuthenticationToken;
 import kl.socialnetwork.validations.serviceValidation.services.UserValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

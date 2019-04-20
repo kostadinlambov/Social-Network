@@ -14,6 +14,8 @@ public interface UserService extends UserDetailsService {
 
     boolean updateUser(UserServiceModel userUpdateBindingModel, String loggedInUserId) throws Exception;
 
+    UserServiceModel updateUserOnlineStatus(String userName, boolean changeToOnline) throws Exception;
+
     UserDetailsViewModel getById(String id) throws Exception;
 
     UserEditViewModel editById(String id) throws Exception;

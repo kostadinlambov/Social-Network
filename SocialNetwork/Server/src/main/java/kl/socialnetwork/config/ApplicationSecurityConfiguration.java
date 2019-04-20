@@ -99,7 +99,7 @@ public class ApplicationSecurityConfiguration
                 .requestMatchers(EndpointRequest.toAnyEndpoint()).hasAnyAuthority("ADMIN", "ROOT", "USER")
                 .anyRequest().authenticated()
                 .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationManager(), this.mapper, this.loggerService))
+                .addFilter(new JwtAuthenticationFilter(authenticationManager(), this.mapper, this.loggerService, userService))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), this.userService))
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);

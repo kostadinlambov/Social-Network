@@ -27,8 +27,8 @@ public class UserValidationServiceImpl implements UserValidationService {
     }
 
     @Override
-    public boolean isValid(String password, String confirmPassword) {
-        return password.equals(confirmPassword);
+    public boolean isValid(String firstParam, String secondParam) {
+        return firstParam.equals(secondParam);
     }
 
     @Override

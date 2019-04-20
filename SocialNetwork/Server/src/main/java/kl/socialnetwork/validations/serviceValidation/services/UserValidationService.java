@@ -13,7 +13,7 @@ public interface UserValidationService {
 
     boolean isValid(UserRegisterBindingModel userRegisterBindingModel);
 
-    boolean isValid(String password, String confirmPassword);
+    boolean isValid(String firstParam, String secondParam);
 
     boolean isValid(UserUpdateBindingModel userUpdateBindingModel);
 

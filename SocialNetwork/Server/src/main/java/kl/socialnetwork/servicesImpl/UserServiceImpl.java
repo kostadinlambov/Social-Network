@@ -107,6 +107,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserServiceModel updateUserOnlineStatus(String userName, boolean changeToOnline) throws Exception {
+        User user = userRepository.findByUsername(userName)
+                .filter(userValidation::isValid)
+                .orElseThrow(() -> new CustomException(SERVER_ERROR_MESSAGE));
+
+        if(changeToOnline){
+            user.setOnline(true);
+        }else {
+            user.setOnline(false);
+        }
+
+        User updatedUser = this.userRepository.save(user);
+
+        if (updatedUser != null) {
+            return this.modelMapper.map(updatedUser, UserServiceModel.class);
+        }
+
+        throw new CustomException(SERVER_ERROR_MESSAGE);
+    }
+
+
+    @Override
     public List<UserServiceModel> getAllUsers(String userId) throws Exception {
         User userById = this.userRepository.findById(userId).orElse(null);
 

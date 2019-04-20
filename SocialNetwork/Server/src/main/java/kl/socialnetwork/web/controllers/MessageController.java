@@ -59,14 +59,19 @@ public class MessageController {
         return this.messageService.getAllFriendMessages(loggedInUsername);
     }
 
+    /*
+     * This MessageMapping annotated method will be handled by
+     * SimpAnnotationMethodMessageHandler and after that the Message will be
+     * forwarded to Broker channel to be forwarded to the client via WebSocket
+     */
     @MessageMapping("/message")
-    public void sendMessageTpPrivateRoom(@RequestBody @Valid MessageCreateBindingModel messageCreateBindingModel, Principal principal, SimpMessageHeaderAccessor headerAccessor) throws Exception {
+    public void createPrivateChatMessages(@RequestBody @Valid MessageCreateBindingModel messageCreateBindingModel, Principal principal, SimpMessageHeaderAccessor headerAccessor) throws Exception {
         MessageServiceModel message = this.messageService.createMessage(messageCreateBindingModel, principal.getName());
         MessageAllViewModel messageAllViewModel = this.modelMapper.map(message, MessageAllViewModel.class);
 
         if (messageAllViewModel != null) {
-            String response =  this.objectMapper.writeValueAsString(messageAllViewModel);
-            template.convertAndSend("/user/" + message.getToUser().getUsername() + "/queue/position-update",response);
+            String response = this.objectMapper.writeValueAsString(messageAllViewModel);
+            template.convertAndSend("/user/" + message.getToUser().getUsername() + "/queue/position-update", response);
             template.convertAndSend("/user/" + message.getFromUser().getUsername() + "/queue/position-update", response);
             return;
         }

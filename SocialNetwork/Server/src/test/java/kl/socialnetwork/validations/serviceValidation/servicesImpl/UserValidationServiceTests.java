@@ -5,11 +5,13 @@ import kl.socialnetwork.domain.entities.UserRole;
 import kl.socialnetwork.domain.models.bindingModels.user.UserRegisterBindingModel;
 import kl.socialnetwork.domain.models.bindingModels.user.UserUpdateBindingModel;
 import kl.socialnetwork.domain.models.serviceModels.UserServiceModel;
+import kl.socialnetwork.services.UserService;
 import kl.socialnetwork.testUtils.RolesUtils;
 import kl.socialnetwork.testUtils.UsersUtils;
 import kl.socialnetwork.validations.serviceValidation.services.UserValidationService;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -100,6 +102,20 @@ public class UserValidationServiceTests {
     public void isValidWithUserUpdateBindingModel_whenNull_false() {
         UserUpdateBindingModel userUpdateBindingModel = null;
         boolean result = userValidationService.isValid(userUpdateBindingModel);
+        assertFalse(result);
+    }
+
+    @Test
+    public void isValidWithUserDetails_whenValid_true() {
+        UserDetails user = UsersUtils.createUser();
+        boolean result = userValidationService.isValid(user);
+        assertTrue(result);
+    }
+
+    @Test
+    public void isValidWithUserDetails_whenNull_false() {
+        UserDetails user = null;
+        boolean result = userValidationService.isValid(user);
         assertFalse(result);
     }
 }

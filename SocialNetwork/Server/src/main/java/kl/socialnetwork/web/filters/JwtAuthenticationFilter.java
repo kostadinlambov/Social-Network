@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import kl.socialnetwork.domain.entities.User;
 import kl.socialnetwork.domain.models.bindingModels.user.UserLoginBindingModel;
 import kl.socialnetwork.services.LoggerService;
+import kl.socialnetwork.services.UserService;
 import kl.socialnetwork.utils.responseHandler.exceptions.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,7 +16,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -26,13 +26,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private final AuthenticationManager authenticationManager;
     private final ObjectMapper mapper;
     private final LoggerService loggerService;
+    private final UserService userService;
 
 
     @Autowired
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, ObjectMapper mapper, LoggerService loggerService) {
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, ObjectMapper mapper, LoggerService loggerService, UserService userService) {
         this.authenticationManager = authenticationManager;
         this.mapper = mapper;
         this.loggerService = loggerService;
+        this.userService = userService;
     }
 
     @Override
@@ -57,7 +59,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
         User user = ((User) authResult.getPrincipal());
         String authority = user.getAuthorities()
                 .stream()
@@ -85,11 +87,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.getWriter()
                 .append(tokenJson);
 
-        if (request.getMethod().equals("POST") && request.getRequestURI().endsWith("/login")) {
-            loggerService.createLog("POST", user.getUsername(), "-", "login");
-        }
 
-        System.out.println(response);
+        if (request.getMethod().equals("POST") && request.getRequestURI().endsWith("/login")) {
+                String username = user.getUsername();
+                loggerService.createLog("POST", username, "-", "login");
+        }
 
         response.addHeader("Authorization", "Bearer " + token);
     }

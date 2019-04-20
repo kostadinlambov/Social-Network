@@ -31,6 +31,6 @@ public class LogsInterceptor extends HandlerInterceptorAdapter {
             }
         }
 
-        return super.preHandle(request, response, handler);
+        return true;
     }
 }

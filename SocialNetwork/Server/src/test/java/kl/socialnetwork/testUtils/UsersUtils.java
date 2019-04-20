@@ -8,6 +8,7 @@ import kl.socialnetwork.domain.models.serviceModels.UserServiceModel;
 import kl.socialnetwork.domain.models.viewModels.user.UserCreateViewModel;
 import kl.socialnetwork.domain.models.viewModels.user.UserDetailsViewModel;
 import kl.socialnetwork.domain.models.viewModels.user.UserEditViewModel;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -17,8 +18,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class UsersUtils {
-
-
     public static User createUser() {
         return new User() {{
             setId("1");
@@ -31,6 +30,7 @@ public class UsersUtils {
             setAddress("Vasil Levski 1");
             setProfilePicUrl("profilePic");
             setBackgroundImageUrl("backgroundPic");
+            setOnline(false);
         }};
     }
 
@@ -47,6 +47,7 @@ public class UsersUtils {
                     setAddress("Vasil Levski 1");
                     setProfilePicUrl("profilePic " + index);
                     setBackgroundImageUrl("backgroundPic " + index);
+                    setOnline(false);
                 }})
                 .collect(Collectors.toList());
     }
@@ -67,6 +68,7 @@ public class UsersUtils {
                     setProfilePicUrl("profilePic " + index);
                     setBackgroundImageUrl("backgroundPic " + index);
                     setAuthorities(new HashSet<>(Arrays.asList(role)));
+                    setOnline(false);
                 }})
                 .collect(Collectors.toList());
     }

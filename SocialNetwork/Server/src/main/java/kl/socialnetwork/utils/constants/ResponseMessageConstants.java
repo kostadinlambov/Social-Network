@@ -22,6 +22,7 @@ public final class ResponseMessageConstants {
     // User Successful Response Messages
     public static final String SUCCESSFUL_REGISTER_MESSAGE = "You have been successfully registered.";
     public static final String SUCCESSFUL_LOGIN_MESSAGE = "You have successfully logged in.";
+    public static final String SUCCESSFUL_LOGOUT_MESSAGE = "You have been successfully logged out.";
     public static final String SUCCESSFUL_USER_DEMOTED_MESSAGE = "User demoted successfully.";
     public static final String SUCCESSFUL_USER_PROMOTED_MESSAGE = "User promoted successfully.";
     public static final String SUCCESSFUL_USER_PROFILE_EDIT_MESSAGE = "User Profile have been successfully edited.";

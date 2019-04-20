@@ -186,19 +186,23 @@ public class MessageControllerTests {
         verifyNoMoreInteractions(this.mockMessageService);
     }
 
-    @Test()
-    public void createMessage_whenUnAuthorized_403Forbidden() throws Exception {
-        MessageCreateBindingModel messageCreateBindingModel = MessagesUtils.getMessageCreateBindingModel();
 
-        this.mvc
-                .perform(post("/message/create")
-                        .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                        .content(TestUtil.convertObjectToJsonString(messageCreateBindingModel))
-                )
-                .andDo(print())
-                .andExpect(status().isForbidden());
-    }
+//    createPrivateChatMessages
 
+//
+//    @Test()
+//    public void createMessage_whenUnAuthorized_403Forbidden() throws Exception {
+//        MessageCreateBindingModel messageCreateBindingModel = MessagesUtils.getMessageCreateBindingModel();
+//
+//        this.mvc
+//                .perform(post("/message/create")
+//                        .contentType(TestUtil.APPLICATION_JSON_UTF8)
+//                        .content(TestUtil.convertObjectToJsonString(messageCreateBindingModel))
+//                )
+//                .andDo(print())
+//                .andExpect(status().isForbidden());
+//    }
+//
 //    @Test
 //    @WithMockUser(authorities = "USER")
 //    public void createMessage_whenInputsAreValid_createMessage() throws Exception {

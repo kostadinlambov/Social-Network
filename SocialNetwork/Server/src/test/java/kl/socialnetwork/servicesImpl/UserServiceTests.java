@@ -504,6 +504,114 @@ public class UserServiceTests {
         verify(mockUserRepository, times(1)).save(any());
     }
 
+
+//    updateUserOnlineStatus
+
+    @Test
+    public void updateUserOnlineStatus_whenAllInputsAreValidAndChangeToOnlineIsTrue_updateUserOnlineStatus() throws Exception {
+        // Arrange
+
+       User user = UsersUtils.createUser();
+       user.setOnline(true);
+
+        when(mockUserRepository.findByUsername(anyString()))
+                .thenReturn(java.util.Optional.of(user));
+
+        when(mockUserValidationService.isValid(any(User.class)))
+                .thenReturn(true);
+
+        when(mockUserRepository.save(any(User.class))).thenReturn(user);
+
+        // Act
+        UserServiceModel actual = userService.updateUserOnlineStatus("pesho", true);
+
+        // Assert
+        assertTrue(actual.isOnline());
+
+        assertEquals(user.getId(), actual.getId());
+        assertEquals(user.getFirstName(), actual.getFirstName());
+        assertEquals(user.getLastName(), actual.getLastName());
+        assertEquals(user.getUsername(), actual.getUsername());
+        assertEquals(user.getEmail(), actual.getEmail());
+        assertEquals(user.getAddress(), actual.getAddress());
+
+        verify(mockUserRepository).save(any());
+        verify(mockUserRepository, times(1)).save(any());
+    }
+
+    @Test
+    public void updateUserOnlineStatus_whenAllInputsAreValidAndChangeToOnlineIsFalse_updateUserOnlineStatus() throws Exception {
+        // Arrange
+
+        User user = UsersUtils.createUser();
+
+        when(mockUserRepository.findByUsername(anyString()))
+                .thenReturn(java.util.Optional.of(user));
+
+        when(mockUserValidationService.isValid(any(User.class)))
+                .thenReturn(true);
+
+        when(mockUserRepository.save(any(User.class))).thenReturn(user);
+
+        // Act
+        UserServiceModel actual = userService.updateUserOnlineStatus("pesho", false);
+
+        // Assert
+        assertFalse(actual.isOnline());
+
+        assertEquals(user.getId(), actual.getId());
+        assertEquals(user.getFirstName(), actual.getFirstName());
+        assertEquals(user.getLastName(), actual.getLastName());
+        assertEquals(user.getUsername(), actual.getUsername());
+        assertEquals(user.getEmail(), actual.getEmail());
+        assertEquals(user.getAddress(), actual.getAddress());
+
+        verify(mockUserRepository).save(any());
+        verify(mockUserRepository, times(1)).save(any());
+    }
+
+    @Test
+    public void updateUserOnlineStatus_whenAllUsernameIsNotValid_throwException() throws Exception {
+        // Arrange
+        User user = UsersUtils.createUser();
+        user.setOnline(true);
+
+        when(mockUserRepository.findByUsername(anyString()))
+                .thenReturn(java.util.Optional.of(user));
+
+        when(mockUserValidationService.isValid(any(User.class)))
+                .thenReturn(false);
+
+        when(mockUserRepository.save(any(User.class))).thenReturn(user);
+
+        thrown.expect(CustomException.class);
+        thrown.expectMessage(SERVER_ERROR_MESSAGE);
+
+        // Act
+        UserServiceModel actual = userService.updateUserOnlineStatus("pesho", true);
+    }
+
+    @Test
+    public void updateUserOnlineStatus_whenSaveUserReturnsNull_throwException() throws Exception {
+        // Arrange
+        User user = UsersUtils.createUser();
+        user.setOnline(true);
+
+        when(mockUserRepository.findByUsername(anyString()))
+                .thenReturn(java.util.Optional.of(user));
+
+        when(mockUserValidationService.isValid(any(User.class)))
+                .thenReturn(true);
+
+        when(mockUserRepository.save(any(User.class))).thenReturn(null);
+
+        thrown.expect(CustomException.class);
+        thrown.expectMessage(SERVER_ERROR_MESSAGE);
+
+        // Act
+        UserServiceModel actual = userService.updateUserOnlineStatus("pesho", true);
+    }
+
     @Test
     public void getById_whenUserIdIsValid_returnUser() throws Exception {
         // Arrange

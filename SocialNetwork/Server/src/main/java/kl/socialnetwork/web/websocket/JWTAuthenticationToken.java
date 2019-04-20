@@ -1,4 +1,4 @@
-package kl.socialnetwork.utils.websocket;
+package kl.socialnetwork.web.websocket;
 
 import kl.socialnetwork.domain.entities.User;
 import org.springframework.security.authentication.AbstractAuthenticationToken;

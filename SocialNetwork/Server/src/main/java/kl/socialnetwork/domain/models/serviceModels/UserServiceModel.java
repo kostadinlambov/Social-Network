@@ -17,6 +17,7 @@ public class UserServiceModel implements Serializable {
     private String username;
     private String profilePicUrl;
     private String backgroundImageUrl;
+    private boolean isOnline;
     private boolean isAccountNonExpired;
     private boolean isAccountNonLocked;
     private boolean isCredentialsNonExpired;
@@ -124,6 +125,14 @@ public class UserServiceModel implements Serializable {
 
     public void setBackgroundImageUrl(String backgroundImageUrl) {
         this.backgroundImageUrl = backgroundImageUrl;
+    }
+
+    public boolean isOnline() {
+        return this.isOnline;
+    }
+
+    public void setOnline(boolean online) {
+        isOnline = online;
     }
 
     public boolean isAccountNonExpired() {

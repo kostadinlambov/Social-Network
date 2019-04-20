@@ -110,12 +110,12 @@ public class LoggerServiceImpl implements LoggerService {
         return true;
     }
 
-//    @Scheduled(cron = "* */30 * * * *")
-    @Scheduled(cron = "0 0 2 * * * ")
-    public void testSchedule(){
-        this.deleteAll();
-        System.out.println("Logs deleted successfully!");
-    }
+////    @Scheduled(cron = "* */30 * * * *")
+//    @Scheduled(cron = "0 0 2 * * * ")
+//    public void testSchedule(){
+//        this.deleteAll();
+//        System.out.println("Logs deleted successfully!");
+//    }
 }
 
 

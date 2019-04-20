@@ -7,6 +7,7 @@ public class FriendsAllViewModel {
     private String username;
     private String profilePicUrl;
     private String backgroundImageUrl;
+    private boolean isOnline;
 
     public FriendsAllViewModel() {
     }
@@ -57,5 +58,13 @@ public class FriendsAllViewModel {
 
     public void setBackgroundImageUrl(String backgroundImageUrl) {
         this.backgroundImageUrl = backgroundImageUrl;
+    }
+
+    public boolean isOnline() {
+        return this.isOnline;
+    }
+
+    public void setOnline(boolean online) {
+        isOnline = online;
     }
 }
