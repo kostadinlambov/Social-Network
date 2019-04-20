@@ -65,7 +65,7 @@
 
 .messagebox-friend-container {
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
     align-items: center;
     width: 100%;
     margin: auto;
@@ -83,6 +83,18 @@
     color:#fff;
     border: 1px solid #fff;
     box-shadow: 0 0 14px 1px rgba(0,0,0,.3);
+}
+
+.online-status{
+    color: rgb(66, 183, 42);
+}
+
+.offline-status{
+    color: rgb(224, 224, 224);
+}
+
+.fa-circle{
+    margin-right: 0.3rem;
 }
 
 .messagebox-friend-image {
@@ -124,7 +136,7 @@
 }
 
 .messagebox-username-container {
-    margin: 0 1rem;
+    margin: 0 0.6rem;
 }
 
 .messagebox-username {

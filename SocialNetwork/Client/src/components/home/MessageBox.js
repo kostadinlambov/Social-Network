@@ -31,13 +31,14 @@ export default class MessageBox extends Component {
             friendsArr: [],
             allMessages: [],
             webSocketMessages: [],
+            friendsChatArr: [],
             clientConnected: false,
             touched: {
                 content: false,
             }
         };
 
-        this.serverUrl = 'http://localhost:8000/socket'
+        this.serverUrl = userService.getBaseUrl() + '/socket'
         this.stompClient = null;
 
         this.handleBlur = this.handleBlur.bind(this);
@@ -50,24 +51,24 @@ export default class MessageBox extends Component {
         observer.subscribe(observer.events.loadMessages, this.showUserChatBox)
     }
 
+    static getDerivedStateFromProps(props, state) {
+        if (props.friendsChatArr.length !== state.friendsChatArr.length) {
+            return {
+                friendsChatArr: props.friendsChatArr,
+                chatBoxDisplay: 'display-none'
+            }
+        }
+        return null;
+    }
+
     componentDidMount() {
         this.props.loadAllChatFriends();
         const userId = userService.getUserId();
         this.setState({
             loggedInUserId: userId,
-        })
+        });
 
         this.initializeWebSocketConnection();
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (this.props.friendsChatArr.length !== nextProps.friendsChatArr.length) {
-            this.setState({ chatBoxDisplay: 'display-none' })
-        }
-
-        if (this.props.openMessageBox !== nextProps.openMessageBox) {
-            this.setState({ chatBoxDisplay: 'display-none' })
-        }
     }
 
     initializeWebSocketConnection = () => {
@@ -80,27 +81,49 @@ export default class MessageBox extends Component {
             this.setState({ clientConnected: true });
             this.stompClient.subscribe("/user/queue/position-update", (message) => {
                 if (message.body) {
-                    const parsedBody = JSON.parse(message.body)
-                    this.setState(prevState => ({
-                        allMessages: [...prevState.allMessages, parsedBody],
-                    }), () => this.scrollDown());
+                    const parsedBody = JSON.parse(message.body);
+
+                    if (parsedBody.fromUserId === this.state.chatUserId || parsedBody.fromUserId === userService.getUserId()) {
+                        this.setState(prevState => ({
+                            allMessages: [...prevState.allMessages, parsedBody],
+                        }), () => this.scrollDown());
+                    }
 
                     if (parsedBody.fromUserId !== userService.getUserId()) {
                         const formattedUserNames = userService.formatUsername(parsedBody.fromUserFirstName, parsedBody.fromUserLastName)
 
-                        toast.success(<ToastComponent.successToast text={`You have a new message from ${formattedUserNames}!`} />, {
+                        toast.info(<ToastComponent.infoToast text={`You have a new message from ${formattedUserNames}!`} />, {
                             position: toast.POSITION.TOP_RIGHT
                         });
                     }
                 }
             });
+
+            this.stompClient.subscribe("/chat/login", (message) => {
+                if (message.body) {
+                    const parsedBody = JSON.parse(message.body);
+                    this.changeUserOnlineStatus(parsedBody);
+                }
+            });
+
+            this.stompClient.subscribe("/chat/logout", (message) => {
+                if (message.body) {
+                    const parsedBody = JSON.parse(message.body);
+                    this.changeUserOnlineStatus(parsedBody);
+                }
+            });
         }, () => {
-            setTimeout(() => {
-                toast.error(<ToastComponent.errorToast text={`Lost connection to ${this.serverUrl}. Trying to reconnect.`} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-                this.initializeWebSocketConnection();
-            }, 10000);
+            toast.error(<ToastComponent.errorToast text={`Lost connection to ${this.serverUrl}. Refresh the page to reconnect.`} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+
+            //// Callback to automatically reconnecting to the server
+            // setTimeout(() => {
+            //     toast.error(<ToastComponent.errorToast text={`Lost connection to ${this.serverUrl}. Trying to reconnect.`} />, {
+            //         position: toast.POSITION.TOP_RIGHT
+            //     });
+            //     this.initializeWebSocketConnection();
+            // }, 10000);
         });
     }
 
@@ -225,7 +248,7 @@ export default class MessageBox extends Component {
             chatUserLastName: lastName,
             chatUserNameFormatted,
             chatUserProfilePicUrl: profilePicUrl,
-            shouldScrollDown: false,
+            shouldScrollDown: true,
             chatBoxDisplay: '',
             chatBoxHeight: '',
 
@@ -253,14 +276,23 @@ export default class MessageBox extends Component {
         container.scrollTop = container.scrollHeight
     }
 
-    onMessageReceive = (msg, topic) => {
-        debugger;
-        console.log(msg)
-        this.setState(prevState => ({
-            webSocketMessages: [...prevState.webSocketMessages, msg]
-        }));
+    getOnlineUserCount = () => {
+        let usersCount = this.state.friendsChatArr.filter(user => { return user.online === true });
+        return usersCount.length;
+    }
 
-        console.log('webSocketMessages: ', this.state.webSocketMessages)
+    changeUserOnlineStatus(webSocketMessage) {
+        const { userId: id, online } = webSocketMessage;
+
+        const copieFriendsChatArr = JSON.parse(JSON.stringify(this.state.friendsChatArr));
+        const index = copieFriendsChatArr.findIndex(x => x.id === id);
+
+        this.setState((prevState, props) => ({
+            friendsChatArr:
+                [...copieFriendsChatArr.slice(0, index),
+                { ...copieFriendsChatArr[index], online: online },
+                ...copieFriendsChatArr.slice(index + 1)]
+        }));
     }
 
     componentWillUnmount() {
@@ -279,7 +311,7 @@ export default class MessageBox extends Component {
 
         const { chatUserFirstName, chatUserLastName, chatUserProfilePicUrl, chatUserNameFormatted } = this.state;
         const imageClassUserPick = userService.getImageSize(chatUserProfilePicUrl);
-        const firstNameFormatted = userService.formatUsername(loggedInUserFirstName)
+        const firstNameFormatted = userService.formatUsername(loggedInUserFirstName);
 
         return (
             <Fragment>
@@ -289,11 +321,11 @@ export default class MessageBox extends Component {
                             <i className="fas fa-location-arrow"></i>
                         </div>
                         <h4 className="chat-title" style={{ color: ' #333' }}>
-                            Chat
+                            Chat &bull; {this.getOnlineUserCount()}
                         </h4>
                     </div>
 
-                    {this.props.friendsChatArr.map((friend) =>
+                    {this.state.friendsChatArr.map((friend) =>
                         <FriendChatBox
                             key={friend.id}
                             showUserChatBox={this.showUserChatBox}

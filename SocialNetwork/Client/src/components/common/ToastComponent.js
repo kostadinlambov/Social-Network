@@ -32,7 +32,7 @@ export default {
         return (
             <div className="d-flex justify-content-start align-items-center">
                 <div style={{ 'fontSize': '25px' }}>
-                    <i class="fas fa-info-circle"></i>
+                    <i className="fas fa-info-circle"></i>
                 </div>
                 <div className="ml-3">
                     <div>{text}</div>

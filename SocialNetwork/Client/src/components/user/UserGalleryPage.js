@@ -53,7 +53,7 @@ export default class UserGalleryPage extends Component {
         data.append('file', this.state.file);
         data.append('loggedInUserId', this.state.id);
 
-        fetch('http://localhost:8000/pictures/add', {
+        fetch(userService.getBaseUrl() + '/pictures/add', {
             method: 'POST',
             headers: {
                 ...this.getAuthHeader()
@@ -152,7 +152,7 @@ export default class UserGalleryPage extends Component {
                         </div>
 
                         {(isRoot || isTheCurrentLoggedInUser) && <div className="">
-                            <button className="button update-info"> 
+                            <button className="button update-info">
                                 <label className="cursor-pointer" id="upload" htmlFor="fileUpload" > ADD PHOTO
                                 <input className="cursor-pointer" id="fileUpload" onChange={this.onFileChange} type="file" />
                                 </label>

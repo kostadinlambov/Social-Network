@@ -3,7 +3,7 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 import { Footer } from './components/common';
 import Navbar from './components/home/NavBar';
 import { ToastComponent } from './components/common'
-import { userService } from './infrastructure';
+import { userService, requester } from './infrastructure';
 import { ToastContainer, toast, Zoom } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css'
 import './styles/App.css';
@@ -25,7 +25,7 @@ class App extends Component {
   onLogout() {
     localStorage.clear();
 
-    toast.success(<ToastComponent.successToast text='You have been successfully logged out!' />, {
+    toast.success(<ToastComponent.successToast text={`"You have been successfully logged out."`} />, {
       position: toast.POSITION.TOP_RIGHT
     });
 

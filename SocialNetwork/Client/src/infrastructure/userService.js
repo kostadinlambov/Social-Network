@@ -2,7 +2,13 @@ import React from 'react';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../components/common'
 
+const BASE_URL = 'http://localhost:8000';
+
 export default {
+    getBaseUrl: () => {
+        return BASE_URL;
+    },
+
     getPayload: () => {
         const token = localStorage.getItem('token')
 
@@ -153,11 +159,11 @@ export default {
         return name;
     },
 
-    getImageSize(profilePicUrl ) {
+    getImageSize(profilePicUrl) {
         let img = new Image();
         img.src = profilePicUrl;
-       
-        if (img.width >= img.height ) {
+
+        if (img.width >= img.height) {
             return 'l'
         }
 

@@ -114,7 +114,8 @@ export default class HomePage extends Component {
         requester.get(`/relationship/friends/${userId}`, (response) => {
             this.setState({
                 friendsArr: response
-            },  (() => this.loadAllChatFriends())())
+            }, 
+            (() => this.loadAllChatFriends())())
         }).catch(err => {
             toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
                 position: toast.POSITION.TOP_RIGHT
