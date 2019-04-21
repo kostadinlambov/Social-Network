@@ -163,7 +163,7 @@ export default class UserGalleryPage extends Component {
                     {this.props.picturesArr.length > 0
                         ?
                         <Fragment>
-                            <hr className="my-2 mb-4 mt-3 col-md-10 mx-auto" />
+                            <div className="hr-styles" style={{'width': '90%'}}></div>
                             <ul className="grid-container">
 
                                 {this.props.picturesArr.map((picture) => <Picture key={picture.id} removePhoto={this.removePhoto}  {...picture} userId={this.props.id} />)}
@@ -171,9 +171,9 @@ export default class UserGalleryPage extends Component {
                         </Fragment>
                         :
                         <Fragment>
-                            <hr className="my-2 mb-5 mt-3 col-md-10 mx-auto" />
+                            <div className="hr-styles" style={{'width': '90%'}}></div>
                             <h3 className="text-center">There are no photos of <span className="username-gallery">{`${this.props.firstName} ${this.props.lastName}`}</span>.</h3>
-                            <hr className="my-2 mb-5 mt-3 col-md-10 mx-auto" />
+                            <div className="hr-styles" style={{'width': '90%'}}></div>
                         </Fragment>
                     }
                 </article>

@@ -13,7 +13,9 @@ const Intro = (props) => {
                     </div>
                     <h3 className="aside-article-title">Intro</h3>
                 </div>
-                <hr className="my-2 mb-3 mt-2 col-md-10 mx-auto" />
+
+                <div className="hr-styles" style={{'width': '90%'}}></div>
+
                 <div className="aside-intro-content">
                     <h4 className="occupation">{formattedUsername}</h4>
                     <p>Lives at {props.address},  in {props.city}.</p>

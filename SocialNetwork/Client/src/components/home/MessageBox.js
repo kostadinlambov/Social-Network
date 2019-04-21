@@ -324,14 +324,16 @@ export default class MessageBox extends Component {
                             Chat &bull; {this.getOnlineUserCount()}
                         </h4>
                     </div>
+                    <div className="messagebox-friendsChatArr-wrapper">
 
-                    {this.state.friendsChatArr.map((friend) =>
-                        <FriendChatBox
-                            key={friend.id}
-                            showUserChatBox={this.showUserChatBox}
-                            {...friend}
-                        />
-                    )}
+                        {this.state.friendsChatArr.map((friend) =>
+                            <FriendChatBox
+                                key={friend.id}
+                                showUserChatBox={this.showUserChatBox}
+                                {...friend}
+                            />
+                        )}
+                    </div>
                 </section>
                 <section className={`chat-container ${chatBoxHeight} ${chatBoxDisplay}`} id="chat-container">
                     <div className="chat-friend-container" onClick={this.changeChatBoxHeight}>

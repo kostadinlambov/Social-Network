@@ -139,7 +139,8 @@ export default class UserEditPageForm extends Component {
                     <section className="form-content-section">
                         <div className="container mb-4">
                             <h1 className="text-center font-weight-bold mt-4" style={{ 'margin': '1rem auto' }}>Edit Account</h1>
-                            <hr className="my-2 mb-3 mt-3 col-md-10 mx-auto"></hr>
+                     
+                            <div className="hr-styles"></div>
 
                             <form className="Register-form-container  " onSubmit={this.onSubmitHandler} >
 
@@ -278,7 +279,8 @@ export default class UserEditPageForm extends Component {
                                         </div>}
                                     </section>
                                 </div>
-                                <hr className="my-2 mb-3 mt-3 col-md-10 mx-auto"></hr>
+                            
+                                <div className="hr-styles"></div>
                                 <div className="text-center">
                                     <button disabled={!isEnabled} type="submit" className="btn App-button-primary btn-lg m-3">Edit</button>
                                     <NavLink className="btn App-button-primary btn-lg m-3" to={`/home/profile/${this.props.id}`} role="button">Cancel</NavLink>

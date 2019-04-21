@@ -104,6 +104,7 @@ main .comment-input:after {
     background: rgb(244, 244, 244);
     padding: 0.8rem;
     border-radius: 30px;
+    word-break: break-all;
 
 }
 

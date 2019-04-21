@@ -16,7 +16,9 @@ const PhotoGallery = (props) => {
                         </h3>
                     </NavLink>
                 </div>
-                <hr className="my-2 mb-3 mt-2 col-md-10 mx-auto" />
+                
+                <div className="hr-styles" style={{'width': '90%'}}></div>
+
                 <ul className="aside-article-gallery bender-photos">
                     {props.picturesArr.map((picture) => <PictureSideBar key={picture.id}  {...picture} />)}
                 </ul>

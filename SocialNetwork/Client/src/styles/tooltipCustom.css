@@ -40,3 +40,7 @@
 .tooltipCustom:hover .tooltiptextCustom {
   visibility: visible;
 }
+
+#friend-requests-tooltip{
+  top: 125%;
+}

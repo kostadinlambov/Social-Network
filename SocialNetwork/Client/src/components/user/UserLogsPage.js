@@ -169,7 +169,7 @@ export default class UserLogsPage extends Component {
                     <section className="logs-content-section">
                         <div className="container col-md-11 text-center mx-auto mb-4">
                             <h1 className="text-center font-weight-bold mt-4" style={{ 'margin': '1rem auto' }}>Server Logs History</h1>
-                            <hr className="my-2 mb-5 mt-3 col-md-10 mx-auto" />
+                            <div className="hr-styles"></div>
 
                             {/* <form className="form-inline my-2 my-lg-0" onSubmit={this.searchFriend}> */}
                             <div className="col-md-4 mx-auto mb-3" >
@@ -228,9 +228,9 @@ export default class UserLogsPage extends Component {
                                 </table>
                                 :
                                 <Fragment>
-                                    <hr className="my-2 mb-5 col-md-10 mx-auto" />
+                                    <div className="hr-styles"></div>
                                     <h3 className="mt-5 mb-5 mx-auto display-5 text-center App-secondary-color">Logs history is empty. </h3>
-                                    <hr className="my-2 mb-5 col-md-10 mx-auto" />
+                                    <div className="hr-styles"></div>
                                 </Fragment>
                             }
                         </div>

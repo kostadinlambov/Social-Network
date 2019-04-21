@@ -15,6 +15,8 @@ export default class Navbar extends Component {
             username: '',
             search: '',
             showDropdown: '',
+            unreadMessages: 0,
+            displayMessageCount: false,
             allUnreadMessages: [],
         }
 
@@ -27,6 +29,12 @@ export default class Navbar extends Component {
         this.changeMessaboxVisibility = this.changeMessaboxVisibility.bind(this);
 
         observer.subscribe(observer.events.loginUser, this.userLoggedIn)
+    }
+
+    componentDidMount = () => {
+        // this.setState({ showDropdown: '' },
+        //     () => this.getAllFriendMessages()
+        // )
     }
 
     userLoggedIn = (username) => {
@@ -69,7 +77,11 @@ export default class Navbar extends Component {
             if (response) {
                 this.setState({
                     allUnreadMessages: response,
-                }, (() => this.changeMessaboxVisibility())())
+                    displayMessageCount: false,
+                }, () => {
+                    this.changeMessaboxVisibility()
+                    this.getUnreadMessagesCount()
+                })
             } else {
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
@@ -89,7 +101,7 @@ export default class Navbar extends Component {
 
     triggerMessageLoad = (id, firstName, lastName, profilePicUrl, event) => {
         this.changeMessaboxVisibility();
-        observer.trigger(observer.events.loadMessages, { id, firstName, lastName, profilePicUrl })
+        observer.trigger(observer.events.loadMessages, { id, firstName, lastName, profilePicUrl });
     }
 
     handleBlur = () => (event) => {
@@ -103,6 +115,19 @@ export default class Navbar extends Component {
             this.setState({ showDropdown: 'show-dropdown' })
         } else {
             this.setState({ showDropdown: '' })
+        }
+    }
+
+    getUnreadMessagesCount = () => {
+        let count = this.state.allUnreadMessages.reduce((a, b) => {
+            return a + b.count;
+        }, 0)
+
+        if (count > 0) {
+            this.setState({
+                unreadMessages: count,
+                displayMessageCount: true,
+            })
         }
     }
 
@@ -140,6 +165,8 @@ export default class Navbar extends Component {
                     </div>
                 </Fragment>
             )
+
+
         }
 
         return (
@@ -168,7 +195,7 @@ export default class Navbar extends Component {
                                 </form>}
                             </div>
 
-                            <label id="toggle" htmlFor="main-nav-toggle"><span>Menu</span></label>
+                            <label id="toggle" htmlFor="main-nav-toggle" style={{ 'marginBottom': '0' }}><span>Menu</span></label>
 
                             <nav className="nav-main">
                                 <ul className="nav-ul">
@@ -176,16 +203,30 @@ export default class Navbar extends Component {
 
                                     {loggedIn && <li className="nav-item"><NavLink exact to={`/home/comments/${userId}`} className="nav-link ">Home</NavLink></li>}
                                     {loggedIn && <li className="nav-item"><NavLink exact to={`/home/findFriends/${userId}/findFriends`} className="nav-link " >Find friends!</NavLink></li>}
-                                    {loggedIn && <li className="nav-item"><NavLink exact to={`/home/findFriends/${userId}/requests`} className="nav-link fas fa-user-friends tooltipCustom"> <span className="tooltiptextCustom">Friend Requests</span></NavLink></li>}
+
+
+                                    {loggedIn &&
+                                        <li className="nav-item">
+                                            <NavLink exact to={`/home/findFriends/${userId}/requests`} className="nav-link tooltipCustom">
+                                                <i className="fas fa-user-friends"></i>
+                                                {/* <i id="icon-badge-container-friend-requests" data-count="2" className="fas fa-user-friends"></i> */}
+                                                <span className="tooltiptextCustom" id="friend-requests-tooltip">Friend Requests</span>
+                                            </NavLink>
+                                        </li>}
+
                                     {loggedIn && pathname &&
                                         <li className="nav-item"
                                             id="onclick-wrapper"
                                             onClick={this.getAllFriendMessages}
                                             onBlur={this.handleBlur('onclick-wrapper')}
                                         >
-                                            <NavLink className="fas fa-envelope tooltipCustom nav-link" to="#">
-                                                <span className="tooltiptextCustom">Messages</span>
-                                            </NavLink>
+                                            {/* <div className="icon-badge-wrapper"> */}
+                                                <NavLink className="fas fa-envelope tooltipCustom nav-link" to="#">
+                                                    <span className="tooltiptextCustom">Messages</span>
+                                                </NavLink>
+                                                {/* {this.state.displayMessageCount && <span id="icon-badge-container-messages">{this.state.unreadMessages}</span>} */}
+                                            {/* </div> */}
+
                                             <div className={`dropdown-container ${showDropdown}`}>
                                                 <div className="dropdown-messagebox-header" onClick={this.changeHeight}>
                                                     <div className="dropdown-messagebox-chat-icon">
@@ -199,6 +240,7 @@ export default class Navbar extends Component {
                                             </div>
                                         </li>
                                     }
+
                                     {(loggedIn && (isRoot || isAdmin)) && <li className="nav-item"><NavLink exact to={`/home/logs/${userId}`} className="nav-link"> Logs</NavLink></li>}
                                     {loggedIn && <li className="nav-item"><NavLink exact to="#" className="nav-link " onClick={onLogout} >Logout</NavLink></li>}
                                     {!loggedIn && <li className="nav-item"><NavLink exact to="/login" className="nav-link" >Login</NavLink></li>}

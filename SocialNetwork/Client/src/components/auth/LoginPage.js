@@ -98,7 +98,7 @@ export default class LoginPage extends Component {
             <section className="pt-3">
                 <div className="container login-form-content-section pb-4 " >
                     <h1 className="text-center font-weight-bold mt-4" style={{ 'margin': '1rem auto', 'paddingTop': '2rem' }}>Login</h1>
-                    <hr className="my-2 mb-4 mt-3 col-md-8 mx-auto"></hr>
+                    <div className="hr-styles" style={{'width': '70%'}}></div>
 
                     <form className="Login-form-container" onSubmit={this.onSubmitHandler}>
                         <div className="form-group">

@@ -89,7 +89,7 @@
 
     main .aside-article-photos, 
     main .aside-article-friends{
-        padding: 0;
+        /* padding: 0; */
     }
 
     main .aside-article-header {

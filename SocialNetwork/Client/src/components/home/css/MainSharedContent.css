@@ -211,6 +211,10 @@ main .main-article-shared-content {
     box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
 }
 
+.post-content>p{
+    word-break: break-all;
+}
+
 
 .post-media img {
     width: 100%;
@@ -333,7 +337,6 @@ main .main-article-shared-content {
 .delete-button:hover{
     background-color: rgb(167, 28, 19);
     color:white;
-
 }
 
 .post-button-fbPhotoCurationControl {

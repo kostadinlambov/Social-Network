@@ -163,7 +163,7 @@ export default class UserSearchResultsPage extends Component {
             friends = (
                 <Fragment>
                     <h3 className="mt-5">Users From Your Friend List</h3>
-                    <hr className="my-2 mb-4 mt-2 col-md-8 mx-auto" />
+                    <div className="hr-styles"></div>
                     {this.props.friendsArrSearch.map((friend) =>
                         <Friend
                             key={friend.id}
@@ -185,7 +185,7 @@ export default class UserSearchResultsPage extends Component {
             requests = (
                 <Fragment>
                     <h3 className="mt-5">Respond to Your Friend Requests</h3>
-                    <hr className="my-2 mb-4 mt-2 col-md-8 mx-auto" />
+                    <div className="hr-styles"></div>
                     {this.props.userWaitingForAcceptingRequest.map((friend) =>
                         <FriendRequest
                             key={friend.id}
@@ -209,7 +209,7 @@ export default class UserSearchResultsPage extends Component {
             friendsCandidates = (
                 <Fragment>
                     <h3 className="mt-5">Pending Requests</h3>
-                    <hr className="my-2 mb-4 mt-2 col-md-8 mx-auto" />
+                    <div className="hr-styles"></div>
                     {
                         this.props.usersReceivedRequestFromCurrentUser.map((friend) =>
                             <Friend
@@ -234,7 +234,7 @@ export default class UserSearchResultsPage extends Component {
             remainCandidates = (
                 <Fragment>
                     <h3 className="mt-5">People You May Know</h3>
-                    <hr className="my-2 mb-4 mt-3 col-md-8 mx-auto" />
+                    <div className="hr-styles"></div>
                     {
                         this.props.friendsCandidatesArr.map((friend) =>
                             <Friend
@@ -258,7 +258,7 @@ export default class UserSearchResultsPage extends Component {
             noResult = (
                 <Fragment>
                     <h2>No results for <span className="App-secondary-color">"{this.state.search}"</span></h2>
-                    <hr className="my-2 mb-5 mt-3 col-md-10 mx-auto" />
+                    <div className="hr-styles"></div>
                 </Fragment>
             )
         }
@@ -269,7 +269,7 @@ export default class UserSearchResultsPage extends Component {
                     <section className="friend-content-section">
                         <div className="container col-md-12 text-center mb-5">
                             <h1 className="text-center font-weight-bold mt-4" style={{ 'margin': '1rem auto' }}>Search Results</h1>
-                            <hr className="my-2 mb-4 mt-3 col-md-10 mx-auto" />
+                            <div className="hr-styles"></div>
                             <section className="friend-section" >
                                 {friends}
                                 {requests}

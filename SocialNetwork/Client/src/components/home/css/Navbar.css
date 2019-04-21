@@ -24,3 +24,49 @@
     border-color: white;
 }
 
+#icon-badge-container-friend-requests, 
+#icon-badge-container-messages{
+    position:relative;
+}
+
+.icon-badge-wrapper{
+    position:relative;
+}
+
+#icon-badge-container-friend-requests:after{
+    display: block;
+    content: attr(data-count);
+    position: absolute;
+    background-color: rgb(246, 84, 50);
+    bottom: 12px;
+    left: 12px;
+    text-align: center;
+    color: white;
+    padding: 2px 4px;
+}
+
+#icon-badge-container-messages{
+    display: block;
+    position: absolute;
+    background-color: rgb(246, 84, 50);
+    font-size: 0.8rem;
+    bottom: 22px;
+    left: 26px;
+    text-align: center;
+    color: white;
+    padding: 1px 4px;
+}
+
+#icon-badge-container-friend-requests:hover:after, 
+#icon-badge-container-messages:hover {
+    background-color: rgb(167, 28, 19);
+    transition: background-color 1s ease-in-out;
+}
+
+
+@media screen and (max-width: 800px){
+    .form-inline {
+        display: none;
+    }
+}
+

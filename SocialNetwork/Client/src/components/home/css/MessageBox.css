@@ -1,7 +1,6 @@
 .messagebox-container {
     background: #FFF;
     border-radius: 0.3rem;
-    /* overflow: hidden; */
     box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
     background: white;
     width: 308px;
@@ -62,6 +61,10 @@
 
 /* ##################################### */
 /* friends-container */
+
+.messagebox-friendsChatArr-wrapper{
+    overflow: auto;
+}
 
 .messagebox-friend-container {
     display: flex;
@@ -158,6 +161,7 @@
     right: 368px;
     z-index: 10;
     transition: height 1.5s ease-in-out;
+    /* overflow: auto; */
 }
 
 .toggle-chat-container {
@@ -335,3 +339,67 @@
     background-color: rgb(167, 28, 19);
     color:white;
 }
+
+@media  screen and (max-width: 500px){
+    .chat-container{
+        display: none;
+    }
+
+    .messagebox-container{
+        display: none;
+    }
+}
+
+@media  screen and (max-width: 800px){
+    .chat-container{
+        /* display: none; */
+        z-index: 15;
+        max-height: 300px;
+        right: 50px;
+        overflow: auto;
+    }
+    .messagebox-container{
+        height: auto;
+        max-height: 300px;
+        overflow: auto;
+    }
+
+    .toggle {
+        height: 52px;
+        overflow: hidden;
+    }
+
+    .toggle-chat-container {
+        height: 52px;
+        overflow: hidden;
+    }
+}
+
+/* .chat-container {
+    background: #FFF;
+    border-radius: 0.3rem;
+    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
+    background: white;
+    width: 425px;
+    height: 532px;
+    position: fixed;
+    bottom: 0;
+    right: 368px;
+    z-index: 10;
+    transition: height 1.5s ease-in-out;
+} */
+
+
+/* .messagebox-container {
+    background: #FFF;
+    border-radius: 0.3rem;
+    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
+    background: white;
+    width: 308px;
+    height: 532px;
+    position: fixed;
+    bottom: 0;
+    right: 40px;
+    z-index: 10;
+    transition: height 1.5s ease-in-out;
+} */

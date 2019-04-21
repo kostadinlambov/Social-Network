@@ -79,6 +79,14 @@ main .aside-article-header {
     margin-bottom: 1rem;
 }
 
+.hr-styles{
+    margin: 1rem auto 1.5rem auto;
+    border: 0;
+    border-top: 1px solid rgb(224, 224, 224);
+    width: 70%;
+    /* margin: auto; */
+}
+
 main .aside-article-header h3 {
     padding: 0 1rem;
 }
@@ -400,3 +408,5 @@ main .main-article-left-side-icons-container ul li {
     font-weight: bold;
     color: rgb(192, 192, 192);
 }
+
+

@@ -132,7 +132,7 @@ export default class UserFindFriendsPage extends Component {
             requests = (
                 <Fragment>
                     <h3 className="mt-5">Respond to Your Friend Requests</h3>
-                    <hr className="my-2 mb-4 mt-2 col-md-8 mx-auto" />
+                    <div className="hr-styles"></div>
                     {this.props.userWaitingForAcceptingRequest.map((friend) =>
                         <FriendRequest
                             key={friend.id}
@@ -156,7 +156,7 @@ export default class UserFindFriendsPage extends Component {
             friendsCandidates = (
                 <Fragment>
                     <h3 className="mt-5">Pending Requests</h3>
-                    <hr className="my-2 mb-4 mt-2 col-md-8 mx-auto" />
+                    <div className="hr-styles"></div>
                     {
                         this.props.usersReceivedRequestFromCurrentUser.map((friend) =>
                             <Friend
@@ -181,7 +181,7 @@ export default class UserFindFriendsPage extends Component {
             remainCandidates = (
                 <Fragment>
                     <h3 className="mt-5">People You May Know</h3>
-                    <hr className="my-2 mb-4 mt-3 col-md-8 mx-auto" />
+                    <div className="hr-styles"></div>
                     {
                         this.props.friendsCandidatesArr.map((friend) =>
                             <Friend
@@ -205,7 +205,7 @@ export default class UserFindFriendsPage extends Component {
             noResult = (
                 <Fragment>
                     <h2>All registered users are already your friends!</h2>
-                    <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" />
+                    <div className="hr-styles"></div>
                 </Fragment>
             )
         }
@@ -217,7 +217,7 @@ export default class UserFindFriendsPage extends Component {
             requests = (
                 <Fragment>
                     <h2>There are no friend requests!</h2>
-                    <hr className="my-2 mb-5 mt-3 col-md-10 mx-auto" />
+                    <div className="hr-styles"></div>
                 </Fragment>)
         }
 
@@ -229,7 +229,7 @@ export default class UserFindFriendsPage extends Component {
                             <h1 className="text-center font-weight-bold mt-4" style={{ 'margin': '1rem auto' }}>
                                 {category === 'findFriends' ? 'Find Friends' : 'Friend Requests'}
                             </h1>
-                            <hr className="my-2 mb-5 mt-3 col-md-10 mx-auto" />
+                            <div className="hr-styles"></div>
                             <section className="friend-section" >
                                 {requests}
                                 {!isRequestsSearch && friendsCandidates}

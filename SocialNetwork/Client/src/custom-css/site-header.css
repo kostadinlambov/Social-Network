@@ -94,12 +94,31 @@ header .nav-search-div input {
     font-weight: 900;
 }
 
+@media screen and (max-width: 1300px) {
+    nav.nav-main {
+        width:100%;
+        margin:auto;
+    }
+
+    header .nav-searchbar-container{
+        justify-content: space-around;
+        margin-top: 1rem;
+    }
+}
+
 @media screen and (max-width: 800px) {
+
+    header .nav-searchbar-container{
+        justify-content: flex-start;
+        margin-top: 0;
+    }
     nav.nav-main {
         display: none;
     }
 
-    nav.nav-main ul.nav-ul {}
+    nav.nav-main ul.nav-ul {
+        flex-direction: column;
+    }
 
     header .navbar-wrapper {
         width: 100%;
@@ -118,6 +137,8 @@ header .nav-search-div input {
     header .navbar-wrapper,
     header ul.nav-ul {
         margin: auto;
+
+
     }
 
     #main-nav-toggle:checked+header #toggle:before {
@@ -189,13 +210,13 @@ header .header-container .img-container img {
     transform: translate(-50%, -50%);
 }
 
-header .header-container .img-container img.l{
+header .header-container .img-container img.l {
     display: block;
     position: absolute;
     top: 0;
     left: 0;
-    width: auto; 
-     height: 100%;
+    width: auto;
+    height: 100%;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);

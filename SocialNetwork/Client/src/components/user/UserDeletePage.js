@@ -147,7 +147,8 @@ export default class UserDeletePage extends Component {
 
                                     </tbody>
                                 </table>
-                                <hr className="my-2 mb-3 mt-3 col-md-12 mx-auto" />
+                                {/* <hr className="my-2 mb-3 mt-3 col-md-12 mx-auto" /> */}
+                                <div className="hr-styles"></div>
                                 <div className="d-flex justify-content-center ">
                                     {(isAdmin || isRoot) && <ButtonWithClickEvent buttonClass={"btn App-button-primary btn-lg m-3"} url={`/home/users/delete/`} text={"Delete"} onClick={this.onSubmitHandlerDelete} />}
                                     {(isAdmin || isRoot) && <NavLink className="btn App-button-primary btn-lg m-3" to={`/home/profile/${this.props.id}`} role="button">Cancel</NavLink>}

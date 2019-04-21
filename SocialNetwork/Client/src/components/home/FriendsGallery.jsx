@@ -17,7 +17,7 @@ const FriendsGallery = (props) => {
                         </h3>
                     </NavLink>
                 </div>
-                <hr className="my-2 mb-3 mt-2 col-md-10 mx-auto" />
+                <div className="hr-styles" style={{'width': '90%'}}></div>
                 <ul className="aside-article-gallery ">
                     {props.friendsArr.map(friend => {
                         const profilePicUrl = friend.profilePicUrl || placeholder_user_image

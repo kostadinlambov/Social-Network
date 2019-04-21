@@ -62,7 +62,7 @@ export default class UserFriendsAllPage extends Component {
                     <section className="friend-content-section">
                         <div className="container col-md-12 text-center mb-5">
                             <h1 className="text-center font-weight-bold mt-4" style={{ 'margin': '1rem auto' }}>Friends </h1>
-                            <hr className="my-2 mb-5 mt-3 col-md-10 mx-auto" />
+                            <div className="hr-styles"></div>
                             <section className="friend-section" >
                                 {this.props.friendsArr.length > 0 ?
                                     this.props.friendsArr.map((friend) =>
@@ -97,7 +97,7 @@ export default class UserFriendsAllPage extends Component {
                                                 </button>)
                                                 : null
                                         }
-                                        <hr className="my-2 mb-5 mt-3 col-md-12 mx-auto" />
+                                       <div className="hr-styles"></div>
                                     </Fragment>
                                     )
                                 }
