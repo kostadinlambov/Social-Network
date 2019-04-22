@@ -19,6 +19,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
@@ -45,6 +46,13 @@ public class UserServiceImpl implements UserService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userValidation = userValidation;
         this.loggerService = loggerService;
+    }
+
+    @PostConstruct
+    public void isOnlineSetup(){
+        if(this.userRepository.count() > 0){
+            this.userRepository.setIsOnlineToFalse();
+        }
     }
 
     @Override
