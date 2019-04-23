@@ -1,5 +1,6 @@
 import React, { Component, Fragment, lazy, Suspense } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
+
 import { Footer } from './components/common';
 import Navbar from './components/home/NavBar';
 import { ToastComponent } from './components/common'
@@ -23,7 +24,7 @@ class App extends Component {
   }
 
   onLogout() {
-    localStorage.clear();
+    window.localStorage.clear();
 
     toast.success(<ToastComponent.successToast text={`"You have been successfully logged out."`} />, {
       position: toast.POSITION.TOP_RIGHT

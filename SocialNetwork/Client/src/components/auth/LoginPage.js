@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import '../../styles/FormPages.css';
-import { requester } from '../../infrastructure';
 import { toast } from 'react-toastify';
-import { ToastComponent } from '../common'
+import { ToastComponent } from '../common';
+import { connect } from 'react-redux';
+import { loginAction, redirectAction } from '../../store/actions/authActions';
 
-export default class LoginPage extends Component {
+class LoginPage extends Component {
     constructor(props) {
         super(props)
 
@@ -21,6 +22,22 @@ export default class LoginPage extends Component {
         this.onSubmitHandler = this.onSubmitHandler.bind(this);
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.loginError.hasError && prevProps.loginError !== this.props.loginError) {
+            toast.error(<ToastComponent.errorToast text={`${this.props.loginError.message}`} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+        } else if (this.props.loginSuccess) {
+            this.props.redirect();
+
+            toast.success(<ToastComponent.successToast text={' You have successfully logged in!'} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+
+            this.props.history.push('/');
+        }
+    }
+
     onChangeHandler(event) {
         this.setState({
             [event.target.name]: event.target.value
@@ -34,32 +51,8 @@ export default class LoginPage extends Component {
             return;
         }
 
-        const { touched, ...otherProps } = this.state;
-
-        requester.post('/login', { ...otherProps }, (response) => {
-            if (response.error) {
-                toast.error(<ToastComponent.errorToast text={' Incorrect credentials!'} />, {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
-
-            } else {
-                const token = response.split(' ')[1];
-                localStorage.setItem('token', token);
-
-                toast.success(<ToastComponent.successToast text={' You have successfully logged in!'} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-
-                this.props.history.push('/');
-            }
-
-        }).catch(err => {
-            localStorage.clear();
-
-            toast.error(<ToastComponent.errorToast text={`${err.message}`} />, {
-                position: toast.POSITION.TOP_RIGHT
-            });
-        })
+        const { username, password } = this.state;
+        this.props.login(username, password);
     }
 
     canBeSubmitted() {
@@ -98,7 +91,7 @@ export default class LoginPage extends Component {
             <section className="pt-3">
                 <div className="container login-form-content-section pb-4 " >
                     <h1 className="text-center font-weight-bold mt-4" style={{ 'margin': '1rem auto', 'paddingTop': '2rem' }}>Login</h1>
-                    <div className="hr-styles" style={{'width': '70%'}}></div>
+                    <div className="hr-styles" style={{ 'width': '70%' }}></div>
 
                     <form className="Login-form-container" onSubmit={this.onSubmitHandler}>
                         <div className="form-group">
@@ -142,3 +135,21 @@ export default class LoginPage extends Component {
         )
     }
 };
+
+
+function mapStateToProps(state) {
+    return {
+        loginSuccess: state.login.success,
+        loginError: state.loginError
+    }
+}
+
+
+function mapDispatchToProps(dispatch) {
+    return {
+        login: (username, password) => dispatch(loginAction(username, password)),
+        redirect: () => dispatch(redirectAction())
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
