@@ -2,11 +2,7 @@ import React, { Component, Fragment, lazy, Suspense } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
-import { requester, userService } from '../../infrastructure/'
-import { connect } from 'react-redux';
-import { fetchPicturesAction } from '../../store/actions/pictureActions'
-import { fetchAllChatFriendsAction } from '../../store/actions/userActions'
-import { fetchAllMessagesAction } from '../../store/actions/messageActions'
+import { requester, userService } from '../../infrastructure'
 
 import TimeLine from './TimeLine';
 import HeaderSection from './HeaderSection';
@@ -18,25 +14,25 @@ import FriendsGallery from './FriendsGallery';
 import placeholder_user_image from '../../assets/images/placeholder.png';
 import default_background_image from '../../assets/images/default-background-image.jpg';
 
-const UserSearchResultsPage = lazy(() => import('../../components/user/UserSearchResultsPage'));
-const UserProfilePage = lazy(() => import('../../components/user/UserProfilePage'));
-const UserFriendsAllPage = lazy(() => import('../../components/user/UserFriendsAllPage'));
-const UserFindFriendsPage = lazy(() => import('../../components/user/UserFindFriendsPage'));
-const UserAllPage = lazy(() => import('../../components/user/UserAllPage'));
-const UserEditPage = lazy(() => import('../../components/user/UserEditPage'));
-const UserDeletePage = lazy(() => import('../../components/user/UserDeletePage'));
-const UserGalleryPage = lazy(() => import('../../components/user/UserGalleryPage'));
-const UserLogsPage = lazy(() => import('../../components/user/UserLogsPage'));
+const UserSearchResultsPage = lazy(() => import('../user/UserSearchResultsPage'));
+const UserProfilePage = lazy(() => import('../user/UserProfilePage'));
+const UserFriendsAllPage = lazy(() => import('../user/UserFriendsAllPage'));
+const UserFindFriendsPage = lazy(() => import('../user/UserFindFriendsPage'));
+const UserAllPage = lazy(() => import('../user/UserAllPage'));
+const UserEditPage = lazy(() => import('../user/UserEditPage'));
+const UserDeletePage = lazy(() => import('../user/UserDeletePage'));
+const UserGalleryPage = lazy(() => import('../user/UserGalleryPage'));
+const UserLogsPage = lazy(() => import('../user/UserLogsPage'));
 const MessageBox = lazy(() => import('./MessageBox'));
 
-const ErrorPage = lazy(() => import('../../components/common/ErrorPage'));
+const ErrorPage = lazy(() => import('../common/ErrorPage'));
 
-class HomePage extends Component {
+export default class HomePage extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            id: userService.getUserId(),
+            id: '',
             username: '',
             email: '',
             firstName: '',
@@ -55,7 +51,6 @@ class HomePage extends Component {
             userWaitingForAcceptingRequest: [],
             usersReceivedRequestFromCurrentUser: [],
             friendsChatArr: [],
-            ready: false
         }
 
         this.getUserToShowId = this.getUserToShowId.bind(this);
@@ -63,37 +58,7 @@ class HomePage extends Component {
         this.loadAllFriends = this.loadAllFriends.bind(this);
         this.searchResults = this.searchResults.bind(this);
         this.findFriends = this.findFriends.bind(this);
-    }
-
-    componentDidMount() {
-        console.log("componentDidMount")
-        const userId = userService.getUserId();
-        this.loadAllPictures(userId);
-        this.setState({ready: true})
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        // console.log('prevProps: ', prevProps);
-        // console.log('this.props: ', this.props);
-        // debugger;
-
-        if ((this.props.fetchPictures.hasError && prevProps.fetchPictures.error !== this.props.fetchPictures.error)) {
-            const errorMessage = this.props.fetchPictures.message || 'Server Error'
-
-            toast.error(<ToastComponent.errorToast text={errorMessage} />, {
-                position: toast.POSITION.TOP_RIGHT
-            });
-            
-        } else if (
-            (!this.props.fetchPictures.hasError && this.props.fetchPictures.message && this.props.fetchPictures !== prevProps.fetchPictures) ) {
-            const successMessage = this.props.fetchPictures.message;
-
-            toast.success(<ToastComponent.successToast text={successMessage} />, {
-                position: toast.POSITION.TOP_RIGHT
-            });
-
-            // this.props.history.push('/login');
-        }
+        this.loadAllChatFriends = this.loadAllChatFriends.bind(this);
     }
 
     getUserToShowId(getUserToShowId) {
@@ -122,36 +87,53 @@ class HomePage extends Component {
     }
 
     loadAllPictures = (userId) => {
-        this.props.loadAllPictures(userId);
-        // requester.get('/pictures/all/' + userId, (response) => {
-        //     if (response) {
-        //         this.setState({
-        //             picturesArr: response,
-        //             id: userId
-        //         })
-        //     } else {
-        //         toast.error(<ToastComponent.errorToast text={response.message} />, {
-        //             position: toast.POSITION.TOP_RIGHT
-        //         });
-        //     }
-        // }).catch(err => {
-        //     toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-        //         position: toast.POSITION.TOP_RIGHT
-        //     });
+        requester.get('/pictures/all/' + userId, (response) => {
+            if (response) {
+                this.setState({
+                    picturesArr: response,
+                    id: userId
+                })
+            } else {
+                toast.error(<ToastComponent.errorToast text={response.message} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+            }
+        }).catch(err => {
+            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
 
-        //     if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-        //         localStorage.clear();
-        //         this.props.history.push('/login');
-        //     }
-        // })
+            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
+                localStorage.clear();
+                this.props.history.push('/login');
+            }
+        })
     }
 
     loadAllFriends = (userId) => {
         requester.get(`/relationship/friends/${userId}`, (response) => {
             this.setState({
                 friendsArr: response
-            },
-                (() => this.loadAllChatFriends())())
+            }, 
+            (() => this.loadAllChatFriends())())
+        }).catch(err => {
+            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+
+            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
+                localStorage.clear();
+                this.props.history.push('/login');
+            }
+        })
+    }
+
+    loadAllChatFriends = () => {
+        const userId = userService.getUserId();
+        requester.get(`/relationship/friends/${userId}`, (response) => {
+            this.setState({
+                friendsChatArr: response
+            })
         }).catch(err => {
             toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
                 position: toast.POSITION.TOP_RIGHT
@@ -216,11 +198,6 @@ class HomePage extends Component {
     }
 
     render() {
-        const loading = this.props.fetchPictures.loading;
-        if (!this.state.ready || loading) {
-            return <h1 className="text-center pt-5 mt-5">Loading...</h1>
-        }
-
         const userToShowId = this.props.match.params;
         const isRoot = userService.isRoot();
         const isAdmin = userService.isAdmin();
@@ -233,10 +210,10 @@ class HomePage extends Component {
                 <main className="site-content">
                     <section className="main-section">
                         <TimeLine {...this.state} />
-                        {/* <Suspense fallback={<h1 className="text-center pt-5 mt-5">Loading...</h1>}>
+                        <Suspense fallback={<h1 className="text-center pt-5 mt-5">Loading...</h1>}>
                             <Switch>
                                 {loggedIn && <Route exact path="/home/comments/:id" render={props => <MainSharedContent  {...props}  {...this.state} getUserToShowId={this.getUserToShowId} />} />}
-
+                            
                                 {loggedIn && <Route exact path="/home/profile/:id" render={props => <UserProfilePage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
                                 {loggedIn && <Route exact path="/home/friends/:id" render={props => <UserFriendsAllPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} loadAllFriends={this.loadAllFriends} />} />}
                                 {loggedIn && <Route exact path="/home/findFriends/:id/:category" render={(props) => <UserFindFriendsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} findFriends={this.findFriends} />} />}
@@ -248,62 +225,23 @@ class HomePage extends Component {
                                 {loggedIn && <Route exact path="/home/users/search/" render={(props) => <UserSearchResultsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} searchResults={this.searchResults} />} />}
                                 <Route exact path="/error" component={ErrorPage} />
                                 <Route render={(props) => <Redirect to="/" {...props} />} />
+                                {/* <Route component={ErrorPage} /> */}
                             </Switch>
-                        </Suspense > */}
+                        </Suspense >
                     </section>
 
-                    {
-                        <Fragment>
-                            <section className="aside-section">
-                                <Intro {...this.state} />
-                                <PhotoGallery picturesArr={this.props.picturesArr} />
-                                <FriendsGallery {...this.state} />
-                                <MessageBox
-                                    // loadAllChatFriends={this.loadAllChatFriends}
-                                    // friendsChatArr={this.props.friendsChatArr}
-                                />
-                            </section>
-                        </Fragment>
-                    }
-                    {/* 
                     {this.state.ready &&
                         <Fragment>
                             <section className="aside-section">
                                 <Intro {...this.state} />
                                 <PhotoGallery {...this.state} />
                                 <FriendsGallery {...this.state} />
-                                <MessageBox loadAllChatFriends={this.loadAllChatFriends} friendsChatArr={this.state.friendsChatArr} />
+                                <MessageBox loadAllChatFriends={this.loadAllChatFriends} friendsChatArr={this.state.friendsChatArr}/>
                             </section>
                         </Fragment>
-                    } */}
+                    }
                 </main>
             </Fragment>
         );
     }
 }
-
-const mapStateToProps = (state) => {
-    return {
-        picturesArr: state.fetchPictures.picturesArr,
-        fetchPictures: state.fetchPictures,
-
-        // friendsChatArr: state.fetchAllChatFriends.friendsChatArr,
-        // fetchAllChatFriends: state.fetchAllChatFriends,
-
-        // allMessagesArr: state.fetchAllMessages.allMessagesArr,
-        // fetchAllMessages: state.fetchAllMessages,
-
-    }
-}
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        loadAllPictures: (userId) => { dispatch(fetchPicturesAction(userId)) },
-        // loadAllChatFriends: (userId) => { dispatch(fetchAllChatFriendsAction(userId)) },
-        // fetchAllMessages: (chatUserId) => { dispatch(fetchAllMessagesAction(chatUserId)) }
-    }
-}
-
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

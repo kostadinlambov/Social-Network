@@ -136,16 +136,14 @@ class LoginPage extends Component {
     }
 };
 
-
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
     return {
         loginSuccess: state.login.success,
         loginError: state.loginError
     }
 }
 
-
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, ownProps) {
     return {
         login: (username, password) => dispatch(loginAction(username, password)),
         redirect: () => dispatch(redirectAction())

@@ -86,7 +86,7 @@ function checkStatus(response) {
         return response.json()
     } else {
         var error = new Error(response.statusText);
-        if (response.status === 403 && response.url === 'http://localhost:8000/login') {
+        if (response.status === 403 && response.url === (BASE_URL +'/login')) {
             error.message = 'Incorrect credentials!';
             error.response = response;
             throw error;
@@ -98,7 +98,7 @@ function checkStatus(response) {
             throw error;
         } else if (response.status === 400) {
             console.log('err response: ', response)
-            error.message = 'Internal Server Error: Bad request'
+            error.message = 'Error: Bad request'
             // error.message = response.message
             error.status = 400;
             error.type = 'cors'

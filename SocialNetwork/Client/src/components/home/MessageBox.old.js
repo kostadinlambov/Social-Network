@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { userService, observer } from '../../infrastructure'
+import { requester, userService, observer } from '../../infrastructure'
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common';
 import TextareaAutosize from 'react-autosize-textarea';
@@ -7,14 +7,11 @@ import FriendChatBox from './FriendChatBox';
 import FriendMessage from './FriendMessage';
 import '../user/css/UserAllPage.css';
 import './css/MessageBox.css';
-import { connect } from 'react-redux';
-import { fetchAllChatFriendsAction, updateUserStatusAction } from '../../store/actions/userActions'
-import { fetchAllMessagesAction, addMessageAction } from '../../store/actions/messageActions'
 
 import Stomp from "stompjs";
 import SockJS from "sockjs-client";
 
-class MessageBox extends Component {
+export default class MessageBox extends Component {
     constructor(props) {
         super(props)
 
@@ -31,13 +28,15 @@ class MessageBox extends Component {
             content: '',
             shouldScrollDown: false,
             friendsArrLength: 0,
+            friendsArr: [],
+            allMessages: [],
+            webSocketMessages: [],
+            friendsChatArr: [],
             clientConnected: false,
             touched: {
                 content: false,
             }
         };
-
-        this._isMounted = false;
 
         this.serverUrl = userService.getBaseUrl() + '/socket'
         this.stompClient = null;
@@ -48,117 +47,77 @@ class MessageBox extends Component {
         this.showUserChatBox = this.showUserChatBox.bind(this);
         this.changeChatBoxDisplay = this.changeChatBoxDisplay.bind(this);
         this.getAllMessages = this.getAllMessages.bind(this);
-        this.loadAllChatFriends = this.loadAllChatFriends.bind(this);
 
         observer.subscribe(observer.events.loadMessages, this.showUserChatBox)
     }
 
+    static getDerivedStateFromProps(props, state) {
+        if (props.friendsChatArr.length !== state.friendsChatArr.length) {
+            return {
+                friendsChatArr: props.friendsChatArr,
+                chatBoxDisplay: 'display-none'
+            }
+        }
+        return null;
+    }
+
     componentDidMount() {
+        this.props.loadAllChatFriends();
         const userId = userService.getUserId();
         this.setState({
             loggedInUserId: userId,
         });
 
         this.initializeWebSocketConnection();
-        this.loadAllChatFriends();
-
-        this._isMounted = true;
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        if (this.props.allMessagesArr !== prevProps.allMessagesArr) {
-            this.setState({
-                content: '',
-            }, () => {
-                if (this.state.shouldScrollDown) {
-                    this.scrollDown();
-                } else {
-                    this.setState({ shouldScrollDown: true }, this.scrollTop())
-                }
-            });
-        }
-
-        if (this.props.friendsChatArr.length !== prevProps.friendsChatArr.length) {
-            this.setState({
-                chatBoxDisplay: 'display-none'
-            })
-        }
-
-        if ((this.props.fetchAllChatFriends.hasError && prevProps.fetchAllChatFriends.error !== this.props.fetchAllChatFriends.error) ||
-            (this.props.fetchAllMessages.hasError && prevProps.fetchAllMessages.error !== this.props.fetchAllMessages.error)) {
-
-            const errorMessage =
-                this.props.fetchAllChatFriends.message ||
-                this.props.fetchAllMessages.message || 'Server Error';
-
-            toast.error(<ToastComponent.errorToast text={errorMessage} />, {
-                position: toast.POSITION.TOP_RIGHT
-            });
-
-        } else if (
-            (!this.props.fetchAllChatFriends.hasError && this.props.fetchAllChatFriends.message && this.props.fetchAllChatFriends !== prevProps.fetchAllChatFriends) ||
-            (!this.props.fetchAllMessages.hasError && this.props.fetchAllMessages.message && this.props.fetchAllMessages !== prevProps.fetchAllMessages)) {
-            const successMessage =
-                this.props.fetchAllChatFriends.message ||
-                this.props.fetchAllMessages.message;
-
-            toast.success(<ToastComponent.successToast text={successMessage} />, {
-                position: toast.POSITION.TOP_RIGHT
-            });
-        }
-    }
-
-    componentWillUnmount() {
-        this.stompClient.disconnect();
-        this._isMounted = false;
     }
 
     initializeWebSocketConnection = () => {
         const ws = new SockJS(this.serverUrl);
+
         this.stompClient = Stomp.over(ws);
         const headers = this.getAuthHeader();
 
         this.stompClient.connect(headers, (frame) => {
-            if (this._isMounted) {
-                this.setState({ clientConnected: true });
-                console.log('this.state.clientConnected: ', this.state.clientConnected);
-                this.stompClient.subscribe("/user/queue/position-update", (message) => {
-                    if (message.body) {
-                        const messageBody = JSON.parse(message.body);
-                        if (this._isMounted && (messageBody.fromUserId === this.state.chatUserId || messageBody.fromUserId === userService.getUserId())) {
-                            this.props.addMessage(messageBody)
-                        }
+            this.setState({ clientConnected: true });
+            this.stompClient.subscribe("/user/queue/position-update", (message) => {
+                if (message.body) {
+                    const parsedBody = JSON.parse(message.body);
 
-                        if (messageBody.fromUserId !== userService.getUserId()) {
-                            const formattedUserNames = userService.formatUsername(messageBody.fromUserFirstName, messageBody.fromUserLastName)
-
-                            toast.info(<ToastComponent.infoToast text={`You have a new message from ${formattedUserNames}!`} />, {
-                                position: toast.POSITION.TOP_RIGHT
-                            });
-                        }
+                    if (parsedBody.fromUserId === this.state.chatUserId || parsedBody.fromUserId === userService.getUserId()) {
+                        this.setState(prevState => ({
+                            allMessages: [...prevState.allMessages, parsedBody],
+                        }), () => this.scrollDown());
                     }
-                });
 
-                this.stompClient.subscribe("/chat/login", (message) => {
-                    if (message.body) {
-                        const parsedBody = JSON.parse(message.body);
-                        this.changeUserOnlineStatus(parsedBody);
-                    }
-                });
+                    if (parsedBody.fromUserId !== userService.getUserId()) {
+                        const formattedUserNames = userService.formatUsername(parsedBody.fromUserFirstName, parsedBody.fromUserLastName)
 
-                this.stompClient.subscribe("/chat/logout", (message) => {
-                    if (message.body) {
-                        const parsedBody = JSON.parse(message.body);
-                        this.changeUserOnlineStatus(parsedBody);
+                        toast.info(<ToastComponent.infoToast text={`You have a new message from ${formattedUserNames}!`} />, {
+                            position: toast.POSITION.TOP_RIGHT
+                        });
                     }
-                });
-            }
+                }
+            });
+
+            this.stompClient.subscribe("/chat/login", (message) => {
+                if (message.body) {
+                    const parsedBody = JSON.parse(message.body);
+                    this.changeUserOnlineStatus(parsedBody);
+                }
+            });
+
+            this.stompClient.subscribe("/chat/logout", (message) => {
+                if (message.body) {
+                    const parsedBody = JSON.parse(message.body);
+                    this.changeUserOnlineStatus(parsedBody);
+                }
+            });
         }, () => {
             toast.error(<ToastComponent.errorToast text={`Lost connection to ${this.serverUrl}. Refresh the page to reconnect.`} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
 
-            //// Callback for automatically reconnecting to the server
+            //// Callback to automatically reconnecting to the server
             // setTimeout(() => {
             //     toast.error(<ToastComponent.errorToast text={`Lost connection to ${this.serverUrl}. Trying to reconnect.`} />, {
             //         position: toast.POSITION.TOP_RIGHT
@@ -180,13 +139,34 @@ class MessageBox extends Component {
             : {}
     }
 
-    getAllMessages = (chatUserId) => {
-        this.props.fetchAllMessages(chatUserId);
-    }
+    getAllMessages = () => {
+        requester.get('/message/all/' + this.state.chatUserId, (response) => {
+            if (response) {
+                this.setState({
+                    allMessages: response,
+                    content: '',
+                }, () => {
+                    if (this.state.shouldScrollDown) {
+                        this.scrollDown();
+                    } else {
+                        this.setState({ shouldScrollDown: true }, this.scrollTop())
+                    }
+                })
+            } else {
+                toast.error(<ToastComponent.errorToast text={response.message} />, {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+            }
+        }).catch(err => {
+            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
 
-    loadAllChatFriends = () => {
-        const userId = userService.getUserId();
-        this.props.loadAllChatFriends(userId);
+            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
+                localStorage.clear();
+                this.props.history.push('/login');
+            }
+        })
     }
 
     onSubmitHandler(event) {
@@ -271,9 +251,9 @@ class MessageBox extends Component {
             shouldScrollDown: true,
             chatBoxDisplay: '',
             chatBoxHeight: '',
-            content: '',
+
         }, () => {
-            this.getAllMessages(id);
+            this.getAllMessages();
         })
     }
 
@@ -297,26 +277,29 @@ class MessageBox extends Component {
     }
 
     getOnlineUserCount = () => {
-        let usersCount = this.props.friendsChatArr.filter(user => { return user.online === true });
+        let usersCount = this.state.friendsChatArr.filter(user => { return user.online === true });
         return usersCount.length;
     }
 
     changeUserOnlineStatus(webSocketMessage) {
         const { userId: id, online } = webSocketMessage;
-        this.props.updateUserStatus({ id, online });
+
+        const copieFriendsChatArr = JSON.parse(JSON.stringify(this.state.friendsChatArr));
+        const index = copieFriendsChatArr.findIndex(x => x.id === id);
+
+        this.setState((prevState, props) => ({
+            friendsChatArr:
+                [...copieFriendsChatArr.slice(0, index),
+                { ...copieFriendsChatArr[index], online: online },
+                ...copieFriendsChatArr.slice(index + 1)]
+        }));
+    }
+
+    componentWillUnmount() {
+        this.stompClient.disconnect();
     }
 
     render() {
-        if (!this.state.clientConnected) {
-            console.log('Connecting...')
-            return <h1 className="text-center pt-5 mt-5">Connecting...</h1>
-        }
-
-        const loading = this.props.fetchAllChatFriends.loading || this.props.fetchAllMessages.loading;
-        if (loading) {
-            return <h1 className="text-center pt-5 mt-5">Loading...</h1>
-        }
-
         const { content } = this.state;
         const errors = this.validate(content);
         const isEnabled = !Object.keys(errors).some(x => errors[x]);
@@ -326,7 +309,7 @@ class MessageBox extends Component {
         const chatBoxHeight = this.state.chatBoxHeight;
         const chatBoxDisplay = this.state.chatBoxDisplay;
 
-        const { chatUserProfilePicUrl, chatUserNameFormatted } = this.state;
+        const { chatUserFirstName, chatUserLastName, chatUserProfilePicUrl, chatUserNameFormatted } = this.state;
         const imageClassUserPick = userService.getImageSize(chatUserProfilePicUrl);
         const firstNameFormatted = userService.formatUsername(loggedInUserFirstName);
 
@@ -343,7 +326,7 @@ class MessageBox extends Component {
                     </div>
                     <div className="messagebox-friendsChatArr-wrapper">
 
-                        {this.props.friendsChatArr.map((friend) =>
+                        {this.state.friendsChatArr.map((friend) =>
                             <FriendChatBox
                                 key={friend.id}
                                 showUserChatBox={this.showUserChatBox}
@@ -369,7 +352,7 @@ class MessageBox extends Component {
                     <div className="content-wrapper">
 
                         <div className="chat-content" id="chat-content">
-                            {this.props.allMessagesArr.map((message) =>
+                            {this.state.allMessages.map((message) =>
                                 <FriendMessage
                                     key={message.id}
                                     {...message}
@@ -409,24 +392,3 @@ class MessageBox extends Component {
         )
     }
 }
-
-const mapStateToProps = (state) => {
-    return {
-        friendsChatArr: state.fetchAllChatFriends.friendsChatArr,
-        fetchAllChatFriends: state.fetchAllChatFriends,
-
-        allMessagesArr: state.fetchAllMessages.allMessagesArr,
-        fetchAllMessages: state.fetchAllMessages,
-    }
-}
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        loadAllChatFriends: (userId) => { dispatch(fetchAllChatFriendsAction(userId)) },
-        fetchAllMessages: (chatUserId) => { dispatch(fetchAllMessagesAction(chatUserId)) },
-        updateUserStatus: (userData) => { dispatch(updateUserStatusAction(userData)) },
-        addMessage: (messageBody) => { dispatch(addMessageAction(messageBody)) },
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(MessageBox);

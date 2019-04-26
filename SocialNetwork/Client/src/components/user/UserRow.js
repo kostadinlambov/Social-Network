@@ -32,11 +32,14 @@ export default class UserRow extends Component {
                     position: toast.POSITION.TOP_RIGHT
                 });
             } else {
+                debugger;
                 toast.error(<ToastComponent.errorToast text={response.message} />, {
                     position: toast.POSITION.TOP_RIGHT
                 });
             }
         }).catch(err => {
+            console.log(err)
+            debugger;
             toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
                 position: toast.POSITION.TOP_RIGHT
             });

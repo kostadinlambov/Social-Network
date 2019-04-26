@@ -8,6 +8,8 @@ import { userService, requester } from './infrastructure';
 import { ToastContainer, toast, Zoom } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css'
 import './styles/App.css';
+import { connect } from 'react-redux';
+import { logoutAction } from './store/actions/authActions';
 
 const StartPage = lazy(() => import('./components/auth/StartPage'))
 const RegisterPage = lazy(() => import('./components/auth/RegisterPage'))
@@ -24,7 +26,7 @@ class App extends Component {
   }
 
   onLogout() {
-    window.localStorage.clear();
+    this.props.logout();
 
     toast.success(<ToastComponent.successToast text={`"You have been successfully logged out."`} />, {
       position: toast.POSITION.TOP_RIGHT
@@ -56,4 +58,17 @@ class App extends Component {
   }
 }
 
-export default withRouter(App);
+function mapStateToProps(state) {
+  return {
+      // loginSuccess: state.login.success,
+      // loginError: state.loginError
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+      logout: () => dispatch(logoutAction()),
+  }
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

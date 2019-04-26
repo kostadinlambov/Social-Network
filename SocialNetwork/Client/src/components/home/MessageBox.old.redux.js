@@ -8,6 +8,9 @@ import FriendMessage from './FriendMessage';
 import '../user/css/UserAllPage.css';
 import './css/MessageBox.css';
 
+import Stomp from "stompjs";
+import SockJS from "sockjs-client";
+
 export default class MessageBox extends Component {
     constructor(props) {
         super(props)
@@ -25,70 +28,181 @@ export default class MessageBox extends Component {
             content: '',
             shouldScrollDown: false,
             friendsArrLength: 0,
-            friendsArr: [],
-            allMessages: [],
+            allMessagesArr: this.props.allMessagesArr || [],
+            friendsChatArr: this.props.friendsChatArr || [],
+            webSocketMessages: [],
+            clientConnected: false,
             touched: {
                 content: false,
             }
         };
+
+        this._isMounted = false;
+
+        this.serverUrl = userService.getBaseUrl() + '/socket'
+        this.stompClient = null;
 
         this.handleBlur = this.handleBlur.bind(this);
         this.onChangeHandler = this.onChangeHandler.bind(this);
         this.onSubmitHandler = this.onSubmitHandler.bind(this);
         this.showUserChatBox = this.showUserChatBox.bind(this);
         this.changeChatBoxDisplay = this.changeChatBoxDisplay.bind(this);
-        this.getAllMessages = this.getAllMessages.bind(this);
-        
+        // this.getAllMessages = this.getAllMessages.bind(this);
+
         observer.subscribe(observer.events.loadMessages, this.showUserChatBox)
     }
 
+    // static getDerivedStateFromProps(props, state) {
+    //     if (props.friendsChatArr.length !== state.friendsChatArr.length) {
+    //         return {
+    //             friendsChatArr: props.friendsChatArr,
+    //             chatBoxDisplay: 'display-none'
+    //         }
+    //     }
+    //     return null;
+    // }
+
     componentDidMount() {
-        this.props.loadAllChatFriends();
+        this._isMounted = true;
+        // this.props.loadAllChatFriends();
         const userId = userService.getUserId();
         this.setState({
             loggedInUserId: userId,
-        })
+            // allMessagesArr: this.props.allMessagesArr || []
+        });
+
+        this.initializeWebSocketConnection();
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (this.props.friendsChatArr.length !== nextProps.friendsChatArr.length) {
-            this.setState({ chatBoxDisplay: 'display-none' })
+    componentDidUpdate(prevProps, prevState) {
+        // console.log('prevProps: ', prevProps);
+        // console.log('this.props: ', this.props);
+        // debugger;
+
+        if (this.props.allMessagesArr !== prevProps.allMessagesArr) {
+            this.setState({
+                allMessagesArr: this.props.allMessagesArr,
+                content: '',
+            }, () => {
+                if (this.state.shouldScrollDown) {
+                    this.scrollDown();
+                } else {
+                    this.setState({ shouldScrollDown: true }, this.scrollTop())
+                }
+            });
         }
 
-        if (this.props.openMessageBox !== nextProps.openMessageBox) {
-            this.setState({ chatBoxDisplay: 'display-none' })
+        if (this.props.friendsChatArr.length !== this.state.friendsChatArr.length) {
+            this.setState( {
+                friendsChatArr: this.props.friendsChatArr,
+                chatBoxDisplay: 'display-none'
+            })
         }
     }
 
-    getAllMessages = () => {
-        requester.get('/message/all/' + this.state.chatUserId, (response) => {
-            if (response) {
-                this.setState({
-                    allMessages: response,
-                    content: '',
-                }, () => {
-                    if (this.state.shouldScrollDown) {
-                        this.scrollDown();
-                    } else {
-                        this.setState({ shouldScrollDown: true }, this.scrollTop())
+    componentWillUnmount() {
+        this.stompClient.disconnect();
+        this._isMounted = false;
+    }
+
+    initializeWebSocketConnection = () => {
+        const ws = new SockJS(this.serverUrl);
+        console.log('this.state.clientConnected: ', this.state.clientConnected);
+        this.stompClient = Stomp.over(ws);
+        const headers = this.getAuthHeader();
+
+        this.stompClient.connect(headers, (frame) => {
+            this.setState({ clientConnected: true });
+
+                this.stompClient.subscribe("/user/queue/position-update", (message) => {
+                    if (message.body) {
+                        const parsedBody = JSON.parse(message.body);
+                        if (this._isMounted === true && (parsedBody.fromUserId === this.state.chatUserId || parsedBody.fromUserId === userService.getUserId())) {
+                            console.log('this.isMounted setState: ', 'Set State async');
+                            this.setState(prevState => ({
+                                allMessagesArr: [...prevState.allMessagesArr, parsedBody],
+                            }), () => this.scrollDown());
+                        }
+
+                        if (parsedBody.fromUserId !== userService.getUserId()) {
+                            const formattedUserNames = userService.formatUsername(parsedBody.fromUserFirstName, parsedBody.fromUserLastName)
+
+                            toast.info(<ToastComponent.infoToast text={`You have a new message from ${formattedUserNames}!`} />, {
+                                position: toast.POSITION.TOP_RIGHT
+                            });
+                        }
                     }
-                })
-            } else {
-                toast.error(<ToastComponent.errorToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
                 });
-            }
-        }).catch(err => {
-            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+
+                this.stompClient.subscribe("/chat/login", (message) => {
+                    if (message.body) {
+                        const parsedBody = JSON.parse(message.body);
+                        this.changeUserOnlineStatus(parsedBody);
+                    }
+                });
+
+                this.stompClient.subscribe("/chat/logout", (message) => {
+                    if (message.body) {
+                        const parsedBody = JSON.parse(message.body);
+                        this.changeUserOnlineStatus(parsedBody);
+                    }
+                });
+        }, () => {
+            toast.error(<ToastComponent.errorToast text={`Lost connection to ${this.serverUrl}. Refresh the page to reconnect.`} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
 
-            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-                localStorage.clear();
-                this.props.history.push('/login');
-            }
-        })
+            //// Callback to automatically reconnecting to the server
+            // setTimeout(() => {
+            //     toast.error(<ToastComponent.errorToast text={`Lost connection to ${this.serverUrl}. Trying to reconnect.`} />, {
+            //         position: toast.POSITION.TOP_RIGHT
+            //     });
+            //     this.initializeWebSocketConnection();
+            // }, 10000);
+        });
     }
+
+    sendMessage(payload) {
+        this.stompClient.send("/app/message", {}, JSON.stringify(payload));
+        this.setState({ content: '' })
+    }
+
+    getAuthHeader = () => {
+        const token = localStorage.getItem("token");
+        return (token && token.length)
+            ? { 'Authorization': `Bearer ${token}` }
+            : {}
+    }
+
+    // getAllMessages = () => {
+    //     requester.get('/message/all/' + this.state.chatUserId, (response) => {
+    //         if (response) {
+    //             this.setState({
+    //                 allMessagesArr: response,
+    //                 content: '',
+    //             }, () => {
+    //                 if (this.state.shouldScrollDown) {
+    //                     this.scrollDown();
+    //                 } else {
+    //                     this.setState({ shouldScrollDown: true }, this.scrollTop())
+    //                 }
+    //             })
+    //         } else {
+    //             toast.error(<ToastComponent.errorToast text={response.message} />, {
+    //                 position: toast.POSITION.TOP_RIGHT
+    //             });
+    //         }
+    //     }).catch(err => {
+    //         toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+    //             position: toast.POSITION.TOP_RIGHT
+    //         });
+
+    //         if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
+    //             localStorage.clear();
+    //             this.props.history.push('/login');
+    //         }
+    //     })
+    // }
 
     onSubmitHandler(event) {
         event.preventDefault();
@@ -99,24 +213,13 @@ export default class MessageBox extends Component {
 
         const { chatUserId: toUserId, content } = this.state;
 
-        requester.post('/message/create', { toUserId, content }, (response) => {
-            if (response.success === true) {
-                this.getAllMessages();
-                this.setState({ content: '' })
-                // toast.success(<ToastComponent.successToast text={response.message} />, {
-                //     position: toast.POSITION.TOP_RIGHT
-                // });
-            } else {
-                toast.error(<ToastComponent.errorToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-            }
-        }).catch(err => {
-            localStorage.clear();
-            toast.error(<ToastComponent.errorToast text={`${err.message}`} />, {
+        if (this.state.clientConnected) {
+            this.sendMessage({ toUserId, content });
+        } else {
+            toast.error(<ToastComponent.errorToast text={`StompClient is disconnected`} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
-        })
+        }
     }
 
     onChangeHandler(event) {
@@ -172,7 +275,7 @@ export default class MessageBox extends Component {
     }
 
     showUserChatBox = (data, event) => {
-        const {id, firstName, lastName, profilePicUrl} = data
+        const { id, firstName, lastName, profilePicUrl } = data
         let chatUserNameFormatted = userService.formatUsername(firstName, lastName, 18)
         this.setState({
             chatUserId: id,
@@ -180,12 +283,12 @@ export default class MessageBox extends Component {
             chatUserLastName: lastName,
             chatUserNameFormatted,
             chatUserProfilePicUrl: profilePicUrl,
-            shouldScrollDown: false,
+            shouldScrollDown: true,
             chatBoxDisplay: '',
             chatBoxHeight: '',
-
+            content: '',
         }, () => {
-            this.getAllMessages();
+            this.props.getAllMessages(id);
         })
     }
 
@@ -208,7 +311,34 @@ export default class MessageBox extends Component {
         container.scrollTop = container.scrollHeight
     }
 
+    getOnlineUserCount = () => {
+        let usersCount = this.state.friendsChatArr.filter(user => { return user.online === true });
+        return usersCount.length;
+    }
+
+    changeUserOnlineStatus(webSocketMessage) {
+        const { userId: id, online } = webSocketMessage;
+
+        const copieFriendsChatArr = JSON.parse(JSON.stringify(this.props.friendsChatArr));
+        const index = copieFriendsChatArr.findIndex(x => x.id === id);
+
+        this.setState((prevState, props) => ({
+            friendsChatArr:
+                [...copieFriendsChatArr.slice(0, index),
+                { ...copieFriendsChatArr[index], online: online },
+                ...copieFriendsChatArr.slice(index + 1)]
+        }));
+
+        console.log()
+    }
+
+   
+
     render() {
+        if (!this.state.clientConnected) {
+            // console.log('Connecting...')
+            return <h1 className="text-center pt-5 mt-5">Connecting...</h1>
+        }
         const { content } = this.state;
         const errors = this.validate(content);
         const isEnabled = !Object.keys(errors).some(x => errors[x]);
@@ -220,7 +350,12 @@ export default class MessageBox extends Component {
 
         const { chatUserFirstName, chatUserLastName, chatUserProfilePicUrl, chatUserNameFormatted } = this.state;
         const imageClassUserPick = userService.getImageSize(chatUserProfilePicUrl);
-        const firstNameFormatted = userService.formatUsername(loggedInUserFirstName)
+        const firstNameFormatted = userService.formatUsername(loggedInUserFirstName);
+
+        // console.log('MessageBox this.props: ', this.props);
+        // console.log('MessageBox  this.state: ', this.state);
+        // console.log('MessageBox  this.state.allMessagesArr: ', this.state.allMessagesArr)
+        // debugger;
         return (
             <Fragment>
                 <section className={`messagebox-container ${userBoxHeight}`} >
@@ -229,17 +364,19 @@ export default class MessageBox extends Component {
                             <i className="fas fa-location-arrow"></i>
                         </div>
                         <h4 className="chat-title" style={{ color: ' #333' }}>
-                            Chat
+                            Chat &bull; {this.getOnlineUserCount()}
                         </h4>
                     </div>
+                    <div className="messagebox-friendsChatArr-wrapper">
 
-                    {this.props.friendsChatArr.map((friend) =>
-                        <FriendChatBox
-                            key={friend.id}
-                            showUserChatBox={this.showUserChatBox}
-                            {...friend}
-                        />
-                    )}
+                        {this.state.friendsChatArr.map((friend) =>
+                            <FriendChatBox
+                                key={friend.id}
+                                showUserChatBox={this.showUserChatBox}
+                                {...friend}
+                            />
+                        )}
+                    </div>
                 </section>
                 <section className={`chat-container ${chatBoxHeight} ${chatBoxDisplay}`} id="chat-container">
                     <div className="chat-friend-container" onClick={this.changeChatBoxHeight}>
@@ -258,7 +395,7 @@ export default class MessageBox extends Component {
                     <div className="content-wrapper">
 
                         <div className="chat-content" id="chat-content">
-                            {this.state.allMessages.map((message) =>
+                            {this.state.allMessagesArr.map((message) =>
                                 <FriendMessage
                                     key={message.id}
                                     {...message}

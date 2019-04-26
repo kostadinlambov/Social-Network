@@ -1,7 +1,5 @@
-import React from 'react';
-
 import { LOGIN_SUCCESS, LOGIN_ERROR, REDIRECTED, REGISTER_SUCCESS, REGISTER_ERROR, LOGOUT_SUCCESS } from './actionTypes';
-import { beginAjax, endAjax } from './ajaxStatusActions';
+import { ajaxBegin, ajaxEnd } from './ajaxActions';
 import { requester } from '../../infrastructure';
 
 function registerSuccess(message) {
@@ -11,13 +9,12 @@ function registerSuccess(message) {
     }
 }
 
-function registerError(error) {
+function registerError(messsage) {
     return {
         type: REGISTER_ERROR,
-        error
+        messsage
     }
 }
-
 
 function loginSuccess() {
     return {
@@ -25,10 +22,10 @@ function loginSuccess() {
     }
 }
 
-function loginError(error) {
+function loginError(messsage) {
     return {
         type: LOGIN_ERROR,
-        error
+        messsage
     }
 }
 
@@ -39,7 +36,7 @@ function redirectAction() {
 }
 
 function logoutSuccess() {
-    return{
+    return {
         type: LOGOUT_SUCCESS
     }
 }
@@ -47,54 +44,50 @@ function logoutSuccess() {
 
 function registerAction(userData) {
     return (dispatch) => {
-        dispatch(beginAjax());
-        return requester.post('/users/register',{...userData},(response) => {
-                if (response.success === true) {
-                    dispatch(registerSuccess(response.message))
-                } else {
-                    dispatch(registerError(response.message))
-                }
-                dispatch(endAjax());
-            }).catch(err => {
-                dispatch(registerError(`${err.message}`));
-                dispatch(endAjax());
-            })
+        dispatch(ajaxBegin());
+        return requester.post('/users/register', { ...userData }, (response) => {
+            if (response.success === true) {
+                dispatch(registerSuccess(response.message))
+            } else {
+                dispatch(registerError(response.message))
+            }
+            dispatch(ajaxEnd());
+        }).catch(err => {
+            dispatch(registerError(`${err.message}`));
+            dispatch(ajaxEnd());
+        })
     }
 }
 
 function loginAction(username, password) {
     return (dispatch) => {
-        dispatch(beginAjax());
+        dispatch(ajaxBegin());
         return requester.post('/login', { username, password }, (response) => {
             if (response.error) {
                 dispatch(loginError(' Incorrect credentials!'));
             } else {
-                authenticateUser(response)
+                saveToken(response)
                 dispatch(loginSuccess());
             }
-            dispatch(endAjax());
+            dispatch(ajaxEnd());
         }).catch(err => {
             localStorage.clear();
             dispatch(loginError(`${err.message}`));
-            dispatch(endAjax());
+            dispatch(ajaxEnd());
         })
     }
 }
 
-function logoutAction(){
+function logoutAction() {
     return (dispatch) => {
-        window.localStorage.clear();
+        localStorage.clear();
         dispatch(logoutSuccess())
     }
 }
 
-
-
-function authenticateUser(response) {
+function saveToken(response) {
     const token = response.split(' ')[1];
-    window.localStorage.setItem('token', token);
+    localStorage.setItem('token', token);
 }
 
-
-
-export { loginAction, redirectAction, registerAction };
+export { loginAction, redirectAction, registerAction, logoutAction };

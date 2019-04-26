@@ -9,6 +9,10 @@ export default {
         return BASE_URL;
     },
 
+    isAuthenticated: () => {
+        return window.localStorage.getItem('token') !== null
+    },
+
     getPayload: () => {
         const token = localStorage.getItem('token')
 
