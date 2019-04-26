@@ -57,9 +57,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserCreateViewModel createUser(UserServiceModel userServiceModel) {
-        loggerService.createLog("POST", userServiceModel.getUsername(), "users", "register");
+        this.loggerService.createLog("POST", userServiceModel.getUsername(), "users", "register");
 
-        if (!userValidation.isValid(userServiceModel)) {
+        if (!this.userValidation.isValid(userServiceModel)) {
             throw new CustomException(SERVER_ERROR_MESSAGE);
         }
 
@@ -116,7 +116,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserServiceModel updateUserOnlineStatus(String userName, boolean changeToOnline) throws Exception {
-        User user = userRepository.findByUsername(userName)
+        User user = this.userRepository.findByUsername(userName)
                 .filter(userValidation::isValid)
                 .orElseThrow(() -> new CustomException(SERVER_ERROR_MESSAGE));
 
