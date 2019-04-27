@@ -1,13 +1,22 @@
-import React, { Component, Fragment, lazy, Suspense } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { ToastComponent } from '../common'
-import { requester, userService } from '../../infrastructure/'
-import { connect } from 'react-redux';
-import { fetchPicturesAction } from '../../store/actions/pictureActions'
-import { fetchAllChatFriendsAction } from '../../store/actions/userActions'
-import { fetchAllMessagesAction } from '../../store/actions/messageActions'
+import { ToastComponent } from '../common';
+import { requester, userService } from '../../infrastructure/';
+import placeholder_user_image from '../../assets/images/placeholder.png';
+import default_background_image from '../../assets/images/default-background-image.jpg';
 
+import MessageBox from './MessageBox';
+import UserSearchResultsPage from '../../components/user/UserSearchResultsPage';
+import UserProfilePage from '../../components/user/UserProfilePage';
+import UserFriendsAllPage from '../../components/user/UserFriendsAllPage';
+import UserFindFriendsPage from '../../components/user/UserFindFriendsPage';
+import UserAllPage from '../../components/user/UserAllPage';
+import UserEditPage from '../../components/user/UserEditPage';
+import UserDeletePage from '../../components/user/UserDeletePage';
+import UserGalleryPage from '../../components/user/UserGalleryPage';
+import UserLogsPage from '../../components/user/UserLogsPage';
+import ErrorPage from '../../components/common/ErrorPage';
 import TimeLine from './TimeLine';
 import HeaderSection from './HeaderSection';
 import MainSharedContent from './MainSharedContent';
@@ -15,21 +24,9 @@ import Intro from './Intro';
 import PhotoGallery from './PhotosGallery';
 import FriendsGallery from './FriendsGallery';
 
-import placeholder_user_image from '../../assets/images/placeholder.png';
-import default_background_image from '../../assets/images/default-background-image.jpg';
-
-const UserSearchResultsPage = lazy(() => import('../../components/user/UserSearchResultsPage'));
-const UserProfilePage = lazy(() => import('../../components/user/UserProfilePage'));
-const UserFriendsAllPage = lazy(() => import('../../components/user/UserFriendsAllPage'));
-const UserFindFriendsPage = lazy(() => import('../../components/user/UserFindFriendsPage'));
-const UserAllPage = lazy(() => import('../../components/user/UserAllPage'));
-const UserEditPage = lazy(() => import('../../components/user/UserEditPage'));
-const UserDeletePage = lazy(() => import('../../components/user/UserDeletePage'));
-const UserGalleryPage = lazy(() => import('../../components/user/UserGalleryPage'));
-const UserLogsPage = lazy(() => import('../../components/user/UserLogsPage'));
-const MessageBox = lazy(() => import('./MessageBox'));
-
-const ErrorPage = lazy(() => import('../../components/common/ErrorPage'));
+import { connect } from 'react-redux';
+import { fetchPicturesAction } from '../../store/actions/pictureActions';
+import { fetchLoggedInUserAction, updateLoggedInUserDataAction, fetchTimeLineUserAction, updateTimeLineUserDataAction, fetchAllFriendsAction } from '../../store/actions/userActions';
 
 class HomePage extends Component {
     constructor(props) {
@@ -66,27 +63,47 @@ class HomePage extends Component {
     }
 
     componentDidMount() {
-        console.log("componentDidMount")
+        console.log("Home componentDidMount")
         const userId = userService.getUserId();
+        this.props.loadLoggedInUserData(userId);
+        this.getUserToShowId(userId);
         this.loadAllPictures(userId);
-        this.setState({ready: true})
+        this.loadAllFriends(userId);
+        this.setState({ ready: true });
     }
 
     componentDidUpdate(prevProps, prevState) {
         // console.log('prevProps: ', prevProps);
         // console.log('this.props: ', this.props);
         // debugger;
+        if (
+            (this.props.fetchPictures.hasError && prevProps.fetchPictures.error !== this.props.fetchPictures.error) ||
+            (this.props.timeLineUserData.hasError && prevProps.timeLineUserData.error !== this.props.timeLineUserData.error) ||
+            (this.props.loggedInUserData.hasError && prevProps.loggedInUserData.error !== this.props.loggedInUserData.error) ||
+            (this.props.fetchAllFriends.hasError && prevProps.fetchAllFriends.error !== this.props.fetchAllFriends.error)
+        ) {
 
-        if ((this.props.fetchPictures.hasError && prevProps.fetchPictures.error !== this.props.fetchPictures.error)) {
-            const errorMessage = this.props.fetchPictures.message || 'Server Error'
+            const errorMessage =
+                this.props.fetchPictures.message ||
+                this.props.timeLineUserData.message ||
+                this.props.loggedInUserData.message ||
+                this.props.fetchAllFriends.message || 'Server Error'
 
             toast.error(<ToastComponent.errorToast text={errorMessage} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
-            
+
         } else if (
-            (!this.props.fetchPictures.hasError && this.props.fetchPictures.message && this.props.fetchPictures !== prevProps.fetchPictures) ) {
-            const successMessage = this.props.fetchPictures.message;
+            (!this.props.fetchPictures.hasError && this.props.fetchPictures.message && this.props.fetchPictures !== prevProps.fetchPictures) ||
+            (!this.props.timeLineUserData.hasError && this.props.timeLineUserData.message && this.props.timeLineUserData !== prevProps.timeLineUserData) ||
+            (!this.props.loggedInUserData.hasError && this.props.loggedInUserData.message && this.props.loggedInUserData !== prevProps.loggedInUserData) ||
+            (!this.props.fetchAllFriends.hasError && this.props.fetchAllFriends.message && this.props.fetchAllFriends !== prevProps.fetchAllFriends)) {
+
+            const successMessage =
+                this.props.fetchPictures.message ||
+                this.props.timeLineUserData.message ||
+                this.props.loggedInUserData.message ||
+                this.props.fetchAllFriends.message;
 
             toast.success(<ToastComponent.successToast text={successMessage} />, {
                 position: toast.POSITION.TOP_RIGHT
@@ -96,43 +113,21 @@ class HomePage extends Component {
         }
     }
 
-    getUserToShowId(getUserToShowId) {
-        requester.get(`/users/details/${getUserToShowId}`, (userData) => {
-            this.setState({
-                ...userData, ready: true
-            }, () => {
-                (() => this.loadAllPictures(getUserToShowId))();
-                (() => this.loadAllFriends(getUserToShowId))();
-                (() => this.loadAllChatFriends())();
-            })
+    getUserToShowId(userId) {
+        this.props.loadTimelineUserData(userId);
 
-            if (userData.error) {
-                this.props.history.push("/");
-            }
-        }).catch(err => {
-            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-                position: toast.POSITION.TOP_RIGHT
-            });
+        // requester.get(`/users/details/${getUserToShowId}`, (userData) => {
+        //     console.log('userData: ', userData);
+        //     this.setState({
+        //         ...userData, ready: true
+        //     }, () => {
+        //         (() => this.loadAllPictures(getUserToShowId))();
+        //         (() => this.loadAllFriends(getUserToShowId))();
+        //         (() => this.loadAllChatFriends())();
+        //     })
 
-            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-                localStorage.clear();
-                this.props.history.push('/login');
-            }
-        })
-    }
-
-    loadAllPictures = (userId) => {
-        this.props.loadAllPictures(userId);
-        // requester.get('/pictures/all/' + userId, (response) => {
-        //     if (response) {
-        //         this.setState({
-        //             picturesArr: response,
-        //             id: userId
-        //         })
-        //     } else {
-        //         toast.error(<ToastComponent.errorToast text={response.message} />, {
-        //             position: toast.POSITION.TOP_RIGHT
-        //         });
+        //     if (userData.error) {
+        //         this.props.history.push("/");
         //     }
         // }).catch(err => {
         //     toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
@@ -146,22 +141,27 @@ class HomePage extends Component {
         // })
     }
 
-    loadAllFriends = (userId) => {
-        requester.get(`/relationship/friends/${userId}`, (response) => {
-            this.setState({
-                friendsArr: response
-            },
-                (() => this.loadAllChatFriends())())
-        }).catch(err => {
-            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-                position: toast.POSITION.TOP_RIGHT
-            });
+    loadAllPictures = (userId) => {
+        this.props.loadAllPictures(userId);
+    }
 
-            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-                localStorage.clear();
-                this.props.history.push('/login');
-            }
-        })
+    loadAllFriends = (userId) => {
+        this.props.loadAllFriends(userId);
+        // requester.get(`/relationship/friends/${userId}`, (response) => {
+        //     this.setState({
+        //         friendsArr: response
+        //     },
+        //         (() => this.loadAllChatFriends())())
+        // }).catch(err => {
+        //     toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+        //         position: toast.POSITION.TOP_RIGHT
+        //     });
+
+        //     if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
+        //         localStorage.clear();
+        //         this.props.history.push('/login');
+        //     }
+        // })
     }
 
     findFriends = (userId, category) => {
@@ -216,7 +216,7 @@ class HomePage extends Component {
     }
 
     render() {
-        const loading = this.props.fetchPictures.loading;
+        const loading = this.props.fetchPictures.loading || this.props.timeLineUserData.loading || this.props.loggedInUserData.loading || this.props.fetchAllFriends.loading;
         if (!this.state.ready || loading) {
             return <h1 className="text-center pt-5 mt-5">Loading...</h1>
         }
@@ -229,15 +229,14 @@ class HomePage extends Component {
 
         return (
             <Fragment>
-                <HeaderSection  {...this.state} />
+                <HeaderSection  {...this.props.timeLineUserData} />
                 <main className="site-content">
                     <section className="main-section">
-                        <TimeLine {...this.state} />
-                        {/* <Suspense fallback={<h1 className="text-center pt-5 mt-5">Loading...</h1>}>
-                            <Switch>
-                                {loggedIn && <Route exact path="/home/comments/:id" render={props => <MainSharedContent  {...props}  {...this.state} getUserToShowId={this.getUserToShowId} />} />}
+                        <TimeLine {...this.props.timeLineUserData} />
+                        <Switch>
+                            {loggedIn && <Route exact path="/home/comments/:id" render={props => <MainSharedContent  {...props}  {...this.state} getUserToShowId={this.getUserToShowId} />} />}
 
-                                {loggedIn && <Route exact path="/home/profile/:id" render={props => <UserProfilePage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
+                            {/* {loggedIn && <Route exact path="/home/profile/:id" render={props => <UserProfilePage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
                                 {loggedIn && <Route exact path="/home/friends/:id" render={props => <UserFriendsAllPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} loadAllFriends={this.loadAllFriends} />} />}
                                 {loggedIn && <Route exact path="/home/findFriends/:id/:category" render={(props) => <UserFindFriendsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} findFriends={this.findFriends} />} />}
                                 {loggedIn && (isRoot || isAdmin || isTheCurrentLoggedInUser) && <Route exact path="/home/users/edit/:id" render={props => <UserEditPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
@@ -245,37 +244,19 @@ class HomePage extends Component {
                                 {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/users/all/:id" render={props => <UserAllPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
                                 {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/logs/:id" render={props => <UserLogsPage {...props} getUserToShowId={this.getUserToShowId} searchResults={this.searchResults} {...this.state} />} />}
                                 {loggedIn && <Route exact path="/home/gallery/:id" render={props => <UserGalleryPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} loadAllPictures={this.loadAllPictures} />} />}
-                                {loggedIn && <Route exact path="/home/users/search/" render={(props) => <UserSearchResultsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} searchResults={this.searchResults} />} />}
-                                <Route exact path="/error" component={ErrorPage} />
-                                <Route render={(props) => <Redirect to="/" {...props} />} />
-                            </Switch>
-                        </Suspense > */}
+                                {loggedIn && <Route exact path="/home/users/search/" render={(props) => <UserSearchResultsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} searchResults={this.searchResults} />} />} */}
+                            {/* <Route exact path="/error" component={ErrorPage} />
+                                <Route render={(props) => <Redirect to="/" {...props} />} /> */}
+                        </Switch>
                     </section>
-
-                    {
-                        <Fragment>
-                            <section className="aside-section">
-                                <Intro {...this.state} />
-                                <PhotoGallery picturesArr={this.props.picturesArr} />
-                                <FriendsGallery {...this.state} />
-                                <MessageBox
-                                    // loadAllChatFriends={this.loadAllChatFriends}
-                                    // friendsChatArr={this.props.friendsChatArr}
-                                />
-                            </section>
-                        </Fragment>
-                    }
-                    {/* 
-                    {this.state.ready &&
-                        <Fragment>
-                            <section className="aside-section">
-                                <Intro {...this.state} />
-                                <PhotoGallery {...this.state} />
-                                <FriendsGallery {...this.state} />
-                                <MessageBox loadAllChatFriends={this.loadAllChatFriends} friendsChatArr={this.state.friendsChatArr} />
-                            </section>
-                        </Fragment>
-                    } */}
+                    <Fragment>
+                        <section className="aside-section">
+                            <Intro {...this.props.timeLineUserData} />
+                            <PhotoGallery picturesArr={this.props.picturesArr} />
+                            <FriendsGallery friendsArr={this.props.friendsArr} />
+                            <MessageBox />
+                        </section>
+                    </Fragment>
                 </main>
             </Fragment>
         );
@@ -287,23 +268,21 @@ const mapStateToProps = (state) => {
         picturesArr: state.fetchPictures.picturesArr,
         fetchPictures: state.fetchPictures,
 
-        // friendsChatArr: state.fetchAllChatFriends.friendsChatArr,
-        // fetchAllChatFriends: state.fetchAllChatFriends,
+        timeLineUserData: state.timeLineUserData,
+        loggedInUserData: state.loggedInUserData,
 
-        // allMessagesArr: state.fetchAllMessages.allMessagesArr,
-        // fetchAllMessages: state.fetchAllMessages,
-
+        friendsArr: state.fetchAllFriends.friendsArr,
+        fetchAllFriends: state.fetchAllFriends,
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
         loadAllPictures: (userId) => { dispatch(fetchPicturesAction(userId)) },
-        // loadAllChatFriends: (userId) => { dispatch(fetchAllChatFriendsAction(userId)) },
-        // fetchAllMessages: (chatUserId) => { dispatch(fetchAllMessagesAction(chatUserId)) }
+        loadLoggedInUserData: (userId) => { dispatch(fetchLoggedInUserAction(userId)) },
+        loadTimelineUserData: (userId) => { dispatch(fetchTimeLineUserAction(userId)) },
+        loadAllFriends: (userId) => { dispatch(fetchAllFriendsAction(userId)) },
     }
 }
-
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

@@ -45,4 +45,4 @@ function fetchPicturesAction(userId) {
     }
 };
 
-export { fetchPicturesAction};
+export { fetchPicturesAction };

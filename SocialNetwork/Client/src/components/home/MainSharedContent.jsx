@@ -7,6 +7,9 @@ import './css/MainSharedContent.css'
 import WritePost from './WritePost';
 import WriteComment from './WriteComment';
 
+import { connect } from 'react-redux';
+import { fetchAllPostsAction } from '../../store/actions/postActions'
+
 class MainSharedContent extends Component {
     constructor(props) {
         super(props)
@@ -14,10 +17,10 @@ class MainSharedContent extends Component {
         this.state = {
             loggedInUserId: '',
             timelineUserId: '',
-            content: '',
             likeCount: 0,
             commentsCount: 0,
             allPostsArr: [],
+            ready: false
         };
 
         this.getAllPosts = this.getAllPosts.bind(this);
@@ -30,35 +33,57 @@ class MainSharedContent extends Component {
     componentDidMount = () => {
         const timelineUserId = this.props.match.params.id;
         const loggedInUserId = userService.getUserId();
-
-        this.props.getUserToShowId(timelineUserId);
-
-        this.setState({ loggedInUserId: loggedInUserId, timelineUserId: timelineUserId });
         this.getAllPosts(timelineUserId);
+        this.setState({ loggedInUserId: loggedInUserId, timelineUserId: timelineUserId, ready:true });
     }
 
-    getAllPosts(timelineUserId) {
-        requester.get('/post/all/' + timelineUserId, (response) => {
-            if (response) {
-                this.setState({
-                    allPostsArr: response,
-                    content: '',
-                })
-            } else {
-                toast.error(<ToastComponent.errorToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-            }
-        }).catch(err => {
-            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+    componentDidUpdate(prevProps, prevState) {
+        if (
+            (this.props.fetchAllPosts.hasError && prevProps.fetchAllPosts.error !== this.props.fetchAllPosts.error)
+        ) {
+
+            const errorMessage =
+                this.props.fetchAllPosts.message || 'Server Error'
+
+            toast.error(<ToastComponent.errorToast text={errorMessage} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
 
-            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-                localStorage.clear();
-                this.props.history.push('/login');
-            }
-        })
+        } else if (
+            (!this.props.fetchAllPosts.hasError && this.props.fetchAllPosts.message && this.props.fetchAllPosts !== prevProps.fetchAllPosts)) {
+
+            const successMessage = this.props.fetchAllPosts.message;
+
+            toast.success(<ToastComponent.successToast text={successMessage} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+
+            // this.props.history.push('/login');
+        }
+    }
+
+    getAllPosts(timelineUserId) {
+        this.props.loadAllPosts(timelineUserId);
+        // requester.get('/post/all/' + timelineUserId, (response) => {
+        //     if (response) {
+        //         this.setState({
+        //             allPostsArr: response,
+        //         })
+        //     } else {
+        //         toast.error(<ToastComponent.errorToast text={response.message} />, {
+        //             position: toast.POSITION.TOP_RIGHT
+        //         });
+        //     }
+        // }).catch(err => {
+        //     toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+        //         position: toast.POSITION.TOP_RIGHT
+        //     });
+
+        //     if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
+        //         localStorage.clear();
+        //         this.props.history.push('/login');
+        //     }
+        // })
     }
 
     removePost(postId, event) {
@@ -176,13 +201,18 @@ class MainSharedContent extends Component {
             this.getAllPosts(this.props.match.params.id);
         }
 
+        const loading = this.props.fetchAllPosts.loading;
+        if (!this.state.ready || loading) {
+            return <h1 className="text-center pt-5 mt-5">Loading...</h1>
+        }
+
         const loggedInUserProfilePicUrl = this.props.profilePicUrl;
         return (
             <Fragment >
                 <article className="main-article-shared-content">
                     <WritePost {...this.props} timelineUserId={this.state.timelineUserId} getAllPosts={this.getAllPosts} loggedInUserProfilePicUrl={loggedInUserProfilePicUrl} />
                     <section className="post-content-section">
-                        {this.state.allPostsArr.map((post, index) =>
+                        {this.props.allPostsArr.map((post, index) =>
                             <Fragment key={post.postId}>
                                 <Post
                                     addLike={this.addLike}
@@ -209,4 +239,26 @@ class MainSharedContent extends Component {
     }
 }
 
-export default MainSharedContent;
+const mapStateToProps = (state) => {
+    return {
+        allPostsArr: state.fetchAllPosts.allPostsArr,
+        fetchAllPosts: state.fetchAllPosts,
+
+        // friendsChatArr: state.fetchAllChatFriends.friendsChatArr,
+        // fetchAllChatFriends: state.fetchAllChatFriends,
+
+        // allMessagesArr: state.fetchAllMessages.allMessagesArr,
+        // fetchAllMessages: state.fetchAllMessages,
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        loadAllPosts: (userId) => { dispatch(fetchAllPostsAction(userId)) },
+        // loadAllChatFriends: (userId) => { dispatch(fetchAllChatFriendsAction(userId)) },
+        // fetchAllMessages: (chatUserId) => { dispatch(fetchAllMessagesAction(chatUserId)) }
+    }
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainSharedContent);
