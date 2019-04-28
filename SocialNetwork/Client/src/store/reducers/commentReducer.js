@@ -1,11 +1,11 @@
 import {
-    FETCH_ALLPOSTS_BEGIN, FETCH_ALLPOSTS_SUCCESS, FETCH_ALLPOSTS_ERROR,
-    REMOVE_POST_BEGIN, REMOVE_POST_SUCCESS, REMOVE_POST_ERROR,
-    ADDLIKE_POST_SUCCESS, ADDLIKE_POST_BEGIN, ADDLIKE_POST_ERROR,
-    CREATE_POST_SUCCESS, CREATE_POST_BEGIN, CREATE_POST_ERROR
+    REMOVE_COMMENT_BEGIN, REMOVE_COMMENT_SUCCESS, REMOVE_COMMENT_ERROR,
+    ADDLIKE_COMMENT_SUCCESS, ADDLIKE_COMMENT_BEGIN, ADDLIKE_COMMENT_ERROR,
+    CREATE_COMMENT_SUCCESS, CREATE_COMMENT_BEGIN, CREATE_COMMENT_ERROR,
 } from '../actions/actionTypes';
 
-const initialStateCreatePost = {
+
+const initialStateCreateComment = {
     hasError: false,
     error: '',
     message: '',
@@ -14,9 +14,9 @@ const initialStateCreatePost = {
     loading: false,
 }
 
-const createPostReducer = (state = initialStateCreatePost, action) => {
+const createCommentReducer = (state = initialStateCreateComment, action) => {
     switch (action.type) {
-        case CREATE_POST_BEGIN:
+        case CREATE_COMMENT_BEGIN:
             return Object.assign({}, state, {
                 hasError: false,
                 error: '',
@@ -25,7 +25,7 @@ const createPostReducer = (state = initialStateCreatePost, action) => {
                 path: '',
                 loading: true,
             })
-        case CREATE_POST_SUCCESS:
+        case CREATE_COMMENT_SUCCESS:
             return Object.assign({}, state, {
                 hasError: false,
                 error: '',
@@ -34,7 +34,7 @@ const createPostReducer = (state = initialStateCreatePost, action) => {
                 path: '',
                 loading: false,
             })
-        case CREATE_POST_ERROR:
+        case CREATE_COMMENT_ERROR:
             return Object.assign({}, state, {
                 hasError: true,
                 error: action.error,
@@ -48,8 +48,7 @@ const createPostReducer = (state = initialStateCreatePost, action) => {
     }
 }
 
-const initialStateAllPosts = {
-    allPostsArr: [],
+const initialStateRemoveComment = {
     hasError: false,
     error: '',
     message: '',
@@ -58,55 +57,9 @@ const initialStateAllPosts = {
     loading: false,
 }
 
-const fetchAllPostsReducer = (state = initialStateAllPosts, action) => {
+const removeCommentReducer = (state = initialStateRemoveComment, action) => {
     switch (action.type) {
-        case FETCH_ALLPOSTS_BEGIN:
-            return Object.assign({}, state, {
-                allPostsArr: [],
-                hasError: false,
-                error: '',
-                message: '',
-                status: '',
-                path: '',
-                loading: true,
-            })
-        case FETCH_ALLPOSTS_SUCCESS:
-            return Object.assign({}, state, {
-                allPostsArr: [...action.payload],
-                hasError: false,
-                error: '',
-                message: action.payload.message,
-                status: '',
-                path: '',
-                loading: false,
-            })
-        case FETCH_ALLPOSTS_ERROR:
-            return Object.assign({}, state, {
-                allPostsArr: [],
-                hasError: true,
-                error: action.error,
-                message: action.message,
-                status: action.status,
-                path: action.path,
-                loading: false,
-            })
-        default:
-            return state
-    }
-}
-
-const initialStateRemovePost = {
-    hasError: false,
-    error: '',
-    message: '',
-    status: '',
-    path: '',
-    loading: false,
-}
-
-const removePostReducer = (state = initialStateRemovePost, action) => {
-    switch (action.type) {
-        case REMOVE_POST_BEGIN:
+        case REMOVE_COMMENT_BEGIN:
             return Object.assign({}, state, {
                 hasError: false,
                 error: '',
@@ -115,7 +68,9 @@ const removePostReducer = (state = initialStateRemovePost, action) => {
                 path: '',
                 loading: true,
             })
-        case REMOVE_POST_SUCCESS:
+        case REMOVE_COMMENT_SUCCESS:
+            console.log(action)
+            debugger;
             return Object.assign({}, state, {
                 hasError: false,
                 error: '',
@@ -124,7 +79,7 @@ const removePostReducer = (state = initialStateRemovePost, action) => {
                 path: '',
                 loading: false,
             })
-        case REMOVE_POST_ERROR:
+        case REMOVE_COMMENT_ERROR:
             return Object.assign({}, state, {
                 hasError: true,
                 error: action.error,
@@ -138,7 +93,7 @@ const removePostReducer = (state = initialStateRemovePost, action) => {
     }
 }
 
-const initialStateAddLikePost = {
+const initialStateAddLikeComment = {
     hasError: false,
     error: '',
     message: '',
@@ -147,9 +102,9 @@ const initialStateAddLikePost = {
     loading: false,
 }
 
-const addLikePostReducer = (state = initialStateAddLikePost, action) => {
+const addLikeCommentReducer = (state = initialStateAddLikeComment, action) => {
     switch (action.type) {
-        case ADDLIKE_POST_BEGIN:
+        case ADDLIKE_COMMENT_BEGIN:
             return Object.assign({}, state, {
                 hasError: false,
                 error: '',
@@ -158,7 +113,9 @@ const addLikePostReducer = (state = initialStateAddLikePost, action) => {
                 path: '',
                 loading: true,
             })
-        case ADDLIKE_POST_SUCCESS:
+        case ADDLIKE_COMMENT_SUCCESS:
+            console.log(action)
+            debugger;
             return Object.assign({}, state, {
                 hasError: false,
                 error: '',
@@ -167,7 +124,7 @@ const addLikePostReducer = (state = initialStateAddLikePost, action) => {
                 path: '',
                 loading: false,
             })
-        case ADDLIKE_POST_ERROR:
+        case ADDLIKE_COMMENT_ERROR:
             return Object.assign({}, state, {
                 hasError: true,
                 error: action.error,
@@ -181,4 +138,4 @@ const addLikePostReducer = (state = initialStateAddLikePost, action) => {
     }
 }
 
-export { createPostReducer, fetchAllPostsReducer, removePostReducer, addLikePostReducer }
+export { createCommentReducer, removeCommentReducer, addLikeCommentReducer }

@@ -83,25 +83,15 @@ class MessageBox extends Component {
                 chatBoxDisplay: 'display-none'
             })
         }
+        
+        const errorMessage = this.getErrorMessage(prevProps, prevState);
+        const successMessage = this.getSuccessMessage(prevProps, prevState)
 
-        if ((this.props.fetchAllChatFriends.hasError && prevProps.fetchAllChatFriends.error !== this.props.fetchAllChatFriends.error) ||
-            (this.props.fetchAllMessages.hasError && prevProps.fetchAllMessages.error !== this.props.fetchAllMessages.error)) {
-
-            const errorMessage =
-                this.props.fetchAllChatFriends.message ||
-                this.props.fetchAllMessages.message || 'Server Error';
-
+        if (errorMessage) {
             toast.error(<ToastComponent.errorToast text={errorMessage} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
-
-        } else if (
-            (!this.props.fetchAllChatFriends.hasError && this.props.fetchAllChatFriends.message && this.props.fetchAllChatFriends !== prevProps.fetchAllChatFriends) ||
-            (!this.props.fetchAllMessages.hasError && this.props.fetchAllMessages.message && this.props.fetchAllMessages !== prevProps.fetchAllMessages)) {
-            const successMessage =
-                this.props.fetchAllChatFriends.message ||
-                this.props.fetchAllMessages.message;
-
+        } else if (successMessage) {
             toast.success(<ToastComponent.successToast text={successMessage} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
@@ -111,6 +101,27 @@ class MessageBox extends Component {
     componentWillUnmount() {
         this.stompClient.disconnect();
         this._isMounted = false;
+    }
+
+    getSuccessMessage(prevProps, prevState) {
+        if (!this.props.fetchAllChatFriends.hasError && this.props.fetchAllChatFriends.message && this.props.fetchAllChatFriends !== prevProps.fetchAllChatFriends) {
+            return this.props.fetchAllChatFriends.message;
+        }
+        else if (!this.props.fetchAllMessages.hasError && this.props.fetchAllMessages.message && this.props.fetchAllMessages !== prevProps.fetchAllMessages) {
+            return this.props.fetchAllMessages.message;
+        } 
+        return null;
+    }
+
+    getErrorMessage(prevProps, prevState) {
+        if (this.props.fetchAllChatFriends.hasError && prevProps.fetchAllChatFriends.error !== this.props.fetchAllChatFriends.error) {
+            return this.props.fetchAllChatFriends.message || 'Server Error';
+        }
+        else if (this.props.fetchAllMessages.hasError && prevProps.fetchAllMessages.error !== this.props.fetchAllMessages.error) {
+            return this.props.fetchAllMessages.message || 'Server Error';
+        } 
+
+        return null;
     }
 
     initializeWebSocketConnection = () => {

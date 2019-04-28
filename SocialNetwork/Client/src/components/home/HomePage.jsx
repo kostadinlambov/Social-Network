@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment, Suspense, lazy } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common';
@@ -6,17 +6,17 @@ import { requester, userService } from '../../infrastructure/';
 import placeholder_user_image from '../../assets/images/placeholder.png';
 import default_background_image from '../../assets/images/default-background-image.jpg';
 
-import MessageBox from './MessageBox';
-import UserSearchResultsPage from '../../components/user/UserSearchResultsPage';
-import UserProfilePage from '../../components/user/UserProfilePage';
-import UserFriendsAllPage from '../../components/user/UserFriendsAllPage';
-import UserFindFriendsPage from '../../components/user/UserFindFriendsPage';
-import UserAllPage from '../../components/user/UserAllPage';
-import UserEditPage from '../../components/user/UserEditPage';
-import UserDeletePage from '../../components/user/UserDeletePage';
-import UserGalleryPage from '../../components/user/UserGalleryPage';
-import UserLogsPage from '../../components/user/UserLogsPage';
-import ErrorPage from '../../components/common/ErrorPage';
+// import MessageBox from './MessageBox';
+// import UserSearchResultsPage from '../../components/user/UserSearchResultsPage';
+// import UserProfilePage from '../../components/user/UserProfilePage';
+// import UserFriendsAllPage from '../../components/user/UserFriendsAllPage';
+// import UserFindFriendsPage from '../../components/user/UserFindFriendsPage';
+// import UserAllPage from '../../components/user/UserAllPage';
+// import UserEditPage from '../../components/user/UserEditPage';
+// import UserDeletePage from '../../components/user/UserDeletePage';
+// import UserGalleryPage from '../../components/user/UserGalleryPage';
+// import UserLogsPage from '../../components/user/UserLogsPage';
+// import ErrorPage from '../../components/common/ErrorPage';
 import TimeLine from './TimeLine';
 import HeaderSection from './HeaderSection';
 import MainSharedContent from './MainSharedContent';
@@ -27,6 +27,22 @@ import FriendsGallery from './FriendsGallery';
 import { connect } from 'react-redux';
 import { fetchPicturesAction } from '../../store/actions/pictureActions';
 import { fetchLoggedInUserAction, updateLoggedInUserDataAction, fetchTimeLineUserAction, updateTimeLineUserDataAction, fetchAllFriendsAction } from '../../store/actions/userActions';
+
+
+const UserSearchResultsPage = lazy(() => import('../user/UserSearchResultsPage'));
+const UserProfilePage = lazy(() => import('../user/UserProfilePage'));
+const UserFriendsAllPage = lazy(() => import('../user/UserFriendsAllPage'));
+const UserFindFriendsPage = lazy(() => import('../user/UserFindFriendsPage'));
+const UserAllPage = lazy(() => import('../user/UserAllPage'));
+const UserEditPage = lazy(() => import('../user/UserEditPage'));
+const UserDeletePage = lazy(() => import('../user/UserDeletePage'));
+const UserGalleryPage = lazy(() => import('../user/UserGalleryPage'));
+const UserLogsPage = lazy(() => import('../user/UserLogsPage'));
+const MessageBox = lazy(() => import('./MessageBox'));
+
+const ErrorPage = lazy(() => import('../common/ErrorPage'));
+
+
 
 class HomePage extends Component {
     constructor(props) {
@@ -73,44 +89,51 @@ class HomePage extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        // console.log('prevProps: ', prevProps);
-        // console.log('this.props: ', this.props);
-        // debugger;
-        if (
-            (this.props.fetchPictures.hasError && prevProps.fetchPictures.error !== this.props.fetchPictures.error) ||
-            (this.props.timeLineUserData.hasError && prevProps.timeLineUserData.error !== this.props.timeLineUserData.error) ||
-            (this.props.loggedInUserData.hasError && prevProps.loggedInUserData.error !== this.props.loggedInUserData.error) ||
-            (this.props.fetchAllFriends.hasError && prevProps.fetchAllFriends.error !== this.props.fetchAllFriends.error)
-        ) {
+        const errorMessage = this.getErrorMessage(prevProps);
+        const successMessage = this.getSuccessMessage(prevProps)
 
-            const errorMessage =
-                this.props.fetchPictures.message ||
-                this.props.timeLineUserData.message ||
-                this.props.loggedInUserData.message ||
-                this.props.fetchAllFriends.message || 'Server Error'
-
+        if (errorMessage) {
             toast.error(<ToastComponent.errorToast text={errorMessage} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
-
-        } else if (
-            (!this.props.fetchPictures.hasError && this.props.fetchPictures.message && this.props.fetchPictures !== prevProps.fetchPictures) ||
-            (!this.props.timeLineUserData.hasError && this.props.timeLineUserData.message && this.props.timeLineUserData !== prevProps.timeLineUserData) ||
-            (!this.props.loggedInUserData.hasError && this.props.loggedInUserData.message && this.props.loggedInUserData !== prevProps.loggedInUserData) ||
-            (!this.props.fetchAllFriends.hasError && this.props.fetchAllFriends.message && this.props.fetchAllFriends !== prevProps.fetchAllFriends)) {
-
-            const successMessage =
-                this.props.fetchPictures.message ||
-                this.props.timeLineUserData.message ||
-                this.props.loggedInUserData.message ||
-                this.props.fetchAllFriends.message;
-
+        } else if (successMessage) {
             toast.success(<ToastComponent.successToast text={successMessage} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
-
-            // this.props.history.push('/login');
         }
+    }
+
+    getSuccessMessage(prevProps) {
+        if (!this.props.fetchPictures.hasError && this.props.fetchPictures.message && this.props.fetchPictures !== prevProps.fetchPictures) {
+            return this.props.fetchPictures.message;
+        }
+        else if (!this.props.timeLineUserData.hasError && this.props.timeLineUserData.message && this.props.timeLineUserData !== prevProps.timeLineUserData) {
+            return this.props.timeLineUserData.message;
+
+        } else if (!this.props.loggedInUserData.hasError && this.props.loggedInUserData.message && this.props.loggedInUserData !== prevProps.loggedInUserData) {
+            return this.props.loggedInUserData.message;
+        }
+        else if (!this.props.fetchAllFriends.hasError && this.props.fetchAllFriends.message && this.props.fetchAllFriends !== prevProps.fetchAllFriends) {
+            return this.props.fetchAllFriends.message;
+        }
+        return null;
+    }
+
+    getErrorMessage(prevProps) {
+        if (this.props.fetchPictures.hasError && prevProps.fetchPictures.error !== this.props.fetchPictures.error) {
+            return this.props.fetchPictures.message || 'Server Error';
+        }
+        else if (this.props.timeLineUserData.hasError && prevProps.timeLineUserData.error !== this.props.timeLineUserData.error) {
+            return this.props.timeLineUserData.message || 'Server Error';
+
+        } else if (this.props.loggedInUserData.hasError && prevProps.loggedInUserData.error !== this.props.loggedInUserData.error) {
+            return this.props.loggedInUserData.message || 'Server Error';
+        }
+        else if (this.props.fetchAllFriends.hasError && prevProps.fetchAllFriends.error !== this.props.fetchAllFriends.error) {
+            return this.props.fetchAllFriends.message || 'Server Error';
+        }
+
+        return null;
     }
 
     getUserToShowId(userId) {
@@ -218,7 +241,7 @@ class HomePage extends Component {
     render() {
         const loading = this.props.fetchPictures.loading || this.props.timeLineUserData.loading || this.props.loggedInUserData.loading || this.props.fetchAllFriends.loading;
         if (!this.state.ready || loading) {
-            return <h1 className="text-center pt-5 mt-5">Loading...</h1>
+            return <h1 className="text-center pt-5 mt-5">Loading HomePage...</h1>
         }
 
         const userToShowId = this.props.match.params;
@@ -233,10 +256,11 @@ class HomePage extends Component {
                 <main className="site-content">
                     <section className="main-section">
                         <TimeLine {...this.props.timeLineUserData} />
-                        <Switch>
-                            {loggedIn && <Route exact path="/home/comments/:id" render={props => <MainSharedContent  {...props}  {...this.state} getUserToShowId={this.getUserToShowId} />} />}
+                        <Suspense fallback={<h1 className="text-center pt-5 mt-5">Loading Falback HomePage...</h1>}>
+                            <Switch>
+                                {loggedIn && <Route exact path="/home/comments/:id" component={MainSharedContent} />}
 
-                            {/* {loggedIn && <Route exact path="/home/profile/:id" render={props => <UserProfilePage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
+                                {/* {loggedIn && <Route exact path="/home/profile/:id" render={props => <UserProfilePage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
                                 {loggedIn && <Route exact path="/home/friends/:id" render={props => <UserFriendsAllPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} loadAllFriends={this.loadAllFriends} />} />}
                                 {loggedIn && <Route exact path="/home/findFriends/:id/:category" render={(props) => <UserFindFriendsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} findFriends={this.findFriends} />} />}
                                 {loggedIn && (isRoot || isAdmin || isTheCurrentLoggedInUser) && <Route exact path="/home/users/edit/:id" render={props => <UserEditPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
@@ -245,9 +269,10 @@ class HomePage extends Component {
                                 {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/logs/:id" render={props => <UserLogsPage {...props} getUserToShowId={this.getUserToShowId} searchResults={this.searchResults} {...this.state} />} />}
                                 {loggedIn && <Route exact path="/home/gallery/:id" render={props => <UserGalleryPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} loadAllPictures={this.loadAllPictures} />} />}
                                 {loggedIn && <Route exact path="/home/users/search/" render={(props) => <UserSearchResultsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} searchResults={this.searchResults} />} />} */}
-                            {/* <Route exact path="/error" component={ErrorPage} />
+                                {/* <Route exact path="/error" component={ErrorPage} />
                                 <Route render={(props) => <Redirect to="/" {...props} />} /> */}
-                        </Switch>
+                            </Switch>
+                        </Suspense>
                     </section>
                     <Fragment>
                         <section className="aside-section">

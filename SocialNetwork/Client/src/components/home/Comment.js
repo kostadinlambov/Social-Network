@@ -7,8 +7,8 @@ const Comment = (props) => {
     const imageClassUserPick = userService.getImageSize(props.loggedInUserProfilePicUrl);
 
     let isRoot = userService.isRoot();
-    let isCommentCreator = (props.creatorId === userService.getUserId());
-    let isTimeLineUser = (props.currentTimelineUserId === userService.getUserId());
+    let isCommentCreator = (props.creatorId === props.currentLoggedInUserId);
+    let isTimeLineUser = (props.timelineUserId === props.currentLoggedInUserId);
 
     const dayTime = props.time.hour <= 12 ? 'AM' : 'PM';
     const month = props.time.month.substring(0, 1) + props.time.month.substring(1, 5).toLowerCase()

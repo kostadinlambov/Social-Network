@@ -1,19 +1,15 @@
 import React, { Fragment, Component } from 'react';
-import { userService, requester } from '../../infrastructure';
+import { userService } from '../../infrastructure';
 import TextareaAutosize from 'react-autosize-textarea';
-import { toast } from 'react-toastify';
-import { ToastComponent } from '../common';
 
 export default class WritePost extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            loggedInUserId: userService.getUserId(),
-            timelineUserId: '',
             content: '',
             imageUrl: '',
-            loggedInUserProfilePicUrl: '',
+            createPostData: '',
             touched: {
                 content: false,
             }
@@ -24,35 +20,31 @@ export default class WritePost extends Component {
         this.onSubmitHandler = this.onSubmitHandler.bind(this);
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        const loading = this.props.createPostData.loading || this.props.loadingAllPosts;
+
+        if (!loading && this.state.createPostData !== this.props.createPostData) {
+            debugger;
+            this.setState({
+                content: '',
+                imageUrl: '',
+                createPostData: this.props.createPostData,
+            })
+        }
+    }
+
     changeUserData = (userdata) => {
         this.setState({loggedInUserProfilePicUrl: userdata.profilePicUrl})
     }
 
     onSubmitHandler(event) {
         event.preventDefault();
-
         if (!this.canBeSubmitted()) {
             return;
         }
 
-        const timelineUserId = this.props.timelineUserId;
-        const { loggedInUserId, content, imageUrl } = this.state;
-
-        requester.post('/post/create', { timelineUserId, loggedInUserId, content, imageUrl }, (response) => {
-            if (response.success === true) {
-                this.props.getAllPosts(timelineUserId);
-                this.setState({content: ''})
-            } else {
-                toast.error(<ToastComponent.errorToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-            }
-        }).catch(err => {
-            localStorage.clear();
-            toast.error(<ToastComponent.errorToast text={`${err.message}`} />, {
-                position: toast.POSITION.TOP_RIGHT
-            });
-        })
+        const { content, imageUrl } = this.state;
+        this.props.createPost(content, imageUrl);
     }
 
     onChangeHandler(event) {
@@ -85,9 +77,10 @@ export default class WritePost extends Component {
         const errors = this.validate(content);
         const isEnabled = !Object.keys(errors).some(x => errors[x]);
         const displayButon = isEnabled ? '' : 'hidden';
-        const imageClass = userService.getImageSize(this.props.imageUrl);
-        const loggedInUserProfilePicUrl = userService.getProfilePicUrl();
-        const loggedInUserFirstName = userService.getFirstName();
+
+        const imageClass = userService.getImageSize(this.props.loggedInUser.profilePicUrl);
+        const loggedInUserProfilePicUrl = this.props.loggedInUser.profilePicUrl;
+        const loggedInUserFirstName = this.props.loggedInUser.firstName;
 
         let formattedUsername = userService.formatUsername(loggedInUserFirstName)
 

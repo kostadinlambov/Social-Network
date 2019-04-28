@@ -18,7 +18,7 @@ const rootReducer = (state, action) => {
 }
 
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk, logger)));
-store.subscribe(() => console.log('store.getState(): ', store.getState()));
+// store.subscribe(() => console.log('store.getState(): ', store.getState()));
 
 // store.dispatch(loginAction);
 // store.dispatch(fetchPicturesAction('cbe9dafe-849d-407b-b703-b3f35f1ab382'));

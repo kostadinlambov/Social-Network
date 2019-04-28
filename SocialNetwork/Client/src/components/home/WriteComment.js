@@ -1,19 +1,15 @@
 import React, { Fragment, Component } from 'react';
-import { userService, requester} from '../../infrastructure';
+import { userService} from '../../infrastructure';
 import TextareaAutosize from 'react-autosize-textarea';
-import { toast } from 'react-toastify';
-import { ToastComponent } from '../common';
 
 export default class WriteComment extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            loggedInUserId: userService.getUserId(),
-            timelineUserId: '',
             content: '',
             imageUrl: '',
-            loggedInUserProfilePicUrl: '',
+            createCommentData: '',
             touched: {
                 content: false,
             }
@@ -24,8 +20,17 @@ export default class WriteComment extends Component {
         this.onSubmitHandler = this.onSubmitHandler.bind(this);
     }
 
-    changeUserData = (userdata) => {
-        this.setState({ loggedInUserProfilePicUrl: userdata.profilePicUrl })
+    componentDidUpdate(prevProps, prevState) {
+        const loading = this.props.createCommentData.loading || this.props.loadingAllPosts;
+
+        if (!loading && this.state.createCommentData !== this.props.createCommentData) {
+            debugger;
+            this.setState({
+                content: '',
+                imageUrl: '',
+                createCommentData: this.props.createCommentData,
+            })
+        }
     }
 
     onSubmitHandler(event) {
@@ -35,25 +40,11 @@ export default class WriteComment extends Component {
             return;
         }
         const postId = this.props.postId;
-        const timelineUserId = this.props.timelineUserId;
-        const { loggedInUserId, content, imageUrl } = this.state;
+        const { content, imageUrl } = this.state;
 
-        requester.post('/comment/create', { postId, loggedInUserId, timelineUserId, content, imageUrl }, (response) => {
-            if (response.success === true) {
-                this.props.getAllPosts(timelineUserId);
-                this.setState({ content: '' })
-            } else {
-                toast.error(<ToastComponent.errorToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-            }
+        debugger;
 
-        }).catch(err => {
-            localStorage.clear();
-            toast.error(<ToastComponent.errorToast text={`${err.message}`} />, {
-                position: toast.POSITION.TOP_RIGHT
-            });
-        })
+        this.props.createComment(postId, content, imageUrl )
     }
 
     onChangeHandler(event) {
@@ -87,9 +78,9 @@ export default class WriteComment extends Component {
         const isEnabled = !Object.keys(errors).some(x => errors[x]);
         const displayButon = isEnabled ? '' : 'hidden';
 
-        const imageClass = userService.getImageSize(this.props.imageUrl);
-        const loggedInUserProfilePicUrl = userService.getProfilePicUrl();
-        const loggedInUserFirstName = userService.getFirstName();
+        const loggedInUserProfilePicUrl = this.props.loggedInUser.profilePicUrl;
+        const imageClass = userService.getImageSize(loggedInUserProfilePicUrl);
+        const loggedInUserFirstName = this.props.loggedInUser.firstName;
         const formattedName = userService.formatUsername(loggedInUserFirstName);
 
         return (
