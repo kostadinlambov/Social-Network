@@ -1,51 +1,101 @@
 import React, { Component, Fragment } from 'react';
 import UserRow from './UserRow';
-import { requester } from '../../infrastructure/'
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common';
 import './css/UserAllPage.css';
 
-export default class UserAllPage extends Component {
+import { connect } from 'react-redux';
+import { fetchAllUsersAction, promoteUserAction, demoteUserAction, changeCurrentTimeLineUserAction } from '../../store/actions/userActions';
+
+
+class UserAllPage extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            userArr: [],
             id: '',
+            userArr: [],
         };
+
+        this.promote = this.promote.bind(this);
+        this.demote = this.demote.bind(this);
+        this.changeTimeLineUser = this.changeTimeLineUser.bind(this);
     }
 
     componentDidMount() {
-        const userId = this.props.match.params.id;
+        const loggedInUserId = this.props.loggedInUserData.id;
+        this.props.loadAllUsers(loggedInUserId);
+    }
 
-        requester.get('/users/all/' + userId, (response) => {
-            if (response) {
-                this.setState({
-                    userArr: response,
-                    id: userId
-                })
-            } else {
-                toast.error(<ToastComponent.errorToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-            }
-        }).catch(err => {
-            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+    componentDidUpdate(prevProps, prevState) {
+        const loading = this.props.promoteUserData.loading
+
+        console.log('loading: ', loading);
+        console.log('this.props: ', this.props);
+        console.log('prevProps: ', prevProps);
+        console.log('this.state: ', this.state);
+        console.log('prevState: ', prevState);
+        debugger;
+
+        const errorMessage = this.getErrorMessage(prevProps);
+        const successMessage = this.getSuccessMessage(prevProps)
+
+        console.log('this.props.id: ', this.props.id)
+        console.log('this.state.id: ', this.state.id)
+
+        if (errorMessage && !loading) {
+            toast.error(<ToastComponent.errorToast text={errorMessage} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
+        } else if (successMessage && !loading) {
+            toast.success(<ToastComponent.successToast text={successMessage} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+        }
+    }
 
-            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-                localStorage.clear();
-                this.props.history.push('/login');
-            }
-        })
+    getSuccessMessage(prevProps) {
+        if (!this.props.fetchAllUsers.hasError && this.props.fetchAllUsers.message && this.props.fetchAllUsers !== prevProps.fetchAllUsers) {
+            return this.props.fetchAllUsers.message;
+        }
+        if (!this.props.promoteUserData.hasError && this.props.promoteUserData.message) {
+            return this.props.promoteUserData.message;
+        }
+        if (!this.props.demoteUserData.hasError && this.props.demoteUserData.message) {
+            return this.props.demoteUserData.message;
+        }
+
+        return null;
+    }
+
+    getErrorMessage(prevProps) {
+        if (this.props.fetchAllUsers.hasError && prevProps.fetchAllUsers.error !== this.props.fetchAllUsers.error) {
+            return this.props.fetchAllUsers.message || 'Server Error';
+        }
+        if (this.props.promoteUserData.hasError && prevProps.promoteUserData.error !== this.props.promoteUserData.error) {
+            return this.props.promoteUserData.message || 'Server Error';
+        }
+        if (this.props.demoteUserData.hasError && prevProps.demoteUserData.error !== this.props.demoteUserData.error) {
+            return this.props.demoteUserData.message || 'Server Error';
+        }
+
+        return null;
+    }
+
+    promote = (userId) => {
+        this.props.promoteUser(userId);
+    }
+
+    demote = (userId) => {
+        this.props.demoteUser(userId);
+    }
+
+    changeTimeLineUser = (userId) => {
+        this.props.changeTimeLineUser(userId);
+        this.props.history.push(`/home/profile/${userId}`)
     }
 
     render() {
-        if (this.props.match.params.id !== this.props.id) {
-            this.props.getUserToShowId(this.props.match.params.id);
-        }
-
         return (
             <Fragment>
                 <article className="main-article-shared-content">
@@ -62,7 +112,13 @@ export default class UserAllPage extends Component {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {this.state.userArr.map((user, i) => <UserRow key={user.id} index={i + 1} {...this.props} {...user} />)}
+                                    {this.props.userArr.map((user, i) => <UserRow 
+                                    key={user.id} 
+                                    index={i + 1} 
+                                    promote={this.promote} 
+                                    demote={this.demote}
+                                    changeTimeLineUser={this.changeTimeLineUser} 
+                                    {...user} />)}
                                 </tbody>
                             </table>
 
@@ -73,3 +129,27 @@ export default class UserAllPage extends Component {
         )
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        timeLineUserData: state.timeLineUserData,
+        loggedInUserData: state.loggedInUserData,
+        userArr: state.fetchAllUsers.userArr,
+        fetchAllUsers: state.fetchAllUsers,
+        promoteUserData: state.promoteUserData,
+        demoteUserData: state.demoteUserData,
+        changeTimeLineUserData: state.changeTimeLineUserData,
+
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        loadAllUsers: (userId) => { dispatch(fetchAllUsersAction(userId)) },
+        promoteUser: (userId) => { dispatch(promoteUserAction(userId)) },
+        demoteUser: (userId) => { dispatch(demoteUserAction(userId)) },
+        changeTimeLineUser: (userId) => { dispatch(changeCurrentTimeLineUserAction(userId)) },
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserAllPage);

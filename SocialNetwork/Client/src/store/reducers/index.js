@@ -1,7 +1,10 @@
-import { registerReducer, loginReducer, registerErrorReducer, loginErrorReducer,  } from './authReducer';
+import { registerReducer, loginReducer, registerErrorReducer, loginErrorReducer, } from './authReducer';
 import { ajaxStatusReducer, ajaxErrorReducer } from './ajaxReducer';
 import { fetchPictureReducer } from './pictureReducer';
-import { fetchAllChatFriendsReducer, loggedInUserDataReducer, timeLineUserDataReducer, fetchAllFriendsReducer, updateUserReducer } from './userReducer';
+import {
+    fetchAllChatFriendsReducer, loggedInUserDataReducer, timeLineUserDataReducer, fetchAllFriendsReducer,
+    updateUserReducer, fetchAllUsersReducer, promoteUserReducer, demoteUserReducer, changeTimeLineUserDataReducer,
+} from './userReducer';
 import { fetchAllMessagesReducer } from './messagesReducer';
 import { createPostReducer, fetchAllPostsReducer, removePostReducer, addLikePostReducer } from './postReducer';
 import { createCommentReducer, removeCommentReducer, addLikeCommentReducer } from './commentReducer';
@@ -14,6 +17,7 @@ export default {
     registerError: registerErrorReducer,
     loginError: loginErrorReducer,
     updateUserData: updateUserReducer,
+    fetchAllUsers: fetchAllUsersReducer,
     fetchPictures: fetchPictureReducer,
     fetchAllChatFriends: fetchAllChatFriendsReducer,
     loggedInUserData: loggedInUserDataReducer,
@@ -27,4 +31,7 @@ export default {
     addLikePost: addLikePostReducer,
     addLikeComment: addLikeCommentReducer,
     createComment: createCommentReducer,
+    promoteUserData: promoteUserReducer,
+    demoteUserData: demoteUserReducer,
+    changeTimeLineUserData: changeTimeLineUserDataReducer
 };

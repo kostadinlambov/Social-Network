@@ -4,6 +4,10 @@ import {
     FETCH_ALLCHATFRIENDS_BEGIN, FETCH_ALLCHATFRIENDS_SUCCESS, FETCH_ALLCHATFRIENDS_ERROR, EDIT_USERSTATUS,
     FETCH_ALLFRIENDS_BEGIN, FETCH_ALLFRIENDS_SUCCESS, FETCH_ALLFRIENDS_ERROR,
     UPDATE_USER_SUCCESS, UPDATE_USER_BEGIN, UPDATE_USER_ERROR,
+    FETCH_ALLUSERS_SUCCESS, FETCH_ALLUSERS_BEGIN, FETCH_ALLUSERS_ERROR,
+    PROMOTE_USER_SUCCESS, PROMOTE_USER_BEGIN, PROMOTE_USER_ERROR,
+    DEMOTE_USER_SUCCESS, DEMOTE_USER_BEGIN, DEMOTE_USER_ERROR, CHANGE_USERROLE,
+    CHANGE_TIMELINE_USERDATA_SUCCESS, CHANGE_TIMELINE_USERDATA_BEGIN, CHANGE_TIMELINE_USERDATA_ERROR,
 } from '../actions/actionTypes';
 
 import placeholder_user_image from '../../assets/images/placeholder.png';
@@ -316,6 +320,228 @@ const updateUserReducer = (state = initialStateUpdateUser, action) => {
     }
 }
 
+
+
+const initialStateAllUsers = {
+    userArr: [],
+    hasError: false,
+    error: '',
+    message: '',
+    status: '',
+    path: '',
+    loading: false,
+}
+
+const fetchAllUsersReducer = (state = initialStateAllUsers, action) => {
+    switch (action.type) {
+        case FETCH_ALLUSERS_BEGIN:
+            return Object.assign({}, state, {
+                userArr: [],
+                hasError: false,
+                error: '',
+                message: '',
+                status: '',
+                path: '',
+                loading: true,
+            })
+        case FETCH_ALLUSERS_SUCCESS:
+            return Object.assign({}, state, {
+                userArr: [...action.payload],
+                hasError: false,
+                error: '',
+                message: '',
+                status: '',
+                path: '',
+                loading: false,
+            })
+        case FETCH_ALLUSERS_ERROR:
+            return Object.assign({}, state, {
+                userArr: [],
+                hasError: true,
+                error: action.error,
+                message: action.message,
+                status: action.status,
+                path: action.path,
+                loading: false,
+            })
+        case CHANGE_USERROLE:
+            return updateUserRole(state, action.payload)
+        default:
+            return state
+    }
+}
+
+const updateUserRole = (state, data) => {
+    const { id, role } = data;
+
+    const newUserArr = state.userArr.map((user) => {
+        if (user.id !== id) {
+            return user
+        }
+
+        return {
+            ...user, role
+        }
+    })
+
+    return Object.assign({}, state, {
+        userArr: [...newUserArr],
+        hasError: false,
+        error: '',
+        message: '',
+        status: '',
+        path: '',
+        loading: false,
+    })
+}
+
+const initialStatePromoteUser = {
+    hasError: false,
+    error: '',
+    message: '',
+    status: '',
+    path: '',
+    loading: false,
+}
+
+const promoteUserReducer = (state = initialStatePromoteUser, action) => {
+    switch (action.type) {
+        case PROMOTE_USER_BEGIN:
+            return Object.assign({}, state, {
+                hasError: false,
+                error: '',
+                message: '',
+                status: '',
+                path: '',
+                loading: true,
+            })
+        case PROMOTE_USER_SUCCESS:
+            return Object.assign({}, state, {
+                hasError: false,
+                error: '',
+                message: action.payload.message,
+                status: '',
+                path: '',
+                loading: false,
+            })
+        case PROMOTE_USER_ERROR:
+            return Object.assign({}, state, {
+                hasError: true,
+                error: action.error,
+                message: action.message,
+                status: action.status,
+                path: action.path,
+                loading: false,
+            })
+        default:
+            return state
+    }
+}
+
+const initialStateDemoteUser = {
+    hasError: false,
+    error: '',
+    message: '',
+    status: '',
+    path: '',
+    loading: false,
+}
+
+const demoteUserReducer = (state = initialStateDemoteUser, action) => {
+    switch (action.type) {
+        case DEMOTE_USER_BEGIN:
+            return Object.assign({}, state, {
+                hasError: false,
+                error: '',
+                message: '',
+                status: '',
+                path: '',
+                loading: true,
+            })
+        case DEMOTE_USER_SUCCESS:
+            return Object.assign({}, state, {
+                hasError: false,
+                error: '',
+                message: action.payload.message,
+                status: '',
+                path: '',
+                loading: false,
+            })
+        case DEMOTE_USER_ERROR:
+            return Object.assign({}, state, {
+                hasError: true,
+                error: action.error,
+                message: action.message,
+                status: action.status,
+                path: action.path,
+                loading: false,
+            })
+        default:
+            return state
+    }
+}
+
+
+const initialStateChangeTimeLineUserData = {
+    id: '',
+    username: '',
+    email: '',
+    firstName: '',
+    lastName: '',
+    address: '',
+    city: '',
+    search: '',
+    category: '',
+    profilePicUrl: placeholder_user_image,
+    backgroundImageUrl: default_background_image,
+    authority: '',
+    hasError: false,
+    error: '',
+    message: '',
+    status: '',
+    path: '',
+    loading: false,
+}
+
+const changeTimeLineUserDataReducer = (state = initialStateChangeTimeLineUserData, action) => {
+    switch (action.type) {
+        case CHANGE_TIMELINE_USERDATA_BEGIN:
+            return Object.assign({},
+                state,
+                initialStateTimeLineUserData,
+                { loading: true }
+            )
+        case CHANGE_TIMELINE_USERDATA_SUCCESS:
+            return Object.assign({},
+                state,
+                action.payload,
+                {
+                    hasError: false,
+                    error: '',
+                    message: '',
+                    status: '',
+                    path: '',
+                    loading: false,
+                }
+            )
+        case CHANGE_TIMELINE_USERDATA_ERROR:
+            return Object.assign({},
+                state,
+                initialStateTimeLineUserData,
+                {
+                    hasError: true,
+                    error: action.error,
+                    message: action.message,
+                    status: action.status,
+                    path: action.path,
+                    loading: false,
+                }
+            )
+        default:
+            return state
+    }
+}
+
 const reconcile = (oldData, newData) => {
     const newDataById = {}
     for (const entry of newData) {
@@ -344,5 +570,9 @@ export {
     loggedInUserDataReducer,
     timeLineUserDataReducer,
     fetchAllFriendsReducer,
-    updateUserReducer
+    updateUserReducer,
+    fetchAllUsersReducer,
+    promoteUserReducer,
+    demoteUserReducer,
+    changeTimeLineUserDataReducer,
 }

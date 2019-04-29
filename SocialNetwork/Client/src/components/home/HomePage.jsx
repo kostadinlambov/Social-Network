@@ -146,21 +146,6 @@ class HomePage extends Component {
 
     loadAllFriends = (userId) => {
         this.props.loadAllFriends(userId);
-        // requester.get(`/relationship/friends/${userId}`, (response) => {
-        //     this.setState({
-        //         friendsArr: response
-        //     },
-        //         (() => this.loadAllChatFriends())())
-        // }).catch(err => {
-        //     toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-        //         position: toast.POSITION.TOP_RIGHT
-        //     });
-
-        //     if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-        //         localStorage.clear();
-        //         this.props.history.push('/login');
-        //     }
-        // })
     }
 
     findFriends = (userId, category) => {
@@ -237,12 +222,12 @@ class HomePage extends Component {
                             <Switch>
                                 {loggedIn && <Route exact path="/home/comments/:id" component={MainSharedContent} />}
                                 {loggedIn && <Route exact path="/home/profile/:id" component={UserProfilePage} />}
+                                {loggedIn && (isRoot || isAdmin || isTheCurrentLoggedInUser) && <Route exact path="/home/users/edit/:id" component={UserEditPage}/>}
+                                {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/users/all/:id" component={UserAllPage} />}
 
                                 {/* {loggedIn && <Route exact path="/home/friends/:id" render={props => <UserFriendsAllPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} loadAllFriends={this.loadAllFriends} />} />}
                                 {loggedIn && <Route exact path="/home/findFriends/:id/:category" render={(props) => <UserFindFriendsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} findFriends={this.findFriends} />} />} */}
-                                {loggedIn && (isRoot || isAdmin || isTheCurrentLoggedInUser) && <Route exact path="/home/users/edit/:id" component={UserEditPage}/>}
                                 {/* {(loggedIn && isRoot) && <Route exact path="/home/users/delete/:id" render={props => <UserDeletePage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
-                                {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/users/all/:id" render={props => <UserAllPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
                                 {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/logs/:id" render={props => <UserLogsPage {...props} getUserToShowId={this.getUserToShowId} searchResults={this.searchResults} {...this.state} />} />}
                                 {loggedIn && <Route exact path="/home/gallery/:id" render={props => <UserGalleryPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} loadAllPictures={this.loadAllPictures} />} />}
                                 {loggedIn && <Route exact path="/home/users/search/" render={(props) => <UserSearchResultsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} searchResults={this.searchResults} />} />} */}

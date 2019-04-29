@@ -14,6 +14,10 @@ class UserProfilePage extends Component {
         }
     }
 
+    componentDidMount(){
+        
+    }
+
     onSubmitHandlerDelete = (e) => {
         this.props.history.push({
             pathname: "/home/users/delete/" + this.props.timeLineUser.id,
