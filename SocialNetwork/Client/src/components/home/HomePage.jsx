@@ -6,17 +6,18 @@ import { requester, userService } from '../../infrastructure/';
 import placeholder_user_image from '../../assets/images/placeholder.png';
 import default_background_image from '../../assets/images/default-background-image.jpg';
 
-// import MessageBox from './MessageBox';
-// import UserSearchResultsPage from '../../components/user/UserSearchResultsPage';
-// import UserProfilePage from '../../components/user/UserProfilePage';
-// import UserFriendsAllPage from '../../components/user/UserFriendsAllPage';
-// import UserFindFriendsPage from '../../components/user/UserFindFriendsPage';
-// import UserAllPage from '../../components/user/UserAllPage';
-// import UserEditPage from '../../components/user/UserEditPage';
-// import UserDeletePage from '../../components/user/UserDeletePage';
-// import UserGalleryPage from '../../components/user/UserGalleryPage';
-// import UserLogsPage from '../../components/user/UserLogsPage';
-// import ErrorPage from '../../components/common/ErrorPage';
+import MessageBox from './MessageBox';
+import UserSearchResultsPage from '../../components/user/UserSearchResultsPage';
+import UserProfilePage from '../../components/user/UserProfilePage';
+import UserFriendsAllPage from '../../components/user/UserFriendsAllPage';
+import UserFindFriendsPage from '../../components/user/UserFindFriendsPage';
+import UserAllPage from '../../components/user/UserAllPage';
+import UserEditPage from '../../components/user/UserEditPage';
+import UserDeletePage from '../../components/user/UserDeletePage';
+import UserGalleryPage from '../../components/user/UserGalleryPage';
+import UserLogsPage from '../../components/user/UserLogsPage';
+import ErrorPage from '../../components/common/ErrorPage';
+
 import TimeLine from './TimeLine';
 import HeaderSection from './HeaderSection';
 import MainSharedContent from './MainSharedContent';
@@ -29,18 +30,17 @@ import { fetchPicturesAction } from '../../store/actions/pictureActions';
 import { fetchLoggedInUserAction, updateLoggedInUserDataAction, fetchTimeLineUserAction, updateTimeLineUserDataAction, fetchAllFriendsAction } from '../../store/actions/userActions';
 
 
-const UserSearchResultsPage = lazy(() => import('../user/UserSearchResultsPage'));
-const UserProfilePage = lazy(() => import('../user/UserProfilePage'));
-const UserFriendsAllPage = lazy(() => import('../user/UserFriendsAllPage'));
-const UserFindFriendsPage = lazy(() => import('../user/UserFindFriendsPage'));
-const UserAllPage = lazy(() => import('../user/UserAllPage'));
-const UserEditPage = lazy(() => import('../user/UserEditPage'));
-const UserDeletePage = lazy(() => import('../user/UserDeletePage'));
-const UserGalleryPage = lazy(() => import('../user/UserGalleryPage'));
-const UserLogsPage = lazy(() => import('../user/UserLogsPage'));
-const MessageBox = lazy(() => import('./MessageBox'));
+// const UserSearchResultsPage = lazy(() => import('../user/UserSearchResultsPage'));
+// const UserProfilePage = lazy(() => import('../user/UserProfilePage'));
+// const UserFriendsAllPage = lazy(() => import('../user/UserFriendsAllPage'));
+// const UserFindFriendsPage = lazy(() => import('../user/UserFindFriendsPage'));
+// const UserAllPage = lazy(() => import('../user/UserAllPage'));
+// const UserEditPage = lazy(() => import('../user/UserE../user/UserEditPage.oldt UserDeletePage = lazy(() => import('../user/UserDeletePage'));
+// const UserGalleryPage = lazy(() => import('../user/UserGalleryPage'));
+// const UserLogsPage = lazy(() => import('../user/UserLogsPage'));
+// const MessageBox = lazy(() => import('./MessageBox'));
 
-const ErrorPage = lazy(() => import('../common/ErrorPage'));
+// const ErrorPage = lazy(() => import('../common/ErrorPage'));
 
 
 
@@ -71,7 +71,7 @@ class HomePage extends Component {
             ready: false
         }
 
-        this.getUserToShowId = this.getUserToShowId.bind(this);
+        this.loadTimeLineUserData = this.loadTimeLineUserData.bind(this);
         this.loadAllPictures = this.loadAllPictures.bind(this);
         this.loadAllFriends = this.loadAllFriends.bind(this);
         this.searchResults = this.searchResults.bind(this);
@@ -82,7 +82,7 @@ class HomePage extends Component {
         console.log("Home componentDidMount")
         const userId = userService.getUserId();
         this.props.loadLoggedInUserData(userId);
-        this.getUserToShowId(userId);
+        this.loadTimeLineUserData(userId);
         this.loadAllPictures(userId);
         this.loadAllFriends(userId);
         this.setState({ ready: true });
@@ -136,32 +136,8 @@ class HomePage extends Component {
         return null;
     }
 
-    getUserToShowId(userId) {
+    loadTimeLineUserData(userId) {
         this.props.loadTimelineUserData(userId);
-
-        // requester.get(`/users/details/${getUserToShowId}`, (userData) => {
-        //     console.log('userData: ', userData);
-        //     this.setState({
-        //         ...userData, ready: true
-        //     }, () => {
-        //         (() => this.loadAllPictures(getUserToShowId))();
-        //         (() => this.loadAllFriends(getUserToShowId))();
-        //         (() => this.loadAllChatFriends())();
-        //     })
-
-        //     if (userData.error) {
-        //         this.props.history.push("/");
-        //     }
-        // }).catch(err => {
-        //     toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-        //         position: toast.POSITION.TOP_RIGHT
-        //     });
-
-        //     if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-        //         localStorage.clear();
-        //         this.props.history.push('/login');
-        //     }
-        // })
     }
 
     loadAllPictures = (userId) => {
@@ -241,6 +217,7 @@ class HomePage extends Component {
     render() {
         const loading = this.props.fetchPictures.loading || this.props.timeLineUserData.loading || this.props.loggedInUserData.loading || this.props.fetchAllFriends.loading;
         if (!this.state.ready || loading) {
+            // return null;
             return <h1 className="text-center pt-5 mt-5">Loading HomePage...</h1>
         }
 
@@ -259,12 +236,12 @@ class HomePage extends Component {
                         <Suspense fallback={<h1 className="text-center pt-5 mt-5">Loading Falback HomePage...</h1>}>
                             <Switch>
                                 {loggedIn && <Route exact path="/home/comments/:id" component={MainSharedContent} />}
+                                {loggedIn && <Route exact path="/home/profile/:id" component={UserProfilePage} />}
 
-                                {/* {loggedIn && <Route exact path="/home/profile/:id" render={props => <UserProfilePage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
-                                {loggedIn && <Route exact path="/home/friends/:id" render={props => <UserFriendsAllPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} loadAllFriends={this.loadAllFriends} />} />}
-                                {loggedIn && <Route exact path="/home/findFriends/:id/:category" render={(props) => <UserFindFriendsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} findFriends={this.findFriends} />} />}
-                                {loggedIn && (isRoot || isAdmin || isTheCurrentLoggedInUser) && <Route exact path="/home/users/edit/:id" render={props => <UserEditPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
-                                {(loggedIn && isRoot) && <Route exact path="/home/users/delete/:id" render={props => <UserDeletePage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
+                                {/* {loggedIn && <Route exact path="/home/friends/:id" render={props => <UserFriendsAllPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} loadAllFriends={this.loadAllFriends} />} />}
+                                {loggedIn && <Route exact path="/home/findFriends/:id/:category" render={(props) => <UserFindFriendsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} findFriends={this.findFriends} />} />} */}
+                                {loggedIn && (isRoot || isAdmin || isTheCurrentLoggedInUser) && <Route exact path="/home/users/edit/:id" component={UserEditPage}/>}
+                                {/* {(loggedIn && isRoot) && <Route exact path="/home/users/delete/:id" render={props => <UserDeletePage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
                                 {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/users/all/:id" render={props => <UserAllPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
                                 {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/logs/:id" render={props => <UserLogsPage {...props} getUserToShowId={this.getUserToShowId} searchResults={this.searchResults} {...this.state} />} />}
                                 {loggedIn && <Route exact path="/home/gallery/:id" render={props => <UserGalleryPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} loadAllPictures={this.loadAllPictures} />} />}

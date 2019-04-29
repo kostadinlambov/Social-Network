@@ -3,86 +3,40 @@ import { userService } from '../../infrastructure';
 import { Button, ButtonWithClickEvent } from '../common';
 import './css/UserProfilePage.css';
 
-export default class UserProfilePage extends Component {
+import { connect } from 'react-redux';
+
+class UserProfilePage extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            id: '',
-            username: '',
-            email: '',
-            firstName: '',
-            lastName: '',
-            address: '',
-            city: '',
-            profilePicUrl: '',
-            backgroundImageUrl: '',
-            authorities: [],
             ready: false
         }
     }
 
-    componentDidMount = () => {
-        const userId = this.props.match.params.id;
-
-        this.setState({ id: userId });
-        this.props.getUserToShowId(userId);
-    }
-
-
     onSubmitHandlerDelete = (e) => {
         this.props.history.push({
-            pathname: "/home/users/delete/" + this.props.id,
+            pathname: "/home/users/delete/" + this.props.timeLineUser.id,
         });
     }
-
 
     onSubmitHandlerEdit = (e) => {
-        // e.preventDefault();
-        this.setState({ ...this.props })
-        const id = this.state.id;
-
         this.props.history.push({
-            pathname: "/home/users/edit/" + this.state.id,
+            pathname: "/home/users/edit/" + this.props.timeLineUser.id,
             state:
-                { ...this.state }
+                { ...this.props.timeLineUser}
         });
-    }
-
-    componetnDidUpdate(prevProps, prevState) {
-        const newId = this.props.match.params.id;
-        const lastId = prevProps.id;
-        if (newId !== lastId) {
-            this.props.getUserToShowId(newId);
-        }
     }
 
     render = () => {
-        // if (!this.state.ready) {
-        //     return <h1 className="text-center pt-5 mt-5">Loading...</h1>
-
-        // }
-
-        if (this.props.match.params.id !== this.props.id) {
-            this.props.getUserToShowId(this.props.match.params.id);
-        }
-
-        const loggedInUserName = userService.getUsername();
-        const loggedInRole = userService.getRole();
-
-        let showPicsButtons = true;
-        if (loggedInUserName !== this.state.username && (loggedInRole !== "ROOT")) {
-            showPicsButtons = false;
-        }
-
-        let authority;
-        if (this.props.authorities[0]) {
-            authority = this.props.authorities[0]['authority'];
+        let timeLineUserRole;
+        if (this.props.timeLineUser.authorities[0]) {
+            timeLineUserRole = this.props.timeLineUser.authorities[0]['authority'];
         }
 
         const isAdmin = userService.isAdmin();
         const isRoot = userService.isRoot();
-        const isCurrentUserRoot = authority === 'ROOT';
+        const isCurrentUserRoot = timeLineUserRole === 'ROOT';
 
         return (
             <Fragment >
@@ -105,7 +59,7 @@ export default class UserProfilePage extends Component {
                                                 <h5 className=" font-weight-bold">Username</h5>
                                             </td>
                                             <td className="col-md-6 username-color" >
-                                                <h5>{this.props.username}</h5>
+                                                <h5>{this.props.timeLineUser.username}</h5>
                                             </td>
                                         </tr>
                                         <tr className="row">
@@ -113,7 +67,7 @@ export default class UserProfilePage extends Component {
                                                 <h5 className=" font-weight-bold">Email</h5>
                                             </td>
                                             <td className="col-md-6">
-                                                <h5>{userService.formatUsername(this.props.email)}</h5>
+                                                <h5>{userService.formatUsername(this.props.timeLineUser.email)}</h5>
                                             </td>
                                         </tr>
                                         <tr className="row">
@@ -121,7 +75,7 @@ export default class UserProfilePage extends Component {
                                                 <h5 className=" font-weight-bold">First Name</h5>
                                             </td>
                                             <td className="col-md-6" >
-                                                <h5>{userService.formatUsername(this.props.firstName)}</h5>
+                                                <h5>{userService.formatUsername(this.props.timeLineUser.firstName)}</h5>
                                             </td>
                                         </tr>
                                         <tr className="row">
@@ -129,7 +83,7 @@ export default class UserProfilePage extends Component {
                                                 <h5 className=" font-weight-bold">Last Name</h5>
                                             </td>
                                             <td className="col-md-6" >
-                                                <h5>{userService.formatUsername(this.props.lastName)}</h5>
+                                                <h5>{userService.formatUsername(this.props.timeLineUser.lastName)}</h5>
                                             </td>
                                         </tr>
                                         <tr className="row">
@@ -137,7 +91,7 @@ export default class UserProfilePage extends Component {
                                                 <h5 className=" font-weight-bold">Address</h5>
                                             </td>
                                             <td className="col-md-6">
-                                                <h5>{userService.formatUsername(this.props.address)}</h5>
+                                                <h5>{userService.formatUsername(this.props.timeLineUser.address)}</h5>
                                             </td>
                                         </tr>
                                         <tr className="row">
@@ -145,7 +99,7 @@ export default class UserProfilePage extends Component {
                                                 <h5 className=" font-weight-bold">City</h5>
                                             </td>
                                             <td className="col-md-6" >
-                                                <h5>{userService.formatUsername(this.props.city)}</h5>
+                                                <h5>{userService.formatUsername(this.props.timeLineUser.city)}</h5>
                                             </td>
                                         </tr>
                                         {(isAdmin || isRoot) && <tr className="row">
@@ -153,7 +107,7 @@ export default class UserProfilePage extends Component {
                                                 <h5 className=" font-weight-bold">Role</h5>
                                             </td>
                                             <td className="col-md-6" >
-                                                <h5>{authority}</h5>
+                                                <h5>{timeLineUserRole}</h5>
                                             </td>
                                         </tr>}
 
@@ -161,9 +115,9 @@ export default class UserProfilePage extends Component {
                                 </table>
                                 <div className="hr-styles"></div>
                                 <div className="d-flex justify-content-center ">
-                                    {(((isRoot || isAdmin) && !isCurrentUserRoot) || userService.isLoggedInUser(this.props.username)) && <ButtonWithClickEvent buttonClass={"btn App-button-primary btn-lg m-3"} url={`/home/users/edit/`} text={"Edit"} onClick={this.onSubmitHandlerEdit} />}
-                                    {((isRoot) && !userService.isLoggedInUser(this.props.username)) && <ButtonWithClickEvent buttonClass={"btn App-button-primary btn-lg m-3"} url={`/home/users/delete/`} text={"Delete"} onClick={this.onSubmitHandlerDelete} />}
-                                    {(isAdmin || isRoot) && <Button buttonClass={"btn App-button-primary btn-lg m-3"} url={`/home/users/all/${userService.getUserId()}`} text={"All Users"} />}
+                                    {(((isRoot || isAdmin) && !isCurrentUserRoot) || userService.isLoggedInUser(this.props.timeLineUser.username)) && <ButtonWithClickEvent buttonClass={"btn App-button-primary btn-lg m-3"} url={`/home/users/edit/`} text={"Edit"} onClick={this.onSubmitHandlerEdit} />}
+                                    {((isRoot) && !userService.isLoggedInUser(this.props.timeLineUser.username)) && <ButtonWithClickEvent buttonClass={"btn App-button-primary btn-lg m-3"} url={`/home/users/delete/`} text={"Delete"} onClick={this.onSubmitHandlerDelete} />}
+                                    {(isAdmin || isRoot) && <Button buttonClass={"btn App-button-primary btn-lg m-3"} url={`/home/users/all/${this.props.loggedInUser.id}`} text={"All Users"} />}
 
                                 </div >
                             </div >
@@ -174,3 +128,12 @@ export default class UserProfilePage extends Component {
         )
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        loggedInUser: state.loggedInUserData,
+        timeLineUser: state.timeLineUserData,
+    }
+}
+
+export default connect(mapStateToProps, null)(UserProfilePage);

@@ -24,7 +24,6 @@ export default class WritePost extends Component {
         const loading = this.props.createPostData.loading || this.props.loadingAllPosts;
 
         if (!loading && this.state.createPostData !== this.props.createPostData) {
-            debugger;
             this.setState({
                 content: '',
                 imageUrl: '',

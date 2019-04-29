@@ -2,7 +2,8 @@ import {
     FETCH_LOGGEDIN_USERDATA_BEGIN, FETCH_LOGGEDIN_USERDATA_SUCCESS, FETCH_LOGGEDIN_USERDATA_ERROR, UPDATE_LOGGEDIN_USERDATA,
     FETCH_TIMELINE_USERDATA_BEGIN, FETCH_TIMELINE_USERDATA_SUCCESS, FETCH_TIMELINE_USERDATA_ERROR, UPDATE_TIMELINE_USERDATA,
     FETCH_ALLCHATFRIENDS_BEGIN, FETCH_ALLCHATFRIENDS_SUCCESS, FETCH_ALLCHATFRIENDS_ERROR, EDIT_USERSTATUS,
-    FETCH_ALLFRIENDS_BEGIN, FETCH_ALLFRIENDS_SUCCESS, FETCH_ALLFRIENDS_ERROR, 
+    FETCH_ALLFRIENDS_BEGIN, FETCH_ALLFRIENDS_SUCCESS, FETCH_ALLFRIENDS_ERROR,
+    UPDATE_USER_SUCCESS, UPDATE_USER_BEGIN, UPDATE_USER_ERROR,
 } from '../actions/actionTypes';
 
 import placeholder_user_image from '../../assets/images/placeholder.png';
@@ -271,6 +272,50 @@ const fetchAllFriendsReducer = (state = initialStateAllFriends, action) => {
     }
 }
 
+
+const initialStateUpdateUser = {
+    hasError: false,
+    error: '',
+    message: '',
+    status: '',
+    path: '',
+    loading: false,
+}
+
+const updateUserReducer = (state = initialStateUpdateUser, action) => {
+    switch (action.type) {
+        case UPDATE_USER_BEGIN:
+            return Object.assign({}, state, {
+                hasError: false,
+                error: '',
+                message: '',
+                status: '',
+                path: '',
+                loading: true,
+            })
+        case UPDATE_USER_SUCCESS:
+            return Object.assign({}, state, {
+                hasError: false,
+                error: '',
+                message: action.payload.message,
+                status: '',
+                path: '',
+                loading: false,
+            })
+        case UPDATE_USER_ERROR:
+            return Object.assign({}, state, {
+                hasError: true,
+                error: action.error,
+                message: action.message,
+                status: action.status,
+                path: action.path,
+                loading: false,
+            })
+        default:
+            return state
+    }
+}
+
 const reconcile = (oldData, newData) => {
     const newDataById = {}
     for (const entry of newData) {
@@ -295,5 +340,9 @@ const reconcile = (oldData, newData) => {
 }
 
 export {
-    fetchAllChatFriendsReducer, loggedInUserDataReducer, timeLineUserDataReducer, fetchAllFriendsReducer
+    fetchAllChatFriendsReducer,
+    loggedInUserDataReducer,
+    timeLineUserDataReducer,
+    fetchAllFriendsReducer,
+    updateUserReducer
 }

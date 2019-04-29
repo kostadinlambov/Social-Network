@@ -4,6 +4,7 @@ import {
     FETCH_TIMELINE_USERDATA_BEGIN, FETCH_TIMELINE_USERDATA_SUCCESS, FETCH_TIMELINE_USERDATA_ERROR, UPDATE_TIMELINE_USERDATA,
     FETCH_ALLCHATFRIENDS_BEGIN, FETCH_ALLCHATFRIENDS_SUCCESS, FETCH_ALLCHATFRIENDS_ERROR, EDIT_USERSTATUS,
     FETCH_ALLFRIENDS_BEGIN, FETCH_ALLFRIENDS_SUCCESS, FETCH_ALLFRIENDS_ERROR, 
+    UPDATE_USER_SUCCESS, UPDATE_USER_BEGIN, UPDATE_USER_ERROR,
 } from './actionTypes';
 
 import { fetchPicturesAction } from './pictureActions'
@@ -236,6 +237,55 @@ const fetchAllFriendsAction = (userId) => {
     }
 }
 
+// update User
+const updateUserSuccess = (response) => {
+    return {
+        type: UPDATE_USER_SUCCESS,
+        payload: response
+    }
+}
+
+const updateUserBegin = () => {
+    return {
+        type: UPDATE_USER_BEGIN,
+    }
+}
+
+const updateUserError = (error, message, status, path) => {
+    return {
+        type: UPDATE_USER_ERROR,
+        error,
+        message,
+        status,
+        path,
+    }
+}
+
+const updateUserAction = (loggedInUserId, otherProps) => {
+    const timeLineUserId = otherProps.id;
+
+    return (dispatch) => {
+        dispatch(updateUserBegin())
+        return requester.put('/users/update/' + loggedInUserId, { ...otherProps }, (response) => {
+            if (response.error) {
+                const { error, message, status, path } = response;
+                dispatch(updateUserError(error, message, status, path));
+            } else {
+                dispatch(updateTimeLineUserDataAction(otherProps));
+                if(loggedInUserId === timeLineUserId){
+                    dispatch(updateLoggedInUserDataAction(otherProps));
+                }
+                dispatch(updateUserSuccess(response));
+            }
+        }).catch(err => {
+            debugger;
+            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
+                localStorage.clear();
+            }
+            dispatch(updateUserError('', `Error: ${err.message}`, err.status, ''));
+        })
+    }
+}
 
 export { 
     fetchAllChatFriendsAction, 
@@ -244,5 +294,6 @@ export {
     updateLoggedInUserDataAction, 
     fetchTimeLineUserAction, 
     updateTimeLineUserDataAction ,
-    fetchAllFriendsAction
+    fetchAllFriendsAction,
+    updateUserAction,
 };

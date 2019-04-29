@@ -1,18 +1,19 @@
-import { registerReducer, loginReducer, registerErrorReducer, loginErrorReducer } from './authReducer';
+import { registerReducer, loginReducer, registerErrorReducer, loginErrorReducer,  } from './authReducer';
 import { ajaxStatusReducer, ajaxErrorReducer } from './ajaxReducer';
 import { fetchPictureReducer } from './pictureReducer';
-import { fetchAllChatFriendsReducer, loggedInUserDataReducer, timeLineUserDataReducer, fetchAllFriendsReducer } from './userReducer';
+import { fetchAllChatFriendsReducer, loggedInUserDataReducer, timeLineUserDataReducer, fetchAllFriendsReducer, updateUserReducer } from './userReducer';
 import { fetchAllMessagesReducer } from './messagesReducer';
 import { createPostReducer, fetchAllPostsReducer, removePostReducer, addLikePostReducer } from './postReducer';
 import { createCommentReducer, removeCommentReducer, addLikeCommentReducer } from './commentReducer';
 
 export default {
+    ajaxStatus: ajaxStatusReducer,
+    ajaxError: ajaxErrorReducer,
     register: registerReducer,
     login: loginReducer,
     registerError: registerErrorReducer,
     loginError: loginErrorReducer,
-    ajaxStatus: ajaxStatusReducer,
-    ajaxError: ajaxErrorReducer,
+    updateUserData: updateUserReducer,
     fetchPictures: fetchPictureReducer,
     fetchAllChatFriends: fetchAllChatFriendsReducer,
     loggedInUserData: loggedInUserDataReducer,
