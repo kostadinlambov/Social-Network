@@ -26,7 +26,7 @@ class UserGalleryPage extends Component {
     }
 
     componentDidMount() {
-        const currentTimeLineUserId = this.props.match.params.id
+        const currentTimeLineUserId = this.props.match.params.id;
         if (currentTimeLineUserId !== this.props.timeLineUserData.id) {
             this.props.changeTimeLineUser(currentTimeLineUserId);
             this.props.changeAllPictures(currentTimeLineUserId);

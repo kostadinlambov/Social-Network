@@ -216,10 +216,11 @@ class HomePage extends Component {
                                 {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/users/all/:id" component={UserAllPage} />}
                                 {(loggedIn && isRoot) && <Route exact path="/home/users/delete/:id" component={UserDeletePage}  />}
                                 {loggedIn && <Route exact path="/home/gallery/:id" component={UserGalleryPage} />} />}
+                                {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/logs/:id" component={UserLogsPage} />}
                                 {/* {loggedIn && <Route exact path="/home/friends/:id" render={props => <UserFriendsAllPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} loadAllFriends={this.loadAllFriends} />} />}
                                 {loggedIn && <Route exact path="/home/findFriends/:id/:category" render={(props) => <UserFindFriendsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} findFriends={this.findFriends} />} />} */}
                                 {/* 
-                                {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/logs/:id" render={props => <UserLogsPage {...props} getUserToShowId={this.getUserToShowId} searchResults={this.searchResults} {...this.state} />} />}
+                               
                                 {loggedIn && <Route exact path="/home/users/search/" render={(props) => <UserSearchResultsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} searchResults={this.searchResults} />} />} */}
                                 {/* <Route exact path="/error" component={ErrorPage} />
                                 <Route render={(props) => <Redirect to="/" {...props} />} /> */}

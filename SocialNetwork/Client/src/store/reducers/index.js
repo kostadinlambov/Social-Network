@@ -9,6 +9,7 @@ import {
 import { fetchAllMessagesReducer } from './messagesReducer';
 import { createPostReducer, fetchAllPostsReducer, removePostReducer, addLikePostReducer } from './postReducer';
 import { createCommentReducer, removeCommentReducer, addLikeCommentReducer } from './commentReducer';
+import { fetchAllLogsReducer, findLogsByUserNameReducer, clearLogsByUserNameReducer, clearAllLogsReducer } from './logsReducer';
 
 export default {
     ajaxStatus: ajaxStatusReducer,
@@ -39,4 +40,8 @@ export default {
     changePicture: changePictureReducer,
     addPicture: addPictureReducer,
     removePicture: removePictureReducer,
+    fetchAllLogs: fetchAllLogsReducer,
+    findLogsByUserName: findLogsByUserNameReducer,
+    clearLogsByUserName: clearLogsByUserNameReducer,
+    clearAllLogs: clearAllLogsReducer,
 };

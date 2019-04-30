@@ -1,19 +1,22 @@
 import React, { Component, Fragment } from 'react';
 import LogsRow from './LogsRow';
-import { userService, requester } from '../../infrastructure';
+import { userService } from '../../infrastructure';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common';
 import './css/UserLogsPage.css';
 
-export default class UserLogsPage extends Component {
+import { connect } from 'react-redux';
+import { changeCurrentTimeLineUserAction, changeAllFriendsAction } from '../../store/actions/userActions';
+import { changeAllPicturesAction } from '../../store/actions/pictureActions';
+import { fetchAllLogsAction, findLogsByUserNameAction, clearLogsByUserNameAction, clearAllLogsAction } from '../../store/actions/logsActions';
+
+class UserLogsPage extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            logsArr: [],
             search: '',
             selected: '',
-            id: '',
         };
 
         this.onChangeHandler = this.onChangeHandler.bind(this);
@@ -24,11 +27,71 @@ export default class UserLogsPage extends Component {
     }
 
     componentDidMount() {
-        const userId = this.props.match.params.id;
         this.loadAllLogs();
-        this.setState({
-            id: userId
-        })
+
+        const loggedInUserId = this.props.loggedInUserData.id;
+        if (loggedInUserId !== this.props.timeLineUserData.id) {
+            this.props.changeTimeLineUser(loggedInUserId);
+            this.props.changeAllPictures(loggedInUserId);
+            this.props.changeAllFriends(loggedInUserId);
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        const errorMessage = this.getErrorMessage(prevProps);
+        const successMessage = this.getSuccessMessage(prevProps)
+
+        if (errorMessage) {
+            toast.error(<ToastComponent.errorToast text={errorMessage} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+        } else if (successMessage) {
+            console.log('this.state: ', this.state)
+            toast.success(<ToastComponent.successToast text={successMessage} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+        }
+    }
+
+    getSuccessMessage(prevProps) {
+        if (!this.state.search && !this.props.fetchAllLogs.hasError && this.props.fetchAllLogs.message && this.props.fetchAllLogs !== prevProps.fetchAllLogs) {
+            return this.props.fetchAllLogs.message;
+        } else if (!this.props.findLogsByUserName.hasError && this.props.findLogsByUserName.message && this.props.findLogsByUserName !== prevProps.findLogsByUserName) {
+            return this.props.findLogsByUserName.message;
+        } else if (!this.props.clearLogsByUserName.hasError && this.props.clearLogsByUserName.message && this.props.clearLogsByUserName !== prevProps.clearLogsByUserName) {
+            this.setState({
+                selected: '',
+                search: '',
+            })
+            return this.props.clearLogsByUserName.message;
+        } else if (!this.props.clearAllLogs.hasError && this.props.clearAllLogs.message && this.props.clearAllLogs !== prevProps.clearAllLogs) {
+            this.setState({
+                selected: '',
+                search: '',
+            })
+
+            return this.props.clearAllLogs.message;
+        }
+
+        return null;
+    }
+
+    getErrorMessage(prevProps) {
+        if (this.props.fetchAllLogs.hasError && prevProps.fetchAllLogs.error !== this.props.fetchAllLogs.error) {
+            return this.props.fetchAllLogs.message || 'Server Error';
+        }
+        else if (this.props.findLogsByUserName.hasError && prevProps.findLogsByUserName.error !== this.props.findLogsByUserName.error) {
+            this.setState({
+                selected: '',
+            })
+            return this.props.findLogsByUserName.message || 'Server Error';
+        } else if (this.props.clearLogsByUserName.hasError && prevProps.clearLogsByUserName.error !== this.props.clearLogsByUserName.error) {
+            return this.props.clearLogsByUserName.message || 'Server Error';
+        } else if (this.props.clearAllLogs.hasError && prevProps.clearAllLogs.error !== this.props.clearAllLogs.error) {
+            return this.props.clearAllLogs.message || 'Server Error';
+        }
+
+        return null;
     }
 
     onChangeHandler(event) {
@@ -38,91 +101,25 @@ export default class UserLogsPage extends Component {
     }
 
     loadAllLogs = () => {
-        requester.get('/logs/all', (response) => {
-            if (response) {
-                this.setState({
-                    logsArr: response,
-                    selected: '',
-                    search: '',
-                })
-            } else {
-                toast.error(<ToastComponent.errorToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-            }
-        }).catch(err => {
-            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-                position: toast.POSITION.TOP_RIGHT
-            });
-
-            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-                localStorage.clear();
-                this.props.history.push('/login');
-            }
-        })
+        this.setState({
+            selected: '',
+            search: '',
+        }, () => this.props.loadAllLogs())
     }
 
     searchLogs = () => {
         const search = this.state.search;
         if (!search) {
-            this.loadAllLogs();
+            this.props.loadAllLogs();
         } else {
-            requester.get('/logs/findByUserName/' + search, (response) => {
-                if (response.error) {
-                    toast.error(<ToastComponent.errorToast text={response.message} />, {
-                        position: toast.POSITION.TOP_RIGHT
-                    });
-                } else {
-                    toast.success(<ToastComponent.successToast text={`Successfully loaded logs for "${this.state.search}".`} />, {
-                        position: toast.POSITION.TOP_RIGHT
-                    });
-
-                    this.setState({
-                        logsArr: response,
-                        selected: search,
-                    })
-                }
-            }).catch(err => {
-                console.error('search logs err:', err)
-                toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-
-                if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-                    localStorage.clear();
-                    this.props.history.push('/login');
-                }
-            })
+            this.setState({
+                selected: search,
+            }, () => this.props.loadLogsByUserName(search))
         }
     }
 
     clearAllLogs = () => {
-        debugger;
-        requester.delete('/logs/clear', {}, (response) => {
-            if (response.success) {
-                this.setState({
-                    logsArr: [],
-                    selected: '',
-                    search: '',
-                })
-                toast.success(<ToastComponent.successToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-            } else {
-                toast.error(<ToastComponent.errorToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-            }
-        }).catch(err => {
-            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-                position: toast.POSITION.TOP_RIGHT
-            });
-
-            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-                localStorage.clear();
-                this.props.history.push('/login');
-            }
-        })
+        this.props.deleteAllLogs();
     }
 
     clearSelectedLogs = () => {
@@ -130,35 +127,16 @@ export default class UserLogsPage extends Component {
         if (!selected) {
             return;
         }
-        requester.delete('/logs/clearByName/' + selected, {}, (response) => {
-            if (response.success) {
-                this.setState({
-                    logsArr: [],
-                }, this.loadAllLogs())
 
-                toast.success(<ToastComponent.successToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-            } else {
-                toast.error(<ToastComponent.errorToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-            }
-        }).catch(err => {
-            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-                position: toast.POSITION.TOP_RIGHT
-            });
-
-            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-                localStorage.clear();
-                this.props.history.push('/login');
-            }
-        })
+        this.props.deleteLogsByUserName(selected);
     }
 
     render() {
-        if (this.props.match.params.id !== this.props.id) {
-            this.props.getUserToShowId(this.props.match.params.id);
+        const loading = this.props.fetchAllLogs.loading || this.props.findLogsByUserName.loading
+            || this.props.clearLogsByUserName.loading || this.props.clearAllLogs.loading;
+
+        if (loading) {
+            return <h1 className="text-center pt-5 mt-5">Loading...</h1>
         }
 
         const selected = this.state.selected;
@@ -171,7 +149,6 @@ export default class UserLogsPage extends Component {
                             <h1 className="text-center font-weight-bold mt-4" style={{ 'margin': '1rem auto' }}>Server Logs History</h1>
                             <div className="hr-styles"></div>
 
-                            {/* <form className="form-inline my-2 my-lg-0" onSubmit={this.searchFriend}> */}
                             <div className="col-md-4 mx-auto mb-3" >
                                 <label className="form-control-label font-weight-bold" htmlFor="search">Enter Username:</label>
                                 <input
@@ -186,7 +163,6 @@ export default class UserLogsPage extends Component {
                                     style={{ background: '#EEE' }}
                                 />
                             </div>
-                            {/* </form> */}
 
                             <div className="col-md-5 d-flex justify-content-center mx-auto mb-5" >
                                 <h5>
@@ -196,7 +172,7 @@ export default class UserLogsPage extends Component {
                                 <h5>
                                     <button className="btn update-info m-1" onClick={this.loadAllLogs} >ALL LOGS</button>
                                 </h5>
-                                {userService.isRoot() &&
+                                {userService.isRoot() && this.props.logsArr.length > 0 &&
                                     <h5>
                                         <button className="btn update-info m-1" onClick={this.clearAllLogs} >CLEAR ALL</button>
                                     </h5>}
@@ -207,7 +183,7 @@ export default class UserLogsPage extends Component {
                                     </h5>}
                             </div>
 
-                            {this.state.logsArr.length > 0
+                            {this.props.logsArr.length > 0
                                 ?
                                 <table className="table table-hover mt-3 w-80 mx-auto text-center">
                                     <thead>
@@ -223,7 +199,7 @@ export default class UserLogsPage extends Component {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {this.state.logsArr.map((log, i) => <LogsRow key={log.id} index={i + 1} {...this.props} {...log} />)}
+                                        {this.props.logsArr.map((log, i) => <LogsRow key={log.id} index={i + 1} {...this.props} {...log} />)}
                                     </tbody>
                                 </table>
                                 :
@@ -240,3 +216,32 @@ export default class UserLogsPage extends Component {
         )
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        timeLineUserData: state.timeLineUserData,
+        loggedInUserData: state.loggedInUserData,
+
+        fetchAllLogs: state.fetchAllLogs,
+        logsArr: state.fetchAllLogs.logsArr,
+
+        findLogsByUserName: state.findLogsByUserName,
+        clearLogsByUserName: state.clearLogsByUserName,
+        clearAllLogs: state.clearAllLogs,
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        changeTimeLineUser: (userId) => { dispatch(changeCurrentTimeLineUserAction(userId)) },
+        changeAllFriends: (userId) => { dispatch(changeAllFriendsAction(userId)) },
+        changeAllPictures: (userId) => { dispatch(changeAllPicturesAction(userId)) },
+
+        loadAllLogs: () => { dispatch(fetchAllLogsAction()) },
+        loadLogsByUserName: (search) => { dispatch(findLogsByUserNameAction(search)) },
+        deleteLogsByUserName: (selected) => { dispatch(clearLogsByUserNameAction(selected)) },
+        deleteAllLogs: () => { dispatch(clearAllLogsAction()) },
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserLogsPage);
