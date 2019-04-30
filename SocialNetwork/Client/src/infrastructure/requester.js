@@ -77,16 +77,26 @@ export default {
         //     console.log(err)
         // })
 
+    },
+
+    addPhoto: (endpoint, data, callback) => {
+        return fetch(BASE_URL + endpoint, {
+            method: 'POST',
+            headers: {
+                ...getAuthHeader()
+            },
+            body: data
+        }).then(checkStatus)
+            .then(callback)
     }
 }
-
 
 function checkStatus(response) {
     if (response.status >= 200 && response.status < 300) {
         return response.json()
     } else {
         var error = new Error(response.statusText);
-        if (response.status === 403 && response.url === (BASE_URL +'/login')) {
+        if (response.status === 403 && response.url === (BASE_URL + '/login')) {
             error.message = 'Incorrect credentials!';
             error.response = response;
             throw error;

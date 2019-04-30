@@ -1,12 +1,13 @@
 import React, { Component, Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
-import { userService, requester } from '../../infrastructure';
+import { userService } from '../../infrastructure';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common';
 import '../../styles/FormPages.css';
 
 import { connect } from 'react-redux';
-import { updateUserAction } from '../../store/actions/userActions';
+import { updateUserAction, changeCurrentTimeLineUserAction, changeAllFriendsAction } from '../../store/actions/userActions';
+import { changeAllPicturesAction } from '../../store/actions/pictureActions';
 
 class UserEditPage extends Component {
     constructor(props) {
@@ -38,8 +39,18 @@ class UserEditPage extends Component {
         this.onSubmitHandler = this.onSubmitHandler.bind(this);
     }
 
+    componentDidMount = () => {
+        const currentTimeLineUserId = this.props.match.params.id
+        if (currentTimeLineUserId !== this.props.timeLineUserData.id) {
+            this.props.changeTimeLineUser(currentTimeLineUserId);
+            this.props.changeAllPictures(currentTimeLineUserId);
+            this.props.changeAllFriends(currentTimeLineUserId);
+        }
+    }
+
     componentDidUpdate(prevProps, prevState) {
-        // const loading = this.props.updateUserData.loading;
+        const loading = this.props.changeTimeLineUserData.loading ||
+            this.props.changeAllFriends.loading || this.props.changePicture.loading;
 
         // console.log('loading: ', loading);
         // console.log('this.props: ', this.props);
@@ -48,18 +59,22 @@ class UserEditPage extends Component {
         // console.log('prevState: ', prevState);
         // debugger;
 
-        // if (!loading && this.props.updateUser !== prevProps.updateUser) {
-        //     this.setState({
-        //         allPostsArr: this.props.allPostsArr
-        //     })
-        // }
+        if (!loading && this.props.timeLineUserData.id !== this.state.id) {
+            this.setState({
+                id: this.props.timeLineUserData.id,
+                username: this.props.timeLineUserData.username,
+                email: this.props.timeLineUserData.email,
+                firstName: this.props.timeLineUserData.firstName,
+                lastName: this.props.timeLineUserData.lastName,
+                address: this.props.timeLineUserData.address,
+                city: this.props.timeLineUserData.city,
+                profilePicUrl: this.props.timeLineUserData.profilePicUrl,
+                backgroundImageUrl: this.props.timeLineUserData.backgroundImageUrl,
+            })
+        }
 
         const errorMessage = this.getErrorMessage(prevProps);
         const successMessage = this.getSuccessMessage(prevProps)
-
-        // console.log('successMessage: ', successMessage);
-        // console.log('errorMessage: ', errorMessage);
-        // debugger;
 
         if (errorMessage) {
             toast.error(<ToastComponent.errorToast text={errorMessage} />, {
@@ -67,15 +82,15 @@ class UserEditPage extends Component {
             });
 
             this.setState({
-                id: this.props.id,
-                username: this.props.username,
-                email: this.props.email,
-                firstName: this.props.firstName,
-                lastName: this.props.lastName,
-                address: this.props.address,
-                city: this.props.city,
-                profilePicUrl: this.props.profilePicUrl,
-                backgroundImageUrl: this.props.backgroundImageUrl
+                id: this.props.timeLineUserData.id,
+                username: this.props.timeLineUserData.username,
+                email: this.props.timeLineUserData.email,
+                firstName: this.props.timeLineUserData.firstName,
+                lastName: this.props.timeLineUserData.lastName,
+                address: this.props.timeLineUserData.address,
+                city: this.props.timeLineUserData.city,
+                profilePicUrl: this.props.timeLineUserData.profilePicUrl,
+                backgroundImageUrl: this.props.timeLineUserData.backgroundImageUrl
             })
         } else if (successMessage) {
             toast.success(<ToastComponent.successToast text={successMessage} />, {
@@ -336,13 +351,19 @@ const mapStateToProps = (state) => {
     return {
         timeLineUserData: state.timeLineUserData,
         loggedInUserData: state.loggedInUserData,
-        updateUserData: state.updateUserData
+        updateUserData: state.updateUserData,
+        changeTimeLineUserData: state.changeTimeLineUserData,
+        changePicture: state.changePicture,
+        changeAllFriends: state.changeAllFriends
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        updateUser: (loggedInUserId, userData) => { dispatch(updateUserAction(loggedInUserId, userData)) }
+        updateUser: (loggedInUserId, userData) => { dispatch(updateUserAction(loggedInUserId, userData)) },
+        changeTimeLineUser: (userId) => { dispatch(changeCurrentTimeLineUserAction(userId)) },
+        changeAllFriends: (userId) => { dispatch(changeAllFriendsAction(userId)) },
+        changeAllPictures: (userId) => { dispatch(changeAllPicturesAction(userId)) },
     }
 }
 

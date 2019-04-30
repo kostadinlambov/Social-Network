@@ -5,7 +5,11 @@ import { ToastComponent } from '../common';
 import './css/UserAllPage.css';
 
 import { connect } from 'react-redux';
-import { fetchAllUsersAction, promoteUserAction, demoteUserAction, changeCurrentTimeLineUserAction } from '../../store/actions/userActions';
+import {
+    fetchAllUsersAction, promoteUserAction, demoteUserAction,
+    changeCurrentTimeLineUserAction, changeAllFriendsAction
+} from '../../store/actions/userActions';
+import { changeAllPicturesAction } from '../../store/actions/pictureActions';
 
 
 class UserAllPage extends Component {
@@ -25,23 +29,27 @@ class UserAllPage extends Component {
     componentDidMount() {
         const loggedInUserId = this.props.loggedInUserData.id;
         this.props.loadAllUsers(loggedInUserId);
+
+        if (loggedInUserId !== this.props.timeLineUserData.id) {
+            this.props.changeTimeLineUser(loggedInUserId);
+            this.props.changeAllPictures(loggedInUserId);
+            this.props.changeAllFriends(loggedInUserId);
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const loading = this.props.promoteUserData.loading
+        const loading = this.props.fetchAllUsers.loading ||
+            this.props.promoteUserData.loading || this.props.demoteUserData.loading;
 
-        console.log('loading: ', loading);
-        console.log('this.props: ', this.props);
-        console.log('prevProps: ', prevProps);
-        console.log('this.state: ', this.state);
-        console.log('prevState: ', prevState);
-        debugger;
+        // console.log('loading: ', loading);
+        // console.log('this.props: ', this.props);
+        // console.log('prevProps: ', prevProps);
+        // console.log('this.state: ', this.state);
+        // console.log('prevState: ', prevState);
+        // debugger;
 
         const errorMessage = this.getErrorMessage(prevProps);
         const successMessage = this.getSuccessMessage(prevProps)
-
-        console.log('this.props.id: ', this.props.id)
-        console.log('this.state.id: ', this.state.id)
 
         if (errorMessage && !loading) {
             toast.error(<ToastComponent.errorToast text={errorMessage} />, {
@@ -58,10 +66,10 @@ class UserAllPage extends Component {
         if (!this.props.fetchAllUsers.hasError && this.props.fetchAllUsers.message && this.props.fetchAllUsers !== prevProps.fetchAllUsers) {
             return this.props.fetchAllUsers.message;
         }
-        if (!this.props.promoteUserData.hasError && this.props.promoteUserData.message) {
+        if (!this.props.promoteUserData.hasError && this.props.promoteUserData.message && this.props.promoteUserData !== prevProps.promoteUserData) {
             return this.props.promoteUserData.message;
         }
-        if (!this.props.demoteUserData.hasError && this.props.demoteUserData.message) {
+        if (!this.props.demoteUserData.hasError && this.props.demoteUserData.message && this.props.demoteUserData !== prevProps.demoteUserData) {
             return this.props.demoteUserData.message;
         }
 
@@ -112,13 +120,13 @@ class UserAllPage extends Component {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {this.props.userArr.map((user, i) => <UserRow 
-                                    key={user.id} 
-                                    index={i + 1} 
-                                    promote={this.promote} 
-                                    demote={this.demote}
-                                    changeTimeLineUser={this.changeTimeLineUser} 
-                                    {...user} />)}
+                                    {this.props.userArr.map((user, i) => <UserRow
+                                        key={user.id}
+                                        index={i + 1}
+                                        promote={this.promote}
+                                        demote={this.demote}
+                                        changeTimeLineUser={this.changeTimeLineUser}
+                                        {...user} />)}
                                 </tbody>
                             </table>
 
@@ -139,7 +147,8 @@ const mapStateToProps = (state) => {
         promoteUserData: state.promoteUserData,
         demoteUserData: state.demoteUserData,
         changeTimeLineUserData: state.changeTimeLineUserData,
-
+        changePicture: state.changePicture,
+        changeAllFriends: state.changeAllFriends
     }
 }
 
@@ -149,6 +158,8 @@ const mapDispatchToProps = (dispatch) => {
         promoteUser: (userId) => { dispatch(promoteUserAction(userId)) },
         demoteUser: (userId) => { dispatch(demoteUserAction(userId)) },
         changeTimeLineUser: (userId) => { dispatch(changeCurrentTimeLineUserAction(userId)) },
+        changeAllFriends: (userId) => { dispatch(changeAllFriendsAction(userId)) },
+        changeAllPictures: (userId) => { dispatch(changeAllPicturesAction(userId)) },
     }
 }
 

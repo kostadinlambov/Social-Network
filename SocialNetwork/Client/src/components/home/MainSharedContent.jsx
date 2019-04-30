@@ -10,6 +10,8 @@ import WriteComment from './WriteComment';
 import { connect } from 'react-redux';
 import { createPostAction, fetchAllPostsAction, removePostAction, addLikePostAction } from '../../store/actions/postActions';
 import { createCommentAction, removeCommentAction, addLikeCommentAction } from '../../store/actions/commentActions';
+import { changeCurrentTimeLineUserAction, changeAllFriendsAction } from '../../store/actions/userActions';
+import { changeAllPicturesAction } from '../../store/actions/pictureActions';
 
 class MainSharedContent extends Component {
     constructor(props) {
@@ -29,6 +31,13 @@ class MainSharedContent extends Component {
     }
 
     componentDidMount = () => {
+        const currentTimeLineUserId = this.props.match.params.id
+        if (currentTimeLineUserId !== this.props.timeLineUser.id) {
+            this.props.changeTimeLineUser(currentTimeLineUserId);
+            this.props.changeAllPictures(currentTimeLineUserId);
+            this.props.changeAllFriends(currentTimeLineUserId);
+        }
+
         const timelineUserId = this.props.match.params.id;
         this.getAllPosts(timelineUserId);
     }
@@ -121,7 +130,6 @@ class MainSharedContent extends Component {
     }
 
     createComment(postId, content, imageUrl) {
-        debugger;
         const loggedInUserId = this.props.loggedInUser.id;
         const timelineUserId = this.props.timeLineUser.id;
         this.props.createComment(postId, loggedInUserId, timelineUserId, content, imageUrl);
@@ -219,6 +227,9 @@ const mapDispatchToProps = (dispatch) => {
         createComment: (postId, loggedInUserId, timelineUserId, content, imageUrl) => { dispatch(createCommentAction(postId, loggedInUserId, timelineUserId, content, imageUrl)) },
         removeComment: (loggedInUserId, commentId, timelineUserId) => { dispatch(removeCommentAction(loggedInUserId, commentId, timelineUserId)) },
         addLikeComment: (loggedInUserId, commentId, timelineUserId) => { dispatch(addLikeCommentAction(loggedInUserId, commentId, timelineUserId)) },
+        changeTimeLineUser: (userId) => { dispatch(changeCurrentTimeLineUserAction(userId)) },
+        changeAllFriends: (userId) => {dispatch(changeAllFriendsAction(userId))},
+        changeAllPictures: (userId) => {dispatch(changeAllPicturesAction(userId))},
     }
 }
 

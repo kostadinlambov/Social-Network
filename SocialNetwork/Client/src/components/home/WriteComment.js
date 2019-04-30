@@ -24,7 +24,6 @@ export default class WriteComment extends Component {
         const loading = this.props.createCommentData.loading || this.props.loadingAllPosts;
 
         if (!loading && this.state.createCommentData !== this.props.createCommentData) {
-            debugger;
             this.setState({
                 content: '',
                 imageUrl: '',
@@ -41,8 +40,6 @@ export default class WriteComment extends Component {
         }
         const postId = this.props.postId;
         const { content, imageUrl } = this.state;
-
-        debugger;
 
         this.props.createComment(postId, content, imageUrl )
     }

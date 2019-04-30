@@ -8,6 +8,7 @@ import {
     PROMOTE_USER_SUCCESS, PROMOTE_USER_BEGIN, PROMOTE_USER_ERROR,
     DEMOTE_USER_SUCCESS, DEMOTE_USER_BEGIN, DEMOTE_USER_ERROR, CHANGE_USERROLE,
     CHANGE_TIMELINE_USERDATA_SUCCESS, CHANGE_TIMELINE_USERDATA_BEGIN, CHANGE_TIMELINE_USERDATA_ERROR,
+    CHANGE_ALLFRIENDS_SUCCESS, CHANGE_ALLFRIENDS_BEGIN, CHANGE_ALLFRIENDS_ERROR, UPDATE_ALL_FRIENDS,
 } from '../actions/actionTypes';
 
 import placeholder_user_image from '../../assets/images/placeholder.png';
@@ -271,11 +272,20 @@ const fetchAllFriendsReducer = (state = initialStateAllFriends, action) => {
                 path: action.path,
                 loading: false,
             })
+            case  UPDATE_ALL_FRIENDS:
+            return  Object.assign({}, state, {
+                friendsArr: [...action.payload],
+                hasError: false,
+                error: '',
+                message: '',
+                status: '',
+                path: '',
+                loading: false,
+            })
         default:
             return state
     }
 }
-
 
 const initialStateUpdateUser = {
     hasError: false,
@@ -319,8 +329,6 @@ const updateUserReducer = (state = initialStateUpdateUser, action) => {
             return state
     }
 }
-
-
 
 const initialStateAllUsers = {
     userArr: [],
@@ -481,7 +489,6 @@ const demoteUserReducer = (state = initialStateDemoteUser, action) => {
     }
 }
 
-
 const initialStateChangeTimeLineUserData = {
     id: '',
     username: '',
@@ -542,6 +549,53 @@ const changeTimeLineUserDataReducer = (state = initialStateChangeTimeLineUserDat
     }
 }
 
+const initialStateChangeAllFriends = {
+    friendsArr: [],
+    hasError: false,
+    error: '',
+    message: '',
+    status: '',
+    path: '',
+    loading: false,
+}
+
+const changeAllFriendsReducer = (state = initialStateChangeAllFriends, action) => {
+    switch (action.type) {
+        case CHANGE_ALLFRIENDS_BEGIN:
+            return Object.assign({}, state, {
+                friendsArr: [],
+                hasError: false,
+                error: '',
+                message: '',
+                status: '',
+                path: '',
+                loading: true,
+            })
+        case CHANGE_ALLFRIENDS_SUCCESS:
+            return Object.assign({}, state, {
+                friendsArr: [...action.payload],
+                hasError: false,
+                error: '',
+                message: '',
+                status: '',
+                path: '',
+                loading: false,
+            })
+        case CHANGE_ALLFRIENDS_ERROR:
+            return Object.assign({}, state, {
+                friendsArr: [],
+                hasError: true,
+                error: action.error,
+                message: action.message,
+                status: action.status,
+                path: action.path,
+                loading: false,
+            })
+        default:
+            return state
+    }
+}
+
 const reconcile = (oldData, newData) => {
     const newDataById = {}
     for (const entry of newData) {
@@ -575,4 +629,5 @@ export {
     promoteUserReducer,
     demoteUserReducer,
     changeTimeLineUserDataReducer,
+    changeAllFriendsReducer,
 }

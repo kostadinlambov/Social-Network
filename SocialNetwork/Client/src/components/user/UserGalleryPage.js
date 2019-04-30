@@ -1,20 +1,19 @@
 import React, { Component, Fragment } from 'react';
-import { requester, userService } from '../../infrastructure'
+import { userService } from '../../infrastructure'
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
 import Picture from './Picture';
-import './css/UserGallery.css'
+import './css/UserGallery.css';
 
-export default class UserGalleryPage extends Component {
+import { connect } from 'react-redux';
+import { changeCurrentTimeLineUserAction, changeAllFriendsAction } from '../../store/actions/userActions';
+import { addPicturesAction, changeAllPicturesAction, removePictureAction } from '../../store/actions/pictureActions';
+
+class UserGalleryPage extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            picturesArr: [],
-            id: this.props.match.params.id,
-            firstName: this.props.firstName,
-            lastName: this.props.lastName,
-            username: '',
             file: '',
             error: '',
             msg: '',
@@ -27,9 +26,53 @@ export default class UserGalleryPage extends Component {
     }
 
     componentDidMount() {
-        const userId = this.props.match.params.id;
-        this.setState({ id: userId });
-        this.props.loadAllPictures(userId);
+        const currentTimeLineUserId = this.props.match.params.id
+        if (currentTimeLineUserId !== this.props.timeLineUserData.id) {
+            this.props.changeTimeLineUser(currentTimeLineUserId);
+            this.props.changeAllPictures(currentTimeLineUserId);
+            this.props.changeAllFriends(currentTimeLineUserId);
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        const loading = this.props.addPicture.loading
+
+        if (!loading && this.props.addPicture !== prevProps.addPicture) {
+            this.setState({ ready: true })
+        }
+
+        const errorMessage = this.getErrorMessage(prevProps);
+        const successMessage = this.getSuccessMessage(prevProps)
+
+        if (errorMessage) {
+            toast.error(<ToastComponent.errorToast text={errorMessage} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+        } else if (successMessage) {
+            toast.success(<ToastComponent.successToast text={successMessage} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+        }
+    }
+
+    getSuccessMessage(prevProps) {
+        if (!this.props.addPicture.hasError && this.props.addPicture.message && this.props.addPicture !== prevProps.addPicture) {
+            return this.props.addPicture.message;
+        } else if (!this.props.removePicture.hasError && this.props.removePicture.message && this.props.removePicture !== prevProps.removePicture) {
+            return this.props.removePicture.message;
+        }
+
+        return null;
+    }
+
+    getErrorMessage(prevProps) {
+        if (this.props.addPicture.hasError && prevProps.addPicture.error !== this.props.addPicture.error) {
+            return this.props.addPicture.message || 'Server Error';
+        } else if (this.props.removePicture.hasError && prevProps.removePicture.error !== this.props.removePicture.error) {
+            return this.props.removePicture.message || 'Server Error';
+        }
+
+        return null;
     }
 
     uploadFile = () => {
@@ -49,76 +92,20 @@ export default class UserGalleryPage extends Component {
             return;
         }
 
+        const timeLineUserId = this.props.timeLineUserData.id;
+
         let data = new FormData();
         data.append('file', this.state.file);
-        data.append('loggedInUserId', this.state.id);
+        data.append('loggedInUserId', timeLineUserId);
 
-        fetch(userService.getBaseUrl() + '/pictures/add', {
-            method: 'POST',
-            headers: {
-                ...this.getAuthHeader()
-            },
-            body: data
-        }).then(data => data.json())
-            .then(response => {
-                if (response.success === true) {
-                    toast.success(<ToastComponent.successToast text={response.message} />, {
-                        position: toast.POSITION.TOP_RIGHT
-                    });
-
-                    this.props.loadAllPictures(this.props.id);
-                    this.setState({ ready: true });
-                } else {
-                    toast.error(<ToastComponent.errorToast text={response.message} />, {
-                        position: toast.POSITION.TOP_RIGHT
-                    });
-                }
-
-            }).catch(err => {
-                toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-
-                if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-                    localStorage.clear();
-                    this.props.history.push('/login');
-                }
-            });
+        this.props.addImage(data, timeLineUserId);
     }
 
-    getAuthHeader = () => {
-        const token = localStorage.getItem("token");
-        return (token && token.length)
-            ? { 'Authorization': `Bearer ${token}` }
-            : {}
-    }
+    removePhoto = (photoToRemoveId) => {
+        const timeLineUserId = this.props.timeLineUserData.id;
+        const loggedInUserId = this.props.loggedInUserData.id;
 
-    removePhoto = (photoToRemoveId, event) => {
-        event.preventDefault();
-        const requestBody = { loggedInUserId: userService.getUserId(), photoToRemoveId: photoToRemoveId }
-
-        requester.post('/pictures/remove', requestBody, (response) => {
-            if (response.success) {
-                toast.success(<ToastComponent.successToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-
-                this.props.loadAllPictures(this.props.id);
-            } else {
-                toast.error(<ToastComponent.errorToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-            }
-        }).catch(err => {
-            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-                position: toast.POSITION.TOP_RIGHT
-            });
-
-            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-                localStorage.clear();
-                this.props.history.push('/login');
-            }
-        })
+        this.props.removeImage(loggedInUserId, photoToRemoveId, timeLineUserId);
     }
 
     onFileChange = (event) => {
@@ -129,16 +116,14 @@ export default class UserGalleryPage extends Component {
     }
 
     render() {
-        if (this.props.match.params.id !== this.props.id) {
-            this.props.getUserToShowId(this.props.match.params.id);
-        }
-
         if (!this.state.ready) {
             return <h1 className="text-center pt-5 mt-5">Uploading Image...</h1>
         }
 
         const isRoot = userService.isRoot();
-        const isTheCurrentLoggedInUser = (this.props.id === userService.getUserId());
+        const isTheCurrentLoggedInUser = (this.props.loggedInUserData.id === this.props.timeLineUserData.id);
+
+        const formattedUserNames = userService.formatUsername(this.props.timeLineUserData.firstName, this.props.timeLineUserData.lastName)
 
         return (
             <section className="galerry-section">
@@ -163,7 +148,7 @@ export default class UserGalleryPage extends Component {
                     {this.props.picturesArr.length > 0
                         ?
                         <Fragment>
-                            <div className="hr-styles" style={{'width': '90%'}}></div>
+                            <div className="hr-styles" style={{ 'width': '90%' }}></div>
                             <ul className="grid-container">
 
                                 {this.props.picturesArr.map((picture) => <Picture key={picture.id} removePhoto={this.removePhoto}  {...picture} userId={this.props.id} />)}
@@ -171,9 +156,9 @@ export default class UserGalleryPage extends Component {
                         </Fragment>
                         :
                         <Fragment>
-                            <div className="hr-styles" style={{'width': '90%'}}></div>
-                            <h3 className="text-center">There are no photos of <span className="username-gallery">{`${this.props.firstName} ${this.props.lastName}`}</span>.</h3>
-                            <div className="hr-styles" style={{'width': '90%'}}></div>
+                            <div className="hr-styles" style={{ 'width': '90%' }}></div>
+                            <h3 className="text-center">There are no photos of <span className="username-gallery">{`${formattedUserNames}`}</span> !</h3>
+                            <div className="hr-styles" style={{ 'width': '90%' }}></div>
                         </Fragment>
                     }
                 </article>
@@ -181,3 +166,26 @@ export default class UserGalleryPage extends Component {
         )
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        addPicture: state.addPicture,
+        removePicture: state.removePicture,
+        picturesArr: state.fetchPictures.picturesArr,
+        fetchPictures: state.fetchPictures,
+        timeLineUserData: state.timeLineUserData,
+        loggedInUserData: state.loggedInUserData,
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        changeTimeLineUser: (userId) => { dispatch(changeCurrentTimeLineUserAction(userId)) },
+        changeAllFriends: (userId) => { dispatch(changeAllFriendsAction(userId)) },
+        changeAllPictures: (userId) => { dispatch(changeAllPicturesAction(userId)) },
+        addImage: (data, userId) => { dispatch(addPicturesAction(data, userId)) },
+        removeImage: (loggedInUserId, photoToRemoveId, timeLineUserId) => { dispatch(removePictureAction(loggedInUserId, photoToRemoveId, timeLineUserId)) },
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserGalleryPage);

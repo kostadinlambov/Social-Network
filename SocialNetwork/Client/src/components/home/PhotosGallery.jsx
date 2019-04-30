@@ -10,7 +10,7 @@ const PhotoGallery = (props) => {
                     <div className="aside-article-icon">
                         <i className="fas fa-images"></i>
                     </div>
-                    < NavLink className="friends " exact to={`/home/gallery/${props.id}`}>
+                    < NavLink className="friends " exact to={`/home/gallery/${props.timeLineUserId}`}>
                         <h3 className="aside-article-title" style={{ color: ' #333' }}>
                             Photos &bull; {props.picturesArr.length}
                         </h3>

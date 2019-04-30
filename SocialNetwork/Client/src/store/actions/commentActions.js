@@ -85,7 +85,6 @@ const removeCommentAction = (loggedInUserId, commentToRemoveId, timelineUserId) 
                 const { error, message, status, path } = response;
                 dispatch(removeCommentError(error, message, status, path));
             } else {
-                debugger;
                 dispatch(removeCommentSuccess(response));
                 dispatch(fetchAllPostsAction(timelineUserId))
             }

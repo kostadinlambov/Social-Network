@@ -4,6 +4,8 @@ import { Button, ButtonWithClickEvent } from '../common';
 import './css/UserProfilePage.css';
 
 import { connect } from 'react-redux';
+import { changeCurrentTimeLineUserAction, changeAllFriendsAction } from '../../store/actions/userActions';
+import { changeAllPicturesAction } from '../../store/actions/pictureActions';
 
 class UserProfilePage extends Component {
     constructor(props) {
@@ -14,8 +16,14 @@ class UserProfilePage extends Component {
         }
     }
 
-    componentDidMount(){
-        
+    componentDidMount() {
+        const currentTimeLineUserId = this.props.match.params.id
+        if (currentTimeLineUserId !== this.props.timeLineUser.id) {
+            this.props.changeTimeLineUser(currentTimeLineUserId);
+            this.props.changeAllPictures(currentTimeLineUserId);
+            this.props.changeAllFriends(currentTimeLineUserId);
+            return <h1 className="text-center pt-5 mt-5">Loading...</h1>;
+        }
     }
 
     onSubmitHandlerDelete = (e) => {
@@ -28,7 +36,7 @@ class UserProfilePage extends Component {
         this.props.history.push({
             pathname: "/home/users/edit/" + this.props.timeLineUser.id,
             state:
-                { ...this.props.timeLineUser}
+                { ...this.props.timeLineUser }
         });
     }
 
@@ -140,4 +148,12 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps, null)(UserProfilePage);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        changeTimeLineUser: (userId) => { dispatch(changeCurrentTimeLineUserAction(userId)) },
+        changeAllFriends: (userId) => {dispatch(changeAllFriendsAction(userId))},
+        changeAllPictures: (userId) => {dispatch(changeAllPicturesAction(userId))},
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserProfilePage);

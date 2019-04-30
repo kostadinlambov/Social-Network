@@ -69,8 +69,6 @@ const removeCommentReducer = (state = initialStateRemoveComment, action) => {
                 loading: true,
             })
         case REMOVE_COMMENT_SUCCESS:
-            console.log(action)
-            debugger;
             return Object.assign({}, state, {
                 hasError: false,
                 error: '',
@@ -114,8 +112,6 @@ const addLikeCommentReducer = (state = initialStateAddLikeComment, action) => {
                 loading: true,
             })
         case ADDLIKE_COMMENT_SUCCESS:
-            console.log(action)
-            debugger;
             return Object.assign({}, state, {
                 hasError: false,
                 error: '',

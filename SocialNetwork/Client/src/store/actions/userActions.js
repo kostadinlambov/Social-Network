@@ -9,6 +9,8 @@ import {
     PROMOTE_USER_SUCCESS, PROMOTE_USER_BEGIN, PROMOTE_USER_ERROR,
     DEMOTE_USER_SUCCESS, DEMOTE_USER_BEGIN, DEMOTE_USER_ERROR, CHANGE_USERROLE,
     CHANGE_TIMELINE_USERDATA_SUCCESS, CHANGE_TIMELINE_USERDATA_BEGIN, CHANGE_TIMELINE_USERDATA_ERROR,
+    CHANGE_ALLFRIENDS_SUCCESS, CHANGE_ALLFRIENDS_BEGIN, CHANGE_ALLFRIENDS_ERROR, UPDATE_ALL_FRIENDS,
+
 } from './actionTypes';
 
 import { fetchPicturesAction } from './pictureActions'
@@ -120,7 +122,6 @@ const fetchLoggedInUserAction = (userId) => {
 
             }
         }).catch(err => {
-            debugger;
             if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
                 localStorage.clear();
             }
@@ -172,9 +173,6 @@ const fetchTimeLineUserAction = (userId) => {
                 dispatch(fetchTimeLineUserSuccess(response));
             }
         }).catch(err => {
-
-            console.log('fetchTimeLineUserAction Err: ', err)
-            debugger;
             if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
                 localStorage.clear();
             }
@@ -215,13 +213,10 @@ const changeCurrentTimeLineUserAction = (userId) => {
                 const { error, message, status, path } = response;
                 dispatch(changeCurrentTimeLineUserError(error, message, status, path));
             } else {
-                dispatch(updateTimeLineUserDataAction(response))
+                dispatch(updateTimeLineUserDataAction(response));
                 dispatch(changeCurrentTimeLineUserSuccess(response));
             }
         }).catch(err => {
-
-            console.log('fetchTimeLineUserAction Err: ', err)
-            debugger;
             if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
                 localStorage.clear();
             }
@@ -229,7 +224,6 @@ const changeCurrentTimeLineUserAction = (userId) => {
         })
     }
 }
-
 
 // fetchAllFriends
 const fetchAllFriendsSuccess = (friendsArr) => {
@@ -275,6 +269,61 @@ const fetchAllFriendsAction = (userId) => {
         })
     }
 }
+
+// changeAllFriends
+const changeAllFriendsSuccess = (friendsArr) => {
+    return {
+        type: CHANGE_ALLFRIENDS_SUCCESS,
+        payload: friendsArr
+    }
+}
+
+const changeAllFriendsBegin = () => {
+    return {
+        type: CHANGE_ALLFRIENDS_BEGIN,
+    }
+}
+
+const changeAllFriendsError = (error, message, status, path) => {
+    return {
+        type: CHANGE_ALLFRIENDS_ERROR,
+        error,
+        message,
+        status,
+        path,
+    }
+}
+
+const updateAllFriendsAction = (friendsArr) => {
+    return {
+        type: UPDATE_ALL_FRIENDS,
+        payload: friendsArr
+    }
+}
+
+const changeAllFriendsAction = (userId) => {
+    return (dispatch) => {
+        dispatch(changeAllFriendsBegin())
+        return requester.get(`/relationship/friends/${userId}`, (response) => {
+            if (response.error) {
+                const { error, message, status, path } = response;
+                dispatch(changeAllFriendsError(error, message, status, path));
+            } else {
+                dispatch(updateAllFriendsAction(response));
+                dispatch(changeAllFriendsSuccess(response));
+                // (() => this.loadAllChatFriends())())
+            }
+        }).catch(err => {
+            debugger;
+            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
+                localStorage.clear();
+            }
+            dispatch(changeAllFriendsError('', `Error: ${err.message}`, err.status, ''));
+        })
+    }
+}
+
+
 
 // update User
 const updateUserSuccess = (response) => {
@@ -361,7 +410,6 @@ const fetchAllUsersAction = (loggedInUserId) => {
                 dispatch(fetchAllUsersSuccess(response));
             }
         }).catch(err => {
-            debugger;
             if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
                 localStorage.clear();
             }
@@ -373,7 +421,6 @@ const fetchAllUsersAction = (loggedInUserId) => {
 
 // updateUserRole
 const updateUserRoleAction = (data) => {
-    debugger;
     return {
         type: CHANGE_USERROLE,
         payload: data
@@ -416,7 +463,6 @@ const promoteUserAction = (userId) => {
                 dispatch(promoteUserSuccess(response));
             }
         }).catch(err => {
-            debugger;
             if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
                 localStorage.clear();
             }
@@ -449,7 +495,6 @@ const demoteUserError = (error, message, status, path) => {
     }
 }
 
-
 const demoteUserAction = (userId) => {
     return (dispatch) => {
         dispatch(demoteUserBegin())
@@ -462,7 +507,6 @@ const demoteUserAction = (userId) => {
                 dispatch(demoteUserSuccess(response));
             }
         }).catch(err => {
-            debugger;
             if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
                 localStorage.clear();
             }
@@ -485,4 +529,5 @@ export {
     demoteUserAction,
     updateUserRoleAction,
     changeCurrentTimeLineUserAction,
+    changeAllFriendsAction,
 };

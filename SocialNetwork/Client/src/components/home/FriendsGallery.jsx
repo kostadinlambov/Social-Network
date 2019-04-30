@@ -11,7 +11,7 @@ const FriendsGallery = (props) => {
                     <div className="aside-article-icon">
                         <i className="fas fa-user-friends"></i>
                     </div>
-                    <NavLink className="friends " exact to={`/home/friends/${props.id}`}>
+                    <NavLink className="friends " exact to={`/home/friends/${props.timeLineUserId}`}>
                         <h3 className="aside-article-title" style={{ color: ' #333' }}>
                             Friends &bull; {props.friendsArr.length}
                         </h3>

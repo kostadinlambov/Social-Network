@@ -27,7 +27,7 @@ import FriendsGallery from './FriendsGallery';
 
 import { connect } from 'react-redux';
 import { fetchPicturesAction } from '../../store/actions/pictureActions';
-import { fetchLoggedInUserAction, updateLoggedInUserDataAction, fetchTimeLineUserAction, updateTimeLineUserDataAction, fetchAllFriendsAction } from '../../store/actions/userActions';
+import { fetchLoggedInUserAction, fetchTimeLineUserAction, fetchAllFriendsAction } from '../../store/actions/userActions';
 
 
 // const UserSearchResultsPage = lazy(() => import('../user/UserSearchResultsPage'));
@@ -42,24 +42,11 @@ import { fetchLoggedInUserAction, updateLoggedInUserDataAction, fetchTimeLineUse
 
 // const ErrorPage = lazy(() => import('../common/ErrorPage'));
 
-
-
 class HomePage extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            id: userService.getUserId(),
-            username: '',
-            email: '',
-            firstName: '',
-            lastName: '',
-            address: '',
-            city: '',
-            search: '',
-            category: '',
-            profilePicUrl: placeholder_user_image,
-            backgroundImageUrl: default_background_image,
             authorities: [],
             picturesArr: [],
             friendsArr: [],
@@ -81,10 +68,13 @@ class HomePage extends Component {
     componentDidMount() {
         console.log("Home componentDidMount")
         const userId = userService.getUserId();
+        const timeLineUserId =  userService.getUserId();
+
         this.props.loadLoggedInUserData(userId);
-        this.loadTimeLineUserData(userId);
-        this.loadAllPictures(userId);
-        this.loadAllFriends(userId);
+        this.loadTimeLineUserData(timeLineUserId);
+        this.loadAllPictures(timeLineUserId);
+        this.loadAllFriends(timeLineUserId);
+
         this.setState({ ready: true });
     }
 
@@ -222,14 +212,14 @@ class HomePage extends Component {
                             <Switch>
                                 {loggedIn && <Route exact path="/home/comments/:id" component={MainSharedContent} />}
                                 {loggedIn && <Route exact path="/home/profile/:id" component={UserProfilePage} />}
-                                {loggedIn && (isRoot || isAdmin || isTheCurrentLoggedInUser) && <Route exact path="/home/users/edit/:id" component={UserEditPage}/>}
+                                {loggedIn && (isRoot || isAdmin || isTheCurrentLoggedInUser) && <Route exact path="/home/users/edit/:id" component={UserEditPage} />}
                                 {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/users/all/:id" component={UserAllPage} />}
-
+                                {(loggedIn && isRoot) && <Route exact path="/home/users/delete/:id" component={UserDeletePage}  />}
+                                {loggedIn && <Route exact path="/home/gallery/:id" component={UserGalleryPage} />} />}
                                 {/* {loggedIn && <Route exact path="/home/friends/:id" render={props => <UserFriendsAllPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} loadAllFriends={this.loadAllFriends} />} />}
                                 {loggedIn && <Route exact path="/home/findFriends/:id/:category" render={(props) => <UserFindFriendsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} findFriends={this.findFriends} />} />} */}
-                                {/* {(loggedIn && isRoot) && <Route exact path="/home/users/delete/:id" render={props => <UserDeletePage {...props} getUserToShowId={this.getUserToShowId} {...this.state} />} />}
+                                {/* 
                                 {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/logs/:id" render={props => <UserLogsPage {...props} getUserToShowId={this.getUserToShowId} searchResults={this.searchResults} {...this.state} />} />}
-                                {loggedIn && <Route exact path="/home/gallery/:id" render={props => <UserGalleryPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} loadAllPictures={this.loadAllPictures} />} />}
                                 {loggedIn && <Route exact path="/home/users/search/" render={(props) => <UserSearchResultsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} searchResults={this.searchResults} />} />} */}
                                 {/* <Route exact path="/error" component={ErrorPage} />
                                 <Route render={(props) => <Redirect to="/" {...props} />} /> */}
@@ -239,8 +229,8 @@ class HomePage extends Component {
                     <Fragment>
                         <section className="aside-section">
                             <Intro {...this.props.timeLineUserData} />
-                            <PhotoGallery picturesArr={this.props.picturesArr} />
-                            <FriendsGallery friendsArr={this.props.friendsArr} />
+                            <PhotoGallery picturesArr={this.props.picturesArr} timeLineUserId={this.props.timeLineUserData.id} />
+                            <FriendsGallery friendsArr={this.props.friendsArr} timeLineUserId={this.props.timeLineUserData.id} />
                             <MessageBox />
                         </section>
                     </Fragment>
@@ -254,10 +244,8 @@ const mapStateToProps = (state) => {
     return {
         picturesArr: state.fetchPictures.picturesArr,
         fetchPictures: state.fetchPictures,
-
         timeLineUserData: state.timeLineUserData,
         loggedInUserData: state.loggedInUserData,
-
         friendsArr: state.fetchAllFriends.friendsArr,
         fetchAllFriends: state.fetchAllFriends,
     }

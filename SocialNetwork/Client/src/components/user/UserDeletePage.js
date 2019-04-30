@@ -6,7 +6,12 @@ import { toast } from 'react-toastify';
 import { ToastComponent } from '../common';
 import './css/UserDeletePage.css';
 
-export default class UserDeletePage extends Component {
+import { connect } from 'react-redux';
+import { changeCurrentTimeLineUserAction, changeAllFriendsAction } from '../../store/actions/userActions';
+import { changeAllPicturesAction } from '../../store/actions/pictureActions';
+
+
+class UserDeletePage extends Component {
     constructor(props) {
         super(props)
 
@@ -25,13 +30,12 @@ export default class UserDeletePage extends Component {
     }
 
     componentDidMount = () => {
-        const userId = this.props.match.params.id;
-
-        requester.get(`/users/details/${userId}`, (userData) => {
-            this.setState({
-                ...userData
-            })
-        })
+        const currentTimeLineUserId = this.props.match.params.id
+        if (currentTimeLineUserId !== this.props.timeLineUserData.id) {
+            this.props.changeTimeLineUser(currentTimeLineUserId);
+            this.props.changeAllPictures(currentTimeLineUserId);
+            this.props.changeAllFriends(currentTimeLineUserId);
+        }
     }
 
     onSubmitHandlerDelete = (e) => {
@@ -61,14 +65,12 @@ export default class UserDeletePage extends Component {
     }
 
     render = () => {
-        if (this.props.match.params.id !== this.props.id) {
-            this.props.getUserToShowId(this.props.match.params.id);
-        }
-
         let authority;
-        if (this.state.authorities[0]) {
-            authority = this.state.authorities[0]['authority'];
+        if (this.props.timeLineUserData.authorities[0]) {
+            authority = this.props.timeLineUserData.authorities[0]['authority'];
         }
+ 
+        const {username, email, firstName, lastName, address, city} = this.props.timeLineUserData;
 
         const isAdmin = userService.isAdmin();
         const isRoot = userService.isRoot();
@@ -93,7 +95,7 @@ export default class UserDeletePage extends Component {
                                                 <h5 className=" font-weight-bold">Username</h5>
                                             </td>
                                             <td className="col-md-6 username-color" >
-                                                <h5>{userService.formatUsername(this.state.username)}</h5>
+                                                <h5>{userService.formatUsername(username)}</h5>
                                             </td>
                                         </tr>
                                         <tr className="row">
@@ -101,7 +103,7 @@ export default class UserDeletePage extends Component {
                                                 <h5 className=" font-weight-bold">Email</h5>
                                             </td>
                                             <td className="col-md-6">
-                                                <h5>{userService.formatUsername(this.state.email)}</h5>
+                                                <h5>{userService.formatUsername(email)}</h5>
                                             </td>
                                         </tr>
                                         <tr className="row">
@@ -109,7 +111,7 @@ export default class UserDeletePage extends Component {
                                                 <h5 className=" font-weight-bold">First Name</h5>
                                             </td>
                                             <td className="col-md-6" >
-                                                <h5>{userService.formatUsername(this.props.firstName)}</h5>
+                                                <h5>{userService.formatUsername(firstName)}</h5>
                                             </td>
                                         </tr>
                                         <tr className="row">
@@ -117,7 +119,7 @@ export default class UserDeletePage extends Component {
                                                 <h5 className=" font-weight-bold">Last Name</h5>
                                             </td>
                                             <td className="col-md-6" >
-                                                <h5>{userService.formatUsername(this.props.lastName)}</h5>
+                                                <h5>{userService.formatUsername(lastName)}</h5>
                                             </td>
                                         </tr>
                                         <tr className="row">
@@ -125,7 +127,7 @@ export default class UserDeletePage extends Component {
                                                 <h5 className=" font-weight-bold">Address</h5>
                                             </td>
                                             <td className="col-md-6">
-                                                <h5>{userService.formatUsername(this.state.address)}</h5>
+                                                <h5>{userService.formatUsername(address)}</h5>
                                             </td>
                                         </tr>
                                         <tr className="row">
@@ -133,7 +135,7 @@ export default class UserDeletePage extends Component {
                                                 <h5 className=" font-weight-bold">City</h5>
                                             </td>
                                             <td className="col-md-6" >
-                                                <h5>{userService.formatUsername(this.state.city)}</h5>
+                                                <h5>{userService.formatUsername(city)}</h5>
                                             </td>
                                         </tr>
                                         {(isAdmin || isRoot) && <tr className="row">
@@ -164,3 +166,21 @@ export default class UserDeletePage extends Component {
         )
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        timeLineUserData: state.timeLineUserData,
+        loggedInUserData: state.loggedInUserData,
+        updateUserData: state.updateUserData
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        changeTimeLineUser: (userId) => { dispatch(changeCurrentTimeLineUserAction(userId)) },
+        changeAllFriends: (userId) => {dispatch(changeAllFriendsAction(userId))},
+        changeAllPictures: (userId) => {dispatch(changeAllPicturesAction(userId))},
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserDeletePage);
