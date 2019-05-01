@@ -6,8 +6,9 @@ import { ToastComponent } from '../common';
 import './css/UserLogsPage.css';
 
 import { connect } from 'react-redux';
-import { fetchAllFriendsAction, changeCurrentTimeLineUserAction, changeAllFriendsAction } from '../../store/actions/userActions';
+import { changeCurrentTimeLineUserAction, changeAllFriendsAction } from '../../store/actions/userActions';
 import { changeAllPicturesAction } from '../../store/actions/pictureActions';
+import { fetchAllLogsAction, findLogsByUserNameAction, clearLogsByUserNameAction, clearAllLogsAction } from '../../store/actions/logsActions';
 
 class UserLogsPage extends Component {
     constructor(props) {
@@ -45,6 +46,7 @@ class UserLogsPage extends Component {
                 position: toast.POSITION.TOP_RIGHT
             });
         } else if (successMessage) {
+            console.log('this.state: ', this.state)
             toast.success(<ToastComponent.successToast text={successMessage} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
@@ -235,7 +237,10 @@ const mapDispatchToProps = (dispatch) => {
         changeAllFriends: (userId) => { dispatch(changeAllFriendsAction(userId)) },
         changeAllPictures: (userId) => { dispatch(changeAllPicturesAction(userId)) },
 
-        loadAllFriends: (userId) => { dispatch(fetchAllFriendsAction(userId)) },
+        loadAllLogs: () => { dispatch(fetchAllLogsAction()) },
+        loadLogsByUserName: (search) => { dispatch(findLogsByUserNameAction(search)) },
+        deleteLogsByUserName: (selected) => { dispatch(clearLogsByUserNameAction(selected)) },
+        deleteAllLogs: () => { dispatch(clearAllLogsAction()) },
     }
 }
 
