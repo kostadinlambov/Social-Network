@@ -15,7 +15,7 @@ import {
     ADD_FRIEND_SUCCESS, ADD_FRIEND_BEGIN, ADD_FRIEND_ERROR,
     CANCEL_REQUEST_SUCCESS, CANCEL_REQUEST_BEGIN, CANCEL_REQUEST_ERROR,
     CONFIRM_REQUEST_SUCCESS, CONFIRM_REQUEST_BEGIN, CONFIRM_REQUEST_ERROR,
-
+    SEARCH_RESULTS_SUCCESS, SEARCH_RESULTS_BEGIN, SEARCH_RESULTS_ERROR,
 } from '../actions/actionTypes';
 
 import placeholder_user_image from '../../assets/images/placeholder.png';
@@ -1003,6 +1003,185 @@ const confirmRequestReducer = (state = initialStateConfirmRequest, action) => {
     }
 }
 
+// searchResults
+const initialStateSearchResults = {
+    friendsArrSearch: [],
+    friendsCandidatesArr: [],
+    userWaitingForAcceptingRequest: [],
+    usersReceivedRequestFromCurrentUser: [],
+    hasError: false,
+    error: '',
+    message: '',
+    status: '',
+    path: '',
+    loading: false,
+}
+
+const searchResultsReducer = (state = initialStateSearchResults, action) => {
+    switch (action.type) {
+        case SEARCH_RESULTS_BEGIN:
+            return Object.assign({}, state, {
+                friendsArrSearch: [],
+                friendsCandidatesArr: [],
+                userWaitingForAcceptingRequest: [],
+                usersReceivedRequestFromCurrentUser: [],
+                hasError: false,
+                error: '',
+                message: '',
+                status: '',
+                path: '',
+                loading: true,
+            })
+        case SEARCH_RESULTS_SUCCESS:
+            return setSearchResultsSuccessState(state, action.payload)
+        case SEARCH_RESULTS_ERROR:
+            return Object.assign({}, state, {
+                friendsArrSearch: [],
+                friendsCandidatesArr: [],
+                userWaitingForAcceptingRequest: [],
+                usersReceivedRequestFromCurrentUser: [],
+                hasError: true,
+                error: action.error,
+                message: action.message,
+                status: action.status,
+                path: action.path,
+                loading: false,
+            })
+        case ADD_FRIEND_SUCCESS:
+            return searchResultsSendUserRequest(state, action.friendCandidateId);
+        case CANCEL_REQUEST_SUCCESS:
+            return searchResultsCancelRequest(state, action.friendToRejectId);
+        case CONFIRM_REQUEST_SUCCESS:
+            return searchResultsConfirmRequest(state, action.friendToAcceptId);
+        case REMOVE_FRIEND_SUCCESS:
+            return searchResultsRemoveFriend(state, action.friendToRemoveId)
+        default:
+            return state
+    }
+}
+
+const setSearchResultsSuccessState = (state, response) => {
+    const friendsArrSearch = response.filter(user => user.status === 1);
+    const friendsCandidatesArr = response.filter(user => user.status !== 0 && user.status !== 1);
+    const userWaitingForAcceptingRequest = response.filter(user => user.status === 0 && user.starterOfAction === true);
+    const usersReceivedRequestFromCurrentUser = response.filter(user => user.status === 0 && user.starterOfAction === false);
+
+    return Object.assign({}, state, {
+        friendsArrSearch,
+        friendsCandidatesArr,
+        userWaitingForAcceptingRequest,
+        usersReceivedRequestFromCurrentUser,
+        hasError: false,
+        error: '',
+        message: '',
+        status: '',
+        path: '',
+        loading: false,
+    })
+}
+
+const searchResultsSendUserRequest = (state, friendCandidateId) => {
+    const userToAddIndex = state.friendsCandidatesArr.findIndex(user => user.id === friendCandidateId);
+    const userToAdd = state.friendsCandidatesArr[userToAddIndex];
+
+    const friendsCandidatesArr = state.friendsCandidatesArr.filter(user => user.id !== friendCandidateId);
+    const usersReceivedRequestFromCurrentUser = [...state.usersReceivedRequestFromCurrentUser, userToAdd]
+
+    return Object.assign({}, state, {
+        friendsArrSearch: state.friendsArrSearch.slice(),
+        friendsCandidatesArr: friendsCandidatesArr,
+        userWaitingForAcceptingRequest: state.userWaitingForAcceptingRequest.slice(),
+        usersReceivedRequestFromCurrentUser: usersReceivedRequestFromCurrentUser,
+        hasError: false,
+        error: '',
+        message: '',
+        status: '',
+        path: '',
+        loading: false,
+    })
+
+}
+
+const searchResultsCancelRequest = (state, friendToRejectId) => {
+    let friendsArrSearch = state.friendsArrSearch.slice();
+    let friendsCandidatesArr = state.friendsCandidatesArr.slice();
+    let userWaitingForAcceptingRequest = state.userWaitingForAcceptingRequest.slice();
+    let usersReceivedRequestFromCurrentUser = state.usersReceivedRequestFromCurrentUser.slice();
+
+    let userToCancelIndex = usersReceivedRequestFromCurrentUser.findIndex(user => user.id === friendToRejectId);
+
+    if (userToCancelIndex > -1) {
+        const userToCancel = usersReceivedRequestFromCurrentUser[userToCancelIndex];
+        usersReceivedRequestFromCurrentUser = usersReceivedRequestFromCurrentUser.filter(user => user.id !== friendToRejectId);
+        friendsCandidatesArr = [...friendsCandidatesArr, userToCancel]
+    } else {
+        userToCancelIndex = userWaitingForAcceptingRequest.findIndex(user => user.id === friendToRejectId);
+        const userToCancel = userWaitingForAcceptingRequest[userToCancelIndex];
+        userWaitingForAcceptingRequest = userWaitingForAcceptingRequest.filter(user => user.id !== friendToRejectId);
+        friendsCandidatesArr = [...friendsCandidatesArr, userToCancel]
+    }
+
+    return Object.assign({}, state, {
+        friendsArrSearch,
+        friendsCandidatesArr,
+        userWaitingForAcceptingRequest,
+        usersReceivedRequestFromCurrentUser,
+        hasError: false,
+        error: '',
+        message: '',
+        status: '',
+        path: '',
+        loading: false,
+    })
+
+}
+
+const searchResultsConfirmRequest = (state, friendToAcceptId) => {
+    let friendsArrSearch = state.friendsArrSearch.slice();
+
+    const userToAcceptIndex = state.userWaitingForAcceptingRequest.findIndex(user => user.id === friendToAcceptId);
+    const userToAccept = state.userWaitingForAcceptingRequest[userToAcceptIndex];
+
+    friendsArrSearch = [...friendsArrSearch, userToAccept];
+    const userWaitingForAcceptingRequest = state.userWaitingForAcceptingRequest.filter(user => user.id !== friendToAcceptId);
+
+    return Object.assign({}, state, {
+        friendsArrSearch,
+        friendsCandidatesArr: state.friendsCandidatesArr.slice(),
+        userWaitingForAcceptingRequest,
+        usersReceivedRequestFromCurrentUser: state.usersReceivedRequestFromCurrentUser.slice(),
+        hasError: false,
+        error: '',
+        message: '',
+        status: '',
+        path: '',
+        loading: false,
+    })
+}
+
+const searchResultsRemoveFriend = (state, friendToRemoveId) => {
+    let friendsArrSearch = state.friendsArrSearch.slice();
+
+    const userToRemoveIndex = friendsArrSearch.findIndex(user => user.id === friendToRemoveId);
+    const userToRemove = friendsArrSearch[userToRemoveIndex];
+    friendsArrSearch = state.friendsArrSearch.filter(friend => friend.id !== friendToRemoveId)
+
+    const friendsCandidatesArr = [...state.friendsCandidatesArr, userToRemove]
+
+    return Object.assign({}, state, {
+        friendsArrSearch,
+        friendsCandidatesArr,
+        userWaitingForAcceptingRequest: state.userWaitingForAcceptingRequest,
+        usersReceivedRequestFromCurrentUser: state.usersReceivedRequestFromCurrentUser,
+        hasError: false,
+        error: '',
+        message: '',
+        status: '',
+        path: '',
+        loading: false,
+    })
+}
+
 const reconcile = (oldData, newData) => {
     const newDataById = {}
     for (const entry of newData) {
@@ -1043,4 +1222,5 @@ export {
     addfriendReducer,
     cancelRequestReducer,
     confirmRequestReducer,
+    searchResultsReducer,
 }

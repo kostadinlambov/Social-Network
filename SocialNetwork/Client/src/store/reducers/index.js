@@ -5,7 +5,7 @@ import {
     fetchAllChatFriendsReducer, loggedInUserDataReducer, timeLineUserDataReducer, fetchAllFriendsReducer,
     updateUserReducer, fetchAllUsersReducer, promoteUserReducer, demoteUserReducer, changeTimeLineUserDataReducer,
     changeAllFriendsReducer,removeFriendReducer, deleteUserReducer, findFriendsReducer, addfriendReducer, 
-    cancelRequestReducer, confirmRequestReducer,
+    cancelRequestReducer, confirmRequestReducer, searchResultsReducer,
 } from './userReducer';
 import { fetchAllMessagesReducer } from './messagesReducer';
 import { createPostReducer, fetchAllPostsReducer, removePostReducer, addLikePostReducer } from './postReducer';
@@ -51,4 +51,5 @@ export default {
     addfriend: addfriendReducer,
     cancelRequest: cancelRequestReducer,
     confirmRequest: confirmRequestReducer,
+    searchResults: searchResultsReducer
 };

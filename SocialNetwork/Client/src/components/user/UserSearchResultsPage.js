@@ -4,9 +4,16 @@ import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
 import Friend from './Friend';
 import FriendRequest from './FriendRequest';
-import './css/UserFriends.css'
+import './css/UserFriends.css';
 
-export default class UserSearchResultsPage extends Component {
+import { connect } from 'react-redux';
+import {
+    changeCurrentTimeLineUserAction, changeAllFriendsAction, addFriendAction,
+    cancelRequestAction, confirmRequestAction, removeFriendAction, searchResultsAction
+} from '../../store/actions/userActions';
+import { changeAllPicturesAction } from '../../store/actions/pictureActions';
+
+class UserSearchResultsPage extends Component {
     constructor(props) {
         super(props)
 
@@ -23,136 +30,114 @@ export default class UserSearchResultsPage extends Component {
         this.confirmRequest = this.confirmRequest.bind(this);
         this.rejectRequest = this.rejectRequest.bind(this);
         this.removeFriend = this.removeFriend.bind(this);
+        this.searchResults = this.searchResults.bind(this);
     }
 
     componentDidMount() {
-        const userId = userService.getUserId();
+        const loggedInUserId = this.props.loggedInUserData.id;
+        if (loggedInUserId !== this.props.timeLineUserData.id) {
+            this.props.changeTimeLineUser(loggedInUserId);
+            this.props.changeAllPictures(loggedInUserId);
+            this.props.changeAllFriends(loggedInUserId);
+        }
+
         const search = this.props.location.state.search;
 
-        this.setState({ search })
+        this.setState({ search, ready: true })
 
-        this.props.getUserToShowId(userId);
-        this.props.searchResults(userId, search);
+        this.searchResults(search);
     }
 
-    addFriend = (friendCandidateId, event) => {
-        event.preventDefault();
-        const requestBody = { loggedInUserId: userService.getUserId(), friendCandidateId: friendCandidateId }
+    componentDidUpdate(prevProps, prevState) {
+        const errorMessage = this.getErrorMessage(prevProps);
+        const successMessage = this.getSuccessMessage(prevProps)
 
-        requester.post('/relationship/addFriend', requestBody, (response) => {
-            if (response.success) {
-                toast.success(<ToastComponent.successToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-
-                this.props.searchResults(this.state.userId, this.state.search);
-            } else {
-                toast.error(<ToastComponent.errorToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-            }
-        }).catch(err => {
-            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+        if (errorMessage) {
+            toast.error(<ToastComponent.errorToast text={errorMessage} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
-
-            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-                localStorage.clear();
-                this.props.history.push('/login');
-            }
-        })
+        } else if (successMessage) {
+            toast.success(<ToastComponent.successToast text={successMessage} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+        }
     }
 
-    confirmRequest = (friendToAcceptId, event) => {
-        event.preventDefault();
-        const requestBody = { loggedInUserId: userService.getUserId(), friendToAcceptId: friendToAcceptId }
+    getSuccessMessage(prevProps) {
+        if (!this.props.searchResultsData.hasError && this.props.searchResultsData.message && this.props.searchResultsData !== prevProps.searchResultsData) {
+            return this.props.searchResultsData.message;
+        }
+        else if (!this.props.addfriendData.hasError && this.props.addfriendData.message && this.props.addfriendData !== prevProps.addfriendData) {
+            return this.props.addfriendData.message;
+        }
+        else if (!this.props.cancelRequestData.hasError && this.props.cancelRequestData.message && this.props.cancelRequestData !== prevProps.cancelRequestData) {
+            return this.props.cancelRequestData.message;
+        }
+        else if (!this.props.confirmRequestData.hasError && this.props.confirmRequestData.message && this.props.confirmRequestData !== prevProps.confirmRequestData) {
+            return this.props.confirmRequestData.message;
+        }
+        else if (!this.props.removeFriend.hasError && this.props.removeFriend.message && this.props.removeFriend !== prevProps.removeFriend) {
+            return this.props.removeFriend.message;
+        }
 
-        requester.post('/relationship/acceptFriend', requestBody, (response) => {
-            if (response.success) {
-                toast.success(<ToastComponent.successToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-                this.props.searchResults(this.state.userId, this.state.search)
-            } else {
-                toast.error(<ToastComponent.errorToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-            }
-        }).catch(err => {
-            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-                position: toast.POSITION.TOP_RIGHT
-            });
-
-            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-                localStorage.clear();
-                this.props.history.push('/login');
-            }
-        })
+        return null;
     }
 
-    rejectRequest = (friendToRejectId, event) => {
-        event.preventDefault();
-        const requestBody = { loggedInUserId: userService.getUserId(), friendToRejectId: friendToRejectId }
+    getErrorMessage(prevProps) {
+        if (this.props.searchResultsData.hasError && prevProps.searchResultsData.error !== this.props.searchResultsData.error) {
+            return this.props.searchResultsData.message || 'Server Error';
+        }
+        else if (this.props.addfriendData.hasError && prevProps.addfriendData.error !== this.props.addfriendData.error) {
+            return this.props.addfriendData.message || 'Server Error';
+        }
+        else if (this.props.cancelRequestData.hasError && prevProps.cancelRequestData.error !== this.props.cancelRequestData.error) {
+            return this.props.cancelRequestData.message || 'Server Error';
+        }
+        else if (this.props.confirmRequestData.hasError && prevProps.confirmRequestData.error !== this.props.confirmRequestData.error) {
+            return this.props.confirmRequestData.message || 'Server Error';
+        }
+        else if (this.props.removeFriend.hasError && prevProps.removeFriend.error !== this.props.removeFriend.error) {
+            return this.props.removeFriend.message || 'Server Error';
+        }
 
-        requester.post('/relationship/cancelRequest', requestBody, (response) => {
-            if (response.success) {
-                toast.success(<ToastComponent.successToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
+        return null;
+    }
 
-                this.props.searchResults(this.state.userId, this.state.search);
-            } else {
-                toast.error(<ToastComponent.errorToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-            }
-        }).catch(err => {
-            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-                position: toast.POSITION.TOP_RIGHT
-            });
-
-            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-                localStorage.clear();
-                this.props.history.push('/login');
-            }
+    searchResults = (search) => {
+        this.setState({
+            search
         })
+        const loggedInUserId = this.props.loggedInUserData.id;
+        this.props.searchResult(loggedInUserId, search);
+    }
+
+
+    addFriend = (friendCandidateId) => {
+        const loggedInUserId = this.props.loggedInUserData.id;
+        this.props.addFriend(loggedInUserId, friendCandidateId);
+    }
+
+    confirmRequest = (friendToAcceptId) => {
+        const loggedInUserId = this.props.loggedInUserData.id;
+        this.props.acceptRequest(loggedInUserId, friendToAcceptId);
+    }
+
+    rejectRequest = (friendToRejectId) => {
+        const loggedInUserId = this.props.loggedInUserData.id;
+        this.props.cancelRequest(loggedInUserId, friendToRejectId);
     }
 
     removeFriend = (friendToRemoveId, event) => {
-        event.preventDefault();
-        const requestBody = { loggedInUserId: userService.getUserId(), friendToRemoveId: friendToRemoveId }
-
-        requester.post('/relationship/removeFriend', requestBody, (response) => {
-            if (response.success) {
-                toast.success(<ToastComponent.successToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-
-                this.props.searchResults(this.state.userId, this.state.search)
-            } else {
-                toast.error(<ToastComponent.errorToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-            }
-        }).catch(err => {
-            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-                position: toast.POSITION.TOP_RIGHT
-            });
-
-            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-                localStorage.clear();
-                this.props.history.push('/login');
-            }
-        })
+        const loggedInUserId = this.props.loggedInUserData.id
+        this.props.deleteFriend(loggedInUserId, friendToRemoveId);
     }
 
     render() {
-        const userId = userService.getUserId();
         const search = this.props.location.state.search;
 
         if (this.state.search !== search) {
             this.setState({ search: search },
-                () => this.props.searchResults(userId, search)
+                () => this.searchResults(search)
             );
         }
 
@@ -284,3 +269,36 @@ export default class UserSearchResultsPage extends Component {
         )
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        timeLineUserData: state.timeLineUserData,
+        loggedInUserData: state.loggedInUserData,
+
+        searchResultsData: state.searchResults,
+        friendsArrSearch: state.searchResults.friendsArrSearch,
+        friendsCandidatesArr: state.searchResults.friendsCandidatesArr,
+        userWaitingForAcceptingRequest: state.searchResults.userWaitingForAcceptingRequest,
+        usersReceivedRequestFromCurrentUser: state.searchResults.usersReceivedRequestFromCurrentUser,
+
+        addfriendData: state.addfriend,
+        cancelRequestData: state.cancelRequest,
+        confirmRequestData: state.confirmRequest,
+        removeFriend: state.removeFriend
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        changeTimeLineUser: (userId) => { dispatch(changeCurrentTimeLineUserAction(userId)) },
+        changeAllFriends: (userId) => { dispatch(changeAllFriendsAction(userId)) },
+        changeAllPictures: (userId) => { dispatch(changeAllPicturesAction(userId)) },
+        addFriend: (loggedInUserId, friendCandidateId) => { dispatch(addFriendAction(loggedInUserId, friendCandidateId)) },
+        cancelRequest: (loggedInUserId, friendToRejectId) => { dispatch(cancelRequestAction(loggedInUserId, friendToRejectId)) },
+        acceptRequest: (loggedInUserId, friendToAcceptId) => { dispatch(confirmRequestAction(loggedInUserId, friendToAcceptId)) },
+        deleteFriend: (loggedInUserId, friendToRemoveId) => { dispatch(removeFriendAction(loggedInUserId, friendToRemoveId)) },
+        searchResult: (loggedInUserId, search) => { dispatch(searchResultsAction(loggedInUserId, search)) },
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserSearchResultsPage);

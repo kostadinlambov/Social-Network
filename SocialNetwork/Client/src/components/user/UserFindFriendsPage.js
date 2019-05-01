@@ -20,7 +20,6 @@ class UserFindFriendsPage extends Component {
             friendsCandidatesArr: [],
             userWaitingForAcceptingRequest: [],
             usersReceivedRequestFromCurrentUser: [],
-            category: '',
             ready: false,
         };
 

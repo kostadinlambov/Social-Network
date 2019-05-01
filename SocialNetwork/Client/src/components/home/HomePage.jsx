@@ -62,7 +62,7 @@ class HomePage extends Component {
         this.loadTimeLineUserData = this.loadTimeLineUserData.bind(this);
         this.loadAllPictures = this.loadAllPictures.bind(this);
         this.loadAllFriends = this.loadAllFriends.bind(this);
-        this.searchResults = this.searchResults.bind(this);
+        // this.searchResults = this.searchResults.bind(this);
         // this.findFriends = this.findFriends.bind(this);
     }
 
@@ -139,32 +139,32 @@ class HomePage extends Component {
         this.props.loadAllFriends(userId);
     }
 
-    searchResults = (userId, search) => {
-        this.setState({
-            search
-        })
+    // searchResults = (userId, search) => {
+    //     this.setState({
+    //         search
+    //     })
 
-        const requestBody = { loggedInUserId: userId, search: search }
+    //     const requestBody = { loggedInUserId: userId, search: search }
 
-        requester.post('/relationship/search', requestBody, (response) => {
-            this.setState({
-                friendsArrSearch: response.filter(user => user.status === 1),
-                friendsCandidatesArr: response.filter(user => user.status !== 0 && user.status !== 1),
-                userWaitingForAcceptingRequest: response.filter(user => user.status === 0 && user.starterOfAction === true),
-                usersReceivedRequestFromCurrentUser: response.filter(user => user.status === 0 && user.starterOfAction === false),
-                ready: true
-            })
-        }).catch(err => {
-            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-                position: toast.POSITION.TOP_RIGHT
-            });
+    //     requester.post('/relationship/search', requestBody, (response) => {
+    //         this.setState({
+    //             friendsArrSearch: response.filter(user => user.status === 1),
+    //             friendsCandidatesArr: response.filter(user => user.status !== 0 && user.status !== 1),
+    //             userWaitingForAcceptingRequest: response.filter(user => user.status === 0 && user.starterOfAction === true),
+    //             usersReceivedRequestFromCurrentUser: response.filter(user => user.status === 0 && user.starterOfAction === false),
+    //             ready: true
+    //         })
+    //     }).catch(err => {
+    //         toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+    //             position: toast.POSITION.TOP_RIGHT
+    //         });
 
-            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-                localStorage.clear();
-                this.props.history.push('/login');
-            }
-        })
-    }
+    //         if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
+    //             localStorage.clear();
+    //             this.props.history.push('/login');
+    //         }
+    //     })
+    // }
 
     render() {
         const loading = this.props.fetchPictures.loading || this.props.timeLineUserData.loading || this.props.loggedInUserData.loading || this.props.fetchAllFriends.loading;
@@ -196,10 +196,8 @@ class HomePage extends Component {
                                 {loggedIn && <Route exact path="/home/friends/:id" component={UserFriendsAllPage} />}
                                 {loggedIn && <Route exact path="/home/findFriends/:id" component={UserFindFriendsPage} />}
                                 {loggedIn && <Route exact path="/home/friendRequests/:id" component={UserFriendRequestsPage} />}
-                                {/* {loggedIn && <Route exact path="/home/findFriends/:id/:category" render={(props) => <UserFindFriendsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} findFriends={this.findFriends} />} />} */}
-
+                                {loggedIn && <Route exact path="/home/users/search/" component={UserSearchResultsPage}  />}
                                 {/* 
-                                {loggedIn && <Route exact path="/home/users/search/" render={(props) => <UserSearchResultsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} searchResults={this.searchResults} />} />} */}
                                 {/* <Route exact path="/error" component={ErrorPage} />
                                 <Route render={(props) => <Redirect to="/" {...props} />} /> */}
                             </Switch>

@@ -16,6 +16,7 @@ import {
     ADD_FRIEND_SUCCESS, ADD_FRIEND_BEGIN, ADD_FRIEND_ERROR,
     CANCEL_REQUEST_SUCCESS,CANCEL_REQUEST_BEGIN, CANCEL_REQUEST_ERROR,
     CONFIRM_REQUEST_SUCCESS,CONFIRM_REQUEST_BEGIN, CONFIRM_REQUEST_ERROR,
+    SEARCH_RESULTS_SUCCESS, SEARCH_RESULTS_BEGIN, SEARCH_RESULTS_ERROR,
 } from './actionTypes';
 
 // fetchAllChatFriends
@@ -783,6 +784,49 @@ const confirmRequestAction = (loggedInUserId, friendToAcceptId) => {
 }
 
 
+// searchResults
+const searchResultsSuccess = (response) => {
+    return {
+        type: SEARCH_RESULTS_SUCCESS,
+        payload: response
+    }
+}
+
+const searchResultsBegin = () => {
+    return {
+        type: SEARCH_RESULTS_BEGIN,
+    }
+}
+
+const searchResultsError = (error, message, status, path) => {
+    return {
+        type: SEARCH_RESULTS_ERROR,
+        error,
+        message,
+        status,
+        path,
+    }
+}
+
+const searchResultsAction = (loggedInUserId, search) => {
+    return (dispatch) => {
+        dispatch(searchResultsBegin())
+        return requester.post('/relationship/search', {loggedInUserId, search}, (response) => {
+            if (response.error) {
+                const { error, message, status, path } = response;
+                dispatch(searchResultsError(error, message, status, path));
+            } else {
+                dispatch(searchResultsSuccess(response));
+            }
+        }).catch(err => {
+            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
+                localStorage.clear();
+            }
+            dispatch(searchResultsError('', `Error: ${err.message}`, err.status, ''));
+        })
+    }
+}
+
 export {
     fetchAllChatFriendsAction,
     updateUserStatusAction,
@@ -804,4 +848,5 @@ export {
     addFriendAction,
     cancelRequestAction,
     confirmRequestAction,
+    searchResultsAction,
 };
