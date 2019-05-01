@@ -4,9 +4,13 @@ import { requester, userService } from '../../infrastructure'
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
 import Friend from './Friend';
-import './css/UserFriends.css'
+import './css/UserFriends.css';
 
-export default class UserFriendsAllPage extends Component {
+import { connect } from 'react-redux';
+import { changeCurrentTimeLineUserAction, changeAllFriendsAction, removeFriendAction } from '../../store/actions/userActions';
+import { changeAllPicturesAction } from '../../store/actions/pictureActions';
+
+class UserFriendsAllPage extends Component {
     constructor(props) {
         super(props)
 
@@ -17,44 +21,51 @@ export default class UserFriendsAllPage extends Component {
     }
 
     componentDidMount() {
-        const userId = this.props.match.params.id;
-        this.setState({ id: userId });
+        const currentTimeLineUserId = this.props.match.params.id;
+        if (currentTimeLineUserId !== this.props.timeLineUserData.id) {
+            this.props.changeTimeLineUser(currentTimeLineUserId);
+            this.props.changeAllPictures(currentTimeLineUserId);
+            this.props.changeAllFriends(currentTimeLineUserId);
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        const errorMessage = this.getErrorMessage(prevProps);
+        const successMessage = this.getSuccessMessage(prevProps)
+
+        if (errorMessage) {
+            toast.error(<ToastComponent.errorToast text={errorMessage} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+        } else if (successMessage) {
+            toast.success(<ToastComponent.successToast text={successMessage} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+        }
+    }
+
+    getSuccessMessage(prevProps) {
+        if (!this.props.removeFriend.hasError && this.props.removeFriend.message && this.props.removeFriend !== prevProps.removeFriend) {
+            return this.props.removeFriend.message;
+        }
+        return null;
+    }
+
+    getErrorMessage(prevProps) {
+        if (this.props.removeFriend.hasError && prevProps.removeFriend.error !== this.props.removeFriend.error) {
+            return this.props.removeFriend.message || 'Server Error';
+        }
+        return null;
     }
 
     removeFriend = (friendToRemoveId, event) => {
-        event.preventDefault();
-        const requestBody = { loggedInUserId: this.props.id, friendToRemoveId: friendToRemoveId }
-
-        requester.post('/relationship/removeFriend', requestBody, (response) => {
-            if (response.success) {
-                toast.success(<ToastComponent.successToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-
-                this.props.loadAllFriends(this.props.id);
-            } else {
-                toast.error(<ToastComponent.errorToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-            }
-        }).catch(err => {
-            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-                position: toast.POSITION.TOP_RIGHT
-            });
-
-            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-                localStorage.clear();
-                this.props.history.push('/login');
-            }
-        })
+        const loggedInUserId = this.props.loggedInUserData.id
+        this.props.deleteFriend(loggedInUserId, friendToRemoveId);
     }
 
     render() {
-        if (this.props.match.params.id !== this.props.id) {
-            this.props.getUserToShowId(this.props.match.params.id);
-        }
 
-        const isTheCurrentLoggedInUser = (this.props.id === userService.getUserId());
+        const isTheCurrentLoggedInUser = (this.props.loggedInUserData.id === this.props.timeLineUserData.id);
 
         return (
             <Fragment >
@@ -83,7 +94,7 @@ export default class UserFriendsAllPage extends Component {
                                                 {...this.props}
                                                 {...friend}
                                                 firstButtonLink={`/home/profile/${friend.id}`}
-                                                secondButtonLink={`/`}
+                                                secondButtonLink={`/home/comments/${this.props.loggedInUserData.id}`}
                                                 firstButtonText={'VIEW PROFILE'}
                                                 secondButtonText={'HOME'}
                                             />)
@@ -93,11 +104,11 @@ export default class UserFriendsAllPage extends Component {
                                         {
                                             isTheCurrentLoggedInUser ?
                                                 (<button className="button view-activity">
-                                                    <NavLink to={`/home/findFriends/${this.props.id}/findFriends`}>FIND FRIENDS</NavLink>
+                                                    <NavLink to={`/home/findFriends/${this.props.loggedInUserData.id}/findFriends`}>FIND FRIENDS</NavLink>
                                                 </button>)
                                                 : null
                                         }
-                                       <div className="hr-styles"></div>
+                                        <div className="hr-styles"></div>
                                     </Fragment>
                                     )
                                 }
@@ -109,3 +120,29 @@ export default class UserFriendsAllPage extends Component {
         )
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        timeLineUserData: state.timeLineUserData,
+        loggedInUserData: state.loggedInUserData,
+
+        fetchAllLogs: state.fetchAllLogs,
+        logsArr: state.fetchAllLogs.logsArr,
+
+        friendsArr: state.fetchAllFriends.friendsArr,
+        fetchAllFriends: state.fetchAllFriends,
+
+        removeFriend: state.removeFriend
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        changeTimeLineUser: (userId) => { dispatch(changeCurrentTimeLineUserAction(userId)) },
+        changeAllFriends: (userId) => { dispatch(changeAllFriendsAction(userId)) },
+        changeAllPictures: (userId) => { dispatch(changeAllPicturesAction(userId)) },
+        deleteFriend: (loggedInUserId, friendToRemoveId) => { dispatch(removeFriendAction(loggedInUserId, friendToRemoveId)) }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserFriendsAllPage);

@@ -11,6 +11,7 @@ import UserSearchResultsPage from '../../components/user/UserSearchResultsPage';
 import UserProfilePage from '../../components/user/UserProfilePage';
 import UserFriendsAllPage from '../../components/user/UserFriendsAllPage';
 import UserFindFriendsPage from '../../components/user/UserFindFriendsPage';
+import UserFriendRequestsPage from '../../components/user/UserFriendRequestsPage';
 import UserAllPage from '../../components/user/UserAllPage';
 import UserEditPage from '../../components/user/UserEditPage';
 import UserDeletePage from '../../components/user/UserDeletePage';
@@ -62,13 +63,13 @@ class HomePage extends Component {
         this.loadAllPictures = this.loadAllPictures.bind(this);
         this.loadAllFriends = this.loadAllFriends.bind(this);
         this.searchResults = this.searchResults.bind(this);
-        this.findFriends = this.findFriends.bind(this);
+        // this.findFriends = this.findFriends.bind(this);
     }
 
     componentDidMount() {
         console.log("Home componentDidMount")
         const userId = userService.getUserId();
-        const timeLineUserId =  userService.getUserId();
+        const timeLineUserId = userService.getUserId();
 
         this.props.loadLoggedInUserData(userId);
         this.loadTimeLineUserData(timeLineUserId);
@@ -138,26 +139,6 @@ class HomePage extends Component {
         this.props.loadAllFriends(userId);
     }
 
-    findFriends = (userId, category) => {
-        requester.get(`/relationship/findFriends/${userId}`, (response) => {
-            this.setState({
-                friendsCandidatesArr: response.filter(user => user.status !== 0 && user.status !== 1),
-                userWaitingForAcceptingRequest: response.filter(user => user.status === 0 && user.starterOfAction === true),
-                usersReceivedRequestFromCurrentUser: response.filter(user => user.status === 0 && user.starterOfAction === false),
-                category: category,
-            }, () => this.loadAllFriends(userId))
-        }).catch(err => {
-            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-                position: toast.POSITION.TOP_RIGHT
-            });
-
-            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-                localStorage.clear();
-                this.props.history.push('/login');
-            }
-        })
-    }
-
     searchResults = (userId, search) => {
         this.setState({
             search
@@ -185,10 +166,6 @@ class HomePage extends Component {
         })
     }
 
-    checkIfCurrentUserIsLoggedInUser() {
-        return this.state.id === userService.getUserId();
-    }
-
     render() {
         const loading = this.props.fetchPictures.loading || this.props.timeLineUserData.loading || this.props.loggedInUserData.loading || this.props.fetchAllFriends.loading;
         if (!this.state.ready || loading) {
@@ -196,10 +173,9 @@ class HomePage extends Component {
             return <h1 className="text-center pt-5 mt-5">Loading HomePage...</h1>
         }
 
-        const userToShowId = this.props.match.params;
         const isRoot = userService.isRoot();
         const isAdmin = userService.isAdmin();
-        const isTheCurrentLoggedInUser = this.checkIfCurrentUserIsLoggedInUser(userToShowId);
+        const isTheCurrentLoggedInUser = this.props.loggedInUserData.id === this.props.timeLineUserData.id;
         let loggedIn = userService.isTheUserLoggedIn();
 
         return (
@@ -214,13 +190,15 @@ class HomePage extends Component {
                                 {loggedIn && <Route exact path="/home/profile/:id" component={UserProfilePage} />}
                                 {loggedIn && (isRoot || isAdmin || isTheCurrentLoggedInUser) && <Route exact path="/home/users/edit/:id" component={UserEditPage} />}
                                 {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/users/all/:id" component={UserAllPage} />}
-                                {(loggedIn && isRoot) && <Route exact path="/home/users/delete/:id" component={UserDeletePage}  />}
+                                {(loggedIn && isRoot) && <Route exact path="/home/users/delete/:id" component={UserDeletePage} />}
                                 {loggedIn && <Route exact path="/home/gallery/:id" component={UserGalleryPage} />} />}
                                 {(loggedIn && (isRoot || isAdmin)) && <Route exact path="/home/logs/:id" component={UserLogsPage} />}
-                                {/* {loggedIn && <Route exact path="/home/friends/:id" render={props => <UserFriendsAllPage {...props} getUserToShowId={this.getUserToShowId} {...this.state} loadAllFriends={this.loadAllFriends} />} />}
-                                {loggedIn && <Route exact path="/home/findFriends/:id/:category" render={(props) => <UserFindFriendsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} findFriends={this.findFriends} />} />} */}
+                                {loggedIn && <Route exact path="/home/friends/:id" component={UserFriendsAllPage} />}
+                                {loggedIn && <Route exact path="/home/findFriends/:id" component={UserFindFriendsPage} />}
+                                {loggedIn && <Route exact path="/home/friendRequests/:id" component={UserFriendRequestsPage} />}
+                                {/* {loggedIn && <Route exact path="/home/findFriends/:id/:category" render={(props) => <UserFindFriendsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} findFriends={this.findFriends} />} />} */}
+
                                 {/* 
-                               
                                 {loggedIn && <Route exact path="/home/users/search/" render={(props) => <UserSearchResultsPage {...props} {...this.state} getUserToShowId={this.getUserToShowId} searchResults={this.searchResults} />} />} */}
                                 {/* <Route exact path="/error" component={ErrorPage} />
                                 <Route render={(props) => <Redirect to="/" {...props} />} /> */}

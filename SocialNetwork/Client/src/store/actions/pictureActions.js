@@ -173,7 +173,6 @@ const updatePicturesAction = (picturesArr) => {
 }
 
 function changeAllPicturesAction(userId) {
-    debugger;
     return (dispatch) => {
         dispatch(changePictureBegin())
         return requester.get('/pictures/all/' + userId, (response) => {

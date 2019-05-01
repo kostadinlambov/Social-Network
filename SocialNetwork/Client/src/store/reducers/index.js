@@ -4,7 +4,8 @@ import { addPictureReducer, removePictureReducer, fetchPictureReducer, changePic
 import {
     fetchAllChatFriendsReducer, loggedInUserDataReducer, timeLineUserDataReducer, fetchAllFriendsReducer,
     updateUserReducer, fetchAllUsersReducer, promoteUserReducer, demoteUserReducer, changeTimeLineUserDataReducer,
-    changeAllFriendsReducer,
+    changeAllFriendsReducer,removeFriendReducer, deleteUserReducer, findFriendsReducer, addfriendReducer, 
+    cancelRequestReducer, confirmRequestReducer,
 } from './userReducer';
 import { fetchAllMessagesReducer } from './messagesReducer';
 import { createPostReducer, fetchAllPostsReducer, removePostReducer, addLikePostReducer } from './postReducer';
@@ -44,4 +45,10 @@ export default {
     findLogsByUserName: findLogsByUserNameReducer,
     clearLogsByUserName: clearLogsByUserNameReducer,
     clearAllLogs: clearAllLogsReducer,
+    removeFriend: removeFriendReducer,
+    deleteUser: deleteUserReducer,
+    findFriends: findFriendsReducer,
+    addfriend: addfriendReducer,
+    cancelRequest: cancelRequestReducer,
+    confirmRequest: confirmRequestReducer,
 };

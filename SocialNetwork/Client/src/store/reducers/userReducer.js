@@ -9,12 +9,19 @@ import {
     DEMOTE_USER_SUCCESS, DEMOTE_USER_BEGIN, DEMOTE_USER_ERROR, CHANGE_USERROLE,
     CHANGE_TIMELINE_USERDATA_SUCCESS, CHANGE_TIMELINE_USERDATA_BEGIN, CHANGE_TIMELINE_USERDATA_ERROR,
     CHANGE_ALLFRIENDS_SUCCESS, CHANGE_ALLFRIENDS_BEGIN, CHANGE_ALLFRIENDS_ERROR, UPDATE_ALL_FRIENDS,
+    REMOVE_FRIEND_SUCCESS, REMOVE_FRIEND_BEGIN, REMOVE_FRIEND_ERROR,
+    DELETE_USER_SUCCESS, DELETE_USER_BEGIN, DELETE_USER_ERROR,
+    FIND_FRIENDS_SUCCESS, FIND_FRIENDS_BEGIN, FIND_FRIENDS_ERROR,
+    ADD_FRIEND_SUCCESS, ADD_FRIEND_BEGIN, ADD_FRIEND_ERROR,
+    CANCEL_REQUEST_SUCCESS, CANCEL_REQUEST_BEGIN, CANCEL_REQUEST_ERROR,
+    CONFIRM_REQUEST_SUCCESS, CONFIRM_REQUEST_BEGIN, CONFIRM_REQUEST_ERROR,
+
 } from '../actions/actionTypes';
 
 import placeholder_user_image from '../../assets/images/placeholder.png';
 import default_background_image from '../../assets/images/default-background-image.jpg';
 
-
+// loggedInUserDataReducer
 const initialStateLoggedInUserData = {
     id: '',
     username: '',
@@ -86,6 +93,7 @@ const loggedInUserDataReducer = (state = initialStateLoggedInUserData, action) =
     }
 }
 
+// timeLineUserDataReducer
 const initialStateTimeLineUserData = {
     id: '',
     username: '',
@@ -157,6 +165,7 @@ const timeLineUserDataReducer = (state = initialStateTimeLineUserData, action) =
     }
 }
 
+// fetchAllChatFriendsReducer
 const initialStateAllChatFriends = {
     friendsChatArr: [],
     hasError: false,
@@ -230,63 +239,7 @@ const updateUserStatus = (state, data) => {
     })
 }
 
-const initialStateAllFriends = {
-    friendsArr: [],
-    hasError: false,
-    error: '',
-    message: '',
-    status: '',
-    path: '',
-    loading: false,
-}
-
-const fetchAllFriendsReducer = (state = initialStateAllFriends, action) => {
-    switch (action.type) {
-        case FETCH_ALLFRIENDS_BEGIN:
-            return Object.assign({}, state, {
-                friendsArr: [],
-                hasError: false,
-                error: '',
-                message: '',
-                status: '',
-                path: '',
-                loading: true,
-            })
-        case FETCH_ALLFRIENDS_SUCCESS:
-            return Object.assign({}, state, {
-                friendsArr: [...action.payload],
-                hasError: false,
-                error: '',
-                message: '',
-                status: '',
-                path: '',
-                loading: false,
-            })
-        case FETCH_ALLFRIENDS_ERROR:
-            return Object.assign({}, state, {
-                friendsArr: [],
-                hasError: true,
-                error: action.error,
-                message: action.message,
-                status: action.status,
-                path: action.path,
-                loading: false,
-            })
-            case  UPDATE_ALL_FRIENDS:
-            return  Object.assign({}, state, {
-                friendsArr: [...action.payload],
-                hasError: false,
-                error: '',
-                message: '',
-                status: '',
-                path: '',
-                loading: false,
-            })
-        default:
-            return state
-    }
-}
-
+// updateUserReducer
 const initialStateUpdateUser = {
     hasError: false,
     error: '',
@@ -330,6 +283,7 @@ const updateUserReducer = (state = initialStateUpdateUser, action) => {
     }
 }
 
+// fetchAllUsersReducer
 const initialStateAllUsers = {
     userArr: [],
     hasError: false,
@@ -374,9 +328,25 @@ const fetchAllUsersReducer = (state = initialStateAllUsers, action) => {
             })
         case CHANGE_USERROLE:
             return updateUserRole(state, action.payload)
+        case DELETE_USER_SUCCESS:
+            return removeUser(state, action.deletedUserId)
         default:
             return state
     }
+}
+
+const removeUser = (state, deletedUserId) => {
+    const userArr = state.userArr.filter(user => user.id !== deletedUserId);
+
+    return Object.assign({}, state, {
+        userArr: [...userArr],
+        hasError: false,
+        error: '',
+        message: '',
+        status: '',
+        path: '',
+        loading: false,
+    })
 }
 
 const updateUserRole = (state, data) => {
@@ -403,6 +373,51 @@ const updateUserRole = (state, data) => {
     })
 }
 
+// deleteUser
+const initialStateDeleteUser = {
+    hasError: false,
+    error: '',
+    message: '',
+    status: '',
+    path: '',
+    loading: false,
+}
+
+const deleteUserReducer = (state = initialStateDeleteUser, action) => {
+    switch (action.type) {
+        case DELETE_USER_BEGIN:
+            return Object.assign({}, state, {
+                hasError: false,
+                error: '',
+                message: '',
+                status: '',
+                path: '',
+                loading: true,
+            })
+        case DELETE_USER_SUCCESS:
+            return Object.assign({}, state, {
+                hasError: false,
+                error: '',
+                message: action.payload.message,
+                status: '',
+                path: '',
+                loading: false,
+            })
+        case DELETE_USER_ERROR:
+            return Object.assign({}, state, {
+                hasError: true,
+                error: action.error,
+                message: action.message,
+                status: action.status,
+                path: action.path,
+                loading: false,
+            })
+        default:
+            return state
+    }
+}
+
+// promoteUserReducer
 const initialStatePromoteUser = {
     hasError: false,
     error: '',
@@ -446,6 +461,7 @@ const promoteUserReducer = (state = initialStatePromoteUser, action) => {
     }
 }
 
+// demoteUserReducer
 const initialStateDemoteUser = {
     hasError: false,
     error: '',
@@ -489,6 +505,7 @@ const demoteUserReducer = (state = initialStateDemoteUser, action) => {
     }
 }
 
+// changeTimeLineUserDataReducer
 const initialStateChangeTimeLineUserData = {
     id: '',
     username: '',
@@ -549,6 +566,79 @@ const changeTimeLineUserDataReducer = (state = initialStateChangeTimeLineUserDat
     }
 }
 
+// fetchAllFriendsReducer
+const initialStateAllFriends = {
+    friendsArr: [],
+    hasError: false,
+    error: '',
+    message: '',
+    status: '',
+    path: '',
+    loading: false,
+}
+
+const fetchAllFriendsReducer = (state = initialStateAllFriends, action) => {
+    switch (action.type) {
+        case FETCH_ALLFRIENDS_BEGIN:
+            return Object.assign({}, state, {
+                friendsArr: [],
+                hasError: false,
+                error: '',
+                message: '',
+                status: '',
+                path: '',
+                loading: true,
+            })
+        case FETCH_ALLFRIENDS_SUCCESS:
+            return Object.assign({}, state, {
+                friendsArr: [...action.payload],
+                hasError: false,
+                error: '',
+                message: '',
+                status: '',
+                path: '',
+                loading: false,
+            })
+        case FETCH_ALLFRIENDS_ERROR:
+            return Object.assign({}, state, {
+                friendsArr: [],
+                hasError: true,
+                error: action.error,
+                message: action.message,
+                status: action.status,
+                path: action.path,
+                loading: false,
+            })
+        case UPDATE_ALL_FRIENDS:
+            return Object.assign({}, state, {
+                friendsArr: [...action.payload],
+                hasError: false,
+                error: '',
+                message: '',
+                status: '',
+                path: '',
+                loading: false,
+            })
+        case REMOVE_FRIEND_SUCCESS:
+            return Object.assign({}, state, {
+                friendsArr: removeFriend(state, action.friendToRemoveId),
+                hasError: false,
+                error: '',
+                message: '',
+                status: '',
+                path: '',
+                loading: false,
+            })
+        default:
+            return state
+    }
+}
+
+const removeFriend = (state, friendToRemoveId) => {
+    return state.friendsArr.filter(friend => friend.id !== friendToRemoveId);
+}
+
+// changeAllFriendsReducer
 const initialStateChangeAllFriends = {
     friendsArr: [],
     hasError: false,
@@ -596,6 +686,323 @@ const changeAllFriendsReducer = (state = initialStateChangeAllFriends, action) =
     }
 }
 
+// removeFriendReducer
+const initialStateRemoveFriend = {
+    hasError: false,
+    error: '',
+    message: '',
+    status: '',
+    path: '',
+    loading: false,
+}
+
+const removeFriendReducer = (state = initialStateRemoveFriend, action) => {
+    switch (action.type) {
+        case REMOVE_FRIEND_BEGIN:
+            return Object.assign({}, state, {
+                hasError: false,
+                error: '',
+                message: '',
+                status: '',
+                path: '',
+                loading: true,
+            })
+        case REMOVE_FRIEND_SUCCESS:
+            return Object.assign({}, state, {
+                hasError: false,
+                error: '',
+                message: action.payload.message,
+                status: '',
+                path: '',
+                loading: false,
+            })
+        case REMOVE_FRIEND_ERROR:
+            return Object.assign({}, state, {
+                hasError: true,
+                error: action.error,
+                message: action.message,
+                status: action.status,
+                path: action.path,
+                loading: false,
+            })
+        default:
+            return state
+    }
+}
+
+// findFriends
+const initialStateFindFriends = {
+    friendsCandidatesArr: [],
+    userWaitingForAcceptingRequest: [],
+    usersReceivedRequestFromCurrentUser: [],
+    hasError: false,
+    error: '',
+    message: '',
+    status: '',
+    path: '',
+    loading: false,
+}
+
+const findFriendsReducer = (state = initialStateFindFriends, action) => {
+    switch (action.type) {
+        case FIND_FRIENDS_BEGIN:
+            return Object.assign({}, state, {
+                friendsCandidatesArr: [],
+                userWaitingForAcceptingRequest: [],
+                usersReceivedRequestFromCurrentUser: [],
+                hasError: false,
+                error: '',
+                message: '',
+                status: '',
+                path: '',
+                loading: true,
+            })
+        case FIND_FRIENDS_SUCCESS:
+            return setFindFriendsSuccessState(state, action.payload)
+        case FIND_FRIENDS_ERROR:
+            return Object.assign({}, state, {
+                friendsCandidatesArr: [],
+                userWaitingForAcceptingRequest: [],
+                usersReceivedRequestFromCurrentUser: [],
+                hasError: true,
+                error: action.error,
+                message: action.message,
+                status: action.status,
+                path: action.path,
+                loading: false,
+            })
+        case ADD_FRIEND_SUCCESS:
+            return sendUserRequest(state, action.friendCandidateId);
+        case CANCEL_REQUEST_SUCCESS:
+            return cancelRequest(state, action.friendToRejectId);
+        case CONFIRM_REQUEST_SUCCESS:
+            return confirmRequest(state, action.friendToAcceptId);
+        default:
+            return state
+    }
+}
+
+const setFindFriendsSuccessState = (state, response) => {
+    const friendsCandidatesArr = response.filter(user => user.status !== 0 && user.status !== 1);
+    const userWaitingForAcceptingRequest = response.filter(user => user.status === 0 && user.starterOfAction === true);
+    const usersReceivedRequestFromCurrentUser = response.filter(user => user.status === 0 && user.starterOfAction === false);
+
+    return Object.assign({}, state, {
+        friendsCandidatesArr: friendsCandidatesArr,
+        userWaitingForAcceptingRequest: userWaitingForAcceptingRequest,
+        usersReceivedRequestFromCurrentUser: usersReceivedRequestFromCurrentUser,
+        hasError: false,
+        error: '',
+        message: '',
+        status: '',
+        path: '',
+        loading: false,
+    })
+}
+
+const sendUserRequest = (state, friendCandidateId) => {
+    const userToAddIndex = state.friendsCandidatesArr.findIndex(user => user.id === friendCandidateId);
+    const userToAdd = state.friendsCandidatesArr[userToAddIndex];
+
+    const friendsCandidatesArr = state.friendsCandidatesArr.filter(user => user.id !== friendCandidateId);
+    const usersReceivedRequestFromCurrentUser = [...state.usersReceivedRequestFromCurrentUser, userToAdd]
+
+    return Object.assign({}, state, {
+        friendsCandidatesArr: friendsCandidatesArr,
+        userWaitingForAcceptingRequest: state.userWaitingForAcceptingRequest.slice(),
+        usersReceivedRequestFromCurrentUser: usersReceivedRequestFromCurrentUser,
+        hasError: false,
+        error: '',
+        message: '',
+        status: '',
+        path: '',
+        loading: false,
+    })
+
+}
+
+const cancelRequest = (state, friendToRejectId) => {
+    let friendsCandidatesArr = state.friendsCandidatesArr.slice();
+    let userWaitingForAcceptingRequest = state.userWaitingForAcceptingRequest.slice();
+    let usersReceivedRequestFromCurrentUser = state.usersReceivedRequestFromCurrentUser.slice();
+
+    let userToCancelIndex = usersReceivedRequestFromCurrentUser.findIndex(user => user.id === friendToRejectId);
+
+    if (userToCancelIndex > -1) {
+        const userToCancel = usersReceivedRequestFromCurrentUser[userToCancelIndex];
+        usersReceivedRequestFromCurrentUser = usersReceivedRequestFromCurrentUser.filter(user => user.id !== friendToRejectId);
+        friendsCandidatesArr = [...friendsCandidatesArr, userToCancel]
+    } else {
+        userToCancelIndex = userWaitingForAcceptingRequest.findIndex(user => user.id === friendToRejectId);
+        const userToCancel = userWaitingForAcceptingRequest[userToCancelIndex];
+        userWaitingForAcceptingRequest = userWaitingForAcceptingRequest.filter(user => user.id !== friendToRejectId);
+        friendsCandidatesArr = [...friendsCandidatesArr, userToCancel]
+    }
+
+    return Object.assign({}, state, {
+        friendsCandidatesArr,
+        userWaitingForAcceptingRequest,
+        usersReceivedRequestFromCurrentUser,
+        hasError: false,
+        error: '',
+        message: '',
+        status: '',
+        path: '',
+        loading: false,
+    })
+
+}
+
+const confirmRequest = (state, friendToAcceptId) => {
+    const userWaitingForAcceptingRequest = state.userWaitingForAcceptingRequest.filter(user => user.id !== friendToAcceptId);
+
+    return Object.assign({}, state, {
+        friendsCandidatesArr: state.friendsCandidatesArr.slice(),
+        userWaitingForAcceptingRequest,
+        usersReceivedRequestFromCurrentUser: state.usersReceivedRequestFromCurrentUser.slice(),
+        hasError: false,
+        error: '',
+        message: '',
+        status: '',
+        path: '',
+        loading: false,
+    })
+
+}
+
+// addFriend
+const initialStateAddFriend = {
+    hasError: false,
+    error: '',
+    message: '',
+    status: '',
+    path: '',
+    loading: false,
+}
+
+const addfriendReducer = (state = initialStateAddFriend, action) => {
+    switch (action.type) {
+        case ADD_FRIEND_BEGIN:
+            return Object.assign({}, state, {
+                hasError: false,
+                error: '',
+                message: '',
+                status: '',
+                path: '',
+                loading: true,
+            })
+        case ADD_FRIEND_SUCCESS:
+            return Object.assign({}, state, {
+                hasError: false,
+                error: '',
+                message: action.payload.message,
+                status: '',
+                path: '',
+                loading: false,
+            })
+        case ADD_FRIEND_ERROR:
+            return Object.assign({}, state, {
+                hasError: true,
+                error: action.error,
+                message: action.message,
+                status: action.status,
+                path: action.path,
+                loading: false,
+            })
+        default:
+            return state
+    }
+}
+
+// cancelRequest
+const initialStateCancelRequest = {
+    hasError: false,
+    error: '',
+    message: '',
+    status: '',
+    path: '',
+    loading: false,
+}
+
+const cancelRequestReducer = (state = initialStateCancelRequest, action) => {
+    switch (action.type) {
+        case CANCEL_REQUEST_BEGIN:
+            return Object.assign({}, state, {
+                hasError: false,
+                error: '',
+                message: '',
+                status: '',
+                path: '',
+                loading: true,
+            })
+        case CANCEL_REQUEST_SUCCESS:
+            return Object.assign({}, state, {
+                hasError: false,
+                error: '',
+                message: action.payload.message,
+                status: '',
+                path: '',
+                loading: false,
+            })
+        case CANCEL_REQUEST_ERROR:
+            return Object.assign({}, state, {
+                hasError: true,
+                error: action.error,
+                message: action.message,
+                status: action.status,
+                path: action.path,
+                loading: false,
+            })
+        default:
+            return state
+    }
+}
+
+
+// confirmRequestReducer
+const initialStateConfirmRequest = {
+    hasError: false,
+    error: '',
+    message: '',
+    status: '',
+    path: '',
+    loading: false,
+}
+
+const confirmRequestReducer = (state = initialStateConfirmRequest, action) => {
+    switch (action.type) {
+        case CONFIRM_REQUEST_BEGIN:
+            return Object.assign({}, state, {
+                hasError: false,
+                error: '',
+                message: '',
+                status: '',
+                path: '',
+                loading: true,
+            })
+        case CONFIRM_REQUEST_SUCCESS:
+            return Object.assign({}, state, {
+                hasError: false,
+                error: '',
+                message: action.payload.message,
+                status: '',
+                path: '',
+                loading: false,
+            })
+        case CONFIRM_REQUEST_ERROR:
+            return Object.assign({}, state, {
+                hasError: true,
+                error: action.error,
+                message: action.message,
+                status: action.status,
+                path: action.path,
+                loading: false,
+            })
+        default:
+            return state
+    }
+}
+
 const reconcile = (oldData, newData) => {
     const newDataById = {}
     for (const entry of newData) {
@@ -630,4 +1037,10 @@ export {
     demoteUserReducer,
     changeTimeLineUserDataReducer,
     changeAllFriendsReducer,
+    removeFriendReducer,
+    deleteUserReducer,
+    findFriendsReducer,
+    addfriendReducer,
+    cancelRequestReducer,
+    confirmRequestReducer,
 }

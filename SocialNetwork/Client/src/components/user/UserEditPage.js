@@ -40,6 +40,7 @@ class UserEditPage extends Component {
     }
 
     componentDidMount = () => {
+        debugger;
         const currentTimeLineUserId = this.props.match.params.id
         if (currentTimeLineUserId !== this.props.timeLineUserData.id) {
             this.props.changeTimeLineUser(currentTimeLineUserId);
@@ -165,6 +166,7 @@ class UserEditPage extends Component {
     }
 
     render() {
+        debugger;
         const { username, email, firstName, lastName, address, city, profilePicUrl, backgroundImageUrl } = this.state;
 
         const loggedInUserName = userService.getUsername();

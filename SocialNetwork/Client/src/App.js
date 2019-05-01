@@ -34,7 +34,7 @@ class App extends Component {
   onLogout() {
     this.props.logout();
 
-    toast.success(<ToastComponent.successToast text={`"You have been successfully logged out."`} />, {
+    toast.success(<ToastComponent.successToast text={`You have been successfully logged out.`} />, {
       position: toast.POSITION.TOP_RIGHT
     });
 

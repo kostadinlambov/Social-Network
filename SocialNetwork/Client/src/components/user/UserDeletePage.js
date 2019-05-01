@@ -1,15 +1,14 @@
 import React, { Component, Fragment } from 'react'
 import { NavLink } from 'react-router-dom';
-import { userService, requester } from '../../infrastructure';
+import { userService } from '../../infrastructure';
 import { Button, ButtonWithClickEvent } from '../common'
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common';
 import './css/UserDeletePage.css';
 
 import { connect } from 'react-redux';
-import { changeCurrentTimeLineUserAction, changeAllFriendsAction } from '../../store/actions/userActions';
+import { changeCurrentTimeLineUserAction, changeAllFriendsAction, deleteUserAction } from '../../store/actions/userActions';
 import { changeAllPicturesAction } from '../../store/actions/pictureActions';
-
 
 class UserDeletePage extends Component {
     constructor(props) {
@@ -38,39 +37,55 @@ class UserDeletePage extends Component {
         }
     }
 
-    onSubmitHandlerDelete = (e) => {
-        e.preventDefault();
+    componentDidUpdate(prevProps, prevState) {
+        const errorMessage = this.getErrorMessage(prevProps);
+        const successMessage = this.getSuccessMessage(prevProps)
 
-        requester.delete('/users/delete/' + this.state.id, {}, (response) => {
-            if (response.success === true) {
-                toast.success(<ToastComponent.successToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-                this.props.history.push(`/`);
-            } else {
-                toast.error(<ToastComponent.errorToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-            }
-        }).catch(err => {
-            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
+        if (errorMessage) {
+            toast.error(<ToastComponent.errorToast text={errorMessage} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+        } else if (successMessage) {
+            toast.success(<ToastComponent.successToast text={successMessage} />, {
                 position: toast.POSITION.TOP_RIGHT
             });
 
-            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-                localStorage.clear();
-                this.props.history.push('/login');
-            }
-        })
+            const loggedInUserId = this.props.loggedInUserData.id;
+            this.props.history.push('/home/users/all/' + loggedInUserId)
+        }
+    }
+
+    getSuccessMessage(prevProps) {
+        if (!this.props.deleteUser.hasError && this.props.deleteUser.message && this.props.deleteUser !== prevProps.deleteUser) {
+            return this.props.deleteUser.message;
+        }
+
+        return null;
+    }
+
+    getErrorMessage(prevProps) {
+        if (this.props.deleteUser.hasError && prevProps.deleteUser.error !== this.props.deleteUser.error) {
+            return this.props.deleteUser.message || 'Server Error';
+        }
+
+        return null;
+    }
+
+    onSubmitHandlerDelete = (e) => {
+        e.preventDefault();
+
+        const userToRemoveId = this.props.timeLineUserData.id;
+
+        this.props.removeUser(userToRemoveId);
     }
 
     render = () => {
         let authority;
-        if (this.props.timeLineUserData.authorities[0]) {
+        if (this.props.timeLineUserData.authorities) {
             authority = this.props.timeLineUserData.authorities[0]['authority'];
         }
- 
-        const {username, email, firstName, lastName, address, city} = this.props.timeLineUserData;
+
+        const { username, email, firstName, lastName, address, city } = this.props.timeLineUserData;
 
         const isAdmin = userService.isAdmin();
         const isRoot = userService.isRoot();
@@ -171,15 +186,17 @@ const mapStateToProps = (state) => {
     return {
         timeLineUserData: state.timeLineUserData,
         loggedInUserData: state.loggedInUserData,
-        updateUserData: state.updateUserData
+        updateUserData: state.updateUserData,
+        deleteUser: state.deleteUser,
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
         changeTimeLineUser: (userId) => { dispatch(changeCurrentTimeLineUserAction(userId)) },
-        changeAllFriends: (userId) => {dispatch(changeAllFriendsAction(userId))},
-        changeAllPictures: (userId) => {dispatch(changeAllPicturesAction(userId))},
+        changeAllFriends: (userId) => { dispatch(changeAllFriendsAction(userId)) },
+        changeAllPictures: (userId) => { dispatch(changeAllPicturesAction(userId)) },
+        removeUser: (userId) => { dispatch(deleteUserAction(userId)) }
     }
 }
 

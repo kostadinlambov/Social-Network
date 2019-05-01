@@ -202,12 +202,12 @@ export default class Navbar extends Component {
                                     {loggedIn && <li className="nav-item"><NavLink exact to={`/home/profile/${userId}`} className="nav-link  fas fa-user tooltipCustom"  > {userService.getUsername()}<span className="tooltiptextCustom">Profile</span></NavLink></li>}
 
                                     {loggedIn && <li className="nav-item"><NavLink exact to={`/home/comments/${userId}`} className="nav-link ">Home</NavLink></li>}
-                                    {loggedIn && <li className="nav-item"><NavLink exact to={`/home/findFriends/${userId}/findFriends`} className="nav-link " >Find friends!</NavLink></li>}
+                                    {loggedIn && <li className="nav-item"><NavLink exact to={`/home/findFriends/${userId}`} className="nav-link " >Find friends!</NavLink></li>}
 
 
                                     {loggedIn &&
                                         <li className="nav-item">
-                                            <NavLink exact to={`/home/findFriends/${userId}/requests`} className="nav-link tooltipCustom">
+                                            <NavLink exact to={`/home/friendRequests/${userId}`} className="nav-link tooltipCustom">
                                                 <i className="fas fa-user-friends"></i>
                                                 {/* <i id="icon-badge-container-friend-requests" data-count="2" className="fas fa-user-friends"></i> */}
                                                 <span className="tooltiptextCustom" id="friend-requests-tooltip">Friend Requests</span>
