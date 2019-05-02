@@ -958,7 +958,6 @@ const cancelRequestReducer = (state = initialStateCancelRequest, action) => {
     }
 }
 
-
 // confirmRequestReducer
 const initialStateConfirmRequest = {
     hasError: false,
@@ -1009,6 +1008,7 @@ const initialStateSearchResults = {
     friendsCandidatesArr: [],
     userWaitingForAcceptingRequest: [],
     usersReceivedRequestFromCurrentUser: [],
+    search: '',
     hasError: false,
     error: '',
     message: '',
@@ -1025,6 +1025,7 @@ const searchResultsReducer = (state = initialStateSearchResults, action) => {
                 friendsCandidatesArr: [],
                 userWaitingForAcceptingRequest: [],
                 usersReceivedRequestFromCurrentUser: [],
+                search: '',
                 hasError: false,
                 error: '',
                 message: '',
@@ -1033,13 +1034,14 @@ const searchResultsReducer = (state = initialStateSearchResults, action) => {
                 loading: true,
             })
         case SEARCH_RESULTS_SUCCESS:
-            return setSearchResultsSuccessState(state, action.payload)
+            return setSearchResultsSuccessState(state, action.payload, action.search)
         case SEARCH_RESULTS_ERROR:
             return Object.assign({}, state, {
                 friendsArrSearch: [],
                 friendsCandidatesArr: [],
                 userWaitingForAcceptingRequest: [],
                 usersReceivedRequestFromCurrentUser: [],
+                search: action.search,
                 hasError: true,
                 error: action.error,
                 message: action.message,
@@ -1060,7 +1062,7 @@ const searchResultsReducer = (state = initialStateSearchResults, action) => {
     }
 }
 
-const setSearchResultsSuccessState = (state, response) => {
+const setSearchResultsSuccessState = (state, response, search) => {
     const friendsArrSearch = response.filter(user => user.status === 1);
     const friendsCandidatesArr = response.filter(user => user.status !== 0 && user.status !== 1);
     const userWaitingForAcceptingRequest = response.filter(user => user.status === 0 && user.starterOfAction === true);
@@ -1071,6 +1073,7 @@ const setSearchResultsSuccessState = (state, response) => {
         friendsCandidatesArr,
         userWaitingForAcceptingRequest,
         usersReceivedRequestFromCurrentUser,
+        search,
         hasError: false,
         error: '',
         message: '',
@@ -1092,6 +1095,7 @@ const searchResultsSendUserRequest = (state, friendCandidateId) => {
         friendsCandidatesArr: friendsCandidatesArr,
         userWaitingForAcceptingRequest: state.userWaitingForAcceptingRequest.slice(),
         usersReceivedRequestFromCurrentUser: usersReceivedRequestFromCurrentUser,
+        search: state.search,
         hasError: false,
         error: '',
         message: '',
@@ -1126,6 +1130,7 @@ const searchResultsCancelRequest = (state, friendToRejectId) => {
         friendsCandidatesArr,
         userWaitingForAcceptingRequest,
         usersReceivedRequestFromCurrentUser,
+        search: state.search,
         hasError: false,
         error: '',
         message: '',
@@ -1150,6 +1155,7 @@ const searchResultsConfirmRequest = (state, friendToAcceptId) => {
         friendsCandidatesArr: state.friendsCandidatesArr.slice(),
         userWaitingForAcceptingRequest,
         usersReceivedRequestFromCurrentUser: state.usersReceivedRequestFromCurrentUser.slice(),
+        search: state.search,
         hasError: false,
         error: '',
         message: '',
@@ -1163,46 +1169,31 @@ const searchResultsRemoveFriend = (state, friendToRemoveId) => {
     let friendsArrSearch = state.friendsArrSearch.slice();
 
     const userToRemoveIndex = friendsArrSearch.findIndex(user => user.id === friendToRemoveId);
-    const userToRemove = friendsArrSearch[userToRemoveIndex];
-    friendsArrSearch = state.friendsArrSearch.filter(friend => friend.id !== friendToRemoveId)
 
-    const friendsCandidatesArr = [...state.friendsCandidatesArr, userToRemove]
+    if (userToRemoveIndex > -1) {
+        const userToRemove = friendsArrSearch[userToRemoveIndex];
+        friendsArrSearch = state.friendsArrSearch.filter(friend => friend.id !== friendToRemoveId)
 
-    return Object.assign({}, state, {
-        friendsArrSearch,
-        friendsCandidatesArr,
-        userWaitingForAcceptingRequest: state.userWaitingForAcceptingRequest,
-        usersReceivedRequestFromCurrentUser: state.usersReceivedRequestFromCurrentUser,
-        hasError: false,
-        error: '',
-        message: '',
-        status: '',
-        path: '',
-        loading: false,
-    })
-}
+        const friendsCandidatesArr = [...state.friendsCandidatesArr, userToRemove]
 
-const reconcile = (oldData, newData) => {
-    const newDataById = {}
-    for (const entry of newData) {
-        newDataById[entry._id] = entry
+        return Object.assign({}, state, {
+            friendsArrSearch,
+            friendsCandidatesArr,
+            userWaitingForAcceptingRequest: state.userWaitingForAcceptingRequest,
+            usersReceivedRequestFromCurrentUser: state.usersReceivedRequestFromCurrentUser,
+            search: state.search,
+            hasError: false,
+            error: '',
+            message: '',
+            status: '',
+            path: '',
+            loading: false,
+        })
+    }else{
+        return state;
     }
 
-    const result = []
-    for (const entry of oldData) {
-        if (newDataById[entry._id]) {
-            result.push(newDataById[entry._id])
-            delete newDataById[entry._id]
-        } else {
-            result.push(entry)
-        }
-    }
 
-    for (const entryId in newDataById) {
-        result.push(newDataById[entryId])
-    }
-
-    return result
 }
 
 export {

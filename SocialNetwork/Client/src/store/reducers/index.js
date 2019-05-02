@@ -7,7 +7,7 @@ import {
     changeAllFriendsReducer,removeFriendReducer, deleteUserReducer, findFriendsReducer, addfriendReducer, 
     cancelRequestReducer, confirmRequestReducer, searchResultsReducer,
 } from './userReducer';
-import { fetchAllMessagesReducer } from './messagesReducer';
+import { fetchAllMessagesReducer, fetchAllUnreadMessagesReducer, triggerMessageLoadReducer } from './messagesReducer';
 import { createPostReducer, fetchAllPostsReducer, removePostReducer, addLikePostReducer } from './postReducer';
 import { createCommentReducer, removeCommentReducer, addLikeCommentReducer } from './commentReducer';
 import { fetchAllLogsReducer, findLogsByUserNameReducer, clearLogsByUserNameReducer, clearAllLogsReducer } from './logsReducer';
@@ -26,6 +26,7 @@ export default {
     loggedInUserData: loggedInUserDataReducer,
     timeLineUserData: timeLineUserDataReducer,
     fetchAllMessages: fetchAllMessagesReducer,
+    fetchAllUnreadMessages: fetchAllUnreadMessagesReducer,
     fetchAllFriends: fetchAllFriendsReducer,
     createPost: createPostReducer,
     fetchAllPosts: fetchAllPostsReducer,
@@ -51,5 +52,6 @@ export default {
     addfriend: addfriendReducer,
     cancelRequest: cancelRequestReducer,
     confirmRequest: confirmRequestReducer,
-    searchResults: searchResultsReducer
+    searchResults: searchResultsReducer,
+    triggerMessageLoad: triggerMessageLoadReducer,
 };

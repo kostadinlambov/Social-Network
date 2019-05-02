@@ -9,7 +9,7 @@ import '../user/css/UserAllPage.css';
 import './css/MessageBox.css';
 import { connect } from 'react-redux';
 import { fetchAllChatFriendsAction, updateUserStatusAction } from '../../store/actions/userActions'
-import { fetchAllMessagesAction, addMessageAction } from '../../store/actions/messageActions'
+import { fetchAllMessagesAction, addMessageAction, fetchAllUnreadMessagesAction } from '../../store/actions/messageActions'
 
 import Stomp from "stompjs";
 import SockJS from "sockjs-client";
@@ -49,8 +49,6 @@ class MessageBox extends Component {
         this.changeChatBoxDisplay = this.changeChatBoxDisplay.bind(this);
         this.getAllMessages = this.getAllMessages.bind(this);
         this.loadAllChatFriends = this.loadAllChatFriends.bind(this);
-
-        observer.subscribe(observer.events.loadMessages, this.showUserChatBox)
     }
 
     componentDidMount() {
@@ -83,7 +81,12 @@ class MessageBox extends Component {
                 chatBoxDisplay: 'display-none'
             })
         }
-        
+
+        if (this.props.triggerMessageLoad !== prevProps.triggerMessageLoad) {
+            const userData = this.props.triggerMessageLoad;
+            this.showUserChatBox(userData)
+        }
+
         const errorMessage = this.getErrorMessage(prevProps, prevState);
         const successMessage = this.getSuccessMessage(prevProps, prevState)
 
@@ -109,7 +112,7 @@ class MessageBox extends Component {
         }
         else if (!this.props.fetchAllMessages.hasError && this.props.fetchAllMessages.message && this.props.fetchAllMessages !== prevProps.fetchAllMessages) {
             return this.props.fetchAllMessages.message;
-        } 
+        }
         return null;
     }
 
@@ -119,7 +122,7 @@ class MessageBox extends Component {
         }
         else if (this.props.fetchAllMessages.hasError && prevProps.fetchAllMessages.error !== this.props.fetchAllMessages.error) {
             return this.props.fetchAllMessages.message || 'Server Error';
-        } 
+        }
 
         return null;
     }
@@ -146,6 +149,8 @@ class MessageBox extends Component {
                             toast.info(<ToastComponent.infoToast text={`You have a new message from ${formattedUserNames}!`} />, {
                                 position: toast.POSITION.TOP_RIGHT
                             });
+
+                            this.props.loadAllUnreadMessages();
                         }
                     }
                 });
@@ -323,11 +328,6 @@ class MessageBox extends Component {
             return <h1 className="text-center pt-5 mt-5">Connecting...</h1>
         }
 
-        const loading = this.props.fetchAllChatFriends.loading || this.props.fetchAllMessages.loading;
-        if (loading) {
-            return <h1 className="text-center pt-5 mt-5">Loading...</h1>
-        }
-
         const { content } = this.state;
         const errors = this.validate(content);
         const isEnabled = !Object.keys(errors).some(x => errors[x]);
@@ -428,6 +428,8 @@ const mapStateToProps = (state) => {
 
         allMessagesArr: state.fetchAllMessages.allMessagesArr,
         fetchAllMessages: state.fetchAllMessages,
+
+        triggerMessageLoad: state.triggerMessageLoad,
     }
 }
 
@@ -437,6 +439,7 @@ const mapDispatchToProps = (dispatch) => {
         fetchAllMessages: (chatUserId) => { dispatch(fetchAllMessagesAction(chatUserId)) },
         updateUserStatus: (userData) => { dispatch(updateUserStatusAction(userData)) },
         addMessage: (messageBody) => { dispatch(addMessageAction(messageBody)) },
+        loadAllUnreadMessages: () => { dispatch(fetchAllUnreadMessagesAction()) },
     }
 }
 

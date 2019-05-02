@@ -172,6 +172,7 @@ header .header-section {
 }
 
 header .header-section {
+    /* padding-top: 15%; */
     padding-top: 12%;
     padding-bottom: 5%;
 }
@@ -238,4 +239,16 @@ header .header-button-container button {
 
 #root>main>section.aside-section>article.aside-article-intro>button>a {
     text-decoration: none;
+}
+
+@media screen and (max-width: 1300px) {
+    header .header-section {
+        padding-top: 18%;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    header .header-section {
+        padding-top: 12%;
+    }
 }

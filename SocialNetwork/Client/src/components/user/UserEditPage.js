@@ -40,7 +40,6 @@ class UserEditPage extends Component {
     }
 
     componentDidMount = () => {
-        debugger;
         const currentTimeLineUserId = this.props.match.params.id
         if (currentTimeLineUserId !== this.props.timeLineUserData.id) {
             this.props.changeTimeLineUser(currentTimeLineUserId);
@@ -52,13 +51,6 @@ class UserEditPage extends Component {
     componentDidUpdate(prevProps, prevState) {
         const loading = this.props.changeTimeLineUserData.loading ||
             this.props.changeAllFriends.loading || this.props.changePicture.loading;
-
-        // console.log('loading: ', loading);
-        // console.log('this.props: ', this.props);
-        // console.log('prevProps: ', prevProps);
-        // console.log('this.state: ', this.state);
-        // console.log('prevState: ', prevState);
-        // debugger;
 
         if (!loading && this.props.timeLineUserData.id !== this.state.id) {
             this.setState({
@@ -166,7 +158,6 @@ class UserEditPage extends Component {
     }
 
     render() {
-        debugger;
         const { username, email, firstName, lastName, address, city, profilePicUrl, backgroundImageUrl } = this.state;
 
         const loggedInUserName = userService.getUsername();

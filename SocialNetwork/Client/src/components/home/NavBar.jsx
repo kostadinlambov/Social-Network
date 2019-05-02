@@ -1,64 +1,91 @@
 import React, { Component, Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
-import { userService, requester, observer } from '../../infrastructure';
+import { userService } from '../../infrastructure';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common';
 import MessageNavBarRow from './MessageNavbarRow';
 import './css/MessageNavbarRow.css';
 import './css/Navbar.css';
 
-export default class Navbar extends Component {
+import { connect } from 'react-redux';
+import { fetchAllUnreadMessagesAction, triggerMessageLoadAction } from '../../store/actions/messageActions';
+import { searchResultsAction } from '../../store/actions/userActions';
+
+class Navbar extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            username: '',
             search: '',
             showDropdown: '',
             unreadMessages: 0,
-            displayMessageCount: false,
+            displayMessageCount: true,
             allUnreadMessages: [],
         }
 
         this.searchFriend = this.searchFriend.bind(this);
-        this.handleChange = this.handleChange.bind(this);
         this.onChangeHandler = this.onChangeHandler.bind(this);
         this.getAllFriendMessages = this.getAllFriendMessages.bind(this);
         this.triggerMessageLoad = this.triggerMessageLoad.bind(this);
         this.handleBlur = this.handleBlur.bind(this);
         this.changeMessaboxVisibility = this.changeMessaboxVisibility.bind(this);
-
-        observer.subscribe(observer.events.loginUser, this.userLoggedIn)
     }
 
-    componentDidMount = () => {
-        // this.setState({ showDropdown: '' },
-        //     () => this.getAllFriendMessages()
-        // )
+    componentDidUpdate(prevProps, prevState) {
+        const loading = this.props.fetchAllUnreadMessages.loading;
+
+        if (!loading && !this.props.fetchAllUnreadMessages.hasError && this.props.fetchAllUnreadMessages !== prevProps.fetchAllUnreadMessages) {
+            this.setState({
+                displayMessageCount: true,
+            }, () => {
+                this.getUnreadMessagesCount();
+            })
+        }
+
+        const errorMessage = this.getErrorMessage(prevProps);
+        const successMessage = this.getSuccessMessage(prevProps)
+
+        if (errorMessage) {
+            toast.error(<ToastComponent.errorToast text={errorMessage} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+        } else if (successMessage) {
+            toast.success(<ToastComponent.successToast text={successMessage} />, {
+                position: toast.POSITION.TOP_RIGHT
+            });
+        }
     }
 
-    userLoggedIn = (username) => {
-        this.setState({ username })
+    getSuccessMessage(prevProps) {
+        if (!this.props.fetchAllUnreadMessages.hasError && this.props.fetchAllUnreadMessages.message && this.props.fetchAllUnreadMessages !== prevProps.fetchAllUnreadMessages) {
+            return this.props.fetchAllLogs.message;
+        }
+        else if (!this.props.searchResultsData.hasError && this.props.searchResultsData.message && this.props.searchResultsData !== prevProps.searchResultsData) {
+            return this.props.searchResultsData.message;
+        }
+
+        return null;
+    }
+
+    getErrorMessage(prevProps) {
+        if (this.props.fetchAllUnreadMessages.hasError && prevProps.fetchAllUnreadMessages.error !== this.props.fetchAllUnreadMessages.error) {
+            return this.props.fetchAllUnreadMessages.message || 'Server Error';
+        }
+        else if (this.props.searchResultsData.hasError && prevProps.searchResultsData.error !== this.props.searchResultsData.error) {
+            return this.props.searchResultsData.message || 'Server Error';
+        }
+
+        return null;
     }
 
     searchFriend(event) {
         event.preventDefault();
 
-        this.props.history.push({
-            pathname: "/home/users/search",
-            state: {
-                search: this.state.search
-            }
-        })
-    }
+        const loggedInUserId = this.props.loggedInUserData.id;
+        const search = this.state.search;
 
-    handleChange(event) {
-        event.preventDefault();
-        const { name, value } = event.target
-
-        this.setState({
-            [name]: value
-        })
+        this.props.searchResult(loggedInUserId, search);
+        return this.props.history.push({ pathname: "/home/users/search" });
     }
 
     onChangeHandler(event) {
@@ -73,35 +100,15 @@ export default class Navbar extends Component {
             return;
         }
 
-        requester.get('/message/friend', (response) => {
-            if (response) {
-                this.setState({
-                    allUnreadMessages: response,
-                    displayMessageCount: false,
-                }, () => {
-                    this.changeMessaboxVisibility()
-                    this.getUnreadMessagesCount()
-                })
-            } else {
-                toast.error(<ToastComponent.errorToast text={response.message} />, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-            }
-        }).catch(err => {
-            toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-                position: toast.POSITION.TOP_RIGHT
-            });
-
-            if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-                localStorage.clear();
-                this.props.history.push('/login');
-            }
-        })
+        this.props.loadAllUnreadMessages();
+        this.setState({ showDropdown: 'show-dropdown' })
     }
 
     triggerMessageLoad = (id, firstName, lastName, profilePicUrl, event) => {
         this.changeMessaboxVisibility();
-        observer.trigger(observer.events.loadMessages, { id, firstName, lastName, profilePicUrl });
+        const userData = { id, firstName, lastName, profilePicUrl }
+        this.props.triggerMessageLoad(userData);
+
     }
 
     handleBlur = () => (event) => {
@@ -111,6 +118,7 @@ export default class Navbar extends Component {
     }
 
     changeMessaboxVisibility = () => {
+        debugger;
         if (this.state.showDropdown === '') {
             this.setState({ showDropdown: 'show-dropdown' })
         } else {
@@ -119,14 +127,20 @@ export default class Navbar extends Component {
     }
 
     getUnreadMessagesCount = () => {
-        let count = this.state.allUnreadMessages.reduce((a, b) => {
+        let count = this.props.allUnreadMessages.reduce((a, b) => {
             return a + b.count;
         }, 0)
-
+      
         if (count > 0) {
             this.setState({
                 unreadMessages: count,
                 displayMessageCount: true,
+            })
+        } else {
+            this.setState({
+                unreadMessages: 0,
+                displayMessageCount: false,
+
             })
         }
     }
@@ -138,7 +152,9 @@ export default class Navbar extends Component {
 
         const { loggedIn, onLogout } = this.props;
         const showDropdown = this.state.showDropdown;
-        let pathname = this.props.location.pathname !== "/" && this.props.location.pathname !== "/home/users/search";
+        let pathname = this.props.location.pathname !== "/";
+
+        const isFrendRequestsArrEmpty = this.props.friendRequestsArr.length > 0
 
         let messages = (
             <Fragment>
@@ -150,11 +166,11 @@ export default class Navbar extends Component {
             </Fragment>
         )
 
-        if (this.state.allUnreadMessages.length > 0) {
+        if (this.props.allUnreadMessages.length > 0) {
             messages = (
                 <Fragment>
                     <div className="messagebox-navbar-container">
-                        {this.state.allUnreadMessages.map(message =>
+                        {this.props.allUnreadMessages.map(message =>
                             <MessageNavBarRow
                                 key={message.id}
                                 {...message}
@@ -165,8 +181,6 @@ export default class Navbar extends Component {
                     </div>
                 </Fragment>
             )
-
-
         }
 
         return (
@@ -209,6 +223,7 @@ export default class Navbar extends Component {
                                         <li className="nav-item">
                                             <NavLink exact to={`/home/friendRequests/${userId}`} className="nav-link tooltipCustom">
                                                 <i className="fas fa-user-friends"></i>
+                                                {isFrendRequestsArrEmpty && <span id="icon-badge-container-friend-requests">{this.props.friendRequestsArr.length}</span>}
                                                 {/* <i id="icon-badge-container-friend-requests" data-count="2" className="fas fa-user-friends"></i> */}
                                                 <span className="tooltiptextCustom" id="friend-requests-tooltip">Friend Requests</span>
                                             </NavLink>
@@ -220,12 +235,12 @@ export default class Navbar extends Component {
                                             onClick={this.getAllFriendMessages}
                                             onBlur={this.handleBlur('onclick-wrapper')}
                                         >
-                                            {/* <div className="icon-badge-wrapper"> */}
+                                            <div className="icon-badge-wrapper">
                                                 <NavLink className="fas fa-envelope tooltipCustom nav-link" to="#">
                                                     <span className="tooltiptextCustom">Messages</span>
                                                 </NavLink>
-                                                {/* {this.state.displayMessageCount && <span id="icon-badge-container-messages">{this.state.unreadMessages}</span>} */}
-                                            {/* </div> */}
+                                                {this.state.displayMessageCount && <span id="icon-badge-container-messages">{this.state.unreadMessages}</span>}
+                                            </div>
 
                                             <div className={`dropdown-container ${showDropdown}`}>
                                                 <div className="dropdown-messagebox-header" onClick={this.changeHeight}>
@@ -254,5 +269,29 @@ export default class Navbar extends Component {
         )
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        timeLineUserData: state.timeLineUserData,
+        loggedInUserData: state.loggedInUserData,
+
+        fetchAllUnreadMessages: state.fetchAllUnreadMessages,
+        allUnreadMessages: state.fetchAllUnreadMessages.allUnreadMessages,
+
+        searchResultsData: state.searchResults,
+
+        friendRequestsArr: state.findFriends.userWaitingForAcceptingRequest,
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        triggerMessageLoad: (userData) => { dispatch(triggerMessageLoadAction(userData)) },
+        searchResult: (loggedInUserId, search) => { dispatch(searchResultsAction(loggedInUserId, search)) },
+        loadAllUnreadMessages: () => { dispatch(fetchAllUnreadMessagesAction()) },
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar);
 
 

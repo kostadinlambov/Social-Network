@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import { requester, userService } from '../../infrastructure'
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
 import Friend from './Friend';
@@ -18,19 +17,13 @@ class UserSearchResultsPage extends Component {
         super(props)
 
         this.state = {
-            friendsArrSearch: this.props.friendsArrSearch,
-            friendsCandidatesArr: this.props.friendsCandidatesArr,
-            userWaitingForAcceptingRequest: this.props.userWaitingForAcceptingRequest,
-            usersReceivedRequestFromCurrentUser: this.props.usersReceivedRequestFromCurrentUser,
             search: '',
-            userId: userService.getUserId(),
         };
 
         this.addFriend = this.addFriend.bind(this);
         this.confirmRequest = this.confirmRequest.bind(this);
         this.rejectRequest = this.rejectRequest.bind(this);
         this.removeFriend = this.removeFriend.bind(this);
-        this.searchResults = this.searchResults.bind(this);
     }
 
     componentDidMount() {
@@ -40,12 +33,6 @@ class UserSearchResultsPage extends Component {
             this.props.changeAllPictures(loggedInUserId);
             this.props.changeAllFriends(loggedInUserId);
         }
-
-        const search = this.props.location.state.search;
-
-        this.setState({ search, ready: true })
-
-        this.searchResults(search);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -64,10 +51,7 @@ class UserSearchResultsPage extends Component {
     }
 
     getSuccessMessage(prevProps) {
-        if (!this.props.searchResultsData.hasError && this.props.searchResultsData.message && this.props.searchResultsData !== prevProps.searchResultsData) {
-            return this.props.searchResultsData.message;
-        }
-        else if (!this.props.addfriendData.hasError && this.props.addfriendData.message && this.props.addfriendData !== prevProps.addfriendData) {
+        if (!this.props.addfriendData.hasError && this.props.addfriendData.message && this.props.addfriendData !== prevProps.addfriendData) {
             return this.props.addfriendData.message;
         }
         else if (!this.props.cancelRequestData.hasError && this.props.cancelRequestData.message && this.props.cancelRequestData !== prevProps.cancelRequestData) {
@@ -84,10 +68,7 @@ class UserSearchResultsPage extends Component {
     }
 
     getErrorMessage(prevProps) {
-        if (this.props.searchResultsData.hasError && prevProps.searchResultsData.error !== this.props.searchResultsData.error) {
-            return this.props.searchResultsData.message || 'Server Error';
-        }
-        else if (this.props.addfriendData.hasError && prevProps.addfriendData.error !== this.props.addfriendData.error) {
+        if (this.props.addfriendData.hasError && prevProps.addfriendData.error !== this.props.addfriendData.error) {
             return this.props.addfriendData.message || 'Server Error';
         }
         else if (this.props.cancelRequestData.hasError && prevProps.cancelRequestData.error !== this.props.cancelRequestData.error) {
@@ -102,15 +83,6 @@ class UserSearchResultsPage extends Component {
 
         return null;
     }
-
-    searchResults = (search) => {
-        this.setState({
-            search
-        })
-        const loggedInUserId = this.props.loggedInUserData.id;
-        this.props.searchResult(loggedInUserId, search);
-    }
-
 
     addFriend = (friendCandidateId) => {
         const loggedInUserId = this.props.loggedInUserData.id;
@@ -133,13 +105,6 @@ class UserSearchResultsPage extends Component {
     }
 
     render() {
-        const search = this.props.location.state.search;
-
-        if (this.state.search !== search) {
-            this.setState({ search: search },
-                () => this.searchResults(search)
-            );
-        }
 
         const friendsArrLength = this.props.friendsArrSearch.length;
         let friends = '';
@@ -242,7 +207,7 @@ class UserSearchResultsPage extends Component {
         if (!friends && !requests && !friendsCandidates && !remainCandidates) {
             noResult = (
                 <Fragment>
-                    <h2>No results for <span className="App-secondary-color">"{this.state.search}"</span></h2>
+                    <h2>No results for <span className="App-secondary-color">"{this.props.search}"</span></h2>
                     <div className="hr-styles"></div>
                 </Fragment>
             )
@@ -275,7 +240,7 @@ const mapStateToProps = (state) => {
         timeLineUserData: state.timeLineUserData,
         loggedInUserData: state.loggedInUserData,
 
-        searchResultsData: state.searchResults,
+        search: state.searchResults.search,
         friendsArrSearch: state.searchResults.friendsArrSearch,
         friendsCandidatesArr: state.searchResults.friendsCandidatesArr,
         userWaitingForAcceptingRequest: state.searchResults.userWaitingForAcceptingRequest,
@@ -297,7 +262,6 @@ const mapDispatchToProps = (dispatch) => {
         cancelRequest: (loggedInUserId, friendToRejectId) => { dispatch(cancelRequestAction(loggedInUserId, friendToRejectId)) },
         acceptRequest: (loggedInUserId, friendToAcceptId) => { dispatch(confirmRequestAction(loggedInUserId, friendToAcceptId)) },
         deleteFriend: (loggedInUserId, friendToRemoveId) => { dispatch(removeFriendAction(loggedInUserId, friendToRemoveId)) },
-        searchResult: (loggedInUserId, search) => { dispatch(searchResultsAction(loggedInUserId, search)) },
     }
 }
 

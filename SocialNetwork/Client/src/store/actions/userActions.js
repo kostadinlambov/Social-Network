@@ -110,17 +110,6 @@ const fetchLoggedInUserAction = (userId) => {
                 dispatch(fetchLoggedInUserError(error, message, status, path));
             } else {
                 dispatch(fetchLoggedInUserSuccess(response));
-                // dispatch(fetchPicturesAction(userId));
-                // // dispatch(fetchFriendsAction(userId));
-                // dispatch(fetchAllChatFriendsAction(userId));
-
-                // this.setState({
-                //     ...userData, ready: true
-                // }, () => {
-                //     (() => this.loadAllPictures(getUserToShowId))();
-                //     (() => this.loadAllFriends(getUserToShowId))();
-                //     (() => this.loadAllChatFriends())();
-                // })
 
             }
         }).catch(err => {
@@ -419,7 +408,6 @@ const deleteUserAction = (userId) => {
     }
 }
 
-
 // fetchAllUsers
 const fetchAllUsersSuccess = (userArr) => {
     return {
@@ -593,7 +581,7 @@ const removeFriendAction = (loggedInUserId, friendToRemoveId) => {
                 dispatch(removeFriendError(error, message, status, path));
             } else {
                 dispatch(removeFriendSuccess(response, friendToRemoveId));
-           
+                dispatch(fetchAllChatFriendsAction(loggedInUserId));
             }
         }).catch(err => {
             debugger;
@@ -604,7 +592,6 @@ const removeFriendAction = (loggedInUserId, friendToRemoveId) => {
         })
     }
 }
-
 
 // findFriends
 const findFriendsSuccess = (response) => {
@@ -773,6 +760,7 @@ const confirmRequestAction = (loggedInUserId, friendToAcceptId) => {
             } else {
                 dispatch(confirmRequestSuccess(response, friendToAcceptId));
                 dispatch(changeAllFriendsAction(loggedInUserId));
+                dispatch(fetchAllChatFriendsAction(loggedInUserId));
             }
         }).catch(err => {
             if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
@@ -785,10 +773,11 @@ const confirmRequestAction = (loggedInUserId, friendToAcceptId) => {
 
 
 // searchResults
-const searchResultsSuccess = (response) => {
+const searchResultsSuccess = (response, search) => {
     return {
         type: SEARCH_RESULTS_SUCCESS,
-        payload: response
+        payload: response,
+        search: search,
     }
 }
 
@@ -816,7 +805,7 @@ const searchResultsAction = (loggedInUserId, search) => {
                 const { error, message, status, path } = response;
                 dispatch(searchResultsError(error, message, status, path));
             } else {
-                dispatch(searchResultsSuccess(response));
+                dispatch(searchResultsSuccess(response, search));
             }
         }).catch(err => {
             if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {

@@ -28,7 +28,8 @@ import FriendsGallery from './FriendsGallery';
 
 import { connect } from 'react-redux';
 import { fetchPicturesAction } from '../../store/actions/pictureActions';
-import { fetchLoggedInUserAction, fetchTimeLineUserAction, fetchAllFriendsAction } from '../../store/actions/userActions';
+import { fetchAllUnreadMessagesAction } from '../../store/actions/messageActions';
+import { fetchLoggedInUserAction, fetchTimeLineUserAction, fetchAllFriendsAction, findFriendsAction } from '../../store/actions/userActions';
 
 
 // const UserSearchResultsPage = lazy(() => import('../user/UserSearchResultsPage'));
@@ -48,22 +49,12 @@ class HomePage extends Component {
         super(props)
 
         this.state = {
-            authorities: [],
-            picturesArr: [],
-            friendsArr: [],
-            friendsArrSearch: [],
-            friendsCandidatesArr: [],
-            userWaitingForAcceptingRequest: [],
-            usersReceivedRequestFromCurrentUser: [],
-            friendsChatArr: [],
             ready: false
         }
 
         this.loadTimeLineUserData = this.loadTimeLineUserData.bind(this);
         this.loadAllPictures = this.loadAllPictures.bind(this);
         this.loadAllFriends = this.loadAllFriends.bind(this);
-        // this.searchResults = this.searchResults.bind(this);
-        // this.findFriends = this.findFriends.bind(this);
     }
 
     componentDidMount() {
@@ -75,6 +66,8 @@ class HomePage extends Component {
         this.loadTimeLineUserData(timeLineUserId);
         this.loadAllPictures(timeLineUserId);
         this.loadAllFriends(timeLineUserId);
+        this.props.findFriends(userId);
+        this.props.loadAllUnreadMessages();
 
         this.setState({ ready: true });
     }
@@ -139,33 +132,6 @@ class HomePage extends Component {
         this.props.loadAllFriends(userId);
     }
 
-    // searchResults = (userId, search) => {
-    //     this.setState({
-    //         search
-    //     })
-
-    //     const requestBody = { loggedInUserId: userId, search: search }
-
-    //     requester.post('/relationship/search', requestBody, (response) => {
-    //         this.setState({
-    //             friendsArrSearch: response.filter(user => user.status === 1),
-    //             friendsCandidatesArr: response.filter(user => user.status !== 0 && user.status !== 1),
-    //             userWaitingForAcceptingRequest: response.filter(user => user.status === 0 && user.starterOfAction === true),
-    //             usersReceivedRequestFromCurrentUser: response.filter(user => user.status === 0 && user.starterOfAction === false),
-    //             ready: true
-    //         })
-    //     }).catch(err => {
-    //         toast.error(<ToastComponent.errorToast text={`Internal Server Error: ${err.message}`} />, {
-    //             position: toast.POSITION.TOP_RIGHT
-    //         });
-
-    //         if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
-    //             localStorage.clear();
-    //             this.props.history.push('/login');
-    //         }
-    //     })
-    // }
-
     render() {
         const loading = this.props.fetchPictures.loading || this.props.timeLineUserData.loading || this.props.loggedInUserData.loading || this.props.fetchAllFriends.loading;
         if (!this.state.ready || loading) {
@@ -196,10 +162,12 @@ class HomePage extends Component {
                                 {loggedIn && <Route exact path="/home/friends/:id" component={UserFriendsAllPage} />}
                                 {loggedIn && <Route exact path="/home/findFriends/:id" component={UserFindFriendsPage} />}
                                 {loggedIn && <Route exact path="/home/friendRequests/:id" component={UserFriendRequestsPage} />}
-                                {loggedIn && <Route exact path="/home/users/search/" component={UserSearchResultsPage}  />}
-                                {/* 
-                                {/* <Route exact path="/error" component={ErrorPage} />
-                                <Route render={(props) => <Redirect to="/" {...props} />} /> */}
+                                {loggedIn && <Route exact path="/home/users/search/" component={UserSearchResultsPage} />}
+
+                                <Route exact path="/error" component={ErrorPage} />
+                                <Route component={ErrorPage} />
+
+                                {/* <Route render={(props) => <Redirect to="/error" {...props} />} /> */}
                             </Switch>
                         </Suspense>
                     </section>
@@ -234,6 +202,8 @@ const mapDispatchToProps = (dispatch) => {
         loadLoggedInUserData: (userId) => { dispatch(fetchLoggedInUserAction(userId)) },
         loadTimelineUserData: (userId) => { dispatch(fetchTimeLineUserAction(userId)) },
         loadAllFriends: (userId) => { dispatch(fetchAllFriendsAction(userId)) },
+        findFriends: (userId) => { dispatch(findFriendsAction(userId)) },
+        loadAllUnreadMessages: () => { dispatch(fetchAllUnreadMessagesAction()) },
     }
 }
 

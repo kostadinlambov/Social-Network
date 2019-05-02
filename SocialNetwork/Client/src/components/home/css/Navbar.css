@@ -33,7 +33,7 @@
     position:relative;
 }
 
-#icon-badge-container-friend-requests:after{
+/* #icon-badge-container-friend-requests:after{
     display: block;
     content: attr(data-count);
     position: absolute;
@@ -43,9 +43,21 @@
     text-align: center;
     color: white;
     padding: 2px 4px;
+} */
+
+#icon-badge-container-friend-requests{
+    display: block;
+    position: absolute;
+    background-color: rgb(246, 84, 50);
+    font-size: 0.8rem;
+    bottom: 26px;
+    left: 30px;
+    text-align: center;
+    color: white;
+    padding: 1px 4px;
 }
 
-#icon-badge-container-messages{
+#icon-badge-container-messages {
     display: block;
     position: absolute;
     background-color: rgb(246, 84, 50);
@@ -57,7 +69,7 @@
     padding: 1px 4px;
 }
 
-#icon-badge-container-friend-requests:hover:after, 
+#icon-badge-container-friend-requests:hover, 
 #icon-badge-container-messages:hover {
     background-color: rgb(167, 28, 19);
     transition: background-color 1s ease-in-out;

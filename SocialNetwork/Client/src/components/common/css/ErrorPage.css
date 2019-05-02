@@ -1,0 +1,40 @@
+.error-page-content-section {
+    width: 100%;
+    border-radius: 5px;
+    box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.3);
+    background: white;
+}
+
+.error-page-content-section-unauthorized{
+    width: 80%;
+    margin: 10rem auto;
+    padding-top: 3rem ;
+    padding-bottom: 2rem;
+}
+
+.error-page-container{
+    width: 90%;
+    margin: auto;
+}
+
+.image-wrapper{
+    width: 100%;
+    margin: auto;
+}
+
+img{
+    width: 100%;
+}
+
+/* @media  screen and (max-width: 1300px){
+    .error-page-content-section{
+        margin-top: 10rem;
+     }
+ }
+
+ @media  screen and (max-width: 800px){
+    .error-page-content-section{
+        margin-top: 5rem;
+        width: 100%;
+     }
+ } */

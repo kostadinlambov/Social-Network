@@ -1,0 +1,13 @@
+
+@media  screen and (max-width: 1300px){
+    .start-page-margin{
+        margin-top: 8rem;
+     }
+ }
+
+ @media  screen and (max-width: 800px){
+    .start-page-margin{
+        margin-top: 5rem;
+        width: 100%;
+     }
+ }

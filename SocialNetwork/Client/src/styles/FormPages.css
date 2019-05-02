@@ -97,5 +97,22 @@ input.error:focus{
     background: #eee;
  }
 
+ @media  screen and (max-width: 1300px){
+    .login-form-content-section, .register-form-content-section{
+        margin-top: 10rem;
+     }
+
+     .login-form-content-section{
+        width: 50%;
+     }
+ }
+
+ @media  screen and (max-width: 800px){
+    .login-form-content-section, .register-form-content-section{
+        margin-top: 5rem;
+        width: 100%;
+     }
+ }
+
 
 

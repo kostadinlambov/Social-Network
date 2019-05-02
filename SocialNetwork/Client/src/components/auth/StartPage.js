@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import userService from '../../infrastructure/userService';
+import './css/StartPage.css'
 
 const StartPage = () => {
     const isAdmin = userService.isAdmin();
@@ -11,8 +12,8 @@ const StartPage = () => {
     if (!localStorage.getItem('token')) {
         StartPageView = (
             <div>
-                <div className="container text-center ">
-                    <div className="jumbotron bg-light text-dark text-center mb-0 mt-5 mx-auto" style={{ 'boxShadow': '0 0 14px 1px rgba(0, 0, 0, 0.3)' }}>
+                <div className="container text-center start-page-margin">
+                    <div className="jumbotron bg-light text-dark text-center mb-0 mt-5 mx-auto " style={{ 'boxShadow': '0 0 14px 1px rgba(0, 0, 0, 0.3)' }}>
                         <h2 className="h1 h1-responsive">Welcome to SoftUni Social Network!</h2>
                         <div className="hr-styles" style={{'width': '70%'}}></div>
                         <p className="lead" style={{'marginBottom': '1.5rem'}}>Please <NavLink className="text-info" exact to="/login">Login</NavLink> or <NavLink className="text-info" exact to="/register">Register</NavLink> if you don't have an account.</p>
@@ -28,7 +29,7 @@ const StartPage = () => {
     } else {
         StartPageView = (
             <div>
-                <div className="container text-center ">
+                <div className="container text-center start-page-margin">
                     <div className="jumbotron bg-light text-dark text-center mb-0 mt-5" style={{ 'boxShadow': '0 0 14px 1px rgba(0, 0, 0, 0.3)' }}>
                         <h3 className="md-display-5 h3 h3-responsive mb-3">Hello {userService.getUsername()}!</h3>
                         <div className="hr-styles" style={{'width': '80%'}}></div>

@@ -60,6 +60,9 @@ class UserFriendsAllPage extends Component {
 
     removeFriend = (friendToRemoveId, event) => {
         const loggedInUserId = this.props.loggedInUserData.id
+        console.log('friendToRemoveId: ', friendToRemoveId)
+        console.log('loggedInUserId: ', loggedInUserId)
+        debugger;
         this.props.deleteFriend(loggedInUserId, friendToRemoveId);
     }
 
@@ -80,7 +83,7 @@ class UserFriendsAllPage extends Component {
                                         isTheCurrentLoggedInUser ?
                                             <Friend
                                                 key={friend.id}
-                                                {...this.props}
+                                                // {...this.props}
                                                 {...friend}
                                                 firstButtonLink={`/home/profile/${friend.id}`}
                                                 secondButtonLink={`/`}
@@ -91,7 +94,7 @@ class UserFriendsAllPage extends Component {
                                             :
                                             <Friend
                                                 key={friend.id}
-                                                {...this.props}
+                                                // {...this.props}
                                                 {...friend}
                                                 firstButtonLink={`/home/profile/${friend.id}`}
                                                 secondButtonLink={`/home/comments/${this.props.loggedInUserData.id}`}
@@ -104,7 +107,7 @@ class UserFriendsAllPage extends Component {
                                         {
                                             isTheCurrentLoggedInUser ?
                                                 (<button className="button view-activity">
-                                                    <NavLink to={`/home/findFriends/${this.props.loggedInUserData.id}/findFriends`}>FIND FRIENDS</NavLink>
+                                                    <NavLink to={`/home/findFriends/${this.props.loggedInUserData.id}`}>FIND FRIENDS</NavLink>
                                                 </button>)
                                                 : null
                                         }
