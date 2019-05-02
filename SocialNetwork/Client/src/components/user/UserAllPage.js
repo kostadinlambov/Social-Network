@@ -11,7 +11,6 @@ import {
 } from '../../store/actions/userActions';
 import { changeAllPicturesAction } from '../../store/actions/pictureActions';
 
-
 class UserAllPage extends Component {
     constructor(props) {
         super(props)
@@ -40,13 +39,6 @@ class UserAllPage extends Component {
     componentDidUpdate(prevProps, prevState) {
         const loading = this.props.fetchAllUsers.loading ||
             this.props.promoteUserData.loading || this.props.demoteUserData.loading;
-
-        // console.log('loading: ', loading);
-        // console.log('this.props: ', this.props);
-        // console.log('prevProps: ', prevProps);
-        // console.log('this.state: ', this.state);
-        // console.log('prevState: ', prevState);
-        // debugger;
 
         const errorMessage = this.getErrorMessage(prevProps);
         const successMessage = this.getSuccessMessage(prevProps)

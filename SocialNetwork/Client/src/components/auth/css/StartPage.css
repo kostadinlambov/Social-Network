@@ -1,13 +1,21 @@
+.jumbo-wrapper {
+    background-color: rgba(238, 238, 238, 0.95) !important;
+    background: url('../../../assets/images/SoftUniFoundation_Logo.png');
+    background-repeat: none;
+    background-size: cover;
+    /* background-position: center; */
+    background-blend-mode: color;
+}
 
-@media  screen and (max-width: 1300px){
-    .start-page-margin{
+@media screen and (max-width: 1300px) {
+    .start-page-margin {
         margin-top: 8rem;
-     }
- }
+    }
+}
 
- @media  screen and (max-width: 800px){
-    .start-page-margin{
+@media screen and (max-width: 800px) {
+    .start-page-margin {
         margin-top: 5rem;
         width: 100%;
-     }
- }
+    }
+}

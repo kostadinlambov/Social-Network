@@ -1,5 +1,4 @@
 import React, { Fragment, Component } from 'react';
-import { userService } from '../../infrastructure/'
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common';
 import Post from './Post';

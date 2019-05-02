@@ -66,7 +66,6 @@ class UserFindFriendsPage extends Component {
             return this.props.cancelRequestData.message;
         }
         else if (!this.props.confirmRequestData.hasError && this.props.confirmRequestData.message && this.props.confirmRequestData !== prevProps.confirmRequestData) {
-            // this.props.changeAllFriends(this.props.loggedInUserData.id);
             return this.props.confirmRequestData.message;
         }
 

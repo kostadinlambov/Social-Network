@@ -42,7 +42,7 @@ class UserProfilePage extends Component {
 
     render = () => {
         let timeLineUserRole;
-        if (this.props.timeLineUser.authorities[0]) {
+        if (this.props.timeLineUser.authorities) {
             timeLineUserRole = this.props.timeLineUser.authorities[0]['authority'];
         }
 

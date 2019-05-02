@@ -1,23 +1,8 @@
 import React, { Component, Fragment, Suspense, lazy } from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common';
-import { requester, userService } from '../../infrastructure/';
-import placeholder_user_image from '../../assets/images/placeholder.png';
-import default_background_image from '../../assets/images/default-background-image.jpg';
-
-import MessageBox from './MessageBox';
-import UserSearchResultsPage from '../../components/user/UserSearchResultsPage';
-import UserProfilePage from '../../components/user/UserProfilePage';
-import UserFriendsAllPage from '../../components/user/UserFriendsAllPage';
-import UserFindFriendsPage from '../../components/user/UserFindFriendsPage';
-import UserFriendRequestsPage from '../../components/user/UserFriendRequestsPage';
-import UserAllPage from '../../components/user/UserAllPage';
-import UserEditPage from '../../components/user/UserEditPage';
-import UserDeletePage from '../../components/user/UserDeletePage';
-import UserGalleryPage from '../../components/user/UserGalleryPage';
-import UserLogsPage from '../../components/user/UserLogsPage';
-import ErrorPage from '../../components/common/ErrorPage';
+import {userService } from '../../infrastructure/';
 
 import TimeLine from './TimeLine';
 import HeaderSection from './HeaderSection';
@@ -31,18 +16,18 @@ import { fetchPicturesAction } from '../../store/actions/pictureActions';
 import { fetchAllUnreadMessagesAction } from '../../store/actions/messageActions';
 import { fetchLoggedInUserAction, fetchTimeLineUserAction, fetchAllFriendsAction, findFriendsAction } from '../../store/actions/userActions';
 
-
-// const UserSearchResultsPage = lazy(() => import('../user/UserSearchResultsPage'));
-// const UserProfilePage = lazy(() => import('../user/UserProfilePage'));
-// const UserFriendsAllPage = lazy(() => import('../user/UserFriendsAllPage'));
-// const UserFindFriendsPage = lazy(() => import('../user/UserFindFriendsPage'));
-// const UserAllPage = lazy(() => import('../user/UserAllPage'));
-// const UserEditPage = lazy(() => import('../user/UserE../user/UserEditPage.oldt UserDeletePage = lazy(() => import('../user/UserDeletePage'));
-// const UserGalleryPage = lazy(() => import('../user/UserGalleryPage'));
-// const UserLogsPage = lazy(() => import('../user/UserLogsPage'));
-// const MessageBox = lazy(() => import('./MessageBox'));
-
-// const ErrorPage = lazy(() => import('../common/ErrorPage'));
+const UserSearchResultsPage = lazy(() => import('../user/UserSearchResultsPage'));
+const UserProfilePage = lazy(() => import('../user/UserProfilePage'));
+const UserFriendsAllPage = lazy(() => import('../user/UserFriendsAllPage'));
+const UserFindFriendsPage = lazy(() => import('../user/UserFindFriendsPage'));
+const UserFriendRequestsPage = lazy(() => import('../user/UserFriendRequestsPage'));
+const UserAllPage = lazy(() => import('../user/UserAllPage'));
+const UserEditPage = lazy(() => import('../../components/user/UserEditPage'));
+const UserDeletePage = lazy(() => import('../../components/user/UserDeletePage'));
+const UserGalleryPage = lazy(() => import('../user/UserGalleryPage'));
+const UserLogsPage = lazy(() => import('../user/UserLogsPage'));
+const MessageBox = lazy(() => import('./MessageBox'));
+const ErrorPage = lazy(() => import('../common/ErrorPage'));
 
 class HomePage extends Component {
     constructor(props) {
@@ -58,7 +43,6 @@ class HomePage extends Component {
     }
 
     componentDidMount() {
-        console.log("Home componentDidMount")
         const userId = userService.getUserId();
         const timeLineUserId = userService.getUserId();
 
@@ -135,8 +119,7 @@ class HomePage extends Component {
     render() {
         const loading = this.props.fetchPictures.loading || this.props.timeLineUserData.loading || this.props.loggedInUserData.loading || this.props.fetchAllFriends.loading;
         if (!this.state.ready || loading) {
-            // return null;
-            return <h1 className="text-center pt-5 mt-5">Loading HomePage...</h1>
+            // return <h1 className="text-center pt-5 mt-5">Loading...</h1>
         }
 
         const isRoot = userService.isRoot();
@@ -150,7 +133,7 @@ class HomePage extends Component {
                 <main className="site-content">
                     <section className="main-section">
                         <TimeLine {...this.props.timeLineUserData} />
-                        <Suspense fallback={<h1 className="text-center pt-5 mt-5">Loading Falback HomePage...</h1>}>
+                        <Suspense fallback={<h1 className="text-center pt-5 mt-5">Loading...</h1>}>
                             <Switch>
                                 {loggedIn && <Route exact path="/home/comments/:id" component={MainSharedContent} />}
                                 {loggedIn && <Route exact path="/home/profile/:id" component={UserProfilePage} />}
@@ -166,8 +149,6 @@ class HomePage extends Component {
 
                                 <Route exact path="/error" component={ErrorPage} />
                                 <Route component={ErrorPage} />
-
-                                {/* <Route render={(props) => <Redirect to="/error" {...props} />} /> */}
                             </Switch>
                         </Suspense>
                     </section>

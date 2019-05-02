@@ -34,7 +34,6 @@ function ajaxErrorReducer(state = { hasError: false, error: '', message: '', sta
   }
 }
 
-
 export {
   ajaxStatusReducer,
   ajaxErrorReducer

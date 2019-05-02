@@ -61,7 +61,6 @@ const fetchAllChatFriendsAction = (userId) => {
                 dispatch(fetchAllChatFriendsSuccess(response));
             }
         }).catch(err => {
-            debugger;
             if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
                 localStorage.clear();
             }
@@ -122,7 +121,6 @@ const fetchLoggedInUserAction = (userId) => {
 }
 
 // fetchTimeLineUser
-
 const fetchTimeLineUserSuccess = (userData) => {
     return {
         type: FETCH_TIMELINE_USERDATA_SUCCESS,
@@ -251,7 +249,6 @@ const fetchAllFriendsAction = (userId) => {
                 dispatch(fetchAllFriendsSuccess(response));
             }
         }).catch(err => {
-            debugger;
             if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
                 localStorage.clear();
             }
@@ -303,7 +300,6 @@ const changeAllFriendsAction = (userId) => {
                 dispatch(changeAllFriendsSuccess(response));
             }
         }).catch(err => {
-            debugger;
             if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
                 localStorage.clear();
             }
@@ -353,7 +349,6 @@ const updateUserAction = (loggedInUserId, otherProps) => {
                 dispatch(updateUserSuccess(response));
             }
         }).catch(err => {
-            debugger;
             if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
                 localStorage.clear();
             }
@@ -399,7 +394,6 @@ const deleteUserAction = (userId) => {
            
             }
         }).catch(err => {
-            debugger;
             if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
                 localStorage.clear();
             }
@@ -584,7 +578,6 @@ const removeFriendAction = (loggedInUserId, friendToRemoveId) => {
                 dispatch(fetchAllChatFriendsAction(loggedInUserId));
             }
         }).catch(err => {
-            debugger;
             if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
                 localStorage.clear();
             }

@@ -124,6 +124,5 @@ function checkStatus(response) {
         else {
             return response.json();
         }
-
     }
 }

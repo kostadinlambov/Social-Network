@@ -24,7 +24,6 @@ const UserRow = (props) => {
                     </h5>}
                 <h5>
                     <button className="btn App-button-primary  m-1" onClick={props.changeTimeLineUser.bind(this, props.id)} >Profile</button>
-                    {/* <NavLink className="btn App-button-primary m-1" to={`/home/profile/${props.id}`} role="button">Profile</NavLink> */}
                 </h5>
             </td>
         </tr>

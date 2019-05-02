@@ -1,8 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
-import { requester, userService } from '../../infrastructure'
 import { toast } from 'react-toastify';
-import { ToastComponent } from '../common'
+import { ToastComponent } from '../common';
 import Friend from './Friend';
 import './css/UserFriends.css';
 
@@ -60,14 +59,10 @@ class UserFriendsAllPage extends Component {
 
     removeFriend = (friendToRemoveId, event) => {
         const loggedInUserId = this.props.loggedInUserData.id
-        console.log('friendToRemoveId: ', friendToRemoveId)
-        console.log('loggedInUserId: ', loggedInUserId)
-        debugger;
         this.props.deleteFriend(loggedInUserId, friendToRemoveId);
     }
 
     render() {
-
         const isTheCurrentLoggedInUser = (this.props.loggedInUserData.id === this.props.timeLineUserData.id);
 
         return (
@@ -83,7 +78,6 @@ class UserFriendsAllPage extends Component {
                                         isTheCurrentLoggedInUser ?
                                             <Friend
                                                 key={friend.id}
-                                                // {...this.props}
                                                 {...friend}
                                                 firstButtonLink={`/home/profile/${friend.id}`}
                                                 secondButtonLink={`/`}
@@ -94,7 +88,6 @@ class UserFriendsAllPage extends Component {
                                             :
                                             <Friend
                                                 key={friend.id}
-                                                // {...this.props}
                                                 {...friend}
                                                 firstButtonLink={`/home/profile/${friend.id}`}
                                                 secondButtonLink={`/home/comments/${this.props.loggedInUserData.id}`}

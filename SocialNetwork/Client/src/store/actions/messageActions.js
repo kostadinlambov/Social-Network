@@ -40,7 +40,6 @@ const fetchAllMessagesAction = (chatUserId) => {
                 dispatch(fetchAllUnreadMessagesAction());
             }
         }).catch(err => {
-            debugger;
             if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
                 localStorage.clear();
             }
@@ -91,7 +90,6 @@ const fetchAllUnreadMessagesAction = () => {
                 dispatch(fetchAllUnreadMessagesSuccess(response));
             }
         }).catch(err => {
-            debugger;
             if (err.status === 403 && err.message === 'Your JWT token is expired. Please log in!') {
                 localStorage.clear();
             }
@@ -100,7 +98,6 @@ const fetchAllUnreadMessagesAction = () => {
     }
 }
 
-
 // LoadUserMessages and showUserChatBox
 const triggerMessageLoadAction = (userData) => {
     return {
@@ -108,6 +105,5 @@ const triggerMessageLoadAction = (userData) => {
         payload: userData
     }
 }
-
 
 export { fetchAllMessagesAction, addMessageAction, fetchAllUnreadMessagesAction, triggerMessageLoadAction };

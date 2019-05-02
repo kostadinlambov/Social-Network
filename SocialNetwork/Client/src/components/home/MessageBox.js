@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { userService, observer } from '../../infrastructure'
+import { userService } from '../../infrastructure';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common';
 import TextareaAutosize from 'react-autosize-textarea';
@@ -8,8 +8,8 @@ import FriendMessage from './FriendMessage';
 import '../user/css/UserAllPage.css';
 import './css/MessageBox.css';
 import { connect } from 'react-redux';
-import { fetchAllChatFriendsAction, updateUserStatusAction } from '../../store/actions/userActions'
-import { fetchAllMessagesAction, addMessageAction, fetchAllUnreadMessagesAction } from '../../store/actions/messageActions'
+import { fetchAllChatFriendsAction, updateUserStatusAction } from '../../store/actions/userActions';
+import { fetchAllMessagesAction, addMessageAction, fetchAllUnreadMessagesAction } from '../../store/actions/messageActions';
 
 import Stomp from "stompjs";
 import SockJS from "sockjs-client";
@@ -135,7 +135,6 @@ class MessageBox extends Component {
         this.stompClient.connect(headers, (frame) => {
             if (this._isMounted) {
                 this.setState({ clientConnected: true });
-                console.log('this.state.clientConnected: ', this.state.clientConnected);
                 this.stompClient.subscribe("/user/queue/position-update", (message) => {
                     if (message.body) {
                         const messageBody = JSON.parse(message.body);

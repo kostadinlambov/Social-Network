@@ -374,32 +374,3 @@
         overflow: hidden;
     }
 }
-
-/* .chat-container {
-    background: #FFF;
-    border-radius: 0.3rem;
-    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
-    background: white;
-    width: 425px;
-    height: 532px;
-    position: fixed;
-    bottom: 0;
-    right: 368px;
-    z-index: 10;
-    transition: height 1.5s ease-in-out;
-} */
-
-
-/* .messagebox-container {
-    background: #FFF;
-    border-radius: 0.3rem;
-    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
-    background: white;
-    width: 308px;
-    height: 532px;
-    position: fixed;
-    bottom: 0;
-    right: 40px;
-    z-index: 10;
-    transition: height 1.5s ease-in-out;
-} */

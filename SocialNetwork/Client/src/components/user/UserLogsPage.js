@@ -136,6 +136,7 @@ class UserLogsPage extends Component {
             || this.props.clearLogsByUserName.loading || this.props.clearAllLogs.loading;
 
         if (loading) {
+            // return null;
             return <h1 className="text-center pt-5 mt-5">Loading...</h1>
         }
 

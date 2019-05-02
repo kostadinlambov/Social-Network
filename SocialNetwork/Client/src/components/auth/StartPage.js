@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import userService from '../../infrastructure/userService';
-import './css/StartPage.css'
+import './css/StartPage.css';
 
 const StartPage = () => {
     const isAdmin = userService.isAdmin();
@@ -12,11 +12,11 @@ const StartPage = () => {
     if (!localStorage.getItem('token')) {
         StartPageView = (
             <div>
-                <div className="container text-center start-page-margin">
-                    <div className="jumbotron bg-light text-dark text-center mb-0 mt-5 mx-auto " style={{ 'boxShadow': '0 0 14px 1px rgba(0, 0, 0, 0.3)' }}>
+                <div className="container text-center start-page-margin" >
+                    <div className="jumbotron bg-light text-dark text-center mb-0 mt-5 mx-auto jumbo-wrapper" style={{ 'boxShadow': '0 0 14px 1px rgba(0, 0, 0, 0.3)' }}>
                         <h2 className="h1 h1-responsive">Welcome to SoftUni Social Network!</h2>
                         <div className="hr-styles" style={{'width': '70%'}}></div>
-                        <p className="lead" style={{'marginBottom': '1.5rem'}}>Please <NavLink className="text-info" exact to="/login">Login</NavLink> or <NavLink className="text-info" exact to="/register">Register</NavLink> if you don't have an account.</p>
+                        <p className="lead" style={{'marginBottom': '1.5rem', 'fontWeight': '600'}}>Please <NavLink className="text-info" exact to="/login">Login</NavLink> or <NavLink className="text-info" exact to="/register">Register</NavLink> if you don't have an account.</p>
                         <div className="hr-styles" style={{'width': '70%'}}></div>
                         <p className="lead">
                             <NavLink className="btn App-button-primary btn-lg m-3" to="/login" role="button">Login</NavLink>
@@ -30,7 +30,7 @@ const StartPage = () => {
         StartPageView = (
             <div>
                 <div className="container text-center start-page-margin">
-                    <div className="jumbotron bg-light text-dark text-center mb-0 mt-5" style={{ 'boxShadow': '0 0 14px 1px rgba(0, 0, 0, 0.3)' }}>
+                    <div className="jumbotron bg-light text-dark text-center mb-0 mt-5 jumbo-wrapper" style={{ 'boxShadow': '0 0 14px 1px rgba(0, 0, 0, 0.3)' }}>
                         <h3 className="md-display-5 h3 h3-responsive mb-3">Hello {userService.getUsername()}!</h3>
                         <div className="hr-styles" style={{'width': '80%'}}></div>
                         <h2 className="h1 h1-responsive">Welcome to SoftUni Social Network!</h2>

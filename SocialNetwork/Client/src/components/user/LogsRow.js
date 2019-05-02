@@ -3,7 +3,6 @@ import { requester } from '../../infrastructure'
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
 
-
 export default class UserRow extends Component {
     constructor(props) {
         super(props)

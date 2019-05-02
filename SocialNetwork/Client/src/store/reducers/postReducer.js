@@ -5,6 +5,7 @@ import {
     CREATE_POST_SUCCESS, CREATE_POST_BEGIN, CREATE_POST_ERROR
 } from '../actions/actionTypes';
 
+// createPostReducer
 const initialStateCreatePost = {
     hasError: false,
     error: '',
@@ -48,6 +49,7 @@ const createPostReducer = (state = initialStateCreatePost, action) => {
     }
 }
 
+// fetchAllPostsReducer
 const initialStateAllPosts = {
     allPostsArr: [],
     hasError: false,
@@ -104,6 +106,7 @@ const initialStateRemovePost = {
     loading: false,
 }
 
+// removePostReducer
 const removePostReducer = (state = initialStateRemovePost, action) => {
     switch (action.type) {
         case REMOVE_POST_BEGIN:
@@ -147,6 +150,7 @@ const initialStateAddLikePost = {
     loading: false,
 }
 
+// addLikePostReducer
 const addLikePostReducer = (state = initialStateAddLikePost, action) => {
     switch (action.type) {
         case ADDLIKE_POST_BEGIN:

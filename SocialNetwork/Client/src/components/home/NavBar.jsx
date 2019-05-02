@@ -108,7 +108,6 @@ class Navbar extends Component {
         this.changeMessaboxVisibility();
         const userData = { id, firstName, lastName, profilePicUrl }
         this.props.triggerMessageLoad(userData);
-
     }
 
     handleBlur = () => (event) => {
@@ -118,7 +117,6 @@ class Navbar extends Component {
     }
 
     changeMessaboxVisibility = () => {
-        debugger;
         if (this.state.showDropdown === '') {
             this.setState({ showDropdown: 'show-dropdown' })
         } else {

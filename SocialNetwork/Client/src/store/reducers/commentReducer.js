@@ -5,6 +5,7 @@ import {
 } from '../actions/actionTypes';
 
 
+// createCommentReducer
 const initialStateCreateComment = {
     hasError: false,
     error: '',
@@ -48,6 +49,7 @@ const createCommentReducer = (state = initialStateCreateComment, action) => {
     }
 }
 
+// removeCommentReducer
 const initialStateRemoveComment = {
     hasError: false,
     error: '',
@@ -91,6 +93,7 @@ const removeCommentReducer = (state = initialStateRemoveComment, action) => {
     }
 }
 
+// addLikeCommentReducer
 const initialStateAddLikeComment = {
     hasError: false,
     error: '',

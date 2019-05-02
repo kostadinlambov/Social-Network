@@ -11,12 +11,8 @@ export default class ErrorPage extends Component {
     }
     render = () => {
         let isAuthenticated = userService.isAuthenticated();
-
         const errorClass = isAuthenticated ? '': 'error-page-content-section-unauthorized';
         
-        console.log('isAuthenticated: ', isAuthenticated)
-        console.log('errorClass: ', errorClass)
-
         return (
             <article className="main-article-shared-content">
                 <section className={`error-page-content-section ${errorClass}`}>
@@ -49,9 +45,5 @@ export default class ErrorPage extends Component {
             </article>
         )
     }
-
-
-
-
 }
 

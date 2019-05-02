@@ -4,7 +4,6 @@
     width: 100%;
 }
 
-
 .main-article-comments-container {
     display: flex;
     justify-content: start;
@@ -38,7 +37,6 @@ main .main-article-shared-content-image:before {
     padding-top: 100%;
 }
 
-/* // .l img { */
 .main-article-shared-content-image .l {
     display: block;
     position: absolute;

@@ -1085,24 +1085,29 @@ const setSearchResultsSuccessState = (state, response, search) => {
 
 const searchResultsSendUserRequest = (state, friendCandidateId) => {
     const userToAddIndex = state.friendsCandidatesArr.findIndex(user => user.id === friendCandidateId);
-    const userToAdd = state.friendsCandidatesArr[userToAddIndex];
 
-    const friendsCandidatesArr = state.friendsCandidatesArr.filter(user => user.id !== friendCandidateId);
-    const usersReceivedRequestFromCurrentUser = [...state.usersReceivedRequestFromCurrentUser, userToAdd]
+    if (userToAddIndex > -1) {
+        const userToAdd = state.friendsCandidatesArr[userToAddIndex];
 
-    return Object.assign({}, state, {
-        friendsArrSearch: state.friendsArrSearch.slice(),
-        friendsCandidatesArr: friendsCandidatesArr,
-        userWaitingForAcceptingRequest: state.userWaitingForAcceptingRequest.slice(),
-        usersReceivedRequestFromCurrentUser: usersReceivedRequestFromCurrentUser,
-        search: state.search,
-        hasError: false,
-        error: '',
-        message: '',
-        status: '',
-        path: '',
-        loading: false,
-    })
+        const friendsCandidatesArr = state.friendsCandidatesArr.filter(user => user.id !== friendCandidateId);
+        const usersReceivedRequestFromCurrentUser = [...state.usersReceivedRequestFromCurrentUser, userToAdd]
+
+        return Object.assign({}, state, {
+            friendsArrSearch: state.friendsArrSearch.slice(),
+            friendsCandidatesArr: friendsCandidatesArr,
+            userWaitingForAcceptingRequest: state.userWaitingForAcceptingRequest.slice(),
+            usersReceivedRequestFromCurrentUser: usersReceivedRequestFromCurrentUser,
+            search: state.search,
+            hasError: false,
+            error: '',
+            message: '',
+            status: '',
+            path: '',
+            loading: false,
+        })
+    } else {
+        return state;
+    }
 
 }
 
@@ -1145,24 +1150,29 @@ const searchResultsConfirmRequest = (state, friendToAcceptId) => {
     let friendsArrSearch = state.friendsArrSearch.slice();
 
     const userToAcceptIndex = state.userWaitingForAcceptingRequest.findIndex(user => user.id === friendToAcceptId);
-    const userToAccept = state.userWaitingForAcceptingRequest[userToAcceptIndex];
 
-    friendsArrSearch = [...friendsArrSearch, userToAccept];
-    const userWaitingForAcceptingRequest = state.userWaitingForAcceptingRequest.filter(user => user.id !== friendToAcceptId);
+    if (userToAcceptIndex > -1) {
+        const userToAccept = state.userWaitingForAcceptingRequest[userToAcceptIndex];
 
-    return Object.assign({}, state, {
-        friendsArrSearch,
-        friendsCandidatesArr: state.friendsCandidatesArr.slice(),
-        userWaitingForAcceptingRequest,
-        usersReceivedRequestFromCurrentUser: state.usersReceivedRequestFromCurrentUser.slice(),
-        search: state.search,
-        hasError: false,
-        error: '',
-        message: '',
-        status: '',
-        path: '',
-        loading: false,
-    })
+        friendsArrSearch = [...friendsArrSearch, userToAccept];
+        const userWaitingForAcceptingRequest = state.userWaitingForAcceptingRequest.filter(user => user.id !== friendToAcceptId);
+
+        return Object.assign({}, state, {
+            friendsArrSearch,
+            friendsCandidatesArr: state.friendsCandidatesArr.slice(),
+            userWaitingForAcceptingRequest,
+            usersReceivedRequestFromCurrentUser: state.usersReceivedRequestFromCurrentUser.slice(),
+            search: state.search,
+            hasError: false,
+            error: '',
+            message: '',
+            status: '',
+            path: '',
+            loading: false,
+        })
+    } else {
+        return state;
+    }
 }
 
 const searchResultsRemoveFriend = (state, friendToRemoveId) => {
@@ -1189,7 +1199,7 @@ const searchResultsRemoveFriend = (state, friendToRemoveId) => {
             path: '',
             loading: false,
         })
-    }else{
+    } else {
         return state;
     }
 

@@ -6,7 +6,6 @@ import {
     CHANGE_PICTURES_SUCCESS, CHANGE_PICTURES_BEGIN, CHANGE_PICTURES_ERROR, UPDATE_PICTURES,
 } from './actionTypes';
 
-
 // addPicture
 function addPictureSuccess(response) {
     return {
@@ -50,7 +49,6 @@ function addPicturesAction(data, timeLineUserId) {
         })
     }
 };
-
 
 // removePicture
 function removePictureSuccess(response) {

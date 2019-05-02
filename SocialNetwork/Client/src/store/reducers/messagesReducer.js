@@ -4,6 +4,7 @@ import {
     LOAD_USER_MESSAGES,
 } from '../actions/actionTypes';
 
+// fetchAllMessagesReducer
 const initialStateAllChatFriends = {
     allMessagesArr: [],
     hasError: false,
@@ -112,7 +113,6 @@ function fetchAllUnreadMessagesReducer(state = initialStateAllUnreadMessages, ac
 }
 
 // triggerMessageLoadAction
-
 function triggerMessageLoadReducer(state = {}, action) {
     switch (action.type) {
         case LOAD_USER_MESSAGES:
@@ -121,7 +121,6 @@ function triggerMessageLoadReducer(state = {}, action) {
             return state;
     }
 }
-
 
 export {
     fetchAllMessagesReducer, fetchAllUnreadMessagesReducer, triggerMessageLoadReducer,

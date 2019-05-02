@@ -74,8 +74,7 @@
         font-size: 0.6rem;
     }
 
-    /* // main */
-
+    /*  main */
     main .main-article-shared-content-header{
         box-shadow:none;
     }
@@ -84,12 +83,6 @@
     main .article-friends, 
     main .aside-article-photos {
         margin-bottom: 0;
-        /* // box-shadow:none; */
-    }
-
-    main .aside-article-photos, 
-    main .aside-article-friends{
-        /* padding: 0; */
     }
 
     main .aside-article-header {
