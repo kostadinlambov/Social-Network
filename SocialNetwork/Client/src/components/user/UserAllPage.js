@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import {userService} from '../../infrastructure';
 import UserRow from './UserRow';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common';
@@ -26,14 +27,15 @@ class UserAllPage extends Component {
     }
 
     componentDidMount() {
-        const loggedInUserId = this.props.loggedInUserData.id;
-        this.props.loadAllUsers(loggedInUserId);
+        const loggedInUserId = userService.getUserId();
 
         if (loggedInUserId !== this.props.timeLineUserData.id) {
             this.props.changeTimeLineUser(loggedInUserId);
             this.props.changeAllPictures(loggedInUserId);
             this.props.changeAllFriends(loggedInUserId);
         }
+      
+        this.props.loadAllUsers(loggedInUserId);
     }
 
     componentDidUpdate(prevProps, prevState) {

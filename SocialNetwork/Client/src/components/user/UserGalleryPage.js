@@ -5,9 +5,18 @@ import { ToastComponent } from '../common'
 import Picture from './Picture';
 import './css/UserGallery.css';
 
+import { css } from '@emotion/core';
+import { RingLoader, GridLoader, MoonLoader, CircleLoader } from 'react-spinners';
+
 import { connect } from 'react-redux';
 import { changeCurrentTimeLineUserAction, changeAllFriendsAction } from '../../store/actions/userActions';
 import { addPicturesAction, changeAllPicturesAction, removePictureAction } from '../../store/actions/pictureActions';
+
+const override = css`
+        display: block;
+        margin: 0 auto;
+        border-color: red;
+`;
 
 class UserGalleryPage extends Component {
     constructor(props) {
@@ -116,8 +125,14 @@ class UserGalleryPage extends Component {
     }
 
     render() {
-        if (!this.state.ready) {
-            return <h1 className="text-center pt-5 mt-5">Uploading Image...</h1>
+        if (!this.state.ready && this.props.picturesArr.length === 0) {
+            // return <CircleLoader
+            //     css={override}
+            //     sizeUnit={"px"}
+            //     size={150}
+            //     color={'#61dafb'}
+            //     loading={true}
+            // />
         }
 
         const isRoot = userService.isRoot();
@@ -126,9 +141,12 @@ class UserGalleryPage extends Component {
         const formattedUserNames = userService.formatUsername(this.props.timeLineUserData.firstName, this.props.timeLineUserData.lastName)
 
         return (
+
             <section className="galerry-section">
+
                 <article className="aside-article-photos">
                     <div className="gallery-article-intro">
+
                         <div className="gallery-aside-article-header"  >
                             <div className="aside-article-icon">
                                 <i className="fas fa-images"></i>
@@ -145,20 +163,44 @@ class UserGalleryPage extends Component {
                         </div>}
 
                     </div>
+
                     {this.props.picturesArr.length > 0
                         ?
                         <Fragment>
                             <div className="hr-styles" style={{ 'width': '90%' }}></div>
-                            <ul className="grid-container">
 
-                                {this.props.picturesArr.map((picture) => <Picture key={picture.id} removePhoto={this.removePhoto}  {...picture} userId={this.props.id} />)}
-                            </ul>
+                            {!this.state.ready ?
+                                <CircleLoader
+                                    css={override}
+                                    sizeUnit={"px"}
+                                    size={150}
+                                    color={'#61dafb'}
+                                    loading={true}
+                                /> :
+                                <ul className="grid-container">
+                                    {this.props.picturesArr.map((picture) => <Picture key={picture.id} removePhoto={this.removePhoto}  {...picture} userId={this.props.id} />)}
+                                </ul>}
                         </Fragment>
                         :
+
                         <Fragment>
-                            <div className="hr-styles" style={{ 'width': '90%' }}></div>
-                            <h3 className="text-center">There are no photos of <span className="username-gallery">{`${formattedUserNames}`}</span> !</h3>
-                            <div className="hr-styles" style={{ 'width': '90%' }}></div>
+                            {!this.state.ready ?
+                                <Fragment>
+                                    <div className="hr-styles" style={{ 'width': '90%' }}></div>
+                                    <CircleLoader
+                                        css={override}
+                                        sizeUnit={"px"}
+                                        size={150}
+                                        color={'#61dafb'}
+                                        loading={true}
+                                    />
+                                </Fragment> :
+                                <Fragment>
+                                    <div className="hr-styles" style={{ 'width': '90%' }}></div>
+                                    <h3 className="text-center">There are no photos of <span className="username-gallery">{`${formattedUserNames}`}</span> !</h3>
+                                    <div className="hr-styles" style={{ 'width': '90%' }}></div>
+                                </Fragment>
+                            }
                         </Fragment>
                     }
                 </article>

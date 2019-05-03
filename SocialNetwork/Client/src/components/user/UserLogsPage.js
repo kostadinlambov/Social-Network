@@ -4,11 +4,19 @@ import { userService } from '../../infrastructure';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common';
 import './css/UserLogsPage.css';
+import { css } from '@emotion/core';
+import { CircleLoader } from 'react-spinners';
 
 import { connect } from 'react-redux';
 import { changeCurrentTimeLineUserAction, changeAllFriendsAction } from '../../store/actions/userActions';
 import { changeAllPicturesAction } from '../../store/actions/pictureActions';
 import { fetchAllLogsAction, findLogsByUserNameAction, clearLogsByUserNameAction, clearAllLogsAction } from '../../store/actions/logsActions';
+
+const override = css`
+        display: block;
+        margin: 0 auto;
+        border-color: red;
+`;
 
 class UserLogsPage extends Component {
     constructor(props) {
@@ -29,7 +37,7 @@ class UserLogsPage extends Component {
     componentDidMount() {
         this.loadAllLogs();
 
-        const loggedInUserId = this.props.loggedInUserData.id;
+        const loggedInUserId = userService.getUserId();
         if (loggedInUserId !== this.props.timeLineUserData.id) {
             this.props.changeTimeLineUser(loggedInUserId);
             this.props.changeAllPictures(loggedInUserId);
@@ -136,8 +144,7 @@ class UserLogsPage extends Component {
             || this.props.clearLogsByUserName.loading || this.props.clearAllLogs.loading;
 
         if (loading) {
-            // return null;
-            return <h1 className="text-center pt-5 mt-5">Loading...</h1>
+            // return <h1 className="text-center pt-5 mt-5">Loading...</h1>
         }
 
         const selected = this.state.selected;
@@ -200,15 +207,35 @@ class UserLogsPage extends Component {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {this.props.logsArr.map((log, i) => <LogsRow key={log.id} index={i + 1} {...this.props} {...log} />)}
+                                        {loading
+                                            ?
+                                            <CircleLoader
+                                                css={override}
+                                                sizeUnit={"px"}
+                                                size={150}
+                                                color={'#61dafb'}
+                                                loading={true}
+                                            /> :
+
+                                            this.props.logsArr.map((log, i) => <LogsRow key={log.id} index={i + 1} {...this.props} {...log} />)}
                                     </tbody>
                                 </table>
                                 :
-                                <Fragment>
-                                    <div className="hr-styles"></div>
-                                    <h3 className="mt-5 mb-5 mx-auto display-5 text-center App-secondary-color">Logs history is empty. </h3>
-                                    <div className="hr-styles"></div>
-                                </Fragment>
+                                loading ?
+                                    <Fragment>
+                                        <CircleLoader
+                                            css={override}
+                                            sizeUnit={"px"}
+                                            size={150}
+                                            color={'#61dafb'}
+                                            loading={true}
+                                        />
+                                    </Fragment> :
+                                    <Fragment>
+                                        <div className="hr-styles"></div>
+                                        <h3 className="mt-5 mb-5 mx-auto display-5 text-center App-secondary-color">Logs history is empty. </h3>
+                                        <div className="hr-styles"></div>
+                                    </Fragment>
                             }
                         </div>
                     </section>

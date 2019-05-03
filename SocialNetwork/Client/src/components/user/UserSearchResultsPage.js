@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import {userService} from '../../infrastructure';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common'
 import Friend from './Friend';
@@ -28,7 +29,7 @@ class UserSearchResultsPage extends Component {
     }
 
     componentDidMount() {
-        const loggedInUserId = this.props.loggedInUserData.id;
+        const loggedInUserId = userService.getUserId();
         if (loggedInUserId !== this.props.timeLineUserData.id) {
             this.props.changeTimeLineUser(loggedInUserId);
             this.props.changeAllPictures(loggedInUserId);

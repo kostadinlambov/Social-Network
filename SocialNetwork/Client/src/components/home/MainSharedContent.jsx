@@ -5,12 +5,20 @@ import Post from './Post';
 import './css/MainSharedContent.css'
 import WritePost from './WritePost';
 import WriteComment from './WriteComment';
+import { css } from '@emotion/core';
+import { CircleLoader } from 'react-spinners';
 
 import { connect } from 'react-redux';
 import { createPostAction, fetchAllPostsAction, removePostAction, addLikePostAction } from '../../store/actions/postActions';
 import { createCommentAction, removeCommentAction, addLikeCommentAction } from '../../store/actions/commentActions';
 import { changeCurrentTimeLineUserAction, changeAllFriendsAction } from '../../store/actions/userActions';
 import { changeAllPicturesAction } from '../../store/actions/pictureActions';
+
+const override = css`
+        display: block;
+        margin: 0 auto;
+        border-color: red;
+`;
 
 class MainSharedContent extends Component {
     constructor(props) {
@@ -159,8 +167,21 @@ class MainSharedContent extends Component {
     }
 
     render() {
+        const loading = this.props.fetchAllPosts.loading || this.props.removePost.loading ||
+            this.props.removeCommentData.loading || this.props.addLikePostData.loading ||
+            this.props.addLikeCommentData.loading || this.props.createPostData.loading ||
+            this.props.createCommentData.loading;
         return (
             <Fragment >
+                <div className='sweet-loading'>
+                    <CircleLoader
+                        css={override}
+                        sizeUnit={"px"}
+                        size={150}
+                        color={'#61dafb'}
+                        loading={loading}
+                    />
+                </div>
                 <article className="main-article-shared-content">
                     <WritePost
                         loggedInUser={this.props.loggedInUser}
@@ -227,8 +248,8 @@ const mapDispatchToProps = (dispatch) => {
         removeComment: (loggedInUserId, commentId, timelineUserId) => { dispatch(removeCommentAction(loggedInUserId, commentId, timelineUserId)) },
         addLikeComment: (loggedInUserId, commentId, timelineUserId) => { dispatch(addLikeCommentAction(loggedInUserId, commentId, timelineUserId)) },
         changeTimeLineUser: (userId) => { dispatch(changeCurrentTimeLineUserAction(userId)) },
-        changeAllFriends: (userId) => {dispatch(changeAllFriendsAction(userId))},
-        changeAllPictures: (userId) => {dispatch(changeAllPicturesAction(userId))},
+        changeAllFriends: (userId) => { dispatch(changeAllFriendsAction(userId)) },
+        changeAllPictures: (userId) => { dispatch(changeAllPicturesAction(userId)) },
     }
 }
 

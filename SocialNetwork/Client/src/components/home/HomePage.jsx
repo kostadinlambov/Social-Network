@@ -2,7 +2,9 @@ import React, { Component, Fragment, Suspense, lazy } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '../common';
-import {userService } from '../../infrastructure/';
+import { userService } from '../../infrastructure/';
+import { css } from '@emotion/core';
+import { CircleLoader } from 'react-spinners';
 
 import TimeLine from './TimeLine';
 import HeaderSection from './HeaderSection';
@@ -28,6 +30,12 @@ const UserGalleryPage = lazy(() => import('../user/UserGalleryPage'));
 const UserLogsPage = lazy(() => import('../user/UserLogsPage'));
 const MessageBox = lazy(() => import('./MessageBox'));
 const ErrorPage = lazy(() => import('../common/ErrorPage'));
+
+const override = css`
+        display: block;
+        margin: 0 auto;
+        border-color: red;
+`;
 
 class HomePage extends Component {
     constructor(props) {
@@ -129,11 +137,22 @@ class HomePage extends Component {
 
         return (
             <Fragment>
+
                 <HeaderSection  {...this.props.timeLineUserData} />
                 <main className="site-content">
                     <section className="main-section">
+
                         <TimeLine {...this.props.timeLineUserData} />
-                        <Suspense fallback={<h1 className="text-center pt-5 mt-5">Loading...</h1>}>
+                        <Suspense fallback={
+                            <div className='sweet-loading'>
+                                <CircleLoader
+                                    css={override}
+                                    sizeUnit={"px"}
+                                    size={150}
+                                    color={'#61dafb'}
+                                    loading={true}
+                                />
+                            </div>}>
                             <Switch>
                                 {loggedIn && <Route exact path="/home/comments/:id" component={MainSharedContent} />}
                                 {loggedIn && <Route exact path="/home/profile/:id" component={UserProfilePage} />}
