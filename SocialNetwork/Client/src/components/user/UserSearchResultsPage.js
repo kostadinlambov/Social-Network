@@ -18,6 +18,7 @@ class UserSearchResultsPage extends Component {
 
         this.state = {
             search: '',
+            ready: false,
         };
 
         this.addFriend = this.addFriend.bind(this);
@@ -33,6 +34,8 @@ class UserSearchResultsPage extends Component {
             this.props.changeAllPictures(loggedInUserId);
             this.props.changeAllFriends(loggedInUserId);
         }
+
+        this.setState({ready: true})
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -105,6 +108,9 @@ class UserSearchResultsPage extends Component {
     }
 
     render() {
+        if(!this.state.ready){
+            return <h1 className="text-center pt-5 mt-5">Loading...</h1>
+        }
 
         const friendsArrLength = this.props.friendsArrSearch.length;
         let friends = '';
@@ -204,7 +210,7 @@ class UserSearchResultsPage extends Component {
 
         let noResult = '';
 
-        if (!friends && !requests && !friendsCandidates && !remainCandidates) {
+        if (!friends && !requests && !friendsCandidates && !remainCandidates && !this.props.searchResults.loading) {
             noResult = (
                 <Fragment>
                     <h2>No results for <span className="App-secondary-color">"{this.props.search}"</span></h2>
@@ -240,6 +246,7 @@ const mapStateToProps = (state) => {
         timeLineUserData: state.timeLineUserData,
         loggedInUserData: state.loggedInUserData,
 
+        searchResults: state.searchResults,
         search: state.searchResults.search,
         friendsArrSearch: state.searchResults.friendsArrSearch,
         friendsCandidatesArr: state.searchResults.friendsCandidatesArr,
