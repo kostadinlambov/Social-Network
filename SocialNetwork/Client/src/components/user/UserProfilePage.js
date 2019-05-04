@@ -12,18 +12,34 @@ class UserProfilePage extends Component {
         super(props)
 
         this.state = {
+            currentTimeLineUserId: '',
             ready: false
         }
     }
 
     componentDidMount() {
         const currentTimeLineUserId = this.props.match.params.id
+        this.setState({ currentTimeLineUserId });
+
         if (currentTimeLineUserId !== this.props.timeLineUser.id) {
-            this.props.changeTimeLineUser(currentTimeLineUserId);
-            this.props.changeAllPictures(currentTimeLineUserId);
-            this.props.changeAllFriends(currentTimeLineUserId);
-            return <h1 className="text-center pt-5 mt-5">Loading...</h1>;
+            this.initialDataLoad(currentTimeLineUserId);
         }
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this.state.currentTimeLineUserId !== this.props.match.params.id) {
+            this.initialDataLoad(this.props.match.params.id);
+        }
+    }
+
+    initialDataLoad = (currentTimeLineUserId) => {
+        this.setState({ currentTimeLineUserId },
+            () => {
+                this.props.changeTimeLineUser(currentTimeLineUserId);
+                this.props.changeAllPictures(currentTimeLineUserId);
+                this.props.changeAllFriends(currentTimeLineUserId);
+            }
+        )
     }
 
     onSubmitHandlerDelete = (e) => {

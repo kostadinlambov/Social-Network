@@ -5,8 +5,6 @@ import Post from './Post';
 import './css/MainSharedContent.css'
 import WritePost from './WritePost';
 import WriteComment from './WriteComment';
-import { css } from '@emotion/core';
-import { CircleLoader } from 'react-spinners';
 
 import { connect } from 'react-redux';
 import { createPostAction, fetchAllPostsAction, removePostAction, addLikePostAction } from '../../store/actions/postActions';
@@ -14,17 +12,12 @@ import { createCommentAction, removeCommentAction, addLikeCommentAction } from '
 import { changeCurrentTimeLineUserAction, changeAllFriendsAction } from '../../store/actions/userActions';
 import { changeAllPicturesAction } from '../../store/actions/pictureActions';
 
-const override = css`
-        display: block;
-        margin: 0 auto;
-        border-color: red;
-`;
-
 class MainSharedContent extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
+            currentTimeLineUserId: '',
             allPostsArr: [],
         };
 
@@ -39,17 +32,20 @@ class MainSharedContent extends Component {
 
     componentDidMount = () => {
         const currentTimeLineUserId = this.props.match.params.id
-        if (currentTimeLineUserId !== this.props.timeLineUser.id) {
-            this.props.changeTimeLineUser(currentTimeLineUserId);
-            this.props.changeAllPictures(currentTimeLineUserId);
-            this.props.changeAllFriends(currentTimeLineUserId);
-        }
+        this.setState({ currentTimeLineUserId });
 
-        const timelineUserId = this.props.match.params.id;
-        this.getAllPosts(timelineUserId);
+        if (currentTimeLineUserId !== this.props.timeLineUser.id) {
+            this.initialDataLoad(currentTimeLineUserId);
+        }else{
+            this.getAllPosts(currentTimeLineUserId);
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
+        if (this.state.currentTimeLineUserId !== this.props.match.params.id) {
+            this.initialDataLoad(this.props.match.params.id);
+        }
+
         const loading = this.props.fetchAllPosts.loading || this.props.removePost.loading ||
             this.props.removeCommentData.loading || this.props.addLikePostData.loading ||
             this.props.addLikeCommentData.loading || this.props.createPostData.loading ||
@@ -126,6 +122,17 @@ class MainSharedContent extends Component {
         return null;
     }
 
+    initialDataLoad = (currentTimeLineUserId) => {
+        this.setState({ currentTimeLineUserId },
+            () => {
+                this.props.changeTimeLineUser(currentTimeLineUserId);
+                this.props.changeAllPictures(currentTimeLineUserId);
+                this.props.changeAllFriends(currentTimeLineUserId);
+                this.getAllPosts(currentTimeLineUserId);
+            }
+        )
+    }
+
     getAllPosts(timelineUserId) {
         this.props.loadAllPosts(timelineUserId);
     }
@@ -167,21 +174,8 @@ class MainSharedContent extends Component {
     }
 
     render() {
-        const loading = this.props.fetchAllPosts.loading || this.props.removePost.loading ||
-            this.props.removeCommentData.loading || this.props.addLikePostData.loading ||
-            this.props.addLikeCommentData.loading || this.props.createPostData.loading ||
-            this.props.createCommentData.loading;
         return (
             <Fragment >
-                <div className='sweet-loading'>
-                    <CircleLoader
-                        css={override}
-                        sizeUnit={"px"}
-                        size={150}
-                        color={'#61dafb'}
-                        loading={loading}
-                    />
-                </div>
                 <article className="main-article-shared-content">
                     <WritePost
                         loggedInUser={this.props.loggedInUser}

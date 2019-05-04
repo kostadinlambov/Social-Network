@@ -178,7 +178,7 @@ class UserGalleryPage extends Component {
                                     loading={true}
                                 /> :
                                 <ul className="grid-container">
-                                    {this.props.picturesArr.map((picture) => <Picture key={picture.id} removePhoto={this.removePhoto}  {...picture} userId={this.props.id} />)}
+                                    {this.props.picturesArr.map((picture) => <Picture key={picture.id} removePhoto={this.removePhoto}  {...picture} userId={this.props.timeLineUserData.id} />)}
                                 </ul>}
                         </Fragment>
                         :
