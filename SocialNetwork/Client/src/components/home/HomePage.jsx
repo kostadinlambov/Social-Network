@@ -45,7 +45,6 @@ class HomePage extends Component {
             ready: false
         }
 
-        this.loadTimeLineUserData = this.loadTimeLineUserData.bind(this);
         this.loadAllPictures = this.loadAllPictures.bind(this);
         this.loadAllFriends = this.loadAllFriends.bind(this);
     }
@@ -55,7 +54,6 @@ class HomePage extends Component {
         const timeLineUserId = userService.getUserId();
 
         this.props.loadLoggedInUserData(userId);
-        this.loadTimeLineUserData(timeLineUserId);
         this.loadAllPictures(timeLineUserId);
         this.loadAllFriends(timeLineUserId);
         this.props.findFriends(userId);
@@ -83,10 +81,7 @@ class HomePage extends Component {
         if (!this.props.fetchPictures.hasError && this.props.fetchPictures.message && this.props.fetchPictures !== prevProps.fetchPictures) {
             return this.props.fetchPictures.message;
         }
-        else if (!this.props.timeLineUserData.hasError && this.props.timeLineUserData.message && this.props.timeLineUserData !== prevProps.timeLineUserData) {
-            return this.props.timeLineUserData.message;
-
-        } else if (!this.props.loggedInUserData.hasError && this.props.loggedInUserData.message && this.props.loggedInUserData !== prevProps.loggedInUserData) {
+        else if (!this.props.loggedInUserData.hasError && this.props.loggedInUserData.message && this.props.loggedInUserData !== prevProps.loggedInUserData) {
             return this.props.loggedInUserData.message;
         }
         else if (!this.props.fetchAllFriends.hasError && this.props.fetchAllFriends.message && this.props.fetchAllFriends !== prevProps.fetchAllFriends) {
@@ -99,10 +94,7 @@ class HomePage extends Component {
         if (this.props.fetchPictures.hasError && prevProps.fetchPictures.error !== this.props.fetchPictures.error) {
             return this.props.fetchPictures.message || 'Server Error';
         }
-        else if (this.props.timeLineUserData.hasError && prevProps.timeLineUserData.error !== this.props.timeLineUserData.error) {
-            return this.props.timeLineUserData.message || 'Server Error';
-
-        } else if (this.props.loggedInUserData.hasError && prevProps.loggedInUserData.error !== this.props.loggedInUserData.error) {
+        else if (this.props.loggedInUserData.hasError && prevProps.loggedInUserData.error !== this.props.loggedInUserData.error) {
             return this.props.loggedInUserData.message || 'Server Error';
         }
         else if (this.props.fetchAllFriends.hasError && prevProps.fetchAllFriends.error !== this.props.fetchAllFriends.error) {
@@ -110,10 +102,6 @@ class HomePage extends Component {
         }
 
         return null;
-    }
-
-    loadTimeLineUserData(userId) {
-        this.props.loadTimelineUserData(userId);
     }
 
     loadAllPictures = (userId) => {
@@ -125,23 +113,17 @@ class HomePage extends Component {
     }
 
     render() {
-        const loading = this.props.fetchPictures.loading || this.props.timeLineUserData.loading || this.props.loggedInUserData.loading || this.props.fetchAllFriends.loading;
-        if (!this.state.ready || loading) {
-            // return <h1 className="text-center pt-5 mt-5">Loading...</h1>
-        }
-
         const isRoot = userService.isRoot();
         const isAdmin = userService.isAdmin();
         const isTheCurrentLoggedInUser = this.props.loggedInUserData.id === this.props.timeLineUserData.id;
         let loggedIn = userService.isTheUserLoggedIn();
-
+        debugger;
         return (
             <Fragment>
 
                 <HeaderSection  {...this.props.timeLineUserData} />
                 <main className="site-content">
                     <section className="main-section">
-
                         <TimeLine {...this.props.timeLineUserData} />
                         <Suspense fallback={
                             <div className='sweet-loading'>
