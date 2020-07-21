@@ -1,0 +1,71 @@
+# Docker Compose file Reference (https://docs.docker.com/compose/compose-file/)
+
+version: '3.7'
+
+# Define services
+services:
+  # App backend service
+  app-server:
+    # Configuration for building the docker image for the backend service
+    build:
+      context: Server # Use an image built from the specified dockerfile in the `Server` directory.
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000" # Forward the exposed port 8080 on the container to port 8080 on the host machine
+    restart: always
+    depends_on: 
+      - db # This service depends on mysql. Start that first.
+    environment: # Pass environment variables to the service
+      # Datasource properties
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/social_network?useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root 
+
+      # Cloudinary credentials
+      CLOUDINARY_CLOUD_NAME: <enter_your_cloud_name>
+      CLOUDINARY_API_KEY: <enter_your_api_key>
+      CLOUDINARY_API_SECRET: <enter_your_api_secret>
+
+    networks: # Networks to join (Services on the same network can communicate with each other using their name)
+      - backend
+      - frontend
+
+  # Frontend Service 
+  app-client:
+    build:
+      context: Client # Use an image built from the specified dockerfile in the `Client` directory.
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_BASE_URL: http://127.0.0.1:8000
+    ports:
+      - "9090:80" # Map the exposed port 80 on the container to port 9090 on the host machine
+    restart: always
+    depends_on:
+      - app-server
+    networks:
+      - frontend  
+
+  # Database Service (Mysql)
+  db:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_DATABASE: social_network
+      MYSQL_USER: db_user
+      MYSQL_PASSWORD: klSocialNetwork
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - backend  
+  
+# Volumes
+volumes:
+  db-data:
+
+# Networks to be created to facilitate communication between containers
+networks:
+  backend:
+  frontend:    
