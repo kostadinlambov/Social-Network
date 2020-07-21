@@ -11,7 +11,7 @@ services:
       context: Server # Use an image built from the specified dockerfile in the `Server` directory.
       dockerfile: Dockerfile
     ports:
-      - "8000:8000" # Forward the exposed port 8080 on the container to port 8080 on the host machine
+      - "8000:8000" # Forward the exposed port 8000 on the container to port 8000 on the host machine
     restart: always
     depends_on: 
       - db # This service depends on mysql. Start that first.
