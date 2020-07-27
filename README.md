@@ -38,19 +38,19 @@ The project is deployed on [Heroku](https://social-network-kl.herokuapp.com/).
 
 To start the Client you need to enter the `SocialNetwork/Client` folder:
 
-```
-$ cd bash SocialNetwork/Client
+```bash
+$ cd SocialNetwork/Client
 ```
 
 Install all dependencies:
 
-```
+```bash
 $ npm install
 ```
 
 Run the app in the development mode:
 
-```
+```bash
 $ npm start
 ```
 
@@ -60,39 +60,39 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 Go to the root directory of the Spring Boot app:
 
-```
-$ cd bash SocialNetwork/Server
+```bash
+$ cd SocialNetwork/Server
 ```
 
 Start the Server:
 
-```
+```bash
 $ mvn spring-boot:run
 ```
-The Server is running on port 8000.
+The Server is running on port `8000`.
 
 
-### **Option 2 - Start the Application in Docker**
+### **Option 2 - Start the application in Docker**
 
 1. **Start the application**
 
 Go to the project directory( `SocialNetwork/` ) and run:
 
 ```bash
-docker-compose up -d
+$ docker-compose up -d
 ```
 
 The front-end server will start on port `9090`. To open it enter in your browser:
 
 ```bash
-http://localhost:9090
+$ http://localhost:9090
 ```
 2. **Stop the application**
 
 You can stop the containers with:
 
  ```bash 
- docker-compose down
+ $ docker-compose down
  ```
 
 ## App screenshots
