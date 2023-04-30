@@ -11,7 +11,7 @@
     "react-dom": "16.8.0",
     "react-redux": "7.0.2",
     "react-router-dom": "4.4.0-beta.6",
-    "react-scripts": "2.1.3",
+    "react-scripts": "2.1.8",
     "react-spinners": "0.5.4",
     "react-stomp": "4.1.0",
     "react-toastify": "4.5.2",
