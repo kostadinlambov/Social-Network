@@ -88,11 +88,13 @@ class RegisterPage extends Component {
     validate = (username, email, firstName, lastName, password, confirmPassword, address, city) => {
         const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
         const firstLastNameRegex = /^[A-Z]([a-zA-Z]+)?$/;
+        const usernameRegex = /^[a-zA-Z0-9_-]+$/;
         const testEmail = emailRegex.test(email)
         const testFirstName = firstLastNameRegex.test(firstName)
         const testLastName = firstLastNameRegex.test(lastName)
+        const testUsername = usernameRegex.test(username)
         return {
-            username: username.length < 4 || username.length > 16,
+            username: username.length < 4 || username.length > 16 || !testUsername,
             email: email.length === 0 || !testEmail,
             firstName: firstName.length === 0 || !testFirstName,
             lastName: lastName.length === 0 || !testLastName,
