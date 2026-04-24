@@ -16,6 +16,7 @@ import { logoutAction } from './store/actions/authActions';
 
 const StartPage = lazy(() => import('./components/auth/StartPage'))
 const RegisterPage = lazy(() => import('./components/auth/RegisterPage'))
+const OtpVerificationPage = lazy(() => import('./components/auth/OtpVerificationPage'))
 const LoginPage = lazy(() => import('./components/auth/LoginPage'))
 const HomePage = lazy(() => import('./components/home/HomePage'))
 const ErrorPage = lazy(() => import('./components/common/ErrorPage'))
@@ -63,6 +64,7 @@ class App extends Component {
           <Switch>
             <Route exact path="/" component={StartPage} />
             {!loggedIn && <Route exact path="/register" component={RegisterPage} />}
+            {!loggedIn && <Route exact path="/otp-verify" component={OtpVerificationPage} />}
             {!loggedIn && <Route exact path="/login" component={LoginPage} />}
             {loggedIn && <Route path="/home" component={HomePage} />}
             <Route exact path="/error" component={ErrorPage} />

@@ -1,4 +1,4 @@
-import { registerReducer, loginReducer, registerErrorReducer, loginErrorReducer, } from './authReducer';
+import { registerReducer, loginReducer, registerErrorReducer, loginErrorReducer, otpReducer, otpErrorReducer } from './authReducer';
 import { ajaxStatusReducer, ajaxErrorReducer } from './ajaxReducer';
 import { addPictureReducer, removePictureReducer, fetchPictureReducer, changePictureReducer } from './pictureReducer';
 import {
@@ -19,6 +19,8 @@ export default {
     login: loginReducer,
     registerError: registerErrorReducer,
     loginError: loginErrorReducer,
+    otp: otpReducer,
+    otpError: otpErrorReducer,
     updateUserData: updateUserReducer,
     fetchAllUsers: fetchAllUsersReducer,
     fetchPictures: fetchPictureReducer,
